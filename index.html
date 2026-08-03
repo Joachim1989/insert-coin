@@ -659,7 +659,7 @@ async function askAI(){
     const raw=((data.candidates||[])[0]?.content?.parts||[])
       .map(x=>x.text||"").join("\n").replace(/```json|```/g,"").trim();
     const a=raw.indexOf("{"), b=raw.lastIndexOf("}");
-    if(a<0||b<a) throw new Error("Réponse illisible");
+    if(a<0||b<a) throw new Error("Bloqué par l'IA : " + (data.candidates?.[0]?.finishReason || "contenu vide"));
     showAI(JSON.parse(raw.slice(a,b+1)),p,pic);
     photo=null;showPhotoStat();syncAsk();
   }catch(err){
