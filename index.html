@@ -163,7 +163,13 @@
     const state = { mode:'single', photos:[], facing:'environment', stream:null };
     const KEYSTORE = 'insertcoin.gemini.key';
     const MODELSTORE = 'insertcoin.gemini.model';
-    const MODELS = ['gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash'];
+    const MODELS = [
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite'
+];
+
 
     const sheets = {
       live:{title:'Mode live',text:'La page principale doit toujours favoriser la recherche directe par texte ou photo. Le reste aide, mais ne détourne jamais du verdict.',items:[['Recherche texte','Nom, référence, label, série, édition, plateforme.'],['Photo objet','Capture unique ou multi-angles.'],['Photo stand','Repérage global puis zoom ciblé.']]},
