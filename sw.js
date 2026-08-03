@@ -1,30 +1,27 @@
-const CACHE = 'pixel-papa-live-v2';
-const FILES = [
+const CACHE = 'pixel-papa-brocante-v1';
+const ASSETS = [
   './',
-  './pixel-papa-live.html',
+  './pixel-papa-brocante.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
   './icon-mask-192.png',
   './icon-mask-512.png'
 ];
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+self.addEventListener('activate', event => {
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
-self.addEventListener('fetch', e => {
-  const url = new URL(e.request.url);
-  if (url.hostname.includes('generativelanguage')) return;
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
-      if (res && res.ok && url.origin === location.origin) {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy));
-      }
-      return res;
-    }).catch(() => caches.match('./pixel-papa-live.html')))
-  );
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  if (url.hostname.includes('generativelanguage') || event.request.method !== 'GET') return;
+  event.respondWith(caches.match(event.request).then(hit => hit || fetch(event.request).then(resp => {
+    if (resp && resp.ok && url.origin === location.origin) {
+      const copy = resp.clone();
+      caches.open(CACHE).then(cache => cache.put(event.request, copy));
+    }
+    return resp;
+  }).catch(() => caches.match('./pixel-papa-brocante.html'))));
 });
