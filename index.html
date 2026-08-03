@@ -96,6 +96,74 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .bac-spot{margin-top:7px;border:1px solid var(--crt-dim);background:transparent;color:var(--crt);
   border-radius:6px;padding:5px 9px;font-family:var(--mono);font-size:9.5px;letter-spacing:.6px;
   text-transform:uppercase;cursor:pointer}
+/* ── Radar ── */
+.radar{background:#07090b;border:1px solid var(--crt-dim);border-radius:14px;padding:10px;margin-bottom:14px}
+html[data-theme="light"] .radar{background:#0E1416}
+.radar svg{width:100%;max-width:340px;display:block;margin:0 auto}
+.r-n{font-family:var(--mono);font-size:11px;fill:#4de1e8;font-weight:700}
+.r-d{font-family:var(--mono);font-size:9px;fill:#8AA7A9}
+.r-i{font-family:var(--cond);font-size:10px;fill:#14110f;font-weight:700}
+.radar-note{text-align:center;font-family:var(--mono);font-size:9.5px;color:#8AA7A9;margin-top:6px;letter-spacing:.4px}
+.radar-warn{font-family:var(--mono);font-size:10.5px;color:var(--mid);margin-top:10px;text-align:center;line-height:1.5}
+.rline{display:flex;align-items:center;gap:11px;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:7px}
+.rl-i{flex:0 0 26px;height:26px;border-radius:50%;background:var(--gold);color:#14110f;
+  display:flex;align-items:center;justify-content:center;font-family:var(--cond);font-size:14px;font-weight:700}
+.rl-c{flex:1;min-width:0}
+.rl-c b{display:block;font-size:14px;line-height:1.3}
+.rl-c span{font-family:var(--mono);font-size:10.5px;color:var(--text-muted)}
+.rl-d{flex:0 0 auto;text-align:right}
+.rl-d b{display:block;font-family:var(--cond);font-size:17px;color:var(--crt)}
+.rl-d span{font-family:var(--mono);font-size:10px;color:var(--text-muted)}
+
+/* ── Écran de fin de sortie ── */
+.scoreov{display:none}
+.scoreov.on{display:flex;position:fixed;inset:0;z-index:80;background:rgba(4,4,6,.94);
+  align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.score{width:100%;max-width:380px;background:var(--surface);border:2px solid var(--gold);
+  border-radius:16px;padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.score::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px)}
+.sc-top{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted)}
+.sc-rang{font-family:var(--cond);font-size:86px;font-weight:700;line-height:1;margin:6px 0 2px;letter-spacing:2px}
+.sc-rang.rS{color:#FFD700;text-shadow:0 0 22px rgba(255,215,0,.55)}
+.sc-rang.rA{color:#4CAF50} .sc-rang.rB{color:#4de1e8}
+.sc-rang.rC{color:#FF9800} .sc-rang.rD{color:#F44336}
+.sc-mot{font-family:var(--cond);font-size:16px;text-transform:uppercase;letter-spacing:1.4px;color:var(--text)}
+.sc-lieu{font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:6px}
+.sc-grid{display:flex;gap:8px;margin:20px 0 16px}
+.sc-grid div{flex:1;background:var(--bg);border-radius:10px;padding:12px 4px}
+.sc-grid b{display:block;font-family:var(--cond);font-size:23px;line-height:1;color:var(--text)}
+.sc-grid span{display:block;font-family:var(--mono);font-size:8.5px;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--text-muted);margin-top:5px}
+.sc-grid .pos b{color:var(--go)} .sc-grid .neg b{color:var(--stop)}
+.sc-lines{text-align:left;margin-bottom:18px}
+.sc-lines div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;
+  border-bottom:1px solid var(--border);font-size:13.5px}
+.sc-lines span{color:var(--text-muted)}
+.sc-lines b{text-align:right;color:var(--gold)}
+.btn-save.alt2{background:var(--surface-light);color:var(--text);margin-top:9px}
+
+/* ── Historique ── */
+.hist-tot{font-family:var(--mono);font-size:12px;color:var(--text-muted);
+  margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.hist-tot b{font-family:var(--cond);font-size:19px}
+.hist-tot .pos{color:var(--go)} .hist-tot .neg{color:var(--stop)}
+.hist{display:flex;align-items:center;gap:11px;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin-bottom:8px}
+.h-r{flex:0 0 34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--cond);font-size:19px;font-weight:700;background:var(--bg)}
+.h-r.rS{color:#FFD700} .h-r.rA{color:#4CAF50} .h-r.rB{color:#4de1e8}
+.h-r.rC{color:#FF9800} .h-r.rD{color:#F44336}
+.h-c{flex:1;min-width:0}
+.h-c b{display:block;font-size:14px}
+.h-c span{font-family:var(--mono);font-size:10.5px;color:var(--text-muted)}
+.h-m{font-family:var(--cond);font-size:17px;flex:0 0 auto}
+.h-m.pos{color:var(--go)} .h-m.neg{color:var(--stop)}
+.h-a{display:flex;flex-direction:column;gap:3px;flex:0 0 auto}
+.h-a button{background:none;border:0;color:var(--text-muted);font-family:var(--mono);
+  font-size:9.5px;text-transform:uppercase;cursor:pointer;padding:3px 5px;letter-spacing:.5px}
+
 /* ── Jauge de prix ── */
 .gauge{padding:16px 14px 12px;border-top:1px solid var(--border)}
 .g-top,.g-bot{position:relative;height:16px}
@@ -151,6 +219,29 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .tb-v{flex:0 0 46px;text-align:right;font-family:var(--cond);font-size:15px;color:var(--go)}
 .chrono{
   font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:9px;letter-spacing:1px;
+}
+.imminent{display:none}
+.imminent.on{
+  display:flex;align-items:center;gap:11px;padding:11px 14px;
+  border-bottom:2px solid;position:sticky;top:0;z-index:41;
+}
+.imminent.demain{background:#2a2408;border-color:var(--gold);color:var(--gold)}
+.imminent.aujourdhui{background:#3a1608;border-color:var(--mid);color:var(--mid)}
+html[data-theme="light"] .imminent.demain{background:#FBF0CE;color:#6B4E00}
+html[data-theme="light"] .imminent.aujourdhui{background:#FBE2CE;color:#8A3D00}
+.im-t{flex:1;min-width:0}
+.im-t b{display:block;font-family:var(--cond);font-size:15px;letter-spacing:.4px;text-transform:uppercase}
+.im-t span{display:block;font-family:var(--mono);font-size:10.5px;opacity:.85;margin-top:2px}
+.imminent button{
+  flex:0 0 auto;background:transparent;border:1px solid currentColor;color:inherit;
+  border-radius:7px;padding:7px 11px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.8px;text-transform:uppercase;cursor:pointer;
+}
+.cal-rem{display:flex;gap:7px;margin-top:8px}
+.cal-rem button{
+  flex:1;height:34px;border:1px dashed var(--crt-dim);border-radius:7px;background:transparent;
+  color:var(--crt);font-family:var(--mono);font-size:10px;letter-spacing:.5px;
+  text-transform:uppercase;cursor:pointer;
 }
 .cal-actions{display:flex;gap:8px;margin-bottom:14px}
 .cal-actions .btn-save{margin:0;display:flex;align-items:center;justify-content:center;gap:8px}
@@ -521,6 +612,8 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 
 <!-- VIEW: LIVE SEARCH (Main) -->
 <svg id="sprite" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-scan" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="3" y="0" width="5" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="3" y="10" width="7" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="9" y="12" width="3" height="1"/><rect x="10" y="13" width="3" height="1"/><rect x="11" y="14" width="2" height="1"/></symbol><symbol id="i-crate" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="2" height="1" opacity=".45"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="2" height="1" opacity=".45"/><rect x="12" y="3" width="1" height="1" opacity=".45"/><rect x="14" y="3" width="1" height="1"/><rect x="1" y="4" width="14" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1" opacity=".45"/><rect x="5" y="5" width="2" height="1" opacity=".45"/><rect x="8" y="5" width="2" height="1" opacity=".45"/><rect x="11" y="5" width="2" height="1" opacity=".45"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="14" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="3" y="8" width="2" height="1" opacity=".45"/><rect x="6" y="8" width="2" height="1" opacity=".45"/><rect x="9" y="8" width="2" height="1" opacity=".45"/><rect x="12" y="8" width="1" height="1" opacity=".45"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="14" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="5" y="11" width="2" height="1" opacity=".45"/><rect x="8" y="11" width="2" height="1" opacity=".45"/><rect x="11" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol><symbol id="i-target" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="7" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="6" y="11" width="4" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="13" y="12" width="1" height="1"/><rect x="3" y="13" width="2" height="1"/><rect x="11" y="13" width="2" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-cash" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="8" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="6" y="4" width="2" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="3" y="8" width="8" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="0" y="10" width="14" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="2" y="12" width="14" height="1"/><rect x="2" y="13" width="1" height="1"/><rect x="15" y="13" width="1" height="1"/><rect x="2" y="14" width="14" height="1"/></symbol><symbol id="i-pad" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="2" width="12" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="14" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="15" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/><rect x="15" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="9" y="6" width="2" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="10" y="9" width="2" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></symbol><symbol id="i-queue" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="12" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="11" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="4" height="1" opacity=".45"/><rect x="10" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="6" y="5" width="2" height="1" opacity=".45"/><rect x="9" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="6" y="8" width="2" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="6" y="10" width="2" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="4" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="4" y="12" width="6" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="1" y="13" width="1" height="1"/><rect x="3" y="13" width="8" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="1" y="14" width="12" height="1"/></symbol><symbol id="i-tag" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="4" y="1" width="10" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="3" y="4" width="4" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/></symbol><symbol id="i-disk" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="3" y="2" width="8" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="13" y="3" width="2" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="2" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="8" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="3" y="9" width="10" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="5" y="10" width="6" height="1" opacity=".45"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="6" height="1" opacity=".45"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="5" y="12" width="6" height="1" opacity=".45"/><rect x="12" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="0" y="13" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="5" y="13" width="6" height="1" opacity=".45"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="0" y="14" width="15" height="1"/></symbol><symbol id="i-cal" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="1" width="2" height="1"/><rect x="12" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="12" y="2" width="2" height="1"/><rect x="1" y="3" width="14" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="2" height="1" opacity=".45"/><rect x="6" y="7" width="2" height="1" opacity=".45"/><rect x="9" y="7" width="2" height="1" opacity=".45"/><rect x="14" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="3" y="9" width="2" height="1" opacity=".45"/><rect x="6" y="9" width="2" height="1" opacity=".45"/><rect x="9" y="9" width="2" height="1" opacity=".45"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="2" height="1" opacity=".45"/><rect x="6" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/></symbol><symbol id="i-pin" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="6" y="7" width="4" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="3" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/></symbol><symbol id="i-sun" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="5" y="4" width="6" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="2" y="6" width="3" height="1"/><rect x="11" y="6" width="3" height="1"/><rect x="0" y="7" width="2" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="12" y="7" width="1" height="1"/><rect x="14" y="7" width="2" height="1"/><rect x="0" y="8" width="2" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="2" height="1"/><rect x="2" y="9" width="3" height="1"/><rect x="11" y="9" width="3" height="1"/><rect x="4" y="10" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/><rect x="5" y="11" width="6" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="7" y="12" width="2" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="7" y="14" width="2" height="1"/></symbol><symbol id="i-moon" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="4" height="1"/><rect x="4" y="2" width="4" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="1" y="5" width="5" height="1"/><rect x="1" y="6" width="5" height="1"/><rect x="1" y="7" width="5" height="1"/><rect x="1" y="8" width="5" height="1"/><rect x="1" y="9" width="5" height="1"/><rect x="1" y="10" width="6" height="1"/><rect x="2" y="11" width="5" height="1"/><rect x="3" y="12" width="6" height="1"/><rect x="4" y="13" width="8" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-flame" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="6" y="2" width="4" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="1" height="1"/><rect x="5" y="4" width="2" height="1"/><rect x="7" y="4" width="2" height="1" opacity=".45"/><rect x="9" y="4" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="6" y="5" width="4" height="1" opacity=".45"/><rect x="10" y="5" width="2" height="1"/><rect x="3" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1" opacity=".45"/><rect x="9" y="6" width="2" height="1" opacity=".45"/><rect x="11" y="6" width="2" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="4" y="7" width="2" height="1" opacity=".45"/><rect x="10" y="7" width="2" height="1" opacity=".45"/><rect x="12" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="4" y="8" width="1" height="1" opacity=".45"/><rect x="11" y="8" width="1" height="1" opacity=".45"/><rect x="12" y="8" width="2" height="1"/><rect x="1" y="9" width="2" height="1"/><rect x="3" y="9" width="1" height="1" opacity=".45"/><rect x="7" y="9" width="2" height="1"/><rect x="12" y="9" width="1" height="1" opacity=".45"/><rect x="13" y="9" width="2" height="1"/><rect x="1" y="10" width="2" height="1"/><rect x="3" y="10" width="1" height="1" opacity=".45"/><rect x="6" y="10" width="4" height="1"/><rect x="12" y="10" width="1" height="1" opacity=".45"/><rect x="13" y="10" width="2" height="1"/><rect x="1" y="11" width="2" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="6" y="11" width="4" height="1"/><rect x="12" y="11" width="1" height="1" opacity=".45"/><rect x="13" y="11" width="2" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="4" y="12" width="1" height="1" opacity=".45"/><rect x="6" y="12" width="4" height="1"/><rect x="11" y="12" width="1" height="1" opacity=".45"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="10" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-star" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="6" y="3" width="4" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="0" y="5" width="16" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="2" y="7" width="12" height="1"/><rect x="3" y="8" width="10" height="1"/><rect x="4" y="9" width="8" height="1"/><rect x="3" y="10" width="10" height="1"/><rect x="2" y="11" width="4" height="1"/><rect x="10" y="11" width="4" height="1"/><rect x="1" y="12" width="4" height="1"/><rect x="11" y="12" width="4" height="1"/><rect x="1" y="13" width="3" height="1"/><rect x="12" y="13" width="3" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol></svg>
+<div class="scoreov" id="score-screen"></div>
+<div class="imminent" id="imminent"></div>
 <div class="hud" id="hud">
   <div class="hud-cell" onclick="switchView('log', document.querySelectorAll('.nav-item')[4])">
     <span class="hl">Score</span><b id="hud-score">—</b></div>
@@ -630,6 +723,8 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <svg class="ico16"><use href="#i-cal"/></svg> Chercher les prochaines dates</button>
     <button class="btn-save alt" onclick="calAddManual()">＋ Ajouter à la main</button>
   </div>
+  <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-bottom:16px"
+    onclick="calICS(-1)">Exporter toutes mes dates marquées (.ics)</button>
 
   <div class="seg" id="cal-filter" style="margin-bottom:16px">
     <button data-f="all" aria-pressed="true">Toutes</button>
@@ -643,7 +738,12 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 <div id="view-spots" class="view">
   <h2 class="view-title">Objets repérés</h2>
   <p class="view-sub">Ta liste pour la seconde passe. Les prix cèdent au remballage, vers 13 h.</p>
+  <div class="seg" id="spot-mode" style="margin-bottom:16px">
+    <button data-m="list" aria-pressed="true">Liste</button>
+    <button data-m="radar" aria-pressed="false"><svg class="ico16"><use href="#i-target"/></svg>Radar</button>
+  </div>
   <div id="spots-list"></div>
+  <div id="spots-radar" style="display:none"></div>
 </div>
 
 <div id="view-log" class="view">
@@ -653,8 +753,12 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <div id="log-stats"></div>
   <h3 class="sect">Tes achats</h3>
   <div id="log-list"></div>
-  <button class="btn-save" style="margin-top:16px" onclick="logExport()">
-    Envoyer le journal dans mon Drive</button>
+  <button class="btn-save" style="margin-top:18px" onclick="sortieFin()">
+    <svg class="ico16"><use href="#i-star"/></svg> Terminer la sortie</button>
+  <button class="btn-save alt2" onclick="logExport()">Envoyer le journal dans mon Drive</button>
+
+  <h3 class="sect">Sorties archivées</h3>
+  <div id="hist-list"></div>
   <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
 </div>
 
@@ -677,6 +781,18 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
     <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
+
+    <h3 class="sect">Sauvegarde</h3>
+    <div id="backup-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Journal, sorties archivées, cibles, calendrier et bases : tout est stocké dans ce navigateur.
+      Un nettoyage de cache Android l'effacerait sans prévenir.
+    </p>
+    <button class="btn-save" onclick="backupDrive()">
+      <svg class="ico16"><use href="#i-disk"/></svg> Sauvegarder dans mon Drive</button>
+    <button class="btn-save alt2" onclick="backupDownload()">Télécharger la sauvegarde</button>
+    <input type="file" id="restore-file" accept=".json" style="display:none" onchange="backupRestore(event)">
+    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()">Restaurer une sauvegarde</button>
 
     <h3 class="sect">Apparence</h3>
     <div class="seg" id="theme-seg">
@@ -890,9 +1006,10 @@ function vib() {
 
 // --- UI LOGIC ---
 function switchView(viewId, navEl) {
-  if(viewId === 'log') setTimeout(renderLog, 0);
+  if(viewId === 'log') setTimeout(() => { renderLog(); renderHist(); }, 0);
   if(viewId === 'spots') setTimeout(renderSpots, 0);
   if(viewId === 'cal') setTimeout(renderCal, 0);
+  paintImminent();
   if(viewId === 'offline') setTimeout(renderOfflineFull, 0);
   vib();
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -908,7 +1025,7 @@ function init() {
   const savedModel = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
   themeApply(themeGet());
-  collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull();
+  collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull(); paintImminent(); renderHist(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
@@ -956,6 +1073,16 @@ function init() {
   $('ask').addEventListener('click', () => { vib(); askAIText(); });
 
   $('q-base').addEventListener('input', () => renderOfflineFull());
+  document.querySelectorAll('#spot-mode button').forEach(b =>
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#spot-mode button').forEach(x => x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      SPOT_VUE = b.dataset.m;
+      $('spots-list').style.display  = SPOT_VUE === 'list' ? '' : 'none';
+      $('spots-radar').style.display = SPOT_VUE === 'radar' ? '' : 'none';
+      if(SPOT_VUE === 'radar') radarRefresh();
+    }));
+
   document.querySelectorAll('#cal-filter button').forEach(b =>
     b.addEventListener('click', () => {
       document.querySelectorAll('#cal-filter button').forEach(x => x.setAttribute('aria-pressed','false'));
@@ -1009,6 +1136,17 @@ function saveSettings() {
   try{ localStorage.setItem(GROUND_STORE, $('groundBox').checked ? "on" : "off"); }catch(e){}
   
   paintKeyState();
+}
+
+function backupState(){
+  const el = $('backup-state'); if(!el) return;
+  let t = 0; try{ t = parseInt(localStorage.getItem("insertcoin.lastbackup")||"0",10); }catch(e){}
+  const n = sortieRead().length, j = logRead().length, c = spotRead().length;
+  const jours = t ? Math.floor((Date.now()-t)/86400000) : null;
+  const alerte = (jours === null || jours > 14);
+  el.style.borderLeft = "3px solid " + (alerte ? "var(--stop)" : "var(--go)");
+  el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours · ${c} cible(s)<br>`
+    + (t ? `Dernière sauvegarde : il y a ${jours} jour(s)` : "<b>Jamais sauvegardé</b>");
 }
 
 function paintKeyState() {
@@ -2055,9 +2193,88 @@ function calAddManual(){
   calWrite(a); renderCal();
 }
 
+/* ══════ RAPPEL ══════
+   Une app web fermée ne peut rien déclencher : sans serveur, aucune
+   notification ne part. On confie donc le rappel à l'agenda du téléphone,
+   qui lui sonne même app fermée. Départ à 6h30, alerte la veille à 19h. */
+function calDates(x){
+  const debut = new Date(x.date + "T06:30:00");
+  const fin   = new Date(x.date + "T13:30:00");
+  const z = d => d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+  return {debut, fin, zd: z(debut), zf: z(fin)};
+}
+
+function calTitre(x){
+  return (x.nom || "Brocante") + (x.ville ? " — " + x.ville : "");
+}
+function calDesc(x){
+  const l = [];
+  if(x.km) l.push("Distance depuis Binche : " + x.km + " km");
+  if(x.exposants) l.push(x.exposants + " exposants");
+  if(x.horaires) l.push("Horaires : " + x.horaires);
+  if(x.note) l.push(x.note);
+  l.push("Sac : espèces en petites coupures, piles AA/AAA, sacs, chiffon.");
+  l.push("Ajouté par Insert Coin");
+  return l.join("\n");
+}
+
+/* Voie 1 : Google Agenda en un tap. Le rappel se règle une fois dans
+   les préférences de l'agenda et s'applique ensuite à tout. */
+function calGoogle(i){
+  const x = calRead()[i]; if(!x) return;
+  const d = calDates(x);
+  const u = "https://calendar.google.com/calendar/render?action=TEMPLATE"
+    + "&text=" + encodeURIComponent(calTitre(x))
+    + "&dates=" + d.zd + "/" + d.zf
+    + "&details=" + encodeURIComponent(calDesc(x))
+    + "&location=" + encodeURIComponent((x.ville || "") + (x.pays === "FR" ? ", France" : ", Belgique"));
+  window.open(u, "_blank");
+}
+
+/* Voie 2 : fichier .ics, avec l'alerte la veille à 19h déjà dedans.
+   Fonctionne avec n'importe quel agenda, y compris hors ligne. */
+function calICS(i){
+  const liste = i === -1 ? calRead().filter(x => x.go && calJours(x.date) !== null)
+                         : [calRead()[i]].filter(Boolean);
+  if(!liste.length){ alert("Aucune date marquée « j'y vais »."); return; }
+
+  const ev = liste.map((x, n) => {
+    const d = calDates(x);
+    /* Alerte la veille à 19h : le calcul se fait en heures avant le début. */
+    const veille = new Date(d.debut); veille.setDate(veille.getDate()-1); veille.setHours(19,0,0,0);
+    const mins = Math.round((d.debut - veille) / 60000);
+    return [
+      "BEGIN:VEVENT",
+      "UID:insertcoin-" + Date.now() + "-" + n + "@pixelpapa",
+      "DTSTAMP:" + d.zd,
+      "DTSTART:" + d.zd,
+      "DTEND:" + d.zf,
+      "SUMMARY:" + calTitre(x).replace(/[,;\\]/g, m => "\\" + m),
+      "LOCATION:" + ((x.ville||"") + (x.pays==="FR" ? "\\, France" : "\\, Belgique")),
+      "DESCRIPTION:" + calDesc(x).replace(/\n/g, "\\n").replace(/[,;]/g, m => "\\" + m),
+      "BEGIN:VALARM",
+      "TRIGGER:-PT" + mins + "M",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Brocante demain matin — prépare tes espèces et tes sacs",
+      "END:VALARM",
+      "END:VEVENT"
+    ].join("\r\n");
+  }).join("\r\n");
+
+  const ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Pixel Papa//Insert Coin//FR",
+               "CALSCALE:GREGORIAN","METHOD:PUBLISH", ev, "END:VCALENDAR"].join("\r\n");
+
+  const url = URL.createObjectURL(new Blob([ics], {type:"text/calendar;charset=utf-8"}));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = (i === -1 ? "InsertCoin_brocantes" : "brocante_" + (liste[0].date||"")) + ".ics";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
 function calGo(i){
   const a = calRead(); if(!a[i]) return;
-  a[i].go = !a[i].go; calWrite(a); renderCal(); vib();
+  a[i].go = !a[i].go; calWrite(a); renderCal(); paintImminent(); vib();
 }
 function calDel(i){ const a = calRead(); a.splice(i,1); calWrite(a); renderCal(); }
 
@@ -2069,6 +2286,29 @@ function calJours(d){
   if(j < 7) return "Dans " + j + " jours";
   if(j < 14) return "La semaine prochaine";
   return "Dans " + Math.round(j/7) + " semaines";
+}
+
+/* Bandeau d'imminence : visible dès l'ouverture de l'app, sur toutes les vues.
+   C'est le filet de sécurité quand le rappel d'agenda n'a pas été mis. */
+function calImminent(){
+  const auj = new Date(); auj.setHours(0,0,0,0);
+  return calRead().filter(x => x.go).map(x => {
+    const j = Math.round((new Date(x.date + "T12:00:00") - new Date().setHours(12,0,0,0)) / 86400000);
+    return {x, j};
+  }).filter(o => o.j === 0 || o.j === 1).sort((a,b) => a.j - b.j)[0] || null;
+}
+
+function paintImminent(){
+  const el = $('imminent'); if(!el) return;
+  const o = calImminent();
+  if(!o){ el.className = "imminent"; el.innerHTML = ""; return; }
+  const dem = o.j === 1;
+  el.className = "imminent on" + (dem ? " demain" : " aujourdhui");
+  el.innerHTML = `
+    <svg class="ico16"><use href="#i-${dem ? "cal" : "flame"}"/></svg>
+    <div class="im-t"><b>${dem ? "Demain" : "Aujourd'hui"} : ${esc(o.x.nom || "brocante")}</b>
+      <span>${esc(o.x.ville || "")}${o.x.km ? " · " + o.x.km + " km" : ""}${o.x.horaires ? " · " + esc(o.x.horaires) : ""}</span></div>
+    ${dem ? `<button onclick="switchView('guide', document.querySelectorAll('.nav-item')[5]);setTimeout(()=>document.getElementById('sac-ticks')?.scrollIntoView({behavior:'smooth'}),150)">Sac</button>` : ""}`;
 }
 
 function renderCal(){
@@ -2119,6 +2359,10 @@ function renderCal(){
               <svg class="ico16"><use href="#i-star"/></svg>${x.go ? "J'y vais" : "Marquer"}</button>
             <button class="li-x" onclick="calDel(${idx})">✕</button>
           </div>
+          ${x.go ? `<div class="cal-rem">
+            <button onclick="calGoogle(${idx})">＋ Google Agenda</button>
+            <button onclick="calICS(${idx})">Fichier .ics</button>
+          </div>` : ""}
         </div>
       </div>`;
   }).join('');
@@ -2339,14 +2583,57 @@ const SPOT_STORE = "insertcoin.spots";
 function spotRead(){ try { return JSON.parse(localStorage.getItem(SPOT_STORE) || "[]"); } catch(e){ return []; } }
 function spotWrite(a){ try { localStorage.setItem(SPOT_STORE, JSON.stringify(a)); } catch(e){} }
 
+/* ══════════ RADAR ══════════
+   Sur 580 emplacements, « stand 47, nappe bleue » ne suffit pas à retrouver
+   son chemin. On enregistre la position au moment du repérage. */
+let MA_POS = null;
+
+function geoNow(timeout){
+  return new Promise(res => {
+    if(!navigator.geolocation) return res(null);
+    navigator.geolocation.getCurrentPosition(
+      p => res({lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy}),
+      () => res(null),
+      {enableHighAccuracy: true, timeout: timeout || 8000, maximumAge: 30000}
+    );
+  });
+}
+
+/* Distance en mètres entre deux points (formule de haversine). */
+function geoDist(a, b){
+  const R = 6371000, rad = x => x * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
+  const h = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+/* Cap en degrés depuis le nord. */
+function geoCap(a, b){
+  const rad = x => x * Math.PI / 180, deg = x => x * 180 / Math.PI;
+  const dLon = rad(b.lon - a.lon);
+  const y = Math.sin(dLon) * Math.cos(rad(b.lat));
+  const x = Math.cos(rad(a.lat)) * Math.sin(rad(b.lat)) -
+            Math.sin(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.cos(dLon);
+  return (deg(Math.atan2(y, x)) + 360) % 360;
+}
+const CARDINAUX = ["N","NE","E","SE","S","SO","O","NO"];
+const capNom = d => CARDINAUX[Math.round(d / 45) % 8];
+
 function spotAdd(){
   if(!LAST) return;
   const stand = prompt("Où l'as-tu vu ? (numéro de stand, repère, couleur de la nappe…)", "");
   if(stand === null) return;
   const a = spotRead();
-  a.unshift({d: Date.now(), o: LAST.objet, s: stand.trim(),
-             dem: LAST.demande || 0, mx: LAST.prixMax || 0, r: LAST.revente || 0});
+  const e = {d: Date.now(), o: LAST.objet, s: stand.trim(),
+             dem: LAST.demande || 0, mx: LAST.prixMax || 0, r: LAST.revente || 0};
+  a.unshift(e);
   spotWrite(a); vib(); hudPaint();
+  /* La position arrive après coup : inutile de faire attendre devant le vendeur. */
+  geoNow(6000).then(pos => {
+    if(!pos) return;
+    const l = spotRead();
+    const t = l.find(x => x.d === e.d);
+    if(t){ t.lat = pos.lat; t.lon = pos.lon; spotWrite(l); if($('spots-list')) renderSpots(); }
+  });
   const b = document.querySelector('.act-spot');
   if(b){ b.classList.add("done"); b.innerHTML = "✓ Repéré"; }
 }
@@ -2362,6 +2649,92 @@ function spotBuy(i){
 }
 function spotClear(){
   if(confirm("Vider la liste des objets repérés ?")){ spotWrite([]); renderSpots(); hudPaint(); }
+}
+
+let SPOT_VUE = "list";
+
+async function radarRefresh(){
+  const el = $('spots-radar'); if(!el) return;
+  el.innerHTML = `<div class="loading"><div class="dots"><span>●</span><span>●</span><span>●</span></div>
+    <p>Recherche du signal GPS…</p></div>`;
+  MA_POS = await geoNow(10000);
+  renderRadar();
+}
+
+function renderRadar(){
+  const el = $('spots-radar'); if(!el) return;
+  const tous = spotRead();
+  const geo = tous.filter(x => x.lat && x.lon);
+
+  if(!MA_POS){
+    el.innerHTML = `<div class="empty-state">
+      <svg class="ico-big"><use href="#i-target"/></svg>
+      <b>Pas de position</b>
+      <p>Le GPS n'a rien renvoyé. Autorise la localisation et vérifie que tu es dehors.</p>
+      <button class="btn-save" style="margin-top:14px" onclick="radarRefresh()">Réessayer</button></div>`;
+    return;
+  }
+  if(!geo.length){
+    el.innerHTML = `<div class="empty-state">
+      <svg class="ico-big"><use href="#i-target"/></svg>
+      <b>Aucune cible localisée</b>
+      <p>Les cibles repérées à partir de maintenant enregistrent leur position.
+      Celles d'avant n'en ont pas.</p></div>`;
+    return;
+  }
+
+  const cibles = geo.map(x => ({
+    x, dist: geoDist(MA_POS, x), cap: geoCap(MA_POS, x)
+  })).sort((a,b) => a.dist - b.dist);
+
+  /* Échelle : la cible la plus lointaine touche le bord du dernier cercle. */
+  const maxD = Math.max(60, ...cibles.map(c => c.dist));
+  const R = 130, CX = 150, CY = 150;
+  const pts = cibles.map((c, i) => {
+    const r = (c.dist / maxD) * R;
+    const a = (c.cap - 90) * Math.PI / 180;
+    return {...c, px: CX + r * Math.cos(a), py: CY + r * Math.sin(a), i};
+  });
+
+  const cercles = [0.33, 0.66, 1].map(f =>
+    `<circle cx="${CX}" cy="${CY}" r="${(R*f).toFixed(0)}" fill="none"
+       stroke="var(--crt-dim)" stroke-width="1" opacity="${f===1?".9":".45"}"/>`).join("");
+
+  el.innerHTML = `
+    <div class="radar">
+      <svg viewBox="0 0 300 300" role="img" aria-label="Radar des cibles repérées">
+        <line x1="${CX}" y1="${CY-R-8}" x2="${CX}" y2="${CY+R+8}" stroke="var(--crt-dim)" stroke-width="1" opacity=".35"/>
+        <line x1="${CX-R-8}" y1="${CY}" x2="${CX+R+8}" y2="${CY}" stroke="var(--crt-dim)" stroke-width="1" opacity=".35"/>
+        ${cercles}
+        <text x="${CX}" y="${CY-R-13}" text-anchor="middle" class="r-n">N</text>
+        <text x="${CX+R+4}" y="${CY-R*0.66-4}" text-anchor="end" class="r-d">${Math.round(maxD)} m</text>
+        ${pts.map(pt => `
+          <g>
+            <line x1="${CX}" y1="${CY}" x2="${pt.px.toFixed(1)}" y2="${pt.py.toFixed(1)}"
+                  stroke="var(--gold)" stroke-width="1" opacity=".3"/>
+            <circle cx="${pt.px.toFixed(1)}" cy="${pt.py.toFixed(1)}" r="7" fill="var(--gold)"/>
+            <text x="${pt.px.toFixed(1)}" y="${(pt.py+3.5).toFixed(1)}" text-anchor="middle" class="r-i">${pt.i+1}</text>
+          </g>`).join("")}
+        <circle cx="${CX}" cy="${CY}" r="6" fill="var(--crt)"/>
+        <circle cx="${CX}" cy="${CY}" r="11" fill="none" stroke="var(--crt)" stroke-width="1.5" opacity=".5"/>
+      </svg>
+      <div class="radar-note">Nord en haut · tu es au centre${MA_POS.acc ? ` · précision ±${Math.round(MA_POS.acc)} m` : ""}</div>
+    </div>
+    ${pts.map(pt => `
+      <div class="rline">
+        <div class="rl-i">${pt.i+1}</div>
+        <div class="rl-c">
+          <b>${esc(pt.x.o || "—")}</b>
+          ${pt.x.s ? `<span>${esc(pt.x.s)}</span>` : ""}
+        </div>
+        <div class="rl-d">
+          <b>${pt.dist < 1000 ? Math.round(pt.dist) + " m" : (pt.dist/1000).toFixed(1) + " km"}</b>
+          <span>${capNom(pt.cap)}</span>
+        </div>
+      </div>`).join("")}
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:14px"
+      onclick="radarRefresh()">Actualiser ma position</button>
+    ${tous.length > geo.length ? `<p class="radar-warn">${tous.length-geo.length} cible(s) sans position enregistrée — visibles dans la liste.</p>` : ""}`;
 }
 
 function renderSpots(){
@@ -2525,6 +2898,183 @@ function renderLog(){
       <button class="li-x" onclick="logDel(${i})">✕</button>
     </div>`;
   }).join('');
+}
+
+/* ══════════ SORTIES ARCHIVÉES ══════════
+   Rien ne s'efface : terminer une sortie l'archive, elle reste consultable
+   et exportable. Le journal courant repart à zéro pour la suivante. */
+const SORTIE_STORE = "insertcoin.sorties";
+function sortieRead(){ try { return JSON.parse(localStorage.getItem(SORTIE_STORE) || "[]"); } catch(e){ return []; } }
+function sortieWrite(a){ try { localStorage.setItem(SORTIE_STORE, JSON.stringify(a)); return true; } catch(e){ alert("Mémoire saturée."); return false; } }
+
+function rang(dep, val){
+  if(!dep) return val > 0 ? "A" : "—";
+  const m = val / dep;
+  return m >= 4 ? "S" : m >= 3 ? "A" : m >= 2 ? "B" : m >= 1.3 ? "C" : "D";
+}
+const RANG_MOT = {S:"Sortie exceptionnelle", A:"Très belle sortie", B:"Bonne sortie",
+                  C:"Sortie correcte", D:"Tu as payé trop cher", "—":"Rien à mesurer"};
+
+function sortieFin(){
+  const achats = logRead();
+  if(!achats.length){ alert("Aucun achat enregistré : rien à archiver."); return; }
+  const lieu = prompt("Quelle brocante ? (laisse vide si tu ne veux pas la nommer)", "") || "";
+
+  const dep = achats.reduce((s,x)=>s+(x.p||0),0);
+  const val = achats.reduce((s,x)=>s+(x.r||0),0);
+  const best = achats.slice().sort((a,b)=>((b.r||0)-(b.p||0))-((a.r||0)-(a.p||0)))[0];
+  const st = negoStats();
+
+  const so = {
+    id: Date.now(), date: new Date().toISOString().slice(0,10), lieu,
+    achats, cibles: spotRead(),
+    dep, val, marge: val - dep, rang: rang(dep, val),
+    best: best ? {o: best.o, m: (best.r||0)-(best.p||0)} : null,
+    nego: st || null
+  };
+
+  const a = sortieRead(); a.unshift(so);
+  if(!sortieWrite(a)) return;
+
+  /* On vide le courant seulement une fois l'archive écrite. */
+  logWrite([]); spotWrite([]);
+  hudPaint(); renderLog(); renderSpots();
+  showScore(so);
+}
+
+function showScore(so){
+  const r = so.rang;
+  $('score-screen').className = "scoreov on";
+  $('score-screen').innerHTML = `
+    <div class="score">
+      <div class="sc-top">Sortie terminée</div>
+      <div class="sc-rang r${r}">${r}</div>
+      <div class="sc-mot">${RANG_MOT[r]}</div>
+      ${so.lieu ? `<div class="sc-lieu">${esc(so.lieu)} · ${new Date(so.id).toLocaleDateString('fr-BE')}</div>` : ""}
+      <div class="sc-grid">
+        <div><b>${so.dep.toFixed(0)}€</b><span>Dépensé</span></div>
+        <div><b>${so.val.toFixed(0)}€</b><span>Revente est.</span></div>
+        <div class="${so.marge>=0?'pos':'neg'}"><b>${so.marge>=0?'+':''}${so.marge.toFixed(0)}€</b><span>Marge</span></div>
+      </div>
+      <div class="sc-lines">
+        <div><span>Pièces achetées</span><b>${so.achats.length}</b></div>
+        ${so.best ? `<div><span>Meilleure prise</span><b>${esc(so.best.o||"—")} +${so.best.m.toFixed(0)}€</b></div>` : ""}
+        ${so.cibles.length ? `<div><span>Cibles repérées</span><b>${so.cibles.length}</b></div>` : ""}
+        ${so.nego ? `<div><span>Remise moyenne</span><b>${so.nego.remise}%</b></div>` : ""}
+      </div>
+      <button class="btn-save" onclick="scoreClose()">Continuer</button>
+      <button class="btn-save alt2" onclick="sortieExport(${so.id})">Exporter cette sortie</button>
+    </div>`;
+}
+function scoreClose(){ $('score-screen').className = "scoreov"; renderHist(); }
+
+function sortieDel(id){
+  if(!confirm("Supprimer définitivement cette sortie archivée ?")) return;
+  sortieWrite(sortieRead().filter(x => x.id !== id)); renderHist();
+}
+function sortieRevoir(id){
+  const so = sortieRead().find(x => x.id === id);
+  if(so) showScore(so);
+}
+
+function renderHist(){
+  const el = $('hist-list'); if(!el) return;
+  const a = sortieRead();
+  if(!a.length){
+    el.innerHTML = `<p class="statnote">Aucune sortie archivée. Le bouton « Terminer la sortie »
+      range ta matinée ici et remet le journal à zéro — rien n'est perdu.</p>`;
+    return;
+  }
+  const tot = a.reduce((s,x)=>s+(x.marge||0),0);
+  el.innerHTML = `<div class="hist-tot">Cumul de ${a.length} sortie${a.length>1?"s":""} :
+      <b class="${tot>=0?'pos':'neg'}">${tot>=0?'+':''}${tot.toFixed(0)}€</b></div>`
+    + a.map(x => `
+      <div class="hist">
+        <div class="h-r r${x.rang}">${x.rang}</div>
+        <div class="h-c">
+          <b>${esc(x.lieu || "Sortie")}</b>
+          <span>${new Date(x.id).toLocaleDateString('fr-BE')} · ${x.achats.length} pièces · ${x.dep.toFixed(0)}€ dépensés</span>
+        </div>
+        <div class="h-m ${x.marge>=0?'pos':'neg'}">${x.marge>=0?'+':''}${x.marge.toFixed(0)}€</div>
+        <div class="h-a">
+          <button onclick="sortieRevoir(${x.id})">Revoir</button>
+          <button onclick="sortieDel(${x.id})">✕</button>
+        </div>
+      </div>`).join("");
+}
+
+/* ══════════ SAUVEGARDE COMPLÈTE ══════════
+   Un nettoyage de cache Android efface le stockage du navigateur sans
+   prévenir. Ce fichier remet tout en place. */
+const CLES = ["insertcoin.log","insertcoin.spots","insertcoin.sorties","insertcoin.cal",
+              "insertcoin.collection","insertcoin.cred","insertcoin.theme",
+              "insertcoin.drive.files","insertcoin.drive.cid","insertcoin.gemini.model"];
+
+function backupData(){
+  const d = {app:"Insert Coin", version:"4.0", date:new Date().toISOString(), data:{}};
+  CLES.forEach(k => { const v = localStorage.getItem(k); if(v !== null) d.data[k] = v; });
+  return d;
+}
+
+function backupDownload(){
+  const j = JSON.stringify(backupData(), null, 1);
+  const url = URL.createObjectURL(new Blob([j], {type:"application/json"}));
+  const a = document.createElement("a");
+  a.href = url; a.download = "InsertCoin_sauvegarde_" + new Date().toISOString().slice(0,10) + ".json";
+  a.click(); setTimeout(()=>URL.revokeObjectURL(url), 2000);
+}
+
+async function backupDrive(){
+  const tok = await driveAuth(false) || await driveAuth(true);
+  if(!tok){ alert("Connecte d'abord ton Drive."); backupDownload(); return; }
+  try{
+    const nom = "InsertCoin_sauvegarde_" + new Date().toISOString().slice(0,10) + ".json";
+    const b = "----ic" + Date.now();
+    const body = `--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n`
+      + JSON.stringify({name:nom, mimeType:"application/json"})
+      + `\r\n--${b}\r\nContent-Type: application/json\r\n\r\n`
+      + JSON.stringify(backupData()) + `\r\n--${b}--`;
+    const r = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+      {method:"POST", headers:{Authorization:"Bearer "+tok, "Content-Type":"multipart/related; boundary="+b}, body});
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    try{ localStorage.setItem("insertcoin.lastbackup", String(Date.now())); }catch(e){}
+    alert("Sauvegarde envoyée dans ton Drive : " + nom);
+  }catch(err){
+    alert("Envoi impossible (" + err.message + "). Téléchargement local à la place.");
+    backupDownload();
+  }
+}
+
+function backupRestore(e){
+  const f = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const j = JSON.parse(r.result);
+      if(!j.data) throw new Error("format");
+      const n = Object.keys(j.data).length;
+      if(!confirm(`Restaurer ${n} élément(s) sauvegardés le ${new Date(j.date).toLocaleDateString('fr-BE')} ?\n\nCela remplacera tes données actuelles.`)) return;
+      Object.entries(j.data).forEach(([k,v]) => { try{ localStorage.setItem(k, v); }catch(e){} });
+      alert("Restauration terminée.");
+      location.reload();
+    }catch(err){ alert("Fichier de sauvegarde illisible."); }
+  };
+  r.readAsText(f);
+}
+
+function sortieExport(id){
+  const so = sortieRead().find(x => x.id === id); if(!so) return;
+  const l = [["Date","Lieu","Objet","Prix demandé","Prix payé","Revente estimée","Marge"]];
+  so.achats.slice().reverse().forEach(x => l.push([
+    new Date(x.d).toLocaleDateString('fr-BE'), so.lieu || "",
+    (x.o||"").replace(/"/g,"'"), x.dem||0, x.p||0, x.r||0, ((x.r||0)-(x.p||0)).toFixed(0)]));
+  const csv = "\uFEFF" + l.map(r => r.map(c => `"${c}"`).join(";")).join("\n");
+  const url = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+  const a = document.createElement("a");
+  a.href = url; a.download = "InsertCoin_" + so.date + ".csv"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
 }
 
 /* ══════════ EXPORT VERS DRIVE ══════════ */
