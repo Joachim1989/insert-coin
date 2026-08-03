@@ -1,7 +1,7 @@
 /* Insert Coin — mode hors ligne.
    Le barème local doit rester consultable sans réseau (les brocantes saturent la 4G).
    Les appels à l'API Gemini ne sont jamais mis en cache. */
-const CACHE = "insertcoin-v1";
+const CACHE = "insertcoin-v2";
 const FILES = [
   "./",
   "./index.html",
