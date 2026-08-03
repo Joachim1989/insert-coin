@@ -629,7 +629,7 @@ async function askAI(){
   ask+="Cherche sur le web avant de chiffrer.";
 
   const parts=[];
-  if(pic) parts.push({inline_data:{mime_type:pic.media,data:pic.data}});
+  if(pic) parts.push({inlineData:{mimeType:pic.media,data:pic.data}});
   parts.push({text:BRIEF+"\n\n"+ask});
 
   const body={
