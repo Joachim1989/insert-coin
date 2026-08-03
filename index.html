@@ -1268,7 +1268,10 @@ const getGround = () => { try { return localStorage.getItem(GROUND_STORE) !== "o
 
 /* Cache : une même recherche dans la matinée ne reconsomme pas de quota
    et répond instantanément devant le vendeur. */
-const CACHE_STORE = "insertcoin.cache";
+const CACHE_STORE = "insertcoin.cache2";
+/* L'ancien cache contient des entrées enregistrées sous une clé erronée :
+   on l'efface une bonne fois. */
+try{ localStorage.removeItem("insertcoin.cache"); }catch(e){}
 function cacheGet(k){
   try{
     const c = JSON.parse(localStorage.getItem(CACHE_STORE) || "{}");
@@ -1359,7 +1362,7 @@ function extractJSON(data){
   return JSON.parse(raw.slice(a, b + 1));
 }
 
-async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
+async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
 
@@ -1370,13 +1373,17 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
   }
 
   // Cache : uniquement sur les recherches texte (une photo est toujours unique)
-  const ckey = (!images.length && mode === 'single') ? norm(promptText).slice(0, 180) : null;
+  /* La clé DOIT venir de la recherche elle-même. Elle était calculée sur les
+     180 premiers caractères du prompt — c'est-à-dire le début du brief,
+     identique pour toutes les requêtes : chaque recherche retombait donc sur
+     le résultat de la précédente. */
+  const ckey = (!images.length && mode === 'single' && cacheKey) ? cacheKey : null;
   if(ckey){
     const hit = cacheGet(ckey);
     if(hit){ renderResult(hit, [], "Résultat déjà obtenu ce jour — aucun quota consommé."); return; }
   }
 
-  if(!navigator.onLine && !fromQueue){ queuePush(promptText, images, mode); return; }
+  if(!navigator.onLine && !fromQueue){ queuePush(promptText, images, mode, cacheKey); return; }
 
   aiEl.innerHTML = `<div class="loading">
     <div class="dots"><span>●</span><span>●</span><span>●</span></div>
@@ -1454,7 +1461,7 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
   }
 
   if(/Failed to fetch|NetworkError|network/i.test(lastErr) && !fromQueue){
-    if(queuePush(promptText, images, mode)) return;
+    if(queuePush(promptText, images, mode, cacheKey)) return;
   }
 
   stopChrono();
@@ -1491,7 +1498,7 @@ function askAIText() {
   const p = $('price').value.trim();
   let prompt = BRIEF_BASE + `\nObjet recherché : ${q}. `;
   if(p) prompt += `Le vendeur en demande ${p} EUR. Dis dans "note" si c'est ok à ce prix.`;
-  callGemini(prompt, [], 'single');
+  callGemini(prompt, [], 'single', false, "t:" + norm(q) + "|" + (p || ""));
 }
 
 // Fonctions Photos modifiées pour inclure le texte de la barre de recherche
@@ -2770,10 +2777,10 @@ const Q_STORE = "insertcoin.queue";
 function queueRead(){ try { return JSON.parse(localStorage.getItem(Q_STORE) || "[]"); } catch(e){ return []; } }
 function queueWrite(a){ try { localStorage.setItem(Q_STORE, JSON.stringify(a)); return true; } catch(e){ return false; } }
 
-function queuePush(promptText, images, mode){
+function queuePush(promptText, images, mode, cacheKey){
   const a = queueRead();
   if(a.length >= 6){ alert("File pleine (6 objets). Relance-la dès que tu captes."); return false; }
-  a.push({d: Date.now(), promptText, images, mode});
+  a.push({d: Date.now(), promptText, images, mode, cacheKey});
   if(!queueWrite(a)){ alert("Mémoire saturée : impossible de mettre en file."); return false; }
   hudPaint();
   $('ai-results').innerHTML = `<div class="queued">
@@ -2793,7 +2800,7 @@ async function queueRun(manuel){
   qBusy = true;
   const job = a.shift();
   queueWrite(a); hudPaint();
-  try{ await callGemini(job.promptText, job.images || [], job.mode || 'single', true); }
+  try{ await callGemini(job.promptText, job.images || [], job.mode || 'single', true, job.cacheKey); }
   finally{ qBusy = false; }
   if(queueRead().length) setTimeout(() => queueRun(false), 1200);
 }
