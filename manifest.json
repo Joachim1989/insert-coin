@@ -1,20 +1,19 @@
 {
-"name": "Insert Coin - Pixel Papa",
-"short_name": "Insert Coin",
-"description": "L'argus de terrain ultime pour les chineurs.",
-"start_url": "./index.html",
-"scope": "./",
-"display": "standalone",
-"orientation": "portrait",
-"background_color": "#0a0a0c",
-"theme_color": "#0a0a0c",
-"lang": "fr",
-"icons": [
-{
-"src": "pixel-papa-logo.png",
-"sizes": "192x192 512x512",
-"type": "image/png",
-"purpose": "any maskable"
-}
-]
+  "name": "Insert Coin - Pixel Papa",
+  "short_name": "Insert Coin",
+  "description": "L'argus de terrain ultime pour les chineurs.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
+  "lang": "fr",
+  "categories": ["shopping", "utilities"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-mask-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-mask-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }
