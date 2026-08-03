@@ -634,7 +634,30 @@ async function askAI(){
 
   const body={
     contents:[{role:"user",parts}],
-    generationConfig:{temperature:0.2,maxOutputTokens:1400, responseMimeType: "application/json"},
+    generationConfig:{
+      temperature:0.2,
+      maxOutputTokens:1400,
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: "OBJECT",
+        properties: {
+          objet: {type: "STRING"},
+          identification: {type: "STRING"},
+          categorie: {type: "STRING"},
+          verdict: {type: "STRING"},
+          prixMax: {type: "NUMBER"},
+          revente: {type: "NUMBER"},
+          fourchetteBas: {type: "NUMBER"},
+          fourchetteHaut: {type: "NUMBER"},
+          tirage: {type: "STRING"},
+          confiance: {type: "STRING"},
+          preuves: {type: "ARRAY", items: {type: "STRING"}},
+          verifs: {type: "ARRAY", items: {type: "STRING"}},
+          nego: {type: "STRING"},
+          note: {type: "STRING"}
+        }
+      }
+    },
     safetySettings: [
       { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
       { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
