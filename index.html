@@ -49,6 +49,163 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 .li-m{font-family:var(--cond);font-size:19px;font-weight:700;flex:0 0 auto}
 .li-m.pos{color:var(--go)} .li-m.neg{color:var(--stop)}
 .li-x{background:none;border:0;color:var(--text-muted);font-size:17px;cursor:pointer;padding:6px 2px;flex:0 0 auto}
+.dupbox{border-radius:12px;padding:14px 16px;margin-bottom:12px;border:2px solid}
+.dupbox.dup-sure{background:#4a1512;border-color:var(--stop)}
+.dupbox.dup-maybe{background:#3a2f10;border-color:var(--mid)}
+.dupbox .dt{font-family:var(--cond);font-size:19px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.dup-sure .dt{color:#ff8a80} .dup-maybe .dt{color:#ffcf6b}
+.dupbox .dd{font-size:15px;margin-top:5px;color:var(--text)}
+.dupbox .dn{font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:7px;line-height:1.5}
+.tick2{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
+.tick2 input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:2px}
+.tick2 i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text-muted)}
+.diagbox{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 12px;font-family:var(--mono);font-size:12px;line-height:1.6}
+
+/* ══════════════ SYSTÈME ARCADE ══════════════
+   L'or est réservé à l'argent et à la valeur.
+   Le cyan phosphore porte tout ce qui est machine : HUD, système, état.
+   Ça évite que le prix et l'interface se disputent le regard en plein soleil. */
+:root{ --crt:#4de1e8; --crt-dim:#1c6f74; }
+
+.ico{width:22px;height:22px;display:block;margin-bottom:3px}
+.ico16{width:15px;height:15px;flex:0 0 auto;vertical-align:-2px}
+.ico-big{width:52px;height:52px;color:var(--crt-dim);margin-bottom:12px}
+
+/* ── HUD : l'élément signature. Bandeau de machine, toujours visible. ── */
+.hud{
+  display:flex;gap:1px;background:var(--border);
+  border-top:1px solid #000;border-bottom:2px solid var(--crt-dim);
+  position:sticky;top:0;z-index:39;
+}
+.hud-cell{
+  flex:1;background:#07070a;padding:7px 4px 8px;text-align:center;cursor:pointer;
+  position:relative;overflow:hidden;
+}
+/* Lignes de balayage : la texture d'un écran cathodique, à peine perceptible. */
+.hud-cell::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.045) 0 1px,transparent 1px 3px);
+}
+.hud-cell .hl{
+  display:block;font-family:var(--mono);font-size:8px;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--crt-dim);
+}
+.hud-cell b{
+  display:block;font-family:var(--cond);font-size:19px;font-weight:700;
+  color:var(--crt);line-height:1.15;letter-spacing:.5px;
+}
+.hud-cell b.pos{color:var(--go)} .hud-cell b.neg{color:var(--stop)}
+.hud-cell.alert{background:#2a1608}
+.hud-cell.alert b{color:var(--mid);animation:blink 1.4s steps(2,end) infinite}
+@keyframes blink{50%{opacity:.35}}
+
+/* ── Navigation ── */
+.nav-item{position:relative}
+.badge{
+  position:absolute;top:6px;right:calc(50% - 20px);min-width:16px;height:16px;
+  background:var(--stop);color:#fff;border-radius:9px;font-style:normal;
+  font-family:var(--mono);font-size:10px;line-height:16px;text-align:center;
+  padding:0 4px;display:none;
+}
+
+/* ── Titres de section ── */
+.view-sub{
+  text-align:center;color:var(--text-muted);font-size:13px;margin:-8px 0 18px;line-height:1.5;
+}
+h3.sect{
+  font-family:var(--cond);font-size:15px;color:var(--crt);text-transform:uppercase;
+  letter-spacing:1.4px;margin:26px 0 12px;display:flex;align-items:baseline;gap:9px;
+  border-bottom:1px solid var(--border);padding-bottom:7px;
+}
+h3.sect i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:.5px}
+
+/* ── Contre-offre : trois chiffres, rien d'autre ── */
+.nego{background:#12121a;border-top:1px solid var(--border);padding:13px 14px 14px}
+.nego-h{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--crt-dim);margin-bottom:10px;display:flex;align-items:center;gap:7px;
+}
+.nego-g{display:flex;gap:7px}
+.ng{
+  flex:1;background:var(--bg);border:1px solid var(--border);border-radius:9px;
+  padding:11px 4px;text-align:center;
+}
+.ng b{display:block;font-family:var(--cond);font-size:25px;font-weight:700;color:var(--gold);line-height:1}
+.ng span{
+  display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--text-muted);margin-top:5px;
+}
+.ng.stop{border-color:var(--stop)} .ng.stop b{color:var(--stop)}
+.ng.good{border-color:var(--go)} .ng.good b{color:var(--go)}
+.nego-v .warn{color:var(--mid)}
+.nego-v{margin-top:10px;font-size:13px;line-height:1.45}
+.nego-v .ok{color:var(--go)} .nego-v .ko{color:var(--mid)}
+
+/* ── Boutons d'action : verbe simple, une seule chose chacun ── */
+.act-grid{display:flex;gap:7px;padding:12px 14px 14px}
+.act-grid input{
+  flex:0 0 88px;height:46px;border:1px solid var(--border);background:var(--bg);
+  color:var(--text);border-radius:9px;padding:0 11px;font-size:15px;font-family:var(--mono);
+}
+.act{
+  flex:1;height:46px;border:0;border-radius:9px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:var(--cond);font-size:14px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+}
+.act-buy{background:var(--gold);color:#14110f}
+.act-spot{background:var(--surface-light);color:var(--crt);border:1px solid var(--crt-dim)}
+.act.done{background:var(--go);color:#fff;border-color:var(--go)}
+.act:active{transform:scale(.97)}
+
+/* ── Cibles repérées ── */
+.spot{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--crt);
+  border-radius:10px;padding:13px 14px;margin-bottom:10px}
+.spot-h{display:flex;align-items:flex-start;gap:10px}
+.spot-h b{flex:1;font-size:15.5px;line-height:1.3}
+.spot-w{
+  display:flex;align-items:center;gap:7px;margin-top:7px;
+  font-family:var(--mono);font-size:12px;color:var(--crt);
+}
+.spot-p{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px}
+.spot-p span{font-family:var(--mono);font-size:11px;color:var(--text-muted)}
+.spot-p b{color:var(--gold);font-family:var(--cond);font-size:15px}
+.spot-buy{
+  width:100%;margin-top:11px;height:40px;border:1px solid var(--gold);border-radius:8px;
+  background:transparent;color:var(--gold);font-family:var(--cond);font-size:13px;
+  font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;
+}
+
+/* ── Statistiques de négociation ── */
+.stat{margin-bottom:16px}
+.stat-t{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.stat-t span{font-size:13.5px;color:var(--text)}
+.stat-t b{font-family:var(--cond);font-size:21px;color:var(--crt)}
+.bar{height:7px;background:var(--surface-light);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--crt-dim),var(--crt));border-radius:4px}
+.stat-a{font-family:var(--mono);font-size:10.5px;color:var(--text-muted);margin-top:5px;line-height:1.5}
+.statnote{
+  background:var(--surface);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+  padding:11px 13px;font-size:13.5px;line-height:1.5;margin-top:14px;
+}
+
+/* ── États vides et file d'attente : une invitation, pas une excuse ── */
+.empty-state,.queued{
+  text-align:center;padding:34px 22px;background:var(--surface);
+  border:1px dashed var(--border);border-radius:12px;
+}
+.empty-state b,.queued b{
+  display:block;font-family:var(--cond);font-size:18px;text-transform:uppercase;
+  letter-spacing:1px;color:var(--text);margin-bottom:8px;
+}
+.empty-state p,.queued p{font-size:13.5px;color:var(--text-muted);line-height:1.55;margin:0}
+.queued{border-color:var(--mid);border-style:solid;background:#241a08;margin-bottom:12px}
+.queued .ico-big{color:var(--mid)}
+
+@media (prefers-reduced-motion:reduce){
+  .hud-cell.alert b{animation:none}
+  .act:active{transform:none}
+}
+
 /* VIEWS */
 .view { display: none; padding: 15px; }
 .view.active { display: block; }
@@ -198,6 +355,18 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 </header>
 
 <!-- VIEW: LIVE SEARCH (Main) -->
+<svg id="sprite" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-scan" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="3" y="0" width="5" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="3" y="10" width="7" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="9" y="12" width="3" height="1"/><rect x="10" y="13" width="3" height="1"/><rect x="11" y="14" width="2" height="1"/></symbol><symbol id="i-crate" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="2" height="1" opacity=".45"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="2" height="1" opacity=".45"/><rect x="12" y="3" width="1" height="1" opacity=".45"/><rect x="14" y="3" width="1" height="1"/><rect x="1" y="4" width="14" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1" opacity=".45"/><rect x="5" y="5" width="2" height="1" opacity=".45"/><rect x="8" y="5" width="2" height="1" opacity=".45"/><rect x="11" y="5" width="2" height="1" opacity=".45"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="14" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="3" y="8" width="2" height="1" opacity=".45"/><rect x="6" y="8" width="2" height="1" opacity=".45"/><rect x="9" y="8" width="2" height="1" opacity=".45"/><rect x="12" y="8" width="1" height="1" opacity=".45"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="14" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="5" y="11" width="2" height="1" opacity=".45"/><rect x="8" y="11" width="2" height="1" opacity=".45"/><rect x="11" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol><symbol id="i-target" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="7" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="6" y="11" width="4" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="13" y="12" width="1" height="1"/><rect x="3" y="13" width="2" height="1"/><rect x="11" y="13" width="2" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-cash" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="8" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="6" y="4" width="2" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="3" y="8" width="8" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="0" y="10" width="14" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="2" y="12" width="14" height="1"/><rect x="2" y="13" width="1" height="1"/><rect x="15" y="13" width="1" height="1"/><rect x="2" y="14" width="14" height="1"/></symbol><symbol id="i-pad" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="2" width="12" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="14" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="15" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/><rect x="15" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="9" y="6" width="2" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="10" y="9" width="2" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></symbol><symbol id="i-queue" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="12" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="11" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="4" height="1" opacity=".45"/><rect x="10" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="6" y="5" width="2" height="1" opacity=".45"/><rect x="9" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="6" y="8" width="2" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="6" y="10" width="2" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="4" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="4" y="12" width="6" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="1" y="13" width="1" height="1"/><rect x="3" y="13" width="8" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="1" y="14" width="12" height="1"/></symbol><symbol id="i-tag" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="4" y="1" width="10" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="3" y="4" width="4" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/></symbol><symbol id="i-disk" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="3" y="2" width="8" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="13" y="3" width="2" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="2" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="8" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="3" y="9" width="10" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="5" y="10" width="6" height="1" opacity=".45"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="6" height="1" opacity=".45"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="5" y="12" width="6" height="1" opacity=".45"/><rect x="12" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="0" y="13" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="5" y="13" width="6" height="1" opacity=".45"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="0" y="14" width="15" height="1"/></symbol></svg>
+<div class="hud" id="hud">
+  <div class="hud-cell" onclick="switchView('log', document.querySelectorAll('.nav-item')[3])">
+    <span class="hl">Score</span><b id="hud-score">—</b></div>
+  <div class="hud-cell" onclick="switchView('spots', document.querySelectorAll('.nav-item')[2])">
+    <span class="hl">Cibles</span><b id="hud-spots">0</b></div>
+  <div class="hud-cell">
+    <span class="hl">Crédits</span><b id="hud-cred">0</b></div>
+  <div class="hud-cell" id="hud-q-cell" onclick="queueRun(true)">
+    <span class="hl">En file</span><b id="hud-queue">0</b></div>
+</div>
+
 <div id="view-live" class="view active">
   <h2 class="view-title">Recherche en direct 🎯</h2>
   
@@ -276,10 +445,20 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 </div>
 
 <!-- VIEW: GUIDE / PROFIL -->
+<div id="view-spots" class="view">
+  <h2 class="view-title">Objets repérés</h2>
+  <p class="view-sub">Ta liste pour la seconde passe. Les prix cèdent au remballage, vers 13 h.</p>
+  <div id="spots-list"></div>
+</div>
+
 <div id="view-log" class="view">
   <h2 class="view-title">Journal de chasse</h2>
   <div id="log-sum" class="logsum"></div>
+  <div id="log-stats"></div>
+  <h3 class="sect">Tes achats</h3>
   <div id="log-list"></div>
+  <button class="btn-save" style="margin-top:16px" onclick="logExport()">
+    Envoyer le journal dans mon Drive</button>
   <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
 </div>
 
@@ -302,6 +481,27 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
     <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
+
+    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px">Mes bases Google Drive</h3>
+    <div id="coll-state" class="diagbox"></div>
+
+    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px">
+      Identifiant client OAuth (Google Cloud Console). À coller une seule fois.
+    </p>
+    <input id="drive-cid" type="text" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"
+      style="width:100%;height:46px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:0 12px;font-family:var(--mono);font-size:12px">
+
+    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()">Connecter mon Drive</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()">Choisir mes fichiers</button>
+    <div id="drive-files"></div>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)">Synchroniser maintenant</button>
+    <button class="btn-save" style="background:transparent;color:var(--stop);border:1px solid var(--stop);margin-top:9px"
+      onclick="collClear()">Oublier mes bases</button>
+
+    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6">
+      La synchronisation se relance toute seule à l'ouverture de l'app quand tu as du réseau.
+      Sur le terrain, la comparaison se fait en local : elle marche sans connexion.
+    </p>
     <div id="keyState" class="diag" style="display:none;"></div>
   </div>
 
@@ -328,22 +528,26 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 2.1
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 3.0 « Arcade »
   </p>
 </div>
 
 <nav>
   <div class="nav-item active" onclick="switchView('live', this)">
-    <i>🎯</i><span>Live Scan</span>
+    <svg class="ico"><use href="#i-scan"/></svg><span>Scan</span>
   </div>
   <div class="nav-item" onclick="switchView('offline', this)">
-    <i>🎒</i><span>Base Complète</span>
+    <svg class="ico"><use href="#i-crate"/></svg><span>Base</span>
+  </div>
+  <div class="nav-item" onclick="switchView('spots', this)">
+    <svg class="ico"><use href="#i-target"/></svg><span>Repérés</span>
+    <i class="badge" id="bdg-spots"></i>
   </div>
   <div class="nav-item" onclick="switchView('log', this)">
-    <i>💰</i><span>Journal</span>
+    <svg class="ico"><use href="#i-cash"/></svg><span>Journal</span>
   </div>
   <div class="nav-item" onclick="switchView('guide', this)">
-    <i>🧔🏼‍♂️</i><span>Guide / Clé</span>
+    <svg class="ico"><use href="#i-pad"/></svg><span>Réglages</span>
   </div>
 </nav>
 
@@ -410,6 +614,7 @@ function vib() {
 // --- UI LOGIC ---
 function switchView(viewId, navEl) {
   if(viewId === 'log') setTimeout(renderLog, 0);
+  if(viewId === 'spots') setTimeout(renderSpots, 0);
   vib();
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + viewId).classList.add('active');
@@ -423,6 +628,12 @@ function init() {
   $('api-key').value = localStorage.getItem(KEY_STORE) || "";
   const savedModel = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
+  collPaint(); hudPaint(); renderLog(); renderSpots();
+  if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
+  if(navigator.onLine && driveFiles().length){
+    const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
+    if(Date.now() - last > 3600000) setTimeout(() => driveSync(false), 1500);
+  }
   $('api-model').value = savedModel;
   paintKeyState();
   
@@ -691,12 +902,12 @@ function extractJSON(data){
   return JSON.parse(raw.slice(a, b + 1));
 }
 
-async function callGemini(promptText, images = [], mode = 'single') {
+async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
 
   if(!key) {
-    switchView('guide', document.querySelectorAll('.nav-item')[3]);
+    switchView('guide', document.querySelectorAll('.nav-item')[4]);
     setTimeout(()=> alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
     return;
   }
@@ -708,6 +919,8 @@ async function callGemini(promptText, images = [], mode = 'single') {
     if(hit){ renderResult(hit, [], "Résultat déjà obtenu ce jour — aucun quota consommé."); return; }
   }
 
+  if(!navigator.onLine && !fromQueue){ queuePush(promptText, images, mode); return; }
+
   aiEl.innerHTML = `<div class="loading">
     <div class="dots"><span>●</span><span>●</span><span>●</span></div>
     <p>${images.length ? "Analyse visuelle & " : ""}Recherche de la cote réelle...</p>
@@ -715,9 +928,18 @@ async function callGemini(promptText, images = [], mode = 'single') {
   $('photo-queue').classList.remove('active');
   window.scrollTo({top:0, behavior:'smooth'});
 
+  /* Seules les entrées proches de la recherche sont transmises : on donne le
+     contexte utile sans envoyer 400 lignes à chaque requête. */
+  let ctx = "";
+  if(!images.length){
+    const m = collMatch(promptText);
+    if(m) ctx = `\n\nCONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collection. `
+              + `Signale-le dans "note" et dis si une autre édition vaut quand même l'achat.`;
+  }
+
   const parts = [];
   images.forEach(img => parts.push({inlineData:{mimeType: img.media, data: img.data}}));
-  parts.push({text: promptText});
+  parts.push({text: promptText + ctx});
 
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
@@ -743,6 +965,7 @@ async function callGemini(promptText, images = [], mode = 'single') {
         throw new Error(lastErr);
       }
 
+      credBump();
       const j = extractJSON(await res.json());
       let avis = null;
       if(!at.ground){
@@ -756,6 +979,10 @@ async function callGemini(promptText, images = [], mode = 'single') {
       return;
 
     }catch(err){ lastErr = String(err.message || err); }
+  }
+
+  if(/Failed to fetch|NetworkError|network/i.test(lastErr) && !fromQueue){
+    if(queuePush(promptText, images, mode)) return;
   }
 
   let titre = "Échec de l'analyse.", aide = "Vérifie ta connexion et réessaie.";
@@ -784,6 +1011,9 @@ function esc(s) {
 // Fonction pour les recherches 100% texte
 function askAIText() {
   const q = $('q').value.trim();
+  /* Contrôle local instantané : gratuit, hors ligne, avant toute requête. */
+  const dup = collBanner(q);
+  if(dup) $('ai-results').innerHTML = dup;
   if(!q) return;
   const p = $('price').value.trim();
   let prompt = BRIEF_BASE + `\nObjet recherché : ${q}. `;
@@ -849,7 +1079,9 @@ function renderResult(j, images, avis) {
     imgHtml = `<div class="aithumb-container">` + images.map(img => `<img src="${img.url}" class="aithumb">`).join('') + `</div>`;
   }
 
-  $('ai-results').innerHTML = `
+  const dupHtml = collBanner((j.objet||"") + " " + (j.identification||""));
+
+  $('ai-results').innerHTML = dupHtml + `
     <div class="aicard">
       ${imgHtml}
       <div class="aihead ${v}">
@@ -869,13 +1101,20 @@ function renderResult(j, images, avis) {
         ${j.nego ? `<h4>Ce que tu dis</h4><div class="saywrap">« ${esc(j.nego)} »</div>` : ''}
         ${j.note ? `<div class="aimeta">${esc(j.note)}</div>` : ''}
       </div>
-      <div class="log-row">
+      <div id="nego-pad"></div>
+      <div class="act-grid">
         <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
-        <button class="log-btn" onclick="logFind()">＋ Journal</button>
+        <button class="act act-buy" onclick="logFind()">
+          <svg class="ico16"><use href="#i-cash"/></svg>Acheté</button>
+        <button class="act act-spot" onclick="spotAdd()">
+          <svg class="ico16"><use href="#i-target"/></svg>Repérer</button>
       </div>
       <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
     </div>`;
-  LAST = {objet:j.objet, revente:Number(j.revente)||Number(j.fourchetteBas)||0, prixMax:Number(j.prixMax)||0};
+  LAST = {objet:j.objet, revente:Number(j.revente)||Number(j.fourchetteBas)||0,
+          prixMax:Number(j.prixMax)||0, demande:parseFloat($('price').value||"0")||0};
+  const np = $('nego-pad');
+  if(np) np.innerHTML = negoPad(LAST.demande, LAST.prixMax);
 }
 
 function renderStandResult(j, image, avis) {
@@ -912,6 +1151,480 @@ function renderStandResult(j, image, avis) {
     </div>`;
 }
 
+/* ---------- COLLECTION : ANTI-DOUBLON ---------- */
+const COLL_STORE = "insertcoin.collection";
+
+/* Mots à ignorer : ils créent de fausses correspondances entre disques
+   qui n'ont rien à voir (« les », « the », « vinyle »...). */
+const STOP = new Set(["le","la","les","l","de","du","des","un","une","d","et","a","au","aux",
+  "the","of","and","in","on","to","for","my","me","you","is","it",
+  "vinyle","vinyl","lp","33t","45t","33","45","tours","album","maxi","ep","ost","disque"]);
+
+function collNorm(str){
+  return String(str||"")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\([^)]*\)/g," ")          // (remastered), (1986)...
+    .replace(/\[[^\]]*\]/g," ")
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
+}
+function collTokens(str){
+  return collNorm(str).split(" ").filter(w => w.length > 1 && !STOP.has(w));
+}
+
+function collRead(){ try { return JSON.parse(localStorage.getItem(COLL_STORE) || "[]"); } catch(e){ return []; } }
+function collWrite(a){
+  try { localStorage.setItem(COLL_STORE, JSON.stringify(a)); return true; }
+  catch(e){ alert("Mémoire du téléphone saturée. Réduis la liste."); return false; }
+}
+
+/* Coefficient de Dice sur les jetons : tolérant aux fautes d'ordre,
+   aux accents et aux mots en trop, strict sur le fond. */
+function collScore(qt, et){
+  if(!qt.length || !et.length) return 0;
+  const q = new Set(qt);
+  let inter = 0;
+  et.forEach(w => { if(q.has(w)) inter++; });
+  return (2 * inter) / (qt.length + et.length);
+}
+
+function collMatch(query){
+  const coll = collRead();
+  if(!coll.length) return null;
+  const qt = collTokens(query);
+  if(qt.length < 2) return null;
+  const qs = new Set(qt);
+
+  let best = null;
+  for(const e of coll){
+    const at = collTokens(e.a || "");
+    const tt = collTokens(e.t || "");
+
+    /* Le titre doit apparaître, sinon « Alain Souchon Rame » déclencherait
+       une alerte sur « Alain Souchon — Jamais content ». */
+    let tHit = 0; tt.forEach(w => { if(qs.has(w)) tHit++; });
+    if(tt.length && !tHit) continue;
+
+    const aSc = at.length ? collScore(qt, at) : 0;
+    const tSc = tt.length ? collScore(qt, tt) : 0;
+    const sc  = tt.length ? (0.35 * aSc + 0.65 * tSc) : aSc;
+    const couvert = tt.length ? (tHit / tt.length) : 0;
+
+    if(!best || sc > best.sc) best = {sc, e, couvert, aSc};
+  }
+  if(!best || best.sc < 0.40) return null;
+
+  /* Certain = le titre est entièrement retrouvé ET l'artiste concorde. */
+  best.sur = best.couvert >= 0.99 && best.aSc >= 0.4;
+  return best;
+}
+
+function collBanner(query){
+  const m = collMatch(query);
+  if(!m) return "";
+  const cls = m.sur ? "dup-sure" : "dup-maybe";
+  const quoi = m.e.k === "jeux" ? "CE JEU" : "CE DISQUE";
+  const titre = m.sur ? ("TU AS DÉJÀ " + quoi) : "PEUT-ÊTRE UN DOUBLON";
+  return `<div class="dupbox ${cls}">
+    <div class="dt">${titre}</div>
+    <div class="dd">${esc(m.e.a || "")} — ${esc(m.e.t || "")}</div>
+    ${m.sur ? "" : `<div class="dn">Correspondance partielle : vérifie l'édition avant de renoncer.</div>`}
+  </div>`;
+}
+
+/* ---------- GOOGLE DRIVE ---------- */
+const CID_STORE   = "insertcoin.drive.cid";
+const FILES_STORE = "insertcoin.drive.files";   // [{id,name,mime,modified,kind}]
+const TOK_STORE   = "insertcoin.drive.tok";     // {t, exp}
+const SYNC_STORE  = "insertcoin.drive.sync";    // dernière synchro
+
+let tokenClient = null;
+
+function driveCid(){ try { return localStorage.getItem(CID_STORE) || ""; } catch(e){ return ""; } }
+function driveFiles(){ try { return JSON.parse(localStorage.getItem(FILES_STORE) || "[]"); } catch(e){ return []; } }
+function driveToken(){
+  try{
+    const t = JSON.parse(localStorage.getItem(TOK_STORE) || "null");
+    if(t && t.exp > Date.now() + 30000) return t.t;
+  }catch(e){}
+  return null;
+}
+
+function loadGIS(){
+  return new Promise((ok, ko) => {
+    if(window.google && google.accounts && google.accounts.oauth2) return ok();
+    const sc = document.createElement("script");
+    sc.src = "https://accounts.google.com/gsi/client";
+    sc.onload = ok; sc.onerror = () => ko(new Error("Chargement Google impossible"));
+    document.head.appendChild(sc);
+  });
+}
+
+async function driveAuth(interactive){
+  const cid = ($('drive-cid') ? $('drive-cid').value.trim() : "") || driveCid();
+  if(!cid){ alert("Colle d'abord ton identifiant client OAuth."); return null; }
+  try{ localStorage.setItem(CID_STORE, cid); }catch(e){}
+
+  const cached = driveToken();
+  if(cached && !interactive) return cached;
+
+  await loadGIS();
+  return new Promise(resolve => {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: cid,
+      scope: "https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file",
+      callback: (resp) => {
+        if(resp && resp.access_token){
+          try{
+            localStorage.setItem(TOK_STORE, JSON.stringify({
+              t: resp.access_token,
+              exp: Date.now() + ((resp.expires_in || 3600) * 1000)
+            }));
+          }catch(e){}
+          resolve(resp.access_token);
+        } else resolve(null);
+      }
+    });
+    tokenClient.requestAccessToken({prompt: cached ? "" : "consent"});
+  });
+}
+
+async function driveConnect(){
+  const t = await driveAuth(true);
+  if(!t){ alert("Connexion refusée ou annulée."); return; }
+  alert("Drive connecté. Appuie sur « Choisir mes fichiers ».");
+  collPaint();
+}
+
+/* Recherche les tableurs plausibles plutôt que d'imposer un nom de fichier. */
+async function drivePick(){
+  const tok = await driveAuth(false) || await driveAuth(true);
+  if(!tok) return;
+  const el = $('drive-files');
+  el.innerHTML = '<div class="diagbox" style="margin-top:10px">Recherche dans ton Drive…</div>';
+
+  const q = "(mimeType='application/vnd.google-apps.spreadsheet' or "
+          + "mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or "
+          + "mimeType='text/csv') and trashed=false";
+  try{
+    const r = await fetch("https://www.googleapis.com/drive/v3/files?pageSize=100&orderBy=modifiedTime desc"
+      + "&fields=files(id,name,mimeType,modifiedTime)&q=" + encodeURIComponent(q),
+      {headers:{Authorization:"Bearer " + tok}});
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    const list = (await r.json()).files || [];
+    if(!list.length){ el.innerHTML = '<div class="diagbox" style="margin-top:10px">Aucun tableur trouvé.</div>'; return; }
+
+    const sel = driveFiles().map(f => f.id);
+    el.innerHTML = '<p style="font-size:13px;color:var(--text-muted);margin:12px 0 6px">Coche tes bases (vinyles, jeux vidéo…) :</p>'
+      + list.map(f => `
+        <label class="tick2">
+          <input type="checkbox" value="${f.id}" data-name="${esc(f.name)}" data-mime="${f.mimeType}" ${sel.includes(f.id)?"checked":""}>
+          <span><b>${esc(f.name)}</b><br><i>modifié le ${new Date(f.modifiedTime).toLocaleDateString('fr-BE')}</i></span>
+        </label>`).join('')
+      + '<button class="btn-save" style="margin-top:10px" onclick="driveSaveSel()">Valider et synchroniser</button>';
+  }catch(err){
+    el.innerHTML = `<div class="diagbox" style="margin-top:10px;border-left:3px solid var(--stop)">Lecture impossible : ${esc(err.message)}</div>`;
+  }
+}
+
+function driveSaveSel(){
+  const chosen = [...document.querySelectorAll('#drive-files input:checked')].map(c => ({
+    id: c.value, name: c.dataset.name, mime: c.dataset.mime,
+    kind: /jeu|game|console|jv/i.test(c.dataset.name) ? "jeux" : "vinyles"
+  }));
+  if(!chosen.length){ alert("Coche au moins un fichier."); return; }
+  try{ localStorage.setItem(FILES_STORE, JSON.stringify(chosen)); }catch(e){}
+  driveSync(true);
+}
+
+/* Lit une ligne quelle que soit la position des colonnes : on cherche des
+   en-têtes connus, et à défaut on prend les deux premières cellules pleines. */
+function rowsFromAOA(aoa, kind){
+  if(!aoa.length) return [];
+  const head = (aoa[0] || []).map(x => String(x||"").toLowerCase());
+  const find = (...ks) => head.findIndex(h => ks.some(k => h.includes(k)));
+  let ia = find("artiste","artist","groupe","auteur","editeur","éditeur","console","systeme","système");
+  let it = find("titre","title","album","nom","jeu","game");
+  const start = (ia >= 0 || it >= 0) ? 1 : 0;
+
+  const out = [];
+  for(let r = start; r < aoa.length; r++){
+    const row = (aoa[r] || []).map(x => String(x||"").trim());
+    let a = "", t = "";
+    if(ia >= 0 || it >= 0){ a = row[ia] || ""; t = row[it] || ""; }
+    if(!a && !t){ const nz = row.filter(Boolean); a = nz[0] || ""; t = nz[1] || ""; }
+    if(a || t) out.push({a, t, k: kind});
+  }
+  return out;
+}
+
+function csvToAOA(txt){
+  const rows = []; let cur = [], val = "", q = false;
+  for(let i = 0; i < txt.length; i++){
+    const c = txt[i];
+    if(q){
+      if(c === '"' && txt[i+1] === '"'){ val += '"'; i++; }
+      else if(c === '"') q = false;
+      else val += c;
+    }else{
+      if(c === '"') q = true;
+      else if(c === ',' || c === ';' || c === '\t'){ cur.push(val); val = ""; }
+      else if(c === '\n'){ cur.push(val); rows.push(cur); cur = []; val = ""; }
+      else if(c !== '\r') val += c;
+    }
+  }
+  if(val || cur.length){ cur.push(val); rows.push(cur); }
+  return rows;
+}
+
+async function driveSync(manuel){
+  const files = driveFiles();
+  if(!files.length){ if(manuel) alert("Choisis d'abord tes fichiers."); return; }
+  if(!navigator.onLine){ if(manuel) alert("Pas de réseau. Les bases déjà chargées restent utilisables."); return; }
+
+  const tok = await driveAuth(false) || (manuel ? await driveAuth(true) : null);
+  if(!tok){ if(manuel) alert("Connexion Drive expirée. Appuie sur « Connecter mon Drive »."); return; }
+
+  const el = $('coll-state');
+  if(el) el.innerHTML = "Synchronisation en cours…";
+
+  const all = [];
+  for(const f of files){
+    try{
+      let aoa = [];
+      if(f.mime === "application/vnd.google-apps.spreadsheet"){
+        const r = await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=text/csv`,
+          {headers:{Authorization:"Bearer " + tok}});
+        if(!r.ok) throw new Error("HTTP " + r.status);
+        aoa = csvToAOA(await r.text());
+      }else if(f.mime === "text/csv"){
+        const r = await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
+          {headers:{Authorization:"Bearer " + tok}});
+        if(!r.ok) throw new Error("HTTP " + r.status);
+        aoa = csvToAOA(await r.text());
+      }else{
+        if(!window.XLSX){
+          await new Promise((ok, ko) => {
+            const sc = document.createElement("script");
+            sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+            sc.onload = ok; sc.onerror = ko; document.head.appendChild(sc);
+          });
+        }
+        const r = await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
+          {headers:{Authorization:"Bearer " + tok}});
+        if(!r.ok) throw new Error("HTTP " + r.status);
+        const wb = XLSX.read(await r.arrayBuffer(), {type:"array"});
+        wb.SheetNames.forEach(sn => {
+          if(/synth/i.test(sn)) return;                      // on saute l'onglet Synthèse
+          aoa = aoa.concat(XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:""}));
+        });
+      }
+      all.push(...rowsFromAOA(aoa, f.kind));
+    }catch(err){ console.warn("Synchro échouée :", f.name, err); }
+  }
+
+  // dédoublonnage
+  const seen = new Set(), net = [];
+  all.forEach(r => {
+    const k = collNorm((r.a||"") + " " + (r.t||""));
+    if(k && k.length > 2 && !seen.has(k)){ seen.add(k); net.push(r); }
+  });
+
+  if(net.length){
+    collWrite(net);
+    try{ localStorage.setItem(SYNC_STORE, String(Date.now())); }catch(e){}
+  }
+  collPaint();
+  if(manuel) alert(net.length + " entrées synchronisées depuis Drive.");
+}
+
+function collClear(){
+  if(confirm("Effacer toute la collection enregistrée ?")){ collWrite([]); collPaint(); }
+}
+
+function collPaint(){
+  const el = $('coll-state'); if(!el) return;
+  const c = collRead();
+  const ci = $('drive-cid'); if(ci && !ci.value) ci.value = driveCid();
+
+  let quand = "";
+  try{
+    const t = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
+    if(t) quand = "Dernière synchro : " + new Date(t).toLocaleString('fr-BE', {dateStyle:'short', timeStyle:'short'});
+  }catch(e){}
+
+  if(!c.length){
+    el.innerHTML = "Aucune base chargée.<br>Connecte ton Drive et choisis tes fichiers pour activer l'alerte doublon.";
+    return;
+  }
+  const nv = c.filter(x => x.k !== "jeux").length;
+  const nj = c.filter(x => x.k === "jeux").length;
+  el.innerHTML = `<b style="color:var(--gold)">${c.length} entrées en mémoire.</b><br>`
+    + (nv ? `${nv} vinyles` : "") + (nv && nj ? " · " : "") + (nj ? `${nj} jeux` : "") + "<br>"
+    + `<span style="opacity:.7">${quand}</span>`;
+}
+
+/* ══════════ HUD ══════════ */
+function hudPaint(){
+  const log = logRead();
+  const marge = log.reduce((s,x)=> s + ((x.r||0) - (x.p||0)), 0);
+  const sc = $('hud-score');
+  if(sc){
+    sc.textContent = (marge >= 0 ? "+" : "") + marge.toFixed(0) + "€";
+    sc.className = marge > 0 ? "pos" : marge < 0 ? "neg" : "";
+  }
+  const sp = spotRead().length;
+  if($('hud-spots')) $('hud-spots').textContent = sp;
+  const bd = $('bdg-spots');
+  if(bd){ bd.textContent = sp || ""; bd.style.display = sp ? "block" : "none"; }
+
+  if($('hud-cred')) $('hud-cred').textContent = credCount();
+
+  const q = queueRead().length;
+  if($('hud-queue')) $('hud-queue').textContent = q;
+  const qc = $('hud-q-cell');
+  if(qc) qc.classList.toggle("alert", q > 0);
+}
+
+/* Compteur de requêtes du jour : savoir où on en est du quota gratuit. */
+const CRED_STORE = "insertcoin.cred";
+function credCount(){
+  try{
+    const c = JSON.parse(localStorage.getItem(CRED_STORE) || "{}");
+    return (c.d === new Date().toDateString()) ? (c.n || 0) : 0;
+  }catch(e){ return 0; }
+}
+function credBump(){
+  try{
+    const d = new Date().toDateString();
+    let c = JSON.parse(localStorage.getItem(CRED_STORE) || "{}");
+    if(c.d !== d) c = {d, n:0};
+    c.n = (c.n || 0) + 1;
+    localStorage.setItem(CRED_STORE, JSON.stringify(c));
+  }catch(e){}
+  hudPaint();
+}
+
+/* ══════════ CONTRE-OFFRE ══════════ */
+/* Trois chiffres seulement : ce que tu annonces, ton plafond, quand tu poses. */
+function negoPad(demande, prixMax){
+  const d = Number(demande) || 0, mx = Number(prixMax) || 0;
+  if(!d && !mx) return "";
+  const plaf = mx || Math.round(d * 0.7);
+  /* L'ouverture ne dépasse jamais le plafond : annoncer plus haut que son
+     propre maximum n'a aucun sens, même quand le vendeur demande beaucoup. */
+  const ouvre = Math.max(1, Math.min(Math.round(d * 0.55) || plaf, Math.round(plaf * 0.8)));
+
+  let etat = "", cls = "";
+  if(d && plaf){
+    if(d <= plaf){ etat = `Déjà sous ton plafond. Tente ${ouvre}€, paye jusqu'à ${d}€.`; cls = "ok"; }
+    else if(d <= plaf * 1.6){ etat = `${d - plaf}€ de trop. Négociable.`; cls = "warn"; }
+    else { etat = `${d - plaf}€ de trop. Trop loin — repère-le et reviens au remballage.`; cls = "ko"; }
+  }
+  return `<div class="nego">
+    <div class="nego-h"><svg class="ico16"><use href="#i-tag"/></svg>Contre-offre</div>
+    <div class="nego-g">
+      <div class="ng"><b>${ouvre}€</b><span>Tu annonces</span></div>
+      <div class="ng"><b>${plaf}€</b><span>Tu ne dépasses pas</span></div>
+      ${d ? `<div class="ng ${cls === "ok" ? "good" : "stop"}"><b>${d}€</b><span>Il demande</span></div>` : ""}
+    </div>
+    ${etat ? `<div class="nego-v"><span class="${cls}">${etat}</span></div>` : ""}
+  </div>`;
+}
+
+/* ══════════ OBJETS REPÉRÉS ══════════ */
+const SPOT_STORE = "insertcoin.spots";
+function spotRead(){ try { return JSON.parse(localStorage.getItem(SPOT_STORE) || "[]"); } catch(e){ return []; } }
+function spotWrite(a){ try { localStorage.setItem(SPOT_STORE, JSON.stringify(a)); } catch(e){} }
+
+function spotAdd(){
+  if(!LAST) return;
+  const stand = prompt("Où l'as-tu vu ? (numéro de stand, repère, couleur de la nappe…)", "");
+  if(stand === null) return;
+  const a = spotRead();
+  a.unshift({d: Date.now(), o: LAST.objet, s: stand.trim(),
+             dem: LAST.demande || 0, mx: LAST.prixMax || 0, r: LAST.revente || 0});
+  spotWrite(a); vib(); hudPaint();
+  const b = document.querySelector('.act-spot');
+  if(b){ b.classList.add("done"); b.innerHTML = "✓ Repéré"; }
+}
+function spotDel(i){ const a = spotRead(); a.splice(i,1); spotWrite(a); renderSpots(); hudPaint(); }
+function spotBuy(i){
+  const a = spotRead(); const x = a[i]; if(!x) return;
+  const paye = parseFloat(prompt(`« ${x.o} » — prix payé en euros ?`, String(x.mx || "")) || "");
+  if(isNaN(paye)) return;
+  const lg = logRead();
+  lg.unshift({d: Date.now(), o: x.o, p: paye, r: x.r || 0, dem: x.dem || 0, mx: x.mx || 0});
+  logWrite(lg);
+  a.splice(i,1); spotWrite(a); renderSpots(); hudPaint();
+}
+function spotClear(){
+  if(confirm("Vider la liste des objets repérés ?")){ spotWrite([]); renderSpots(); hudPaint(); }
+}
+
+function renderSpots(){
+  const el = $('spots-list'); if(!el) return;
+  const a = spotRead();
+  if(!a.length){
+    el.innerHTML = `<div class="empty-state">
+      <svg class="ico-big"><use href="#i-target"/></svg>
+      <b>Aucune cible</b>
+      <p>Après une analyse, appuie sur « Repérer » pour noter un objet et son stand.
+      Tu retrouveras la liste ici pour ta seconde passe.</p></div>`;
+    return;
+  }
+  el.innerHTML = a.map((x,i) => `
+    <div class="spot">
+      <div class="spot-h">
+        <b>${esc(x.o || "—")}</b>
+        <button class="li-x" onclick="spotDel(${i})">✕</button>
+      </div>
+      ${x.s ? `<div class="spot-w"><svg class="ico16"><use href="#i-target"/></svg>${esc(x.s)}</div>` : ""}
+      <div class="spot-p">
+        ${x.dem ? `<span>demandé <b>${x.dem}€</b></span>` : ""}
+        ${x.mx ? `<span>ton max <b>${x.mx}€</b></span>` : ""}
+        ${x.r ? `<span>revente <b>${x.r}€</b></span>` : ""}
+      </div>
+      <button class="spot-buy" onclick="spotBuy(${i})">Je l'ai acheté</button>
+    </div>`).join('')
+    + `<button class="btn-save" style="background:transparent;color:var(--stop);border:1px solid var(--stop);margin-top:14px" onclick="spotClear()">Vider les cibles</button>`;
+}
+
+/* ══════════ FILE D'ATTENTE HORS LIGNE ══════════ */
+const Q_STORE = "insertcoin.queue";
+function queueRead(){ try { return JSON.parse(localStorage.getItem(Q_STORE) || "[]"); } catch(e){ return []; } }
+function queueWrite(a){ try { localStorage.setItem(Q_STORE, JSON.stringify(a)); return true; } catch(e){ return false; } }
+
+function queuePush(promptText, images, mode){
+  const a = queueRead();
+  if(a.length >= 6){ alert("File pleine (6 objets). Relance-la dès que tu captes."); return false; }
+  a.push({d: Date.now(), promptText, images, mode});
+  if(!queueWrite(a)){ alert("Mémoire saturée : impossible de mettre en file."); return false; }
+  hudPaint();
+  $('ai-results').innerHTML = `<div class="queued">
+    <svg class="ico-big"><use href="#i-queue"/></svg>
+    <b>Mis en file d'attente</b>
+    <p>Pas de réseau ici. L'analyse partira toute seule dès que le signal revient —
+    ${a.length} objet${a.length>1?"s":""} en attente. Continue à chiner.</p></div>`;
+  return true;
+}
+
+let qBusy = false;
+async function queueRun(manuel){
+  if(qBusy) return;
+  const a = queueRead();
+  if(!a.length){ if(manuel) alert("La file est vide."); return; }
+  if(!navigator.onLine){ if(manuel) alert("Toujours pas de réseau."); return; }
+  qBusy = true;
+  const job = a.shift();
+  queueWrite(a); hudPaint();
+  try{ await callGemini(job.promptText, job.images || [], job.mode || 'single', true); }
+  finally{ qBusy = false; }
+  if(queueRead().length) setTimeout(() => queueRun(false), 1200);
+}
+window.addEventListener('online', () => setTimeout(() => queueRun(false), 2000));
+
 /* ---------- JOURNAL DE CHASSE ---------- */
 const LOG_STORE = "insertcoin.log";
 let LAST = null;
@@ -923,17 +1636,34 @@ function logFind(){
   if(!LAST) return;
   const paye = parseFloat(($('log-price') || {}).value || "0") || 0;
   const a = logRead();
-  a.unshift({d: Date.now(), o: LAST.objet, p: paye, r: LAST.revente});
-  logWrite(a);
-  vib();
-  const btn = document.querySelector('.log-btn');
-  if(btn){ btn.textContent = "✓ Ajouté"; btn.disabled = true; }
-  renderLog();
+  a.unshift({d: Date.now(), o: LAST.objet, p: paye, r: LAST.revente,
+             dem: LAST.demande || 0, mx: LAST.prixMax || 0});
+  logWrite(a); vib();
+  const btn = document.querySelector('.act-buy');
+  if(btn){ btn.innerHTML = "✓ Enregistré"; btn.classList.add("done"); }
+  renderLog(); hudPaint();
 }
 
-function logDel(i){ const a = logRead(); a.splice(i,1); logWrite(a); renderLog(); }
+function logDel(i){ const a = logRead(); a.splice(i,1); logWrite(a); renderLog(); hudPaint(); }
 function logClear(){
-  if(confirm("Vider le journal ? Le total de la matinée sera perdu.")){ logWrite([]); renderLog(); }
+  if(confirm("Vider le journal ? Le total de la matinée sera perdu.")){ logWrite([]); renderLog(); hudPaint(); }
+}
+
+/* Statistiques de négociation : sur plusieurs sorties, elles disent
+   si tu ouvres trop haut ou si tu laisses filer de bonnes affaires. */
+function negoStats(){
+  const a = logRead().filter(x => x.dem > 0 && x.p > 0);
+  if(a.length < 2) return null;
+  const gagne = a.filter(x => x.p < x.dem).length;
+  const remise = a.reduce((s,x) => s + ((x.dem - x.p) / x.dem), 0) / a.length;
+  const sousMax = a.filter(x => x.mx > 0 && x.p <= x.mx).length;
+  const avecMax = a.filter(x => x.mx > 0).length;
+  return {
+    n: a.length,
+    taux: Math.round(gagne / a.length * 100),
+    remise: Math.round(remise * 100),
+    disc: avecMax ? Math.round(sousMax / avecMax * 100) : null
+  };
 }
 
 function renderLog(){
@@ -948,20 +1678,91 @@ function renderLog(){
     <div class="sumbox"><div class="sn">${val.toFixed(0)}€</div><div class="sc">Revente est.</div></div>
     <div class="sumbox ${marge>=0?'pos':'neg'}"><div class="sn">${marge>=0?'+':''}${marge.toFixed(0)}€</div><div class="sc">Marge</div></div>`;
 
+  const st = negoStats();
+  const stEl = $('log-stats');
+  if(stEl){
+    if(!st){
+      stEl.innerHTML = `<div class="statnote">Tes statistiques de négociation apparaîtront après deux achats
+        où tu auras saisi le prix demandé et le prix payé.</div>`;
+    }else{
+      const jauge = (v, lbl, aide) => `
+        <div class="stat">
+          <div class="stat-t"><span>${lbl}</span><b>${v}%</b></div>
+          <div class="bar"><i style="width:${Math.min(100,v)}%"></i></div>
+          <div class="stat-a">${aide}</div>
+        </div>`;
+      let conseil = "";
+      if(st.taux < 40) conseil = "Tu payes souvent le prix affiché. Ouvre plus bas : 55 % du demandé.";
+      else if(st.remise > 45) conseil = "Belles remises. Tu pourrais viser des pièces plus chères.";
+      else conseil = "Négociation régulière. Continue à grouper les achats par stand.";
+      stEl.innerHTML = `<h3 class="sect">Ta négociation <i>${st.n} achats</i></h3>`
+        + jauge(st.taux, "Prix obtenu sous le demandé", "Part des achats où tu as fait baisser le prix.")
+        + jauge(st.remise, "Remise moyenne arrachée", "Écart moyen entre le prix affiché et ce que tu payes.")
+        + (st.disc !== null ? jauge(st.disc, "Achats sous ton plafond", "Discipline : rester sous le prix max conseillé.") : "")
+        + `<div class="statnote">${conseil}</div>`;
+    }
+  }
+
   if(!a.length){
-    el.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:14px;padding:30px 10px">
-      Aucune trouvaille enregistrée.<br>Après une analyse, saisis le prix payé et appuie sur « ＋ Journal ».</p>`;
+    el.innerHTML = `<div class="empty-state">
+      <svg class="ico-big"><use href="#i-cash"/></svg>
+      <b>Journal vide</b>
+      <p>Après une analyse, saisis le prix payé et appuie sur « Acheté ».
+      Ta marge du jour se calcule toute seule.</p></div>`;
     return;
   }
   el.innerHTML = a.map((x,i)=>{
     const m = (x.r||0)-(x.p||0);
+    const rem = (x.dem && x.p && x.dem > x.p) ? ` · −${Math.round((x.dem-x.p)/x.dem*100)}%` : "";
     return `<div class="logitem">
       <div class="li-main"><b>${esc(x.o||"—")}</b>
-        <span>payé ${(x.p||0).toFixed(0)}€ · revente ${(x.r||0).toFixed(0)}€</span></div>
+        <span>payé ${(x.p||0).toFixed(0)}€ · revente ${(x.r||0).toFixed(0)}€${rem}</span></div>
       <div class="li-m ${m>=0?'pos':'neg'}">${m>=0?'+':''}${m.toFixed(0)}€</div>
       <button class="li-x" onclick="logDel(${i})">✕</button>
     </div>`;
   }).join('');
+}
+
+/* ══════════ EXPORT VERS DRIVE ══════════ */
+function logCSV(){
+  const rows = [["Date","Objet","Prix demandé","Prix payé","Revente estimée","Marge"]];
+  logRead().slice().reverse().forEach(x => rows.push([
+    new Date(x.d).toLocaleDateString('fr-BE'),
+    (x.o||"").replace(/"/g,"'"),
+    x.dem||0, x.p||0, x.r||0, ((x.r||0)-(x.p||0)).toFixed(0)
+  ]));
+  return rows.map(r => r.map(c => `"${c}"`).join(";")).join("\n");
+}
+
+async function logExport(){
+  const a = logRead();
+  if(!a.length){ alert("Le journal est vide."); return; }
+  const csv = "\uFEFF" + logCSV();
+  const nom = "InsertCoin_" + new Date().toISOString().slice(0,10) + ".csv";
+
+  const tok = await driveAuth(false) || await driveAuth(true);
+  if(tok){
+    try{
+      const meta = {name: nom, mimeType: "text/csv"};
+      const bound = "-------insertcoin" + Date.now();
+      const body = `--${bound}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n`
+        + JSON.stringify(meta)
+        + `\r\n--${bound}\r\nContent-Type: text/csv\r\n\r\n` + csv + `\r\n--${bound}--`;
+      const r = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+        {method:"POST",
+         headers:{Authorization:"Bearer " + tok, "Content-Type": "multipart/related; boundary=" + bound},
+         body});
+      if(!r.ok) throw new Error("HTTP " + r.status);
+      alert("Envoyé dans ton Drive : " + nom);
+      return;
+    }catch(err){
+      alert("Envoi Drive impossible (" + err.message + "). Téléchargement local à la place.");
+    }
+  }
+  const url = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+  const link = document.createElement("a");
+  link.href = url; link.download = nom; link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
 function renderLocalList() {
