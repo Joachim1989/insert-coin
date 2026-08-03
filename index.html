@@ -1,476 +1,309 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#130d1f" />
+  <meta name="theme-color" content="#120c1d" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <title>Pixel Papa Brocante</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>Pixel Papa Fusion</title>
   <style>
     :root {
-      --bg: #130d1f;
-      --bg-2: #1b1230;
-      --panel: #22173b;
-      --panel-2: #2a1d47;
-      --paper: #f4efe7;
-      --paper-2: #ddd5c8;
-      --text: #f7f1ff;
-      --muted: #b9adc9;
-      --line: rgba(255,255,255,.12);
-      --coin: #f1c84a;
-      --coin-deep: #d39a15;
-      --cyan: #4fe6ff;
-      --pink: #ff5cb8;
-      --violet: #8d66ff;
-      --good: #2adf7b;
-      --warn: #ffb84d;
-      --bad: #ff6b6b;
-      --shadow: 0 18px 40px rgba(0,0,0,.34);
-      --radius-sm: 12px;
-      --radius-md: 18px;
-      --radius-lg: 26px;
-      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px;
-      --font-display: 'Press Start 2P', monospace;
-      --font-body: 'Inter', system-ui, sans-serif;
+      --bg:#120c1d; --bg2:#1a1230; --surface:rgba(34,23,59,.94); --surface2:rgba(45,29,79,.96); --surface3:rgba(255,255,255,.05);
+      --text:#f7f1ff; --muted:#b7adc9; --faint:#8f84a3; --line:rgba(255,255,255,.11); --line2:rgba(255,255,255,.06);
+      --gold:#f1c84a; --gold2:#d59d11; --cyan:#49e7ff; --pink:#ff58b6; --violet:#8b67ff; --good:#2be07c; --warn:#ffb84f; --bad:#ff6d6d;
+      --ink:#130d1f; --paper:#f5efe6; --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; --display:'Press Start 2P', monospace; --body:'Inter', system-ui, sans-serif;
+      --shadow:0 18px 40px rgba(0,0,0,.34); --r1:12px; --r2:18px; --r3:24px;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin:0; padding:0; background: radial-gradient(circle at top right, rgba(79,230,255,.12), transparent 28%), linear-gradient(180deg, #130d1f 0%, #100b1a 100%); color:var(--text); font-family:var(--font-body); min-height:100%; }
-    body { padding-bottom: 108px; }
-    button, input, textarea, select { font: inherit; }
-    img, video, canvas { max-width:100%; display:block; }
-    .app { max-width: 980px; margin: 0 auto; padding: calc(12px + env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom)); }
-    .skip { position:absolute; left:-9999px; }
-    .skip:focus { left:12px; top:12px; z-index:100; background:#fff; color:#000; padding:10px 12px; border-radius:10px; }
-    .hero {
-      position: sticky; top: 0; z-index: 40; backdrop-filter: blur(14px);
-      margin: 0 -12px 14px; padding: 12px 12px 14px;
-      background: linear-gradient(180deg, rgba(16,11,26,.96), rgba(16,11,26,.84)); border-bottom:1px solid var(--line);
-    }
-    .brandbar { display:flex; gap:12px; align-items:center; }
-    .coinlogo {
-      width:54px; height:54px; flex:0 0 auto; border-radius:16px; display:grid; place-items:center;
-      background: linear-gradient(180deg, #33204f, #1c1430); border:1px solid rgba(255,255,255,.12); box-shadow: var(--shadow);
-      position: relative; overflow:hidden;
-    }
-    .coinlogo:before { content:''; position:absolute; inset:8px; border-radius:50%; background: radial-gradient(circle at 35% 35%, #ffe58d, #f1c84a 55%, #bf7f0f 100%); box-shadow: inset 0 0 0 5px rgba(0,0,0,.18); }
-    .coinlogo:after { content:'▮'; position:relative; z-index:1; color:#1a1229; font-size:22px; font-weight:900; }
-    .brand h1 { margin:0; font-family:var(--font-display); font-size:15px; line-height:1.2; color: var(--paper); }
-    .brand p { margin:6px 0 0; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
-    .hero-grid { display:grid; gap:10px; margin-top:14px; }
-    .search-shell { display:grid; grid-template-columns: 1fr auto auto; gap:8px; }
-    .input-wrap { position:relative; }
-    .search-input {
-      width:100%; height:58px; border:1px solid var(--line); border-radius:16px; background:rgba(255,255,255,.08); color:#fff;
-      padding:0 44px 0 16px; font-size:16px; box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
-    }
-    .search-input::placeholder { color:#b6abc5; }
-    .clear-btn, .action-btn, .filter-btn, .mini-btn, .chip, .fab, .sheet-btn, .camera-btn, .photo-slot button {
-      border:0; cursor:pointer; transition:.18s ease; }
-    .clear-btn { position:absolute; right:5px; top:5px; width:48px; height:48px; border-radius:12px; background:transparent; color:#dacff0; font-size:24px; }
-    .action-btn {
-      min-width:58px; height:58px; border-radius:16px; color:#140d20; background:linear-gradient(180deg, #f8d46d, #e0ab18); font-weight:800; box-shadow: var(--shadow);
-    }
-    .action-btn.alt { background:linear-gradient(180deg, #62edff, #2ca9e8); }
-    .quick-row { display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
-    .chip-row { display:flex; gap:8px; overflow:auto; padding-bottom:2px; scrollbar-width:none; }
-    .chip-row::-webkit-scrollbar { display:none; }
-    .chip {
-      white-space:nowrap; min-height:42px; padding:0 14px; border-radius:999px; background:rgba(255,255,255,.07); color:#efe8ff; border:1px solid rgba(255,255,255,.08);
-    }
-    .chip.active { background:linear-gradient(180deg, rgba(255,92,184,.24), rgba(79,230,255,.18)); border-color:rgba(255,255,255,.18); }
-    .panel { background:linear-gradient(180deg, rgba(42,29,71,.94), rgba(29,20,49,.96)); border:1px solid var(--line); border-radius:22px; box-shadow: var(--shadow); }
-    .priority { padding:14px; margin-bottom:12px; }
-    .priority h2, .results h2, .offline h2 { margin:0 0 8px; font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:#f4db8e; }
-    .priority .grid { display:grid; gap:10px; }
-    .mode-card { padding:14px; border-radius:18px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); }
-    .mode-card strong { display:block; font-size:16px; }
-    .mode-card span { display:block; margin-top:6px; color:var(--muted); font-size:13px; line-height:1.45; }
-    .mode-card .tag { display:inline-block; margin-top:10px; padding:6px 8px; border-radius:999px; font-size:11px; font-weight:700; background:rgba(241,200,74,.16); color:#ffe38d; }
-    .results { padding:14px; margin-bottom:12px; }
-    .pulse { display:inline-flex; align-items:center; gap:8px; color:#8cf5bc; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
-    .dot { width:10px; height:10px; border-radius:50%; background:var(--good); box-shadow:0 0 0 0 rgba(42,223,123,.45); animation:pulse 1.6s infinite; }
-    @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(42,223,123,.45)} 70%{box-shadow:0 0 0 12px rgba(42,223,123,0)} 100%{box-shadow:0 0 0 0 rgba(42,223,123,0)} }
-    .result-card { margin-top:12px; overflow:hidden; }
-    .result-top { padding:14px; background:linear-gradient(135deg, rgba(255,92,184,.22), rgba(79,230,255,.14)); border-bottom:1px solid var(--line); }
-    .eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#d8caef; }
-    .title { margin:6px 0 0; font-size:20px; font-weight:800; }
-    .subtitle { margin:4px 0 0; color:var(--muted); font-size:14px; }
-    .metrics { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; padding:14px; }
-    .metric { padding:12px; border-radius:16px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.06); }
-    .metric b { display:block; font-size:11px; color:#cdbfe3; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
-    .metric span { font-size:18px; font-weight:800; }
-    .verdict { display:grid; gap:10px; padding:0 14px 14px; }
-    .verdict-pill { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 14px; border-radius:999px; font-weight:800; width:max-content; }
-    .v-rafle { background:rgba(42,223,123,.16); color:#91ffc0; }
-    .v-negocie { background:rgba(255,184,77,.16); color:#ffd08a; }
-    .v-laisse { background:rgba(255,107,107,.16); color:#ffc0c0; }
-    .proofs, .checks { display:grid; gap:8px; }
-    .proof, .check, .offline-card { padding:12px; border-radius:16px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.07); }
-    .proof small, .check small { display:block; color:#d2c7e4; font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
-    .nego { padding:12px 14px; border-radius:16px; background:linear-gradient(180deg, rgba(241,200,74,.14), rgba(241,200,74,.05)); color:#fff0b9; border:1px solid rgba(241,200,74,.18); }
-    .photo-strip { display:flex; gap:10px; overflow:auto; padding:4px 0 2px; }
-    .photo-slot {
-      min-width:118px; width:118px; height:118px; border-radius:18px; overflow:hidden; position:relative;
-      background:rgba(255,255,255,.05); border:1px dashed rgba(255,255,255,.18);
-    }
-    .photo-slot img { width:100%; height:100%; object-fit:cover; }
-    .photo-slot button { position:absolute; top:6px; right:6px; width:28px; height:28px; border-radius:999px; background:rgba(11,8,19,.8); color:#fff; }
-    .add-photo { display:grid; place-items:center; color:#f8e08d; font-weight:700; font-size:13px; text-align:center; padding:14px; }
-    .offline { padding:14px; }
-    .offline-grid { display:grid; gap:10px; }
-    .offline-card b { display:block; margin-bottom:6px; font-size:14px; }
-    .offline-card p { margin:0; color:var(--muted); font-size:13px; line-height:1.45; }
-    .bottom-nav {
-      position:fixed; left:0; right:0; bottom:0; z-index:50; display:grid; grid-template-columns:repeat(4, 1fr);
-      gap:8px; padding:10px 12px calc(10px + env(safe-area-inset-bottom)); background:rgba(13,9,21,.94); border-top:1px solid var(--line); backdrop-filter: blur(14px);
-    }
-    .bottom-nav button { min-height:58px; border-radius:16px; background:rgba(255,255,255,.04); color:#ece4ff; border:1px solid rgba(255,255,255,.06); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
-    .bottom-nav button.active { background:linear-gradient(180deg, rgba(79,230,255,.18), rgba(141,102,255,.18)); }
-    .fab {
-      position:fixed; right:14px; bottom:92px; z-index:60; width:66px; height:66px; border-radius:50%; background:linear-gradient(180deg, #ff6ac0, #d83f9a); color:#fff; font-size:28px; box-shadow: var(--shadow);
-    }
-    .sheet-wrap { position:fixed; inset:0; background:rgba(4,3,7,.58); display:none; align-items:flex-end; z-index:70; }
-    .sheet-wrap.open { display:flex; }
-    .sheet { width:100%; max-height:88vh; overflow:auto; border-radius:26px 26px 0 0; background:linear-gradient(180deg, #22173b, #150f26); border-top:1px solid var(--line); padding:18px 14px calc(24px + env(safe-area-inset-bottom)); }
-    .sheet h3 { margin:0 0 8px; font-size:17px; }
-    .sheet p { margin:0 0 14px; color:var(--muted); line-height:1.5; }
-    .sheet-actions { display:grid; gap:10px; }
-    .sheet-btn { min-height:60px; border-radius:18px; text-align:left; padding:0 14px; background:rgba(255,255,255,.05); color:#fff; border:1px solid rgba(255,255,255,.08); }
-    .sheet-btn strong { display:block; }
-    .sheet-btn span { display:block; margin-top:4px; color:var(--muted); font-size:13px; }
-    .camera { position:fixed; inset:0; background:#000; display:none; z-index:80; flex-direction:column; }
-    .camera.open { display:flex; }
-    .camera video { flex:1; width:100%; object-fit:cover; }
-    .camera-top { padding: calc(12px + env(safe-area-inset-top)) 12px 8px; color:#fff; font-size:13px; text-align:center; }
-    .camera-bar { display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; padding:16px 20px calc(18px + env(safe-area-inset-bottom)); }
-    .camera-btn { min-height:46px; padding:0 12px; border-radius:14px; background:rgba(255,255,255,.14); color:#fff; }
-    .shutter { width:78px; height:78px; border-radius:50%; background:#fff; border:6px solid rgba(255,255,255,.3); }
-    .hidden { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
-    .empty { padding:24px 16px; color:var(--muted); text-align:center; }
-    :focus-visible { outline:3px solid var(--cyan); outline-offset:2px; }
-    @media (min-width: 760px) {
-      .hero-grid { grid-template-columns: 1.5fr 1fr; align-items:start; }
-      .priority .grid { grid-template-columns: repeat(3, 1fr); }
-      .offline-grid { grid-template-columns: repeat(3, 1fr); }
-      .sheet { max-width: 720px; margin:0 auto; }
-    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0;min-height:100%;background:radial-gradient(circle at 85% 0%, rgba(73,231,255,.12), transparent 28%),radial-gradient(circle at 8% 12%, rgba(255,88,182,.10), transparent 22%),linear-gradient(180deg,#120c1d 0%,#0d0914 100%);color:var(--text)}
+    body{font-family:var(--body);padding-bottom:110px;-webkit-text-size-adjust:100%}
+    button,input,select,textarea{font:inherit;color:inherit}
+    img,video,canvas,svg{display:block;max-width:100%;height:auto}
+    .skip{position:absolute;left:-9999px}.skip:focus{left:12px;top:12px;background:#fff;color:#000;z-index:100;padding:10px 12px;border-radius:10px}
+    .app{max-width:980px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 12px calc(24px + env(safe-area-inset-bottom))}
+    .glass{background:linear-gradient(180deg,rgba(20,14,33,.95),rgba(20,14,33,.84));backdrop-filter:blur(14px);border:1px solid var(--line)}
+    .hero{position:sticky;top:0;z-index:50;margin:0 -12px 14px;padding:12px;border-bottom:1px solid var(--line)}
+    .brandbar{display:flex;gap:12px;align-items:center}.avatar{width:64px;height:64px;flex:0 0 auto;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#33204f,#1a112b);border:1px solid var(--line);box-shadow:var(--shadow)}
+    .avatar img{width:100%;height:100%;object-fit:cover}.brand h1{margin:0;font-family:var(--display);font-size:15px;line-height:1.2;color:#fff3c5}.brand p{margin:6px 0 0;color:var(--muted);font-size:12px;letter-spacing:.11em;text-transform:uppercase}
+    .hero-grid{display:grid;gap:10px;margin-top:14px}.panel,.section,.result-card{border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);background:linear-gradient(180deg,rgba(42,29,71,.94),rgba(25,17,43,.96))}
+    .panel,.section{padding:14px}.label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#e9d48c}.title{margin:8px 0 6px;font-size:21px;font-weight:800}.sub{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+    .cards{display:grid;gap:10px;margin-top:12px}.card{padding:14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}.card strong{display:block;font-size:16px}.card span{display:block;margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45}.tag{display:inline-block;margin-top:10px;padding:6px 8px;border-radius:999px;background:rgba(241,200,74,.14);color:#ffe797;font-size:11px;font-weight:700}
+    .search-wrap{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-top:14px}.input-shell{position:relative}.input{width:100%;height:58px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.07);padding:0 48px 0 16px;font-size:16px}.input::placeholder{color:#b6abc5}.clear{position:absolute;right:5px;top:5px;width:48px;height:48px;border:0;border-radius:12px;background:transparent;color:#ded4f3;font-size:23px;cursor:pointer}
+    .cta,.chip,.navbtn,.sheetbtn,.remove,.cameraBtn,.tile,.askbtn,.vf{cursor:pointer;border:0;transition:.18s ease}.cta{min-width:58px;height:58px;border-radius:16px;font-weight:800;color:var(--ink);background:linear-gradient(180deg,#f8d56f,#dfaa18);box-shadow:var(--shadow)}.cta.alt{background:linear-gradient(180deg,#66efff,#2ba5e6)}
+    .toggle-row,.chip-row,.photos{display:flex;gap:8px;overflow:auto;scrollbar-width:none}.toggle-row::-webkit-scrollbar,.chip-row::-webkit-scrollbar,.photos::-webkit-scrollbar{display:none}.toggle-row{margin-top:10px}.chip{min-height:42px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.06);color:#f1e9ff;border:1px solid rgba(255,255,255,.08);white-space:nowrap}.chip.active{background:linear-gradient(180deg,rgba(255,88,182,.22),rgba(73,231,255,.16));border-color:rgba(255,255,255,.16)}
+    .section h2{margin:0 0 10px;font-size:14px;text-transform:uppercase;letter-spacing:.10em;color:#f4db90}.live{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:#8ff6be;text-transform:uppercase;letter-spacing:.10em}.dot{width:10px;height:10px;border-radius:50%;background:var(--good);box-shadow:0 0 0 0 rgba(43,224,124,.45);animation:pulse 1.6s infinite}@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(43,224,124,.45)}70%{box-shadow:0 0 0 12px rgba(43,224,124,0)}100%{box-shadow:0 0 0 0 rgba(43,224,124,0)}}
+    .result-card{overflow:hidden}.result-head{padding:14px;background:linear-gradient(135deg,rgba(255,88,182,.20),rgba(73,231,255,.14));border-bottom:1px solid var(--line)}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#d8caef}.result-title{margin:6px 0 0;font-size:20px;font-weight:800}.result-sub{margin:4px 0 0;font-size:14px;color:var(--muted)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}.metric{border-radius:16px;padding:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06)}.metric b{display:block;margin-bottom:6px;color:#cfc3e2;font-size:11px;text-transform:uppercase;letter-spacing:.09em}.metric span{font-size:18px;font-weight:800}
+    .stack{display:grid;gap:10px;padding:0 14px 14px}.pill{display:inline-flex;align-items:center;gap:8px;width:max-content;min-height:44px;padding:0 14px;border-radius:999px;font-weight:800}.rafle{background:rgba(43,224,124,.16);color:#95ffc5}.nego{background:rgba(255,184,79,.16);color:#ffd08c}.laisse{background:rgba(255,109,109,.16);color:#ffc3c3}.box{padding:12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}.box small{display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#d3c7e5}.quote{padding:12px 14px;border-radius:16px;background:linear-gradient(180deg,rgba(241,200,74,.14),rgba(241,200,74,.05));border:1px solid rgba(241,200,74,.18);color:#fff0b9}
+    .photos{padding-top:4px}.tile{position:relative;min-width:118px;width:118px;height:118px;border-radius:18px;overflow:hidden;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18)}.tile img{width:100%;height:100%;object-fit:cover}.tile.add{display:grid;place-items:center;padding:12px;color:#ffe691;font-weight:700;text-align:center}.remove{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:999px;background:rgba(12,8,20,.82);color:#fff}
+    .mini-grid,.offline-grid,.proof-list,.check-list{display:grid;gap:10px}.askrow{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-top:12px}.price{height:46px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:0 12px}.askbtn{height:46px;border-radius:12px;background:linear-gradient(180deg,#f7d56e,#dea917);color:#1a1128;font-weight:800}
+    .loading,.fail{padding:16px;border-radius:16px;margin-top:12px}.loading{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06);text-align:center}.loading .dots{font-size:24px;letter-spacing:3px;color:var(--cyan)}.fail{background:rgba(255,109,109,.09);border:1px solid rgba(255,109,109,.18);color:#ffd4d4}
+    .proof-list .item,.check-list .item{padding:12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}.mono{font-family:var(--mono)}
+    .nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(10,8,16,.95);border-top:1px solid var(--line);backdrop-filter:blur(16px)}.navbtn{min-height:58px;border-radius:16px;background:rgba(255,255,255,.04);color:#eee6ff;border:1px solid rgba(255,255,255,.06);font-size:11px;text-transform:uppercase;letter-spacing:.08em}.navbtn.active{background:linear-gradient(180deg,rgba(73,231,255,.18),rgba(139,103,255,.18))}
+    .fab{position:fixed;right:14px;bottom:92px;z-index:70;width:68px;height:68px;border-radius:50%;border:0;color:#fff;background:linear-gradient(180deg,#ff6cc2,#d53e98);font-size:28px;box-shadow:var(--shadow);cursor:pointer}
+    .sheetWrap{position:fixed;inset:0;z-index:80;background:rgba(4,3,7,.60);display:none;align-items:flex-end}.sheetWrap.open{display:flex}.sheet{width:100%;max-height:88vh;overflow:auto;padding:18px 14px calc(24px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:linear-gradient(180deg,#22173b,#140f24);border-top:1px solid var(--line)}.sheet h3{margin:0 0 8px;font-size:17px}.sheet p{margin:0 0 14px;color:var(--muted);line-height:1.5}.sheetActions{display:grid;gap:10px}.sheetbtn{min-height:60px;text-align:left;padding:0 14px;border-radius:18px;background:rgba(255,255,255,.05);color:#fff;border:1px solid rgba(255,255,255,.08)}.sheetbtn strong{display:block}.sheetbtn span{display:block;margin-top:4px;color:var(--muted);font-size:13px}
+    .camera{position:fixed;inset:0;z-index:90;background:#000;display:none;flex-direction:column}.camera.open{display:flex}.camera video{flex:1;width:100%;min-height:0;object-fit:cover}.cameraTop{padding:calc(12px + env(safe-area-inset-top)) 12px 8px;text-align:center;color:#fff;font-size:13px}.cameraBar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px 20px calc(18px + env(safe-area-inset-bottom))}.cameraBtn{min-height:46px;padding:0 12px;border-radius:14px;background:rgba(255,255,255,.14);color:#fff}.shutter{width:78px;height:78px;border-radius:50%;border:6px solid rgba(255,255,255,.3);background:#fff;cursor:pointer}
+    .hidden{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.empty{padding:26px 16px;text-align:center;color:var(--muted)}
+    @media (min-width:760px){.hero-grid{grid-template-columns:1.3fr .9fr;align-items:start}.cards{grid-template-columns:repeat(3,1fr)}.offline-grid{grid-template-columns:repeat(3,1fr)}.sheet{max-width:720px;margin:0 auto}}
   </style>
 </head>
 <body>
   <a href="#main" class="skip">Aller au contenu</a>
   <div class="app">
-    <header class="hero">
+    <header class="hero glass">
       <div class="brandbar">
-        <div class="coinlogo" aria-hidden="true"></div>
+        <div class="avatar"><img src="./pixel-papa-logo.png" alt="Pixel Papa" /></div>
         <div class="brand">
-          <h1>Pixel Papa Brocante</h1>
-          <p>Radar de chine en direct, pensé pour la brocante</p>
+          <h1>Pixel Papa Fusion</h1>
+          <p>Recherche live par texte ou photo, verdict terrain, base offline en soutien</p>
         </div>
       </div>
       <div class="hero-grid">
-        <section class="panel priority" aria-labelledby="focus-title">
-          <h2 id="focus-title">Actions de terrain</h2>
-          <div class="grid">
-            <article class="mode-card">
-              <strong>Recherche flash</strong>
-              <span>Tape un nom, une référence, une plateforme ou un label. L'app doit partir en chasse immédiatement.</span>
-              <span class="tag">Priorité n°1</span>
-            </article>
-            <article class="mode-card">
-              <strong>Photo multi-angles</strong>
-              <span>Ajoute plusieurs vues du même objet: face, dos, dessous, étiquette, défauts, connectiques.</span>
-              <span class="tag">Nouveau flux</span>
-            </article>
-            <article class="mode-card">
-              <strong>Photo d'ensemble</strong>
-              <span>Scanne un stand ou un carton entier, puis fais ressortir les pièces à faire isoler et négocier.</span>
-              <span class="tag">Esprit chineur</span>
-            </article>
+        <section class="panel" aria-labelledby="main-title">
+          <div class="label">Terrain d'abord</div>
+          <h2 class="title" id="main-title">Objet seul, multi-photos, stand entier: une seule appli pour décider vite</h2>
+          <p class="sub">Cette version fusionne le moteur d'analyse de ton app actuelle avec une interface pensée pour la brocante: moins de lecture, plus d'action, plus de chasse.</p>
+          <div class="cards">
+            <article class="card"><strong>Recherche flash</strong><span>Nom, référence, console, label, modèle ou série. Le verdict doit arriver sans détour.</span><span class="tag">Priorité n°1</span></article>
+            <article class="card"><strong>Photos multi-angles</strong><span>Ajoute plusieurs vues du même objet pour fiabiliser l'identification et l'état.</span><span class="tag">Fusion complète</span></article>
+            <article class="card"><strong>Photo de stand</strong><span>Repère ce qu'il faut faire sortir du lot, rephotographier ou laisser sans regret.</span><span class="tag">Mode obsessionnel</span></article>
           </div>
         </section>
-        <section class="panel priority" aria-label="Recherche principale">
-          <div class="search-shell">
-            <div class="input-wrap">
-              <input id="query" class="search-input" type="search" placeholder="Ex: GameCube Zelda, Polaroid SX-70, plaque émaillée..." />
-              <button class="clear-btn" id="clearQuery" aria-label="Effacer">×</button>
+        <section class="panel" aria-label="Recherche terrain">
+          <div class="label">Action immédiate</div>
+          <div class="search-wrap">
+            <div class="input-shell">
+              <input id="query" class="input" type="search" placeholder="Ex: GameCube Zelda, vinyle rap FR, Polaroid SX-70, plaque émaillée..." autocomplete="off" spellcheck="false" />
+              <button id="clear" class="clear" aria-label="Effacer">×</button>
             </div>
-            <button class="action-btn alt" id="openCameraBtn" aria-label="Prendre une photo">📸</button>
-            <button class="action-btn" id="analyzeBtn" aria-label="Analyser">Go</button>
+            <button id="cameraOpen" class="cta alt" aria-label="Ouvrir la caméra">📸</button>
+            <button id="analyze" class="cta" aria-label="Analyser">Go</button>
           </div>
-          <div class="quick-row" style="margin-top:8px;">
+          <div class="toggle-row">
             <button class="chip active" data-mode="single">Objet seul</button>
+            <button class="chip" data-mode="multi">Objet multi-photos</button>
             <button class="chip" data-mode="lot">Stand ou lot</button>
           </div>
           <div class="chip-row" style="margin-top:10px;">
-            <button class="chip" data-suggest="jeu video retro">Jeux rétro</button>
-            <button class="chip" data-suggest="vinyle original">Vinyles</button>
-            <button class="chip" data-suggest="retro tech">Rétro-tech</button>
-            <button class="chip" data-suggest="jouet vintage">Jouets</button>
-            <button class="chip" data-suggest="bd eo">BD / pop culture</button>
+            <button class="chip" data-suggest="jeu gamecube cib">Jeux rétro</button>
+            <button class="chip" data-suggest="vinyle pressage original">Vinyles</button>
+            <button class="chip" data-suggest="walkman sony">Rétro-tech</button>
+            <button class="chip" data-suggest="lego vrac kilo">Jouets</button>
+            <button class="chip" data-suggest="bd eo asterix">BD / pop</button>
+          </div>
+          <div class="askrow">
+            <input id="sellerPrice" class="price" type="number" inputmode="decimal" placeholder="Prix" aria-label="Prix vendeur" />
+            <button id="askAI" class="askbtn">Analyser avec l'IA</button>
           </div>
         </section>
       </div>
     </header>
 
     <main id="main">
-      <section class="panel results" aria-labelledby="results-title">
-        <div class="pulse"><span class="dot"></span>Recherche live prioritaire</div>
-        <h2 id="results-title">Verdict terrain</h2>
+      <section class="section" aria-labelledby="verdict-title">
+        <div class="live"><span class="dot"></span>Recherche live prioritaire</div>
+        <h2 id="verdict-title">Verdict terrain</h2>
         <div id="resultMount"></div>
       </section>
 
-      <section class="panel results" aria-labelledby="photos-title">
+      <section class="section" aria-labelledby="photos-title">
         <h2 id="photos-title">Photos du même objet</h2>
-        <div class="photo-strip" id="photoStrip">
-          <div class="photo-slot add-photo" id="addPhotoTile" tabindex="0" role="button" aria-label="Ajouter une photo">+
-            <div>Ajouter<br>une vue</div>
-          </div>
+        <div class="photos" id="photos">
+          <button class="tile add" id="addTile" aria-label="Ajouter une photo">+
+            <span>Ajouter<br>une vue</span>
+          </button>
         </div>
-        <div class="verdict" style="padding-top:12px;">
-          <div class="check"><small>Ce que ce flux doit faire</small>Fusionner plusieurs angles pour affiner l'identification, repérer les pièces manquantes, et ajuster la tranche de négo selon l'état visible.</div>
-          <div class="check"><small>Angles suggérés</small>Face, dos, dessous, étiquette, numéro de série, défaut, accessoire, emballage intérieur.</div>
+        <div class="mini-grid" style="margin-top:12px;">
+          <div class="box"><small>Pourquoi ce flux</small>Une seule photo vend mal la vérité. Le dessous, l'étiquette, le numéro de série, la notice et le défaut changent la cote.</div>
+          <div class="box"><small>Objectif fusion</small>Envoyer plusieurs images d'un même objet dans une seule requête IA pour un verdict plus fiable.</div>
         </div>
       </section>
 
-      <section class="panel offline" aria-labelledby="offline-title">
-        <h2 id="offline-title">Base hors ligne utile</h2>
+      <section class="section" aria-labelledby="offline-title">
+        <h2 id="offline-title">Base hors ligne secondaire</h2>
         <div class="offline-grid">
-          <article class="offline-card">
-            <b>Repères de négo</b>
-            <p>Des réflexes simples pour ouvrir, regrouper et conclure vite, sans devenir le cœur du produit.</p>
-          </article>
-          <article class="offline-card">
-            <b>Pièges fréquents</b>
-            <p>Repros, repressages, corrosion, manque de notice, accessoires absents: juste assez pour gagner du temps hors réseau.</p>
-          </article>
-          <article class="offline-card">
-            <b>Sac du chineur</b>
-            <p>Piles, chiffon, ruban, emballage et batterie externe: une base secours, discrète derrière la recherche live.</p>
-          </article>
+          <article class="box"><small>Négo</small>Formules d'ouverture, lot, retrait, silence utile, décision rapide.</article>
+          <article class="box"><small>Pièges</small>Repro, repressage, manque d'accessoires, corrosion, faux complet.</article>
+          <article class="box"><small>Sac</small>Piles, chiffon, batterie, lampe, emballage: l'essentiel, pas plus.</article>
         </div>
       </section>
     </main>
   </div>
 
-  <nav class="bottom-nav" aria-label="Navigation rapide">
-    <button class="active" data-sheet="live">Live</button>
-    <button data-sheet="offline">Base</button>
-    <button data-sheet="lot">Stand</button>
-    <button data-sheet="settings">Clé IA</button>
+  <nav class="nav" aria-label="Navigation">
+    <button class="navbtn active" data-sheet="live">Live</button>
+    <button class="navbtn" data-sheet="lot">Stand</button>
+    <button class="navbtn" data-sheet="offline">Base</button>
+    <button class="navbtn" data-sheet="settings">Clé IA</button>
   </nav>
+  <button class="fab" id="fab" aria-label="Ouvrir la caméra">+</button>
 
-  <button class="fab" id="fabCamera" aria-label="Ouvrir la caméra">+</button>
+  <div class="sheetWrap" id="sheetWrap" aria-hidden="true"><section class="sheet" id="sheet"></section></div>
 
-  <div class="sheet-wrap" id="sheetWrap" aria-hidden="true">
-    <section class="sheet" id="sheet"></section>
-  </div>
-
-  <section class="camera" id="cameraView" aria-label="Caméra en direct">
-    <div class="camera-top">Cadre l'objet entier, puis l'étiquette ou les défauts. En mode stand, vise l'ensemble avant de zoomer.</div>
+  <section class="camera" id="camera" aria-label="Caméra">
+    <div class="cameraTop">Objet seul: cadre l'objet puis l'étiquette. Stand: commence par la vue d'ensemble, puis zoome sur les suspects.</div>
     <video id="video" playsinline autoplay muted></video>
-    <div class="camera-bar">
-      <button class="camera-btn" id="closeCamera">Fermer</button>
-      <button class="shutter" id="shutter" aria-label="Capturer"></button>
-      <button class="camera-btn" id="flipCamera">Retourner</button>
+    <div class="cameraBar">
+      <button class="cameraBtn" id="cameraClose">Fermer</button>
+      <button class="shutter" id="shutter" aria-label="Prendre une photo"></button>
+      <button class="cameraBtn" id="cameraFlip">Retourner</button>
     </div>
   </section>
 
-  <input class="hidden" id="fileInput" type="file" accept="image/*" multiple />
+  <input id="fileInput" class="hidden" type="file" accept="image/*" multiple />
 
   <script>
     const $ = id => document.getElementById(id);
-    const state = {
-      mode: 'single',
-      photos: [],
-      facing: 'environment',
-      stream: null
+    const state = { mode:'single', photos:[], facing:'environment', stream:null };
+    const KEYSTORE = 'insertcoin.gemini.key';
+    const MODELSTORE = 'insertcoin.gemini.model';
+    const MODELS = ['gemini-2.5-flash','gemini-2.0-flash','gemini-1.5-flash'];
+
+    const sheets = {
+      live:{title:'Mode live',text:'La page principale doit toujours favoriser la recherche directe par texte ou photo. Le reste aide, mais ne détourne jamais du verdict.',items:[['Recherche texte','Nom, référence, label, série, édition, plateforme.'],['Photo objet','Capture unique ou multi-angles.'],['Photo stand','Repérage global puis zoom ciblé.']]},
+      lot:{title:'Mode stand ou lot',text:'Le but est de faire ressortir les objets à isoler, les doutes à éclaircir et les volumes morts à ignorer.',items:[['À faire sortir','Objets liquides, sous-cotés ou suspects.'],['À rephotographier','Étiquette, dos, série, accessoires.'],['À laisser','Volume inutile, faible liquidité, manque d’indices.']]},
+      offline:{title:'Base hors ligne',text:'Toujours utile si la 4G est saturée en brocante, mais volontairement secondaire dans cette version.',items:[['Négo','Offres d’ouverture, réponse lot, sortie propre.'],['Pièges','Repro, repressage, corrosion, faux complet.'],['Sac','Le kit minimum du chineur sérieux.']]},
+      settings:{title:'Réglages IA',text:'La clé API reste cachée dans une feuille. Le design n’expose pas de technique tant que tu n’en as pas besoin.',items:[['Clé API','Saisie locale sur ton appareil.'],['Modèle','Choix du moteur Gemini.'],['Réseau','Jamais de cache sur les cotes live.']]}
     };
 
-    const offlineCards = {
-      live: `
-        <h3>Logique produit</h3>
-        <p>Tout doit pousser vers une décision immédiate sur le terrain: identifier, estimer, négocier, revendre. Le reste reste en soutien et n'interrompt jamais le flux.</p>
-        <div class="sheet-actions">
-          <button class="sheet-btn"><strong>Recherche texte</strong><span>Point d'entrée principal, toujours visible.</span></button>
-          <button class="sheet-btn"><strong>Photo objet</strong><span>Capture unique ou multi-angles pour confirmer l'état.</span></button>
-          <button class="sheet-btn"><strong>Photo stand</strong><span>Repérage global puis demandes de zoom ciblées.</span></button>
-        </div>`,
-      offline: `
-        <h3>Base hors ligne</h3>
-        <p>Elle doit être courte, consultable sans réseau, et servir de filet de sécurité. Pas de tunnel de lecture avant l'action.</p>
-        <div class="sheet-actions">
-          <button class="sheet-btn"><strong>Négo</strong><span>Offre simple, lot, silence, départ, retour.</span></button>
-          <button class="sheet-btn"><strong>Pièges</strong><span>Repro, repressage, corrosion, accessoire absent.</span></button>
-          <button class="sheet-btn"><strong>Sac</strong><span>Piles, chiffon, batterie, emballage, mètre.</span></button>
-        </div>`,
-      lot: `
-        <h3>Analyse de stand</h3>
-        <p>Flux obsessionnel du chineur: une photo d'ensemble, détection des objets à isoler, demande de plans rapprochés, classement en trois niveaux.</p>
-        <div class="sheet-actions">
-          <button class="sheet-btn"><strong>Rafle possible</strong><span>Objets clairement sous-cotés ou liquides à la revente.</span></button>
-          <button class="sheet-btn"><strong>À documenter</strong><span>Objets à faire sortir du carton pour photos complémentaires.</span></button>
-          <button class="sheet-btn"><strong>À laisser</strong><span>Volume inutile, faible liquidité, transport pénible.</span></button>
-        </div>`,
-      settings: `
-        <h3>Connexion IA</h3>
-        <p>Prévois une clé Gemini ou autre modèle multimodal, mais garde le design centré sur l'usage. La zone de réglages reste secondaire et cachée derrière cette feuille.</p>
-        <div class="sheet-actions">
-          <button class="sheet-btn"><strong>Clé API</strong><span>À coller une fois, puis oublier.</span></button>
-          <button class="sheet-btn"><strong>Modèle</strong><span>Choix simple, pas de jargon en première ligne.</span></button>
-        </div>`
-    };
+    function safeGet(key){ try { return localStorage.getItem(key) || ''; } catch(e){ return ''; } }
+    function safeSet(key,val){ try { localStorage.setItem(key,val); } catch(e){} }
+    function euro(n){ return `${Number(n || 0)}€`; }
 
-    function money(v){ return typeof v === 'number' ? `${v}€` : v; }
-
-    function renderDemoResult(q = 'Objet non encore saisi') {
-      const lotMode = state.mode === 'lot';
-      const title = lotMode ? 'Analyse de stand brocante' : q;
-      const subtitle = lotMode
-        ? 'Repérage des objets à faire sortir du lot, avec demandes de zoom.'
-        : 'Estimation actionnable en direct: tranche de négo, marge probable, points de contrôle.';
-      const verdictClass = lotMode ? 'v-negocie' : 'v-rafle';
-      const verdictLabel = lotMode ? 'À isoler puis négocier' : 'Rafle si état confirmé';
-      const max = lotMode ? 35 : 28;
-      const resale = lotMode ? 90 : 65;
-      const margin = lotMode ? 55 : 37;
-      $('resultMount').innerHTML = `
-        <article class="panel result-card">
-          <div class="result-top">
-            <div class="eyebrow">Pixel Papa verdict</div>
-            <div class="title">${title}</div>
-            <div class="subtitle">${subtitle}</div>
-          </div>
-          <div class="metrics">
-            <div class="metric"><b>Prix max</b><span>${money(max)}</span></div>
-            <div class="metric"><b>Revente réaliste</b><span>${money(resale)}</span></div>
-            <div class="metric"><b>Marge possible</b><span>${money(margin)}</span></div>
-          </div>
-          <div class="verdict">
-            <div class="verdict-pill ${verdictClass}">${verdictLabel}</div>
-            <div class="proofs">
-              <div class="proof"><small>Ce qu'il faut vérifier</small>${lotMode ? 'Demande une photo rapprochée des objets les plus prometteurs, puis une vue des étiquettes ou numéros de série.' : 'Face, dos, dessous et défaut visible. Sans cette séquence, la marge est trop théorique.'}</div>
-              <div class="proof"><small>Tranche de négo</small>${lotMode ? 'Ouvre bas sur l’ensemble, puis remonte seulement sur les pièces liquides.' : 'Commence vers 40 à 50% du prix demandé si l’objet est sale, incomplet ou non testé.'}</div>
-              <div class="proof"><small>Décision revente</small>${lotMode ? 'Prends peu, liquide et vérifiable; laisse les gros volumes sans sortie claire.' : 'Ne paye jamais la cote de revente en brocante. Ta marge doit absorber défauts, temps et transport.'}</div>
-            </div>
-            <div class="checks">
-              <div class="check"><small>Multi-photos</small>${state.photos.length ? `${state.photos.length} vue(s) chargée(s). Le prochain moteur doit fusionner les angles dans un seul diagnostic.` : 'Ajoute plusieurs photos du même objet pour augmenter la confiance.'}</div>
-              <div class="check"><small>Mode stand</small>${lotMode ? 'Le moteur doit classer: intéressant, à revoir, à ignorer.' : 'Disponible via le bouton Objet seul / Stand ou lot.'}</div>
-            </div>
-            <div class="nego">Phrase de terrain: « Si on part sur l’état non testé et qu’il manque peut-être un accessoire, je suis à ${money(max)} tout de suite. »</div>
-          </div>
-        </article>`;
-    }
-
-    function renderPhotos() {
-      const strip = $('photoStrip');
-      const addTile = $('addPhotoTile');
-      strip.querySelectorAll('.photo-slot.existing').forEach(el => el.remove());
-      state.photos.forEach((src, index) => {
-        const box = document.createElement('div');
-        box.className = 'photo-slot existing';
-        box.innerHTML = `<img src="${src}" alt="Photo ${index + 1} de l'objet"><button aria-label="Retirer la photo ${index + 1}">×</button>`;
-        box.querySelector('button').addEventListener('click', () => {
-          state.photos.splice(index, 1);
-          renderPhotos();
-          renderDemoResult($('query').value.trim() || 'Objet non encore saisi');
-        });
-        strip.insertBefore(box, addTile);
-      });
-    }
-
-    function openSheet(key) {
-      $('sheet').innerHTML = offlineCards[key] || offlineCards.live;
+    function openSheet(name){
+      const d = sheets[name] || sheets.live;
+      const extra = name === 'settings' ? `
+        <div class="sheetActions" style="margin-top:12px;">
+          <label class="sheetbtn" style="padding:12px 14px;display:block;cursor:default;">
+            <strong>Clé Gemini</strong>
+            <input id="apiKeyInput" type="password" placeholder="Colle ta clé API" style="margin-top:8px;width:100%;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:0 12px;color:#fff;" value="${safeGet(KEYSTORE)}" />
+          </label>
+          <label class="sheetbtn" style="padding:12px 14px;display:block;cursor:default;">
+            <strong>Modèle</strong>
+            <select id="modelSelect" style="margin-top:8px;width:100%;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:0 12px;color:#fff;">
+              ${MODELS.map(m => `<option value="${m}" ${safeGet(MODELSTORE)===m?'selected':''}>${m}</option>`).join('')}
+            </select>
+          </label>
+          <button id="saveSettings" class="askbtn">Enregistrer</button>
+        </div>` : `
+        <div class="sheetActions">${d.items.map(([t,s]) => `<button class="sheetbtn"><strong>${t}</strong><span>${s}</span></button>`).join('')}</div>`;
+      $('sheet').innerHTML = `<h3>${d.title}</h3><p>${d.text}</p>${extra}`;
       $('sheetWrap').classList.add('open');
-      $('sheetWrap').setAttribute('aria-hidden', 'false');
-      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.toggle('active', btn.dataset.sheet === key));
-    }
-    function closeSheet() {
-      $('sheetWrap').classList.remove('open');
-      $('sheetWrap').setAttribute('aria-hidden', 'true');
-    }
-
-    async function openCamera() {
-      try {
-        state.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: state.facing }, width: { ideal: 1600 } }, audio: false });
-        $('video').srcObject = state.stream;
-        $('cameraView').classList.add('open');
-      } catch (e) {
-        openSheet('lot');
+      $('sheetWrap').setAttribute('aria-hidden','false');
+      document.querySelectorAll('.navbtn').forEach(btn => btn.classList.toggle('active', btn.dataset.sheet === name));
+      if(name === 'settings'){
+        $('saveSettings').addEventListener('click', () => {
+          safeSet(KEYSTORE, $('apiKeyInput').value.trim());
+          safeSet(MODELSTORE, $('modelSelect').value);
+          closeSheet();
+        });
       }
     }
-    function closeCamera() {
-      $('cameraView').classList.remove('open');
-      if (state.stream) {
-        state.stream.getTracks().forEach(t => t.stop());
-        state.stream = null;
-      }
-      $('video').srcObject = null;
-    }
-    function capture() {
-      const video = $('video');
-      if (!video.videoWidth) return;
-      const canvas = document.createElement('canvas');
-      const max = 1280;
-      const scale = Math.min(1, max / Math.max(video.videoWidth, video.videoHeight));
-      canvas.width = Math.round(video.videoWidth * scale);
-      canvas.height = Math.round(video.videoHeight * scale);
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-      state.photos.push(canvas.toDataURL('image/jpeg', .85));
-      renderPhotos();
-      renderDemoResult($('query').value.trim() || 'Objet photographié');
-      closeCamera();
+    function closeSheet(){ $('sheetWrap').classList.remove('open'); $('sheetWrap').setAttribute('aria-hidden','true'); }
+
+    function renderDemo(q='Objet non encore saisi'){
+      const mode = state.mode, count = state.photos.length;
+      let title = q, subtitle = 'Estimation actionnable: prix max, revente réaliste, marge probable et angle de négociation.', verdict='Rafle si état confirmé', klass='rafle', max=28, resale=65, margin=37;
+      if(mode==='multi'){ verdict='Multi-vues recommandées'; klass='nego'; max=24; resale=62; margin=38; subtitle='Le moteur doit consolider plusieurs vues pour réduire les erreurs et mieux juger l’état réel.'; }
+      if(mode==='lot'){ title='Analyse de stand brocante'; verdict='À isoler puis négocier'; klass='nego'; max=35; resale=90; margin=55; subtitle='Flux stand: repérage rapide des pièces à sortir, demande de zoom, puis tri du lot.'; }
+      $('resultMount').innerHTML = `<article class="result-card"><div class="result-head"><div class="eyebrow">Pixel Papa verdict</div><div class="result-title">${title}</div><p class="result-sub">${subtitle}</p></div><div class="metrics"><div class="metric"><b>Prix max</b><span>${euro(max)}</span></div><div class="metric"><b>Revente</b><span>${euro(resale)}</span></div><div class="metric"><b>Marge</b><span>${euro(margin)}</span></div></div><div class="stack"><div class="pill ${klass}">${verdict}</div><div class="box"><small>Conduite à tenir</small>${mode==='lot'?'Commence bas sur l’ensemble, puis remonte seulement pour les pièces vraiment liquides.':'Ne paie jamais la revente. Il faut garder une vraie marge après défauts, transport et délai.'}</div><div class="box"><small>Photos à demander</small>${mode==='lot'?'Plan rapproché des suspects, étiquette, dos, série, accessoires.':mode==='multi'?'Face, dos, dessous, étiquette, défaut, accessoire, emballage intérieur.':'Ajoute au moins une vue du dos ou du dessous pour renforcer la confiance.'}</div><div class="box"><small>Lecture chineur</small>${count ? `${count} photo(s) déjà chargée(s). Le flux multi-angles est prêt.` : 'Pas encore de photo. Le texte reste le point d’entrée le plus rapide.'}</div><div class="quote">Phrase terrain: « Vu l’état et ce qu’il me reste à vérifier, je suis à ${euro(max)} tout de suite. »</div></div></article>`;
     }
 
-    function loadFiles(files) {
-      [...files].forEach(file => {
-        if (!file.type.startsWith('image/')) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          state.photos.push(reader.result);
-          renderPhotos();
-          renderDemoResult($('query').value.trim() || 'Objet photographié');
-        };
-        reader.readAsDataURL(file);
+    function renderAiCard(data){
+      const verdictMap = { R:['rafle','Rafle'], N:['nego','Négocie'], L:['laisse','Laisse'] };
+      const info = verdictMap[(data.verdict || '').toUpperCase()] || ['nego','À négocier'];
+      $('resultMount').innerHTML = `<article class="result-card"><div class="result-head"><div class="eyebrow">Analyse IA live</div><div class="result-title">${escapeHtml(data.objet || data.identification || 'Objet analysé')}</div><p class="result-sub">${escapeHtml(data.note || data.identification || '')}</p></div><div class="metrics"><div class="metric"><b>Prix max</b><span>${euro(data.prixMax)}</span></div><div class="metric"><b>Revente</b><span>${euro(data.revente)}</span></div><div class="metric"><b>Fourchette</b><span>${euro(data.fourchetteBas)}-${euro(data.fourchetteHaut)}</span></div></div><div class="stack"><div class="pill ${info[0]}">${info[1]}</div><div class="box"><small>Identification</small>${escapeHtml(data.identification || '—')}</div><div class="box"><small>Confiance</small>${escapeHtml(data.confiance || '—')} • tirage ${escapeHtml(data.tirage || '—')}</div><div class="proof-list">${(data.preuves || []).map(p => `<div class="item"><small>Preuve</small>${escapeHtml(p)}</div>`).join('') || '<div class="item"><small>Preuve</small>Aucune preuve fournie.</div>'}</div><div class="check-list">${(data.verifs || []).map(v => `<div class="item"><small>Vérif terrain</small>${escapeHtml(v)}</div>`).join('') || '<div class="item"><small>Vérif terrain</small>Aucun point fourni.</div>'}</div><div class="quote">${escapeHtml(data.nego || 'Pas de phrase de négo fournie.')}</div></div></article>`;
+    }
+
+    function escapeHtml(s){ return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    function renderPhotos(){
+      const root = $('photos');
+      root.querySelectorAll('.tile.existing').forEach(el => el.remove());
+      state.photos.forEach((src,i) => {
+        const el = document.createElement('div');
+        el.className = 'tile existing';
+        el.innerHTML = `<img src="${src.url || src}" alt="Photo ${i+1} de l'objet" /><button class="remove" aria-label="Supprimer la photo ${i+1}">×</button>`;
+        el.querySelector('.remove').addEventListener('click', () => { state.photos.splice(i,1); renderPhotos(); renderDemo($('query').value.trim() || 'Objet photographié'); });
+        root.insertBefore(el, $('addTile'));
       });
     }
 
-    $('analyzeBtn').addEventListener('click', () => renderDemoResult($('query').value.trim() || 'Objet à identifier'));
-    $('clearQuery').addEventListener('click', () => { $('query').value = ''; renderDemoResult(); $('query').focus(); });
-    $('query').addEventListener('keydown', e => { if (e.key === 'Enter') renderDemoResult($('query').value.trim() || 'Objet à identifier'); });
-    $('openCameraBtn').addEventListener('click', openCamera);
-    $('fabCamera').addEventListener('click', openCamera);
-    $('closeCamera').addEventListener('click', closeCamera);
-    $('shutter').addEventListener('click', capture);
-    $('flipCamera').addEventListener('click', async () => { state.facing = state.facing === 'environment' ? 'user' : 'environment'; closeCamera(); await openCamera(); });
-    $('addPhotoTile').addEventListener('click', () => $('fileInput').click());
-    $('addPhotoTile').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('fileInput').click(); } });
-    $('fileInput').addEventListener('change', e => loadFiles(e.target.files || []));
-    $('sheetWrap').addEventListener('click', e => { if (e.target === $('sheetWrap')) closeSheet(); });
-    document.querySelectorAll('[data-suggest]').forEach(btn => btn.addEventListener('click', () => { $('query').value = btn.dataset.suggest; renderDemoResult(btn.dataset.suggest); }));
-    document.querySelectorAll('[data-mode]').forEach(btn => btn.addEventListener('click', () => {
-      state.mode = btn.dataset.mode;
-      document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b === btn));
-      renderDemoResult($('query').value.trim() || 'Objet à identifier');
-    }));
-    document.querySelectorAll('.bottom-nav button').forEach(btn => btn.addEventListener('click', () => openSheet(btn.dataset.sheet)));
-    document.addEventListener('paste', e => {
-      const img = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/'));
-      if (img) loadFiles([img.getAsFile()]);
-    });
-
-    renderDemoResult();
-    renderPhotos();
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    async function openCamera(){
+      try {
+        state.stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ ideal: state.facing }, width:{ ideal:1600 } }, audio:false });
+        $('video').srcObject = state.stream;
+        $('camera').classList.add('open');
+      } catch(e){ openSheet('lot'); }
     }
+    function closeCamera(){ $('camera').classList.remove('open'); if(state.stream){ state.stream.getTracks().forEach(t => t.stop()); state.stream = null; } $('video').srcObject = null; }
+    function capture(){ const v=$('video'); if(!v.videoWidth) return; const c=document.createElement('canvas'); const max=1280; const scale=Math.min(1,max/Math.max(v.videoWidth,v.videoHeight)); c.width=Math.round(v.videoWidth*scale); c.height=Math.round(v.videoHeight*scale); c.getContext('2d').drawImage(v,0,0,c.width,c.height); state.photos.push({ media:'image/jpeg', data:c.toDataURL('image/jpeg',.84).split(',')[1], url:c.toDataURL('image/jpeg',.84) }); renderPhotos(); renderDemo($('query').value.trim() || 'Objet photographié'); closeCamera(); }
+    function loadFiles(list){ [...list].forEach(file => { if(!file || !file.type.startsWith('image/')) return; const r=new FileReader(); r.onload=()=> state.photos.push({ media:file.type, data:String(r.result).split(',')[1], url:r.result }); r.onloadend=()=>{ renderPhotos(); renderDemo($('query').value.trim() || 'Objet photographié'); }; r.readAsDataURL(file); }); }
+
+    async function askAI(){
+      const key = safeGet(KEYSTORE); const model = safeGet(MODELSTORE) || MODELS[0]; const q = $('query').value.trim(); const p = $('sellerPrice').value.trim();
+      if(!key){ openSheet('settings'); return; }
+      if(!q && !state.photos.length){ renderDemo(); return; }
+      $('resultMount').innerHTML = `<div class="loading"><div class="dots">•••</div><div style="margin-top:8px;" class="mono">Identification + recherche de cote réelle en cours...</div></div>`;
+
+      const BRIEF = `Tu es l'argus de terrain d'un chineur belge en brocante. Sois bref, concret et tranchant. Tu dois identifier précisément l'objet, chercher sa cote réelle en ligne, distinguer prix affichés et ventes réelles, puis renvoyer UNIQUEMENT un JSON valide. Si mode lot: analyse une photo d'ensemble et classe ce qui semble intéressant, ce qui exige plus de photos, et ce qui paraît sans intérêt. Si plusieurs photos du même objet sont fournies: fusionne les angles pour une meilleure identification et une meilleure évaluation d'état. Champs JSON: objet, identification, categorie, verdict, prixMax, revente, fourchetteBas, fourchetteHaut, tirage, confiance, preuves, verifs, nego, note.`;
+      const ask = [];
+      if(state.mode==='lot') ask.push('Mode stand ou lot: détecte ce qui mérite d’être isolé, ce qui exige plus de photos, et ce qui semble sans intérêt.');
+      if(state.mode==='multi') ask.push('Mode multi-photos: fusionne toutes les vues pour estimer l’état réel et relever les manques ou défauts.');
+      if(q) ask.push(`Objet ou recherche texte: ${q}.`);
+      if(p) ask.push(`Le vendeur en demande ${p} EUR.`);
+      ask.push('Cherche sur le web avant de chiffrer.');
+
+      const parts = [];
+      state.photos.forEach(ph => parts.push({ inlineData:{ mimeType: ph.media || 'image/jpeg', data: ph.data } }));
+      parts.push({ text: `${BRIEF}\n${ask.join(' ')}` });
+      const body = {
+        contents:[{ role:'user', parts }],
+        generationConfig:{
+          temperature:0.2,
+          maxOutputTokens:1600,
+          responseMimeType:'application/json',
+          responseSchema:{
+            type:'OBJECT',
+            properties:{
+              objet:{type:'STRING'}, identification:{type:'STRING'}, categorie:{type:'STRING'}, verdict:{type:'STRING'}, prixMax:{type:'NUMBER'}, revente:{type:'NUMBER'}, fourchetteBas:{type:'NUMBER'}, fourchetteHaut:{type:'NUMBER'}, tirage:{type:'STRING'}, confiance:{type:'STRING'}, preuves:{type:'ARRAY', items:{type:'STRING'}}, verifs:{type:'ARRAY', items:{type:'STRING'}}, nego:{type:'STRING'}, note:{type:'STRING'}
+            }
+          }
+        }
+      };
+
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, { method:'POST', headers:{ 'Content-Type':'application/json', 'x-goog-api-key': key }, body: JSON.stringify(body) });
+        const json = await res.json();
+        if(!res.ok) throw new Error(json?.error?.message || 'Erreur API');
+        const text = json?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        const data = JSON.parse(text);
+        renderAiCard(data);
+      } catch(err){
+        $('resultMount').innerHTML = `<div class="fail"><b>Analyse impossible.</b><br>${escapeHtml(err.message || 'Erreur inconnue')}</div>`;
+      }
+    }
+
+    $('analyze').addEventListener('click', () => renderDemo($('query').value.trim() || 'Objet à identifier'));
+    $('askAI').addEventListener('click', askAI);
+    $('query').addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); askAI(); } });
+    $('clear').addEventListener('click', () => { $('query').value=''; renderDemo(); $('query').focus(); });
+    $('cameraOpen').addEventListener('click', openCamera); $('fab').addEventListener('click', openCamera); $('cameraClose').addEventListener('click', closeCamera); $('shutter').addEventListener('click', capture);
+    $('cameraFlip').addEventListener('click', async () => { state.facing = state.facing === 'environment' ? 'user' : 'environment'; closeCamera(); await openCamera(); });
+    $('addTile').addEventListener('click', () => $('fileInput').click()); $('fileInput').addEventListener('change', e => loadFiles(e.target.files || [])); $('sheetWrap').addEventListener('click', e => { if(e.target === $('sheetWrap')) closeSheet(); });
+    document.querySelectorAll('[data-mode]').forEach(btn => btn.addEventListener('click', () => { state.mode = btn.dataset.mode; document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b===btn)); renderDemo($('query').value.trim() || 'Objet à identifier'); }));
+    document.querySelectorAll('[data-suggest]').forEach(btn => btn.addEventListener('click', () => { $('query').value = btn.dataset.suggest; renderDemo(btn.dataset.suggest); }));
+    document.querySelectorAll('.navbtn').forEach(btn => btn.addEventListener('click', () => openSheet(btn.dataset.sheet)));
+    document.addEventListener('paste', e => { const img = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/')); if(img) loadFiles([img.getAsFile()]); });
+
+    renderDemo(); renderPhotos();
+    if('serviceWorker' in navigator){ window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
   </script>
 </body>
 </html>
