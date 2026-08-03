@@ -635,7 +635,7 @@ async function askAI(){
   const body={
     contents:[{role:"user",parts}],
     tools:[{google_search:{}}],
-    generationConfig:{temperature:0.2,maxOutputTokens:1400}
+    generationConfig:{temperature:0.2,maxOutputTokens:1400, responseMimeType: "application/json"}
   };
 
   const model=getModel();
