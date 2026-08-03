@@ -55,11 +55,122 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 .dupbox .dt{font-family:var(--cond);font-size:19px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
 .dup-sure .dt{color:#ff8a80} .dup-maybe .dt{color:#ffcf6b}
 .dupbox .dd{font-size:15px;margin-top:5px;color:var(--text)}
+.dupbox.dup-artist{background:#12222b;border-color:var(--crt-dim)}
+html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
+.dup-artist .dt{color:var(--crt)}
+.dup-list{margin:9px 0 0;padding-left:19px}
+.dup-list li{font-size:14px;line-height:1.55;color:var(--text)}
+.dup-list li.plus{color:var(--text-muted);font-style:italic}
 .dupbox .dn{font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:7px;line-height:1.5}
 .tick2{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
 .tick2 input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:2px}
 .tick2 i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text-muted)}
 .diagbox{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 12px;font-family:var(--mono);font-size:12px;line-height:1.6}
+
+
+.cam-btn.bac{border-color:var(--crt-dim)}
+.ico-cam{width:26px;height:26px;display:block;margin:0 auto 6px;color:var(--gold)}
+.bac-strip{display:flex;gap:2px;background:var(--border)}
+.bac-strip img{flex:1;min-width:0;height:84px;object-fit:cover}
+.bac-sect{margin-bottom:20px}
+.bac-sect h4{display:flex;align-items:baseline;gap:8px}
+.bac-sect h4 i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text-muted)}
+.bac-sub{font-size:12px;color:var(--text-muted);margin:-3px 0 9px;font-style:italic}
+.bacrow{display:flex;gap:10px;align-items:stretch;background:var(--bg);
+  border:1px solid var(--border);border-radius:9px;margin-bottom:7px;overflow:hidden}
+.bac-v{flex:0 0 40px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--cond);font-size:13px;font-weight:700;letter-spacing:.5px;color:#fff;padding:0 3px;text-align:center}
+.bacrow.R .bac-v{background:var(--go)} .bacrow.N .bac-v{background:var(--mid)}
+.bacrow.L .bac-v{background:var(--stop)} .bacrow.D .bac-v{background:var(--crt-dim);font-size:11px}
+.bacrow.D{opacity:.72}
+.bac-c{flex:1;min-width:0;padding:9px 2px 9px 0}
+.bac-n{font-size:14.5px;font-weight:650;line-height:1.3}
+.bac-a{font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:3px}
+.bac-note{font-size:12px;color:var(--text-muted);margin-top:5px;line-height:1.4}
+.bac-warn{font-family:var(--mono);font-size:10.5px;color:var(--mid);margin-top:5px;line-height:1.45}
+.bac-p{flex:0 0 86px;display:flex;flex-direction:column;align-items:flex-end;
+  justify-content:center;padding:9px 10px 9px 0;text-align:right}
+.bac-p b{font-family:var(--cond);font-size:20px;color:var(--gold);line-height:1}
+.bac-p span{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:2px}
+.bac-p .bac-dup{font-family:var(--mono);font-size:10px;color:var(--crt);text-align:right;line-height:1.3}
+.bac-spot{margin-top:7px;border:1px solid var(--crt-dim);background:transparent;color:var(--crt);
+  border-radius:6px;padding:5px 9px;font-family:var(--mono);font-size:9.5px;letter-spacing:.6px;
+  text-transform:uppercase;cursor:pointer}
+.chrono{
+  font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:9px;letter-spacing:1px;
+}
+.cal-actions{display:flex;gap:8px;margin-bottom:14px}
+.cal-actions .btn-save{margin:0;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-save.alt{background:var(--surface-light);color:var(--text);flex:0 0 42%}
+.cal-mois{
+  font-family:var(--cond);font-size:13px;text-transform:uppercase;letter-spacing:1.6px;
+  color:var(--crt);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);
+}
+.cal-mois:first-child{margin-top:0}
+.cal{display:flex;gap:12px;background:var(--surface);border:1px solid var(--border);
+  border-radius:11px;padding:12px;margin-bottom:9px}
+.cal.go{border-color:var(--gold);border-left-width:3px}
+.cal-d{
+  flex:0 0 46px;text-align:center;background:var(--bg);border-radius:8px;
+  padding:8px 2px;height:fit-content;
+}
+.cal-d b{display:block;font-family:var(--cond);font-size:24px;line-height:1;color:var(--text)}
+.cal-d span{
+  display:block;font-family:var(--mono);font-size:9px;text-transform:uppercase;
+  color:var(--text-muted);margin-top:3px;letter-spacing:.5px;
+}
+.cal-c{flex:1;min-width:0}
+.cal-n{font-size:15px;font-weight:650;line-height:1.3;display:flex;align-items:center;gap:7px}
+.cal-n .hot{color:var(--mid);flex:0 0 auto}
+.cal-v{
+  display:flex;align-items:center;gap:6px;margin-top:5px;
+  font-family:var(--mono);font-size:12px;color:var(--crt);
+}
+.cal-v em{font-style:normal;color:var(--text-muted)}
+.cal-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cal-tags span{
+  font-family:var(--mono);font-size:10px;letter-spacing:.4px;padding:3px 7px;
+  border-radius:5px;background:var(--surface-light);color:var(--text-muted);
+}
+.cal-tags .near{background:var(--go);color:#fff}
+.cal-tags .soon{background:transparent;border:1px solid var(--border)}
+.cal-note{font-size:12.5px;color:var(--text-muted);margin-top:8px;line-height:1.45}
+.cal-act{display:flex;align-items:center;gap:8px;margin-top:10px}
+.cal-go{
+  flex:1;height:36px;border:1px solid var(--gold);border-radius:7px;background:transparent;
+  color:var(--gold);font-family:var(--cond);font-size:12.5px;font-weight:700;letter-spacing:.6px;
+  text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.cal.go .cal-go{background:var(--gold);color:#14110f}
+html[data-theme="light"] .cal.go .cal-go{color:#fff}
+/* ══════ THÈME CLAIR ══════
+   Fond papier kraft plutôt que blanc pur : c'est la matière des étiquettes
+   et des cartons de brocante, et ça fatigue moins l'œil en plein soleil. */
+html[data-theme="light"]{
+  --bg:#EFEADD; --surface:#FBF8F1; --surface-light:#E4DDCB; --border:#CFC6B0;
+  --text:#181510; --text-muted:#6B6355;
+  --gold:#9A6F00; --crt:#0C5F66; --crt-dim:#8AA7A9;
+}
+html[data-theme="light"] .hud-cell{background:#241F16}
+html[data-theme="light"] .hud-cell .hl{color:#8AA7A9}
+html[data-theme="light"] .hud-cell b{color:#5FD8DF}
+html[data-theme="light"] .hud{border-bottom-color:#0C5F66}
+html[data-theme="light"] .nego{background:#F3EEE2}
+html[data-theme="light"] .act-buy{color:#fff}
+html[data-theme="light"] .queued{background:#FBF0DC}
+html[data-theme="light"] .empty-state .ico-big{color:#B9AE97}
+html[data-theme="light"] nav{background:#241F16}
+
+.seg{display:flex;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:8px}
+.seg button{
+  flex:1;background:transparent;border:0;border-right:1px solid var(--border);
+  padding:13px 6px;color:var(--text-muted);cursor:pointer;min-height:48px;
+  font-family:var(--cond);font-size:14px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:#14110f}
+html[data-theme="light"] .seg button[aria-pressed="true"]{color:#fff}
 
 /* ══════════════ SYSTÈME ARCADE ══════════════
    L'or est réservé à l'argent et à la valeur.
@@ -215,7 +326,8 @@ h3.sect i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--t
 .camera-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 .cam-btn { background: linear-gradient(145deg, var(--gold), var(--gold-dim)); border: none; border-radius: 12px; padding: 15px 10px; color: #000; font-family: var(--cond); font-weight: 700; font-size: 14px; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); transition: transform 0.1s; }
 .cam-btn:active { transform: scale(0.97); }
-.cam-btn.large { grid-column: 1 / -1; padding: 25px 10px; font-size: 16px; }
+.cam-btn.large { grid-column: 1 / -1; padding: 22px 10px; font-size: 16px; }
+.cam-btn small { display:block; font-size:10.5px; font-weight:400; opacity:.75; margin-top:3px; letter-spacing:.2px; }
 .cam-btn i { font-size: 28px; font-style: normal; }
 .cam-btn.large i { font-size: 38px; }
 
@@ -355,11 +467,11 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 </header>
 
 <!-- VIEW: LIVE SEARCH (Main) -->
-<svg id="sprite" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-scan" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="3" y="0" width="5" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="3" y="10" width="7" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="9" y="12" width="3" height="1"/><rect x="10" y="13" width="3" height="1"/><rect x="11" y="14" width="2" height="1"/></symbol><symbol id="i-crate" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="2" height="1" opacity=".45"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="2" height="1" opacity=".45"/><rect x="12" y="3" width="1" height="1" opacity=".45"/><rect x="14" y="3" width="1" height="1"/><rect x="1" y="4" width="14" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1" opacity=".45"/><rect x="5" y="5" width="2" height="1" opacity=".45"/><rect x="8" y="5" width="2" height="1" opacity=".45"/><rect x="11" y="5" width="2" height="1" opacity=".45"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="14" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="3" y="8" width="2" height="1" opacity=".45"/><rect x="6" y="8" width="2" height="1" opacity=".45"/><rect x="9" y="8" width="2" height="1" opacity=".45"/><rect x="12" y="8" width="1" height="1" opacity=".45"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="14" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="5" y="11" width="2" height="1" opacity=".45"/><rect x="8" y="11" width="2" height="1" opacity=".45"/><rect x="11" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol><symbol id="i-target" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="7" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="6" y="11" width="4" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="13" y="12" width="1" height="1"/><rect x="3" y="13" width="2" height="1"/><rect x="11" y="13" width="2" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-cash" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="8" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="6" y="4" width="2" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="3" y="8" width="8" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="0" y="10" width="14" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="2" y="12" width="14" height="1"/><rect x="2" y="13" width="1" height="1"/><rect x="15" y="13" width="1" height="1"/><rect x="2" y="14" width="14" height="1"/></symbol><symbol id="i-pad" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="2" width="12" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="14" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="15" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/><rect x="15" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="9" y="6" width="2" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="10" y="9" width="2" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></symbol><symbol id="i-queue" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="12" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="11" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="4" height="1" opacity=".45"/><rect x="10" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="6" y="5" width="2" height="1" opacity=".45"/><rect x="9" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="6" y="8" width="2" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="6" y="10" width="2" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="4" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="4" y="12" width="6" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="1" y="13" width="1" height="1"/><rect x="3" y="13" width="8" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="1" y="14" width="12" height="1"/></symbol><symbol id="i-tag" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="4" y="1" width="10" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="3" y="4" width="4" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/></symbol><symbol id="i-disk" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="3" y="2" width="8" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="13" y="3" width="2" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="2" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="8" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="3" y="9" width="10" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="5" y="10" width="6" height="1" opacity=".45"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="6" height="1" opacity=".45"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="5" y="12" width="6" height="1" opacity=".45"/><rect x="12" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="0" y="13" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="5" y="13" width="6" height="1" opacity=".45"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="0" y="14" width="15" height="1"/></symbol></svg>
+<svg id="sprite" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-scan" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="3" y="0" width="5" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="3" y="10" width="7" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="9" y="12" width="3" height="1"/><rect x="10" y="13" width="3" height="1"/><rect x="11" y="14" width="2" height="1"/></symbol><symbol id="i-crate" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="2" height="1" opacity=".45"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="2" height="1" opacity=".45"/><rect x="12" y="3" width="1" height="1" opacity=".45"/><rect x="14" y="3" width="1" height="1"/><rect x="1" y="4" width="14" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1" opacity=".45"/><rect x="5" y="5" width="2" height="1" opacity=".45"/><rect x="8" y="5" width="2" height="1" opacity=".45"/><rect x="11" y="5" width="2" height="1" opacity=".45"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="14" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="3" y="8" width="2" height="1" opacity=".45"/><rect x="6" y="8" width="2" height="1" opacity=".45"/><rect x="9" y="8" width="2" height="1" opacity=".45"/><rect x="12" y="8" width="1" height="1" opacity=".45"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="14" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="5" y="11" width="2" height="1" opacity=".45"/><rect x="8" y="11" width="2" height="1" opacity=".45"/><rect x="11" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol><symbol id="i-target" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="7" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="6" y="11" width="4" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="13" y="12" width="1" height="1"/><rect x="3" y="13" width="2" height="1"/><rect x="11" y="13" width="2" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-cash" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="8" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="6" y="4" width="2" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="3" y="8" width="8" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="0" y="10" width="14" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="2" y="12" width="14" height="1"/><rect x="2" y="13" width="1" height="1"/><rect x="15" y="13" width="1" height="1"/><rect x="2" y="14" width="14" height="1"/></symbol><symbol id="i-pad" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="2" width="12" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="14" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="15" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/><rect x="15" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="9" y="6" width="2" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="10" y="9" width="2" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></symbol><symbol id="i-queue" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="12" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="11" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="4" height="1" opacity=".45"/><rect x="10" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="6" y="5" width="2" height="1" opacity=".45"/><rect x="9" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="6" y="8" width="2" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="6" y="10" width="2" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="4" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="4" y="12" width="6" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="1" y="13" width="1" height="1"/><rect x="3" y="13" width="8" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="1" y="14" width="12" height="1"/></symbol><symbol id="i-tag" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="4" y="1" width="10" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="3" y="4" width="4" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/></symbol><symbol id="i-disk" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="3" y="2" width="8" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="13" y="3" width="2" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="2" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="8" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="3" y="9" width="10" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="5" y="10" width="6" height="1" opacity=".45"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="6" height="1" opacity=".45"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="5" y="12" width="6" height="1" opacity=".45"/><rect x="12" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="0" y="13" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="5" y="13" width="6" height="1" opacity=".45"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="0" y="14" width="15" height="1"/></symbol><symbol id="i-cal" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="1" width="2" height="1"/><rect x="12" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="12" y="2" width="2" height="1"/><rect x="1" y="3" width="14" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="2" height="1" opacity=".45"/><rect x="6" y="7" width="2" height="1" opacity=".45"/><rect x="9" y="7" width="2" height="1" opacity=".45"/><rect x="14" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="3" y="9" width="2" height="1" opacity=".45"/><rect x="6" y="9" width="2" height="1" opacity=".45"/><rect x="9" y="9" width="2" height="1" opacity=".45"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="2" height="1" opacity=".45"/><rect x="6" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/></symbol><symbol id="i-pin" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="6" y="7" width="4" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="3" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/></symbol><symbol id="i-sun" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="5" y="4" width="6" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="2" y="6" width="3" height="1"/><rect x="11" y="6" width="3" height="1"/><rect x="0" y="7" width="2" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="12" y="7" width="1" height="1"/><rect x="14" y="7" width="2" height="1"/><rect x="0" y="8" width="2" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="2" height="1"/><rect x="2" y="9" width="3" height="1"/><rect x="11" y="9" width="3" height="1"/><rect x="4" y="10" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/><rect x="5" y="11" width="6" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="7" y="12" width="2" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="7" y="14" width="2" height="1"/></symbol><symbol id="i-moon" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="4" height="1"/><rect x="4" y="2" width="4" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="1" y="5" width="5" height="1"/><rect x="1" y="6" width="5" height="1"/><rect x="1" y="7" width="5" height="1"/><rect x="1" y="8" width="5" height="1"/><rect x="1" y="9" width="5" height="1"/><rect x="1" y="10" width="6" height="1"/><rect x="2" y="11" width="5" height="1"/><rect x="3" y="12" width="6" height="1"/><rect x="4" y="13" width="8" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-flame" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="6" y="2" width="4" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="1" height="1"/><rect x="5" y="4" width="2" height="1"/><rect x="7" y="4" width="2" height="1" opacity=".45"/><rect x="9" y="4" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="6" y="5" width="4" height="1" opacity=".45"/><rect x="10" y="5" width="2" height="1"/><rect x="3" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1" opacity=".45"/><rect x="9" y="6" width="2" height="1" opacity=".45"/><rect x="11" y="6" width="2" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="4" y="7" width="2" height="1" opacity=".45"/><rect x="10" y="7" width="2" height="1" opacity=".45"/><rect x="12" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="4" y="8" width="1" height="1" opacity=".45"/><rect x="11" y="8" width="1" height="1" opacity=".45"/><rect x="12" y="8" width="2" height="1"/><rect x="1" y="9" width="2" height="1"/><rect x="3" y="9" width="1" height="1" opacity=".45"/><rect x="7" y="9" width="2" height="1"/><rect x="12" y="9" width="1" height="1" opacity=".45"/><rect x="13" y="9" width="2" height="1"/><rect x="1" y="10" width="2" height="1"/><rect x="3" y="10" width="1" height="1" opacity=".45"/><rect x="6" y="10" width="4" height="1"/><rect x="12" y="10" width="1" height="1" opacity=".45"/><rect x="13" y="10" width="2" height="1"/><rect x="1" y="11" width="2" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="6" y="11" width="4" height="1"/><rect x="12" y="11" width="1" height="1" opacity=".45"/><rect x="13" y="11" width="2" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="4" y="12" width="1" height="1" opacity=".45"/><rect x="6" y="12" width="4" height="1"/><rect x="11" y="12" width="1" height="1" opacity=".45"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="10" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-star" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="6" y="3" width="4" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="0" y="5" width="16" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="2" y="7" width="12" height="1"/><rect x="3" y="8" width="10" height="1"/><rect x="4" y="9" width="8" height="1"/><rect x="3" y="10" width="10" height="1"/><rect x="2" y="11" width="4" height="1"/><rect x="10" y="11" width="4" height="1"/><rect x="1" y="12" width="4" height="1"/><rect x="11" y="12" width="4" height="1"/><rect x="1" y="13" width="3" height="1"/><rect x="12" y="13" width="3" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol></svg>
 <div class="hud" id="hud">
-  <div class="hud-cell" onclick="switchView('log', document.querySelectorAll('.nav-item')[3])">
+  <div class="hud-cell" onclick="switchView('log', document.querySelectorAll('.nav-item')[4])">
     <span class="hl">Score</span><b id="hud-score">—</b></div>
-  <div class="hud-cell" onclick="switchView('spots', document.querySelectorAll('.nav-item')[2])">
+  <div class="hud-cell" onclick="switchView('spots', document.querySelectorAll('.nav-item')[3])">
     <span class="hl">Cibles</span><b id="hud-spots">0</b></div>
   <div class="hud-cell">
     <span class="hl">Crédits</span><b id="hud-cred">0</b></div>
@@ -381,7 +493,11 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     </button>
     <button class="cam-btn" onclick="triggerCamera('stand')">
       <i>👁️</i>
-      Vue d'ensemble<br><small>(Scan d'un stand)</small>
+      Vue d'ensemble<br><small>(Qu'y a-t-il sur ce stand ?)</small>
+    </button>
+    <button class="cam-btn bac" onclick="triggerCamera('bac')">
+      <svg class="ico-cam"><use href="#i-crate"/></svg>
+      Mode Bac<br><small>(Chaque pièce du lot)</small>
     </button>
   </div>
   
@@ -413,6 +529,23 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     </div>
   </div>
 
+  <div id="ai-results"></div>
+  <div class="count" id="local-count"></div>
+  <div id="local-results" class="list"></div>
+</div>
+
+<!-- VIEW: OFFLINE BASE -->
+<div id="view-offline" class="view">
+  <h2 class="view-title">Barème Local Complet 🎒</h2>
+  <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; font-family: var(--mono);">
+    Moyennes de catégorie, consultables sans réseau.
+  </p>
+
+  <div class="search-input-wrap" style="margin-bottom:14px">
+    <input type="text" id="q-base" placeholder="Chercher : lego, ampli, holo..." autocomplete="off" autocapitalize="off">
+    <div class="clear" onclick="baseClear()">✕</div>
+  </div>
+
   <div class="chips" id="chips">
     <div class="chip active" data-c="all">Tout</div>
     <div class="chip" data-c="jv">🎮 JV</div>
@@ -430,21 +563,30 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     <button class="vf" data-v="L">Laisse</button>
   </div>
 
-  <div id="ai-results"></div>
-  <div class="count" id="local-count"></div>
-  <div id="local-results" class="list"></div>
-</div>
-
-<!-- VIEW: OFFLINE BASE -->
-<div id="view-offline" class="view">
-  <h2 class="view-title">Barème Local Complet 🎒</h2>
-  <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; font-family: var(--mono);">
-    Base de secours hors-ligne (Moyennes de catégories). <br>Filtrez avec les catégories ou la barre de recherche.
-  </p>
+  <div class="count" id="base-count"></div>
   <div id="full-offline-list" class="list"></div>
 </div>
 
 <!-- VIEW: GUIDE / PROFIL -->
+<div id="view-cal" class="view">
+  <h2 class="view-title">Calendrier</h2>
+  <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France.</p>
+
+  <div class="cal-actions">
+    <button class="btn-save" onclick="calFetch()">
+      <svg class="ico16"><use href="#i-cal"/></svg> Chercher les prochaines dates</button>
+    <button class="btn-save alt" onclick="calAddManual()">＋ Ajouter à la main</button>
+  </div>
+
+  <div class="seg" id="cal-filter" style="margin-bottom:16px">
+    <button data-f="all" aria-pressed="true">Toutes</button>
+    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg>J'y vais</button>
+    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg>Les grosses</button>
+  </div>
+
+  <div id="cal-list"></div>
+</div>
+
 <div id="view-spots" class="view">
   <h2 class="view-title">Objets repérés</h2>
   <p class="view-sub">Ta liste pour la seconde passe. Les prix cèdent au remballage, vers 13 h.</p>
@@ -481,6 +623,13 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
     <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
+
+    <h3 class="sect">Apparence</h3>
+    <div class="seg" id="theme-seg">
+      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg>Clair</button>
+      <button data-t="auto" onclick="themeSet('auto')">Auto</button>
+      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg>Sombre</button>
+    </div>
 
     <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px">Mes bases Google Drive</h3>
     <div id="coll-state" class="diagbox"></div>
@@ -539,6 +688,9 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <div class="nav-item" onclick="switchView('offline', this)">
     <svg class="ico"><use href="#i-crate"/></svg><span>Base</span>
   </div>
+  <div class="nav-item" onclick="switchView('cal', this)">
+    <svg class="ico"><use href="#i-cal"/></svg><span>Dates</span>
+  </div>
   <div class="nav-item" onclick="switchView('spots', this)">
     <svg class="ico"><use href="#i-target"/></svg><span>Repérés</span>
     <i class="badge" id="bdg-spots"></i>
@@ -554,44 +706,115 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 <script>
 // --- FULL LOCAL DATA (Restored from original) ---
 const CATS=[["jv","🎮 Jeux vidéo"],["vin","💿 Vinyles"],["tec","📻 Rétro-tech"],["jou","🧸 Jouets"],["soc","🎲 Société"],["car","🃏 Cartes"],["pop","✨ Pop culture"]];
-const D=[
-{c:"jv",n:"N64 — jeu complet en boîte",b:25,r:60,v:"R",k:"Boîte carton = ultra fragile. Cale intérieure présente ? Sans elle, −40 %.",s:"nintendo 64 n64 cib"},
-{c:"jv",n:"N64 — cartouche seule",b:8,r:18,v:"N",k:"Souffle dans le connecteur devant lui : ça fait vendeur pressé, ça fait baisser.",s:"nintendo 64 loose"},
-{c:"jv",n:"SNES — cartouche seule",b:6,r:15,v:"N",k:"Étiquette trop nette + vis cruciforme = repro. Nintendo utilise du 3,8 mm tri-wing.",s:"super nintendo snes famicom"},
-{c:"jv",n:"SNES — jeu complet boîte + notice",b:25,r:60,v:"R",k:"La notice fait la moitié du prix. Ouvre la boîte avant de payer.",s:"super nintendo cib"},
-{c:"jv",n:"Mega Drive — jeu boîtier plastique",b:5,r:12,v:"N",k:"Charnières cassées = −50 %. Vérifie la notice ET le cale-cartouche.",s:"sega megadrive genesis"},
-{c:"jv",n:"Dreamcast — console",b:40,r:100,v:"R",k:"Pile morte = normal, mais utilise-le pour négocier. Vérifie le tiroir qui s'ouvre.",s:"sega dreamcast console"},
-{c:"jv",n:"GameCube — jeu CIB commun",b:12,r:28,v:"R",k:"Rayure circulaire concentrique = disque foutu. Notice souvent manquante.",s:"gamecube gc ngc nintendo"},
-{c:"jv",n:"GameCube — console complète",b:45,r:90,v:"R",k:"Carte mémoire incluse ? Elle vaut 15 € à elle seule. Teste les 4 ports manette.",s:"gamecube console ngc"},
-{c:"jv",n:"Game Boy DMG d'origine",b:15,r:35,v:"R",k:"Écran sans lignes verticales mortes. Ouvre la trappe : corrosion des piles = poubelle.",s:"gameboy dmg game boy brique"},
-{c:"jv",n:"GBA — jeu complet boîte + notice",b:20,r:45,v:"R",k:"Boîte carton fine, coins écrasés = −30 %.",s:"game boy advance gba cib"},
-{c:"jv",n:"3DS — console",b:30,r:70,v:"R",k:"New 3DS XL > 3DS classique. Stylet présent ? Écran du haut sans rayures ?",s:"3ds console new xl"},
-{c:"jv",n:"Wii U — console 32 Go",b:45,r:110,v:"R",k:"Le GamePad doit s'allumer : sans lui la console est inutilisable, donc invendable.",s:"wii u console gamepad"},
-{c:"jv",n:"PS1 — Final Fantasy VII/VIII/IX PAL",b:20,r:50,v:"R",k:"Compte les disques : il en manque presque toujours un.",s:"playstation ps1 final fantasy ff7"},
-{c:"jv",n:"PS2 — console + manette",b:20,r:45,v:"N",k:"La Slim lit mal les DVD rayés avec l'âge. Demande à tester si possible.",s:"playstation 2 ps2 console slim"},
-{c:"jv",n:"PS Vita — console",b:40,r:90,v:"R",k:"PCH-1000 (écran OLED) vaut nettement plus que la Slim LCD. Regarde au dos.",s:"ps vita psvita oled"},
-{c:"jv",n:"Manette officielle (toute console)",b:8,r:20,v:"R",k:"Pousse les sticks à fond et relâche : s'ils ne reviennent pas au centre, c'est mort.",s:"manette pad controller dualshock"},
-{c:"vin",n:"Rap FR 90s — IAM, NTM, Lunatic",b:12,r:90,v:"R",k:"Pressage d'origine, PAS la réédition 2018. Vérifie l'année et le label au dos.",s:"rap francais iam ntm lunatic"},
-{c:"vin",n:"Rock 60s-70s pressage d'origine",b:8,r:40,v:"R",k:"Matrice gravée dans le vinyle vierge près de l'étiquette : elle date le pressage.",s:"rock beatles pink floyd led zeppelin stones"},
-{c:"vin",n:"Metal 80s originaux",b:8,r:45,v:"R",k:"Pochette gatefold intacte, insert paroles présent.",s:"metal iron maiden metallica hard rock"},
-{c:"vin",n:"B.O. blockbuster (Top Gun, Grease)",b:2,r:4,v:"L",k:"Pressées par millions. Zéro plus-value à la revente.",s:"top gun dirty dancing grease ost"},
-{c:"tec",n:"Walkman Sony (testé, fonctionne)",b:15,r:50,v:"R",k:"Courroie sèche = son ralenti. Demande à entendre.",s:"walkman sony cassette baladeur"},
-{c:"tec",n:"iPod Classic / Mini",b:12,r:45,v:"R",k:"Le disque dur cliquette ? C'est mort. Le Mini se rénove très bien.",s:"ipod classic mini apple mp3"},
-{c:"tec",n:"Ampli hi-fi 70s — Technics, Marantz",b:40,r:150,v:"R",k:"Odeur de brûlé ou potards qui grattent : passe. Lourd = bon signe.",s:"ampli hifi technics marantz pioneer"},
-{c:"tec",n:"Platine Technics SL-1200",b:80,r:400,v:"R",k:"La trouvaille. Vérifie que le plateau démarre au quartz.",s:"platine technics sl1200 vinyle"},
-{c:"tec",n:"Reflex argentique — Nikon, Canon",b:25,r:90,v:"R",k:"Déclenche à toutes les vitesses. Mousses du dos en miettes = 20€ de rép.",s:"appareil photo argentique reflex nikon canon"},
-{c:"jou",n:"Lego en vrac (prix au kilo)",b:6,r:14,v:"R",k:"Au-delà de 7 €/kg tu paies trop. Sac opaque = demande à l'ouvrir.",s:"lego vrac kilo brique"},
-{c:"jou",n:"Star Wars Kenner 1977-85",b:8,r:60,v:"R",k:"Poinçon sous le pied : année + pays. Sans poinçon = repro moderne.",s:"star wars kenner vintage figurine"},
-{c:"jou",n:"Transformers G1",b:10,r:70,v:"R",k:"Complet = accessoires + armes. Sans eux, −70 %.",s:"transformers g1 optimus"},
-{c:"jou",n:"Jeu électronique Tiger / Game & Watch",b:10,r:60,v:"R",k:"Nintendo Game & Watch = pépite. Teste avec tes propres piles.",s:"game and watch tiger electronic lcd"},
-{c:"soc",n:"HeroQuest, Space Crusade",b:15,r:90,v:"R",k:"Compte les figurines contre la notice.",s:"heroquest space crusade mb"},
-{c:"soc",n:"Warhammer — figurines en vrac",b:10,r:50,v:"R",k:"Même peintes n'importe comment, la valeur est là.",s:"warhammer 40k games workshop figurine"},
-{c:"car",n:"Pokémon — holo ère Wizards",b:5,r:60,v:"R",k:"Regarde les arêtes : blanchies = carte jouée, divise par trois.",s:"pokemon holo wizards brillante"},
-{c:"car",n:"Magic — bord noir pré-1995",b:2,r:40,v:"R",k:"Bord noir + ancien cadre. Regarde le coin.",s:"magic mtg gathering bord noir"},
-{c:"pop",n:"Tintin — dos rond ou édition originale",b:15,r:200,v:"R",k:"La liste des titres au dos date l'édition.",s:"tintin herge bd casterman dos rond"},
-{c:"pop",n:"Affiche de cinéma pliée d'époque",b:5,r:60,v:"R",k:"Pliée = normal (repros sont roulées). Cherche le visa d'exploitation.",s:"affiche cinema poster film"},
-{c:"pop",n:"Montre mécanique — Seiko, Lip",b:20,r:120,v:"R",k:"Remonte-la : si la couronne tourne dans le vide, ressort cassé.",s:"montre mecanique automatique seiko lip"}
-];
+const D=[{"c":"jv","n":"N64 — jeu complet en boîte","b":25,"r":60,"v":"R","k":"Boîte carton = ultra fragile. Cale intérieure présente ? Sans elle, −40 %.","s":"nintendo 64 n64 cib"},
+{"c":"jv","n":"N64 — cartouche seule","b":8,"r":18,"v":"N","k":"Souffle dans le connecteur devant lui : ça fait vendeur pressé, ça fait baisser.","s":"nintendo 64 loose"},
+{"c":"jv","n":"SNES — cartouche seule","b":6,"r":15,"v":"N","k":"Étiquette trop nette + vis cruciforme = repro. Nintendo utilise du 3,8 mm tri-wing.","s":"super nintendo snes famicom"},
+{"c":"jv","n":"SNES — jeu complet boîte + notice","b":25,"r":60,"v":"R","k":"La notice fait la moitié du prix. Ouvre la boîte avant de payer.","s":"super nintendo cib"},
+{"c":"jv","n":"Mega Drive — jeu boîtier plastique","b":5,"r":12,"v":"N","k":"Charnières cassées = −50 %. Vérifie la notice ET le cale-cartouche.","s":"sega megadrive genesis"},
+{"c":"jv","n":"Master System — cartouche","b":5,"r":12,"v":"N","k":"Peu de demande hors titres cultes. Groupe-les.","s":"sega master system"},
+{"c":"jv","n":"Dreamcast — jeu","b":8,"r":22,"v":"R","k":"Boîtier fin qui casse. Le disque GD-ROM se raye vite, incline-le vers le soleil.","s":"sega dreamcast dc"},
+{"c":"jv","n":"Dreamcast — console","b":40,"r":100,"v":"R","k":"Pile morte = normal, mais utilise-le pour négocier. Vérifie le tiroir qui s'ouvre.","s":"sega dreamcast console"},
+{"c":"jv","n":"GameCube — jeu CIB commun","b":12,"r":28,"v":"R","k":"Rayure circulaire concentrique = disque foutu. Notice souvent manquante.","s":"gamecube gc ngc nintendo"},
+{"c":"jv","n":"GameCube — Wind Waker, Mario Kart DD, Metroid","b":25,"r":55,"v":"R","k":"Vérifie que le bon disque est dans le bon boîtier, l'erreur est fréquente.","s":"gamecube zelda mario kart double dash metroid prime"},
+{"c":"jv","n":"GameCube — console complète","b":45,"r":90,"v":"R","k":"Carte mémoire incluse ? Elle vaut 15 € à elle seule. Teste les 4 ports manette.","s":"gamecube console ngc"},
+{"c":"jv","n":"Game Boy DMG d'origine","b":15,"r":35,"v":"R","k":"Écran sans lignes verticales mortes. Ouvre la trappe : corrosion des piles = poubelle.","s":"gameboy dmg game boy brique"},
+{"c":"jv","n":"Game Boy Color","b":15,"r":35,"v":"R","k":"Coque transparente jaunie = normal, ça se blanchit. Teste le son.","s":"gameboy color gbc"},
+{"c":"jv","n":"Game Boy Advance SP","b":25,"r":60,"v":"R","k":"Modèle AGS-101 (écran rétroéclairé) = double le prix. Regarde la référence au dos.","s":"gba sp advance ags"},
+{"c":"jv","n":"GBA — cartouche seule","b":7,"r":16,"v":"N","k":"Repro très répandues. La cartouche officielle a un logo Nintendo gravé en relief.","s":"game boy advance gba"},
+{"c":"jv","n":"GBA — jeu complet boîte + notice","b":20,"r":45,"v":"R","k":"Boîte carton fine, coins écrasés = −30 %.","s":"game boy advance gba cib"},
+{"c":"jv","n":"DS / 3DS — jeu loose","b":5,"r":12,"v":"N","k":"Cartouche DS sans boîtier : très peu de valeur sauf Pokémon.","s":"nintendo ds 3ds"},
+{"c":"jv","n":"3DS — console","b":30,"r":70,"v":"R","k":"New 3DS XL > 3DS classique. Stylet présent ? Écran du haut sans rayures ?","s":"3ds console new xl"},
+{"c":"jv","n":"Wii — jeu","b":1.5,"r":4,"v":"L","k":"Aucune valeur SAUF Xenoblade, The Last Story, Metroid Trilogy, Pandora's Tower.","s":"wii nintendo"},
+{"c":"jv","n":"Wii U — jeu","b":10,"r":28,"v":"R","k":"Sous-coté et en pleine montée. Prends tout ce que tu vois.","s":"wii u wiiu"},
+{"c":"jv","n":"Wii U — console 32 Go","b":45,"r":110,"v":"R","k":"Le GamePad doit s'allumer : sans lui la console est inutilisable, donc invendable.","s":"wii u console gamepad"},
+{"c":"jv","n":"PS1 — jeu boîtier cristal","b":4,"r":12,"v":"N","k":"Boîtier fissuré = la norme. La notice + la cale font le prix.","s":"playstation ps1 psx"},
+{"c":"jv","n":"PS1 — Final Fantasy VII/VIII/IX PAL","b":20,"r":50,"v":"R","k":"Compte les disques : il en manque presque toujours un.","s":"playstation ps1 final fantasy ff7"},
+{"c":"jv","n":"PS2 — jeu","b":2,"r":6,"v":"L","k":"Rentable uniquement au lot. « Le carton entier, 15 € » et tu pars.","s":"playstation 2 ps2"},
+{"c":"jv","n":"PS2 — console + manette","b":20,"r":45,"v":"N","k":"La Slim lit mal les DVD rayés avec l'âge. Demande à tester si possible.","s":"playstation 2 ps2 console slim"},
+{"c":"jv","n":"PS3 / Xbox 360 — jeu","b":2,"r":5,"v":"L","k":"Marché saturé. Ne prends que Demon's Souls, Ni no Kuni, les niches.","s":"ps3 xbox 360"},
+{"c":"jv","n":"PS4 — jeu","b":3,"r":8,"v":"N","k":"Vise les exclus et les éditions limitées, pas le sport annuel.","s":"ps4 playstation 4"},
+{"c":"jv","n":"PSP — console","b":25,"r":55,"v":"R","k":"Écran sans pixels morts, batterie qui ne gonfle pas (dos bombé = danger).","s":"psp sony portable"},
+{"c":"jv","n":"PSP — jeu UMD","b":4,"r":10,"v":"N","k":"Le boîtier UMD se fissure à la charnière. Jaquette présente ?","s":"psp umd"},
+{"c":"jv","n":"PS Vita — console","b":40,"r":90,"v":"R","k":"PCH-1000 (écran OLED) vaut nettement plus que la Slim LCD. Regarde au dos.","s":"ps vita psvita oled"},
+{"c":"jv","n":"PS Vita — jeu","b":8,"r":20,"v":"R","k":"Petit tirage PAL, ça monte. Cartouche minuscule : vérifie qu'elle est dans le boîtier.","s":"ps vita psvita jeu"},
+{"c":"jv","n":"Manette officielle (toute console)","b":8,"r":20,"v":"R","k":"Pousse les sticks à fond et relâche : s'ils ne reviennent pas au centre, c'est mort.","s":"manette pad controller dualshock"},
+{"c":"jv","n":"Câbles, alims, adaptateurs officiels","b":3,"r":10,"v":"R","k":"Toujours rentable, tout le monde les jette. Cherche le logo constructeur moulé.","s":"cable alimentation adaptateur peritel"},
+{"c":"jv","n":"Boîte vide ou notice seule","b":2,"r":8,"v":"R","k":"Le complément qui transforme un jeu loose en CIB. Personne d'autre ne le ramasse.","s":"boite vide notice manuel"},
+{"c":"jv","n":"Console « plug & play » TV années 2000","b":0,"r":0,"v":"L","k":"Zéro marché. Même gratuit, ça t'encombre.","s":"plug and play tv games"},
+{"c":"jv","n":"Jeu PC big box carton années 90","b":5,"r":15,"v":"N","k":"Le carton fait tout. Vérifie que les disquettes/CD sont dedans.","s":"pc big box dos disquette"},
+{"c":"vin","n":"33T fond de bac généraliste","b":1,"r":3,"v":"L","k":"Variété française 80s, Top 50, classique DG : marché mort. Passe vite.","s":"vinyle 33 tours lp variete"},
+{"c":"vin","n":"Rap FR 90s — IAM, NTM, Lunatic, Ärsenik","b":12,"r":90,"v":"R","k":"Pressage d'origine, PAS la réédition 2018. Vérifie l'année et le label au dos.","s":"rap francais iam ntm lunatic arsenik hip hop"},
+{"c":"vin","n":"Jazz Blue Note / Impulse! original","b":10,"r":80,"v":"R","k":"Pressage original = adresse du label gravée. Sinon c'est un repress à 8 €.","s":"jazz blue note impulse coltrane"},
+{"c":"vin","n":"Rock 60s-70s pressage d'origine","b":8,"r":40,"v":"R","k":"Matrice gravée dans le vinyle vierge près de l'étiquette : elle date le pressage.","s":"rock beatles pink floyd led zeppelin stones"},
+{"c":"vin","n":"Metal 80s — Maiden, Metallica, Slayer originaux","b":8,"r":45,"v":"R","k":"Pochette gatefold intacte, insert paroles présent.","s":"metal iron maiden metallica hard rock"},
+{"c":"vin","n":"B.O. confidentielle / petit tirage","b":3,"r":20,"v":"R","k":"Rayon négligé, disques peu joués. La valeur vient du faible tirage, pas du genre.","s":"ost bande originale film soundtrack score"},
+{"c":"vin","n":"B.O. blockbuster — Top Gun, Dirty Dancing, Grease, Flashdance","b":2,"r":4,"v":"L","k":"Pressées par millions. Achat plaisir uniquement, zéro plus-value à la revente.","s":"top gun dirty dancing grease flashdance saturday night fever ost bande originale"},
+{"c":"vin","n":"Vinyle encore sous blister d'origine","b":5,"r":25,"v":"R","k":"Blister fin et collé = d'origine. Film épais et lâche = remballé récemment.","s":"vinyle scelle blister sealed neuf"},
+{"c":"vin","n":"45T pochette illustrée / picture disc","b":2,"r":8,"v":"N","k":"Sans pochette, ça ne vaut rien. Avec, ça se revend au lot.","s":"45 tours single picture disc"},
+{"c":"vin","n":"Livre-disque enfant / Disney","b":2,"r":10,"v":"N","k":"Le livret compte plus que le disque. Complet ou rien.","s":"disney livre disque enfant conte"},
+{"c":"vin","n":"Coffret box set","b":8,"r":30,"v":"N","k":"Lourd, encombrant, revente lente. Ne prends que si le prix est cassé.","s":"coffret box set integrale"},
+{"c":"vin","n":"78 tours","b":0,"r":0,"v":"L","k":"Aucun marché, et ça casse dans le sac. Laisse.","s":"78 tours shellac"},
+{"c":"tec","n":"Walkman Sony (testé, fonctionne)","b":15,"r":50,"v":"R","k":"Courroie sèche = son ralenti. Demande à entendre : c'est le seul test qui compte.","s":"walkman sony cassette baladeur"},
+{"c":"tec","n":"Baladeur cassette générique","b":3,"r":6,"v":"L","k":"Hors Sony/Aiwa/Panasonic haut de gamme, ça ne se revend pas.","s":"baladeur cassette generique"},
+{"c":"tec","n":"iPod Classic / Mini","b":12,"r":45,"v":"R","k":"Le disque dur cliquette ? C'est mort. Le Mini se rénove très bien, il monte.","s":"ipod classic mini apple mp3"},
+{"c":"tec","n":"Nokia 3310 / 8210 / 8850","b":8,"r":30,"v":"R","k":"Coque d'origine et écran non fissuré. Les modèles chromés valent le double.","s":"nokia 3310 telephone portable gsm"},
+{"c":"tec","n":"Ampli hi-fi 70s — Technics, Marantz, Pioneer, Sansui","b":40,"r":150,"v":"R","k":"Odeur de brûlé ou potards qui grattent : passe ton chemin. Lourd = bon signe.","s":"ampli amplificateur hifi technics marantz pioneer sansui"},
+{"c":"tec","n":"Platine Technics SL-1200 / SL-1210","b":80,"r":400,"v":"R","k":"La trouvaille du jour si tu la vois. Vérifie que le plateau démarre au quartz.","s":"platine technics sl1200 sl1210 vinyle"},
+{"c":"tec","n":"Platine vinyle générique","b":10,"r":25,"v":"N","k":"Cellule + diamant présents ? Sinon compte 30 € de remise en état.","s":"platine tourne disque"},
+{"c":"tec","n":"Enceintes vintage — JBL, Cabasse, Bose","b":25,"r":90,"v":"R","k":"Appuie doucement sur la membrane : elle doit revenir sans frotter. Mousse craquelée = à refaire.","s":"enceintes jbl cabasse bose hp"},
+{"c":"tec","n":"Reflex argentique — Nikon FM, Canon AE-1, Pentax K1000","b":25,"r":90,"v":"R","k":"Déclenche à toutes les vitesses. Mousses du dos en miettes = 20 € de réparation.","s":"appareil photo argentique reflex nikon canon pentax"},
+{"c":"tec","n":"Polaroid SX-70 / SLR680","b":25,"r":120,"v":"R","k":"Soufflet sans trou (regarde-le à contre-jour). Le cuir décollé se recolle.","s":"polaroid sx70 instantane"},
+{"c":"tec","n":"Compact argentique 90s","b":3,"r":12,"v":"N","k":"Les modèles à objectif fixe lumineux (Olympus mju II) valent 5× le reste.","s":"compact argentique jetable olympus mju"},
+{"c":"tec","n":"Ordinateur 8/16 bits — C64, Amstrad CPC, Amiga","b":30,"r":120,"v":"R","k":"Sans alimentation d'origine ni câble écran, divise par deux. L'alim est introuvable.","s":"commodore c64 amstrad cpc amiga atari retro ordinateur"},
+{"c":"tec","n":"Casio LCD / calculatrice-montre 80s","b":5,"r":25,"v":"R","k":"Écran sans segments manquants. Bracelet d'origine = bonus réel.","s":"casio montre lcd calculatrice digitale"},
+{"c":"tec","n":"Machine à écrire","b":15,"r":45,"v":"N","k":"Décorative surtout. Lourde à porter toute la matinée, réfléchis avant.","s":"machine a ecrire olivetti"},
+{"c":"tec","n":"Téléphone à cadran / Minitel","b":5,"r":20,"v":"N","k":"Purement déco. Le fil et le combiné complets sinon ça ne part pas.","s":"telephone cadran minitel bakelite"},
+{"c":"jou","n":"Lego en vrac (prix au kilo)","b":6,"r":14,"v":"R","k":"Au-delà de 7 €/kg tu paies trop. Sac opaque = demande à l'ouvrir.","s":"lego vrac kilo brique"},
+{"c":"jou","n":"Lego — set complet boîte + notice","b":15,"r":50,"v":"R","k":"Notice présente = +50 %. Un set incomplet redevient du vrac au kilo.","s":"lego set boite notice"},
+{"c":"jou","n":"Playmobil en vrac","b":5,"r":12,"v":"N","k":"Moins liquide que le Lego. Les personnages seuls partent mieux que les décors.","s":"playmobil vrac"},
+{"c":"jou","n":"Star Wars Kenner 1977-85","b":8,"r":60,"v":"R","k":"Poinçon sous le pied : année + pays. Sans poinçon = repro moderne.","s":"star wars kenner vintage figurine"},
+{"c":"jou","n":"Star Wars moderne (Hasbro post-95)","b":1,"r":3,"v":"L","k":"Produit en masse. Rien à en tirer hors coffrets scellés.","s":"star wars hasbro moderne"},
+{"c":"jou","n":"Transformers G1","b":10,"r":70,"v":"R","k":"Complet = accessoires + armes. Sans eux, −70 %. Plastique jauni se blanchit.","s":"transformers g1 optimus"},
+{"c":"jou","n":"Musclor / Masters of the Universe vintage","b":8,"r":45,"v":"R","k":"Élastique de la taille souvent cassé : le buste tourne dans le vide.","s":"musclor motu masters of the universe he-man"},
+{"c":"jou","n":"Petites voitures Dinky, Corgi, Majorette 60s-70s","b":3,"r":20,"v":"R","k":"La boîte d'origine triple le prix. Peinture d'origine, jamais repeinte.","s":"dinky corgi majorette solido voiture miniature"},
+{"c":"jou","n":"Hot Wheels « redline » (liseré rouge sur pneu)","b":2,"r":40,"v":"R","k":"Le liseré rouge sur le pneu = avant 1977. C'est tout ce qu'il faut regarder.","s":"hot wheels redline mattel"},
+{"c":"jou","n":"Polly Pocket Bluebird (boîtier)","b":5,"r":30,"v":"R","k":"Marque Bluebird sous le boîtier, pas Mattel. Figurines à l'intérieur ?","s":"polly pocket bluebird"},
+{"c":"jou","n":"Jeu électronique Tiger / Game & Watch","b":10,"r":60,"v":"R","k":"Nintendo Game & Watch = pépite. Teste avec tes propres piles, emporte-en.","s":"game and watch tiger electronic lcd"},
+{"c":"jou","n":"Tamagotchi / Furby 90s","b":5,"r":30,"v":"R","k":"Coque sans corrosion de piles. Les premières séries Bandai valent le plus.","s":"tamagotchi furby bandai 90s"},
+{"c":"jou","n":"Barbie années 60-70","b":10,"r":60,"v":"R","k":"Marquage au bas du dos : année et lieu de fabrication. Cheveux non coupés.","s":"barbie vintage mattel poupee"},
+{"c":"jou","n":"Barbie 90+ / peluches / poupée porcelaine","b":1,"r":2,"v":"L","k":"Marché effondré. Exception : Steiff, reconnaissable au bouton dans l'oreille.","s":"barbie 90 peluche porcelaine steiff"},
+{"c":"jou","n":"Puzzle","b":0.5,"r":1,"v":"L","k":"Une pièce manquante et c'est invendable. Tu ne peux pas vérifier sur place.","s":"puzzle"},
+{"c":"soc","n":"HeroQuest, Space Crusade, Cry Havoc","b":15,"r":90,"v":"R","k":"Compte les figurines contre la notice. Même incomplet ça se revend en pièces.","s":"heroquest space crusade cry havoc mb"},
+{"c":"soc","n":"Warhammer — figurines en vrac","b":10,"r":50,"v":"R","k":"Même peintes n'importe comment, la valeur est dans le plastique et le métal.","s":"warhammer 40k games workshop figurine citadel"},
+{"c":"soc","n":"Donjons & Dragons — livres 80s-90s","b":5,"r":35,"v":"R","k":"Éditions AD&D en VF : petit tirage, forte demande. Dos décollé = −50 %.","s":"donjons et dragons dnd ad&d jdr jeu de role"},
+{"c":"soc","n":"Jeu allemand — Catane, Carcassonne, Agricola","b":6,"r":20,"v":"R","k":"Compte les pions AVANT de payer, la boîte est toujours « complète » selon le vendeur.","s":"catane carcassonne agricola jeu allemand"},
+{"c":"soc","n":"Jeu de société années 50-60 boîte carton","b":3,"r":15,"v":"N","k":"Valeur surtout décorative : c'est le graphisme de la boîte qui se vend.","s":"jeu societe vintage carton 1950"},
+{"c":"soc","n":"Monopoly, Trivial Pursuit, Cluedo standards","b":1,"r":2,"v":"L","k":"Il y en a sur trois stands sur quatre. Aucune tension.","s":"monopoly trivial pursuit cluedo"},
+{"c":"soc","n":"Échiquier bois ou pierre","b":5,"r":25,"v":"N","k":"32 pièces, compte-les. Un cavalier manquant tue la vente.","s":"echecs echiquier jeu de dames"},
+{"c":"car","n":"Pokémon — lot en vrac non trié","b":15,"r":60,"v":"R","k":"Cherche « Wizards of the Coast » en bas de carte (1999-2003). C'est là qu'est l'argent.","s":"pokemon vrac lot cartes tcg"},
+{"c":"car","n":"Pokémon — holo ère Wizards","b":5,"r":60,"v":"R","k":"Regarde les arêtes : blanchies = carte jouée, divise par trois.","s":"pokemon holo wizards brillante"},
+{"c":"car","n":"Pokémon — cartes 2015 et après","b":0.2,"r":0.5,"v":"L","k":"Surproduites. Uniquement au poids, pour compléter un lot.","s":"pokemon moderne recent"},
+{"c":"car","n":"Magic — bord noir pré-1995","b":2,"r":40,"v":"R","k":"Bord noir + ancien cadre = Alpha/Beta/Unlimited/Legends. Regarde le coin.","s":"magic mtg gathering bord noir alpha beta"},
+{"c":"car","n":"Magic — Revised / 4e édition","b":0.5,"r":3,"v":"N","k":"Sans valeur à l'unité, mais les lots de 500+ partent bien.","s":"magic revised 4e edition"},
+{"c":"car","n":"Yu-Gi-Oh 1re édition 2002-2004","b":2,"r":25,"v":"R","k":"Mention « 1st Edition » sous l'illustration. Sinon c'est du réimprimé.","s":"yugioh yu-gi-oh 1st edition"},
+{"c":"car","n":"Album Panini foot complet 90s","b":10,"r":60,"v":"R","k":"Complet = vraiment complet. Feuillette-le vite, les trous se voient d'un coup d'œil.","s":"panini album football vignettes"},
+{"c":"car","n":"Classeur de cartes rempli","b":20,"r":70,"v":"R","k":"Demande à l'ouvrir. Deux minutes de feuilletage valent 50 € d'écart.","s":"classeur binder cartes collection"},
+{"c":"pop","n":"Tintin — dos rond ou édition originale","b":15,"r":200,"v":"R","k":"Tout se lit au dos et en 4e de couverture : la liste des titres date l'édition.","s":"tintin herge bd casterman dos rond"},
+{"c":"pop","n":"Astérix — EO cartonnée","b":10,"r":120,"v":"R","k":"Dos toilé, pas de code-barres. Le code-barres = réédition sans valeur.","s":"asterix goscinny uderzo bd eo"},
+{"c":"pop","n":"Blake & Mortimer, Spirou, Lucky Luke anciens","b":5,"r":30,"v":"R","k":"Coiffe de dos intacte et pages non jaunies au point d'être cassantes.","s":"blake mortimer spirou lucky luke bd franquin"},
+{"c":"pop","n":"BD moderne bon état","b":1.5,"r":5,"v":"N","k":"Au lot uniquement. « Les 20, 20 € » et tu ne discutes pas plus.","s":"bd moderne album"},
+{"c":"pop","n":"Affiche de cinéma pliée d'époque","b":5,"r":60,"v":"R","k":"Pliée = normal et bon signe (les repros sont roulées). Cherche le visa d'exploitation.","s":"affiche cinema poster film"},
+{"c":"pop","n":"Plaque émaillée publicitaire ancienne","b":20,"r":150,"v":"R","k":"Refabrications très courantes : l'émail moderne est trop régulier, sans éclats d'usure.","s":"plaque emaillee publicite enseigne"},
+{"c":"pop","n":"Pyrex / Duralex / Arcopal vintage coloré","b":3,"r":20,"v":"R","k":"Aucun éclat sur le bord. Les motifs 70s orange et vert se vendent le mieux.","s":"pyrex duralex arcopal vaisselle vintage"},
+{"c":"pop","n":"Lampe ou petit mobilier design 50s-70s","b":20,"r":150,"v":"R","k":"Retourne l'objet : l'étiquette d'éditeur sous le pied fait tout le prix.","s":"lampe design mobilier scandinave 70s"},
+{"c":"pop","n":"Montre mécanique — Seiko, Certina, Tissot, Lip","b":20,"r":120,"v":"R","k":"Remonte-la : si la couronne tourne dans le vide, le ressort est cassé.","s":"montre mecanique automatique seiko certina tissot lip"},
+{"c":"pop","n":"Montre à quartz 90s sans marque","b":2,"r":4,"v":"L","k":"Une pile neuve coûte presque le prix de revente.","s":"montre quartz"},
+{"c":"pop","n":"Vêtement vintage de marque","b":5,"r":60,"v":"R","k":"L'étiquette dit tout : Levi's 501 made in USA, Lacoste croco brodé France, Harris Tweed.","s":"vetement vintage levis 501 lacoste veste"},
+{"c":"pop","n":"Argenterie poinçonnée","b":10,"r":40,"v":"N","k":"Poinçon Minerve = argent massif. Sans poinçon, c'est du métal argenté sans valeur.","s":"argenterie couverts poincon minerve argent"},
+{"c":"pop","n":"Cartes postales anciennes","b":0.3,"r":2,"v":"N","k":"Les « animées » (avec des gens, des métiers) valent 5 à 10× les paysages.","s":"cartes postales anciennes cpa"},
+{"c":"pop","n":"Timbres en vrac","b":2,"r":4,"v":"L","k":"Marché quasi mort. Ne prends que si c'est offert avec autre chose.","s":"timbres philatelie collection"},
+{"c":"pop","n":"Outils anciens bois et laiton","b":3,"r":20,"v":"N","k":"Marque frappée dans le manche = vendable. Anonyme = déco à 5 €.","s":"outils anciens rabot laiton menuisier"},
+{"c":"vin","n":"Metal 80s originaux","b":8,"r":45,"v":"R","k":"Pochette gatefold intacte, insert paroles présent.","s":"metal iron maiden metallica hard rock"}];
 
 const TICKS=["Espèces en petites coupures","Sacs solides ou cabas pliables","Téléphone chargé (l'IA en dépend)","Batterie externe","Piles AA et AAA pour tester"];
 
@@ -615,6 +838,8 @@ function vib() {
 function switchView(viewId, navEl) {
   if(viewId === 'log') setTimeout(renderLog, 0);
   if(viewId === 'spots') setTimeout(renderSpots, 0);
+  if(viewId === 'cal') setTimeout(renderCal, 0);
+  if(viewId === 'offline') setTimeout(renderOfflineFull, 0);
   vib();
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + viewId).classList.add('active');
@@ -628,7 +853,8 @@ function init() {
   $('api-key').value = localStorage.getItem(KEY_STORE) || "";
   const savedModel = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
-  collPaint(); hudPaint(); renderLog(); renderSpots();
+  themeApply(themeGet());
+  collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
@@ -643,7 +869,7 @@ function init() {
       document.querySelectorAll('.chip').forEach(ch => ch.classList.remove('active'));
       e.target.classList.add('active');
       localCat = e.target.dataset.c;
-      renderLocalList();
+      renderOfflineFull();
     });
   });
 
@@ -658,7 +884,7 @@ function init() {
         localVf.add(val);
         e.target.classList.add('active');
       }
-      renderLocalList();
+      renderOfflineFull();
     });
   });
 
@@ -674,6 +900,15 @@ function init() {
   });
 
   $('ask').addEventListener('click', () => { vib(); askAIText(); });
+
+  $('q-base').addEventListener('input', () => renderOfflineFull());
+  document.querySelectorAll('#cal-filter button').forEach(b =>
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#cal-filter button').forEach(x => x.setAttribute('aria-pressed','false'));
+      b.setAttribute('aria-pressed','true');
+      calFilter = b.dataset.f;
+      renderCal();
+    }));
   
   // Ticks init
   $("sac-ticks").innerHTML = TICKS.map(t => `<label class="tick"><input type="checkbox"><span>${t}</span></label>`).join("");
@@ -764,6 +999,10 @@ function handleFileSelect(e) {
     shrink(files[0]).then(p => { photoQueue = [p]; askAISingle(); });
   } else if (currentCameraMode === 'stand') {
     shrink(files[0]).then(p => { photoQueue = [p]; askAIStand(); });
+  } else if (currentCameraMode === 'bac') {
+    Array.from(files).forEach(file => {
+      shrink(file).then(p => { photoQueue.push(p); updatePhotoQueueUI(); });
+    });
   }
   e.target.value = ""; // reset
 }
@@ -771,7 +1010,14 @@ function handleFileSelect(e) {
 function updatePhotoQueueUI() {
   const q = $('photo-queue');
   const imgs = $('photo-queue-imgs');
-  if(photoQueue.length > 0 && currentCameraMode === 'multi') {
+  const btn = q.querySelector('.analyze-multi-btn');
+  if(btn){
+    btn.textContent = currentCameraMode === 'bac'
+      ? `Trier ce bac (${photoQueue.length} photo${photoQueue.length>1?'s':''}) 🚀`
+      : "Analyser ces photos 🚀";
+    btn.setAttribute("onclick", currentCameraMode === 'bac' ? "askAIBac()" : "askAIMulti()");
+  }
+  if(photoQueue.length > 0 && (currentCameraMode === 'multi' || currentCameraMode === 'bac')) {
     q.classList.add('active');
     imgs.innerHTML = photoQueue.map((p, i) => `
       <div class="photo-thumb-wrap">
@@ -861,6 +1107,17 @@ const SCHEMA_SINGLE = {
     nego:{type:"STRING"}, note:{type:"STRING"}
   }
 };
+const SCHEMA_BAC = {
+  type:"OBJECT",
+  properties:{
+    typeBac:{type:"STRING"},
+    resume:{type:"STRING"},
+    lot:{type:"ARRAY",items:{type:"OBJECT",properties:{
+      nom:{type:"STRING"}, artiste:{type:"STRING"}, annee:{type:"STRING"},
+      revente:{type:"NUMBER"}, prixMax:{type:"NUMBER"},
+      verdict:{type:"STRING"}, note:{type:"STRING"}}}}
+  }
+};
 const SCHEMA_STAND = {
   type:"OBJECT",
   properties:{
@@ -877,12 +1134,20 @@ const SCHEMA_STAND = {
    par la recherche web SANS schéma (JSON demandé dans le texte, parsé large),
    et on ne retombe sur le schéma strict que si le grounding est indisponible. */
 function buildBody(parts, mode, ground){
-  const b = { contents:[{role:"user", parts}], generationConfig:{ temperature:0.2, maxOutputTokens:2000 } };
+  const b = { contents:[{role:"user", parts}],
+    generationConfig:{
+      temperature:0.2,
+      maxOutputTokens:1200,
+      /* Gemini 2.5 raisonne avant de repondre par defaut : 30 a 50 secondes
+         d'attente pour un gain nul sur une fiche de prix. On coupe. */
+      thinkingConfig:{thinkingBudget:0}
+    }};
   if(ground){
     b.tools = [{google_search:{}}];
   }else{
     b.generationConfig.responseMimeType = "application/json";
-    b.generationConfig.responseSchema = (mode === 'stand') ? SCHEMA_STAND : SCHEMA_SINGLE;
+    b.generationConfig.responseSchema = mode === 'stand' ? SCHEMA_STAND
+      : mode === 'bac' ? SCHEMA_BAC : SCHEMA_SINGLE;
   }
   return b;
 }
@@ -907,7 +1172,7 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
   const aiEl = $('ai-results');
 
   if(!key) {
-    switchView('guide', document.querySelectorAll('.nav-item')[4]);
+    switchView('guide', document.querySelectorAll('.nav-item')[5]);
     setTimeout(()=> alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
     return;
   }
@@ -923,8 +1188,22 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
 
   aiEl.innerHTML = `<div class="loading">
     <div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p>${images.length ? "Analyse visuelle & " : ""}Recherche de la cote réelle...</p>
+    <p id="load-step">${images.length ? "Lecture de la photo" : "Identification"}…</p>
+    <div class="chrono" id="chrono">0.0 s</div>
   </div>`;
+  const t0 = Date.now();
+  const etapes = getGround()
+    ? [[1200,"Recherche des ventes récentes…"],[4000,"Comparaison des prix…"],[9000,"Presque fini…"]]
+    : [[900,"Estimation…"],[3000,"Presque fini…"]];
+  const tics = etapes.map(([ms,txt]) => setTimeout(() => {
+    const e = $('load-step'); if(e) e.textContent = txt;
+  }, ms));
+  const chrono = setInterval(() => {
+    const c = $('chrono');
+    if(!c){ clearInterval(chrono); return; }
+    c.textContent = ((Date.now()-t0)/1000).toFixed(1) + " s";
+  }, 100);
+  const stopChrono = () => { clearInterval(chrono); tics.forEach(clearTimeout); };
   $('photo-queue').classList.remove('active');
   window.scrollTo({top:0, behavior:'smooth'});
 
@@ -965,16 +1244,17 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
         throw new Error(lastErr);
       }
 
-      credBump();
+      credBump(); stopChrono();
       const j = extractJSON(await res.json());
       let avis = null;
       if(!at.ground){
         avis = "Sans recherche web : prix estimés de mémoire, à confirmer.";
-        if(mode !== 'stand') j.confiance = "faible";
+        if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
       }
       if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
 
-      if(mode === 'stand') renderStandResult(j, images[0], avis);
+      if(mode === 'bac') renderBacResult(j, images, avis);
+      else if(mode === 'stand') renderStandResult(j, images[0], avis);
       else { renderResult(j, images, avis); if(ckey && !avis) cacheSet(ckey, j); }
       return;
 
@@ -985,6 +1265,7 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue) {
     if(queuePush(promptText, images, mode)) return;
   }
 
+  stopChrono();
   let titre = "Échec de l'analyse.", aide = "Vérifie ta connexion et réessaie.";
   if(/401|403|API_KEY_INVALID|PERMISSION/i.test(lastErr)){
     titre = "Clé refusée.";
@@ -1050,6 +1331,26 @@ function askAIMulti() {
   
   callGemini(prompt, photoQueue, 'multi');
   photoQueue = [];
+}
+
+function askAIBac() {
+  if(!photoQueue.length){ alert("Prends d'abord une ou plusieurs photos du bac."); return; }
+  /* On envoie la liste des artistes déjà possédés, tronquée : elle aide le
+     modèle à lire les pochettes floues, sans pour autant remplacer le
+     contrôle de doublon qui reste fait en local, exemplaire par exemplaire. */
+  const artistes = [...new Set(collRead().map(x => x.a).filter(Boolean))].slice(0, 120);
+  const indice = artistes.length
+    ? `\nIndice de lecture : le chineur possède déjà des articles de ${artistes.join(", ")}. Ces noms t'aident à déchiffrer une tranche floue, mais ne suppose jamais qu'un article est présent s'il ne l'est pas visiblement.`
+    : "";
+
+  const prompt = BRIEF_BASE + `
+BAC / LOT HOMOGÈNE. Les photos montrent un bac, un carton ou une pile d'articles du même type (pochettes de vinyles serrées, boîtes de jeux, cartouches, BD...).
+Identifie CHAQUE article LISIBLE, un par un. Ne devine pas ce qui est illisible ou masqué : ne liste que ce que tu lis vraiment.
+Pour chacun : nom (titre exact), artiste (ou console/éditeur), annee si visible, revente estimée en euros, prixMax à payer aujourd'hui, verdict "R" (prends), "N" (seulement sous prixMax) ou "L" (laisse), et une note très courte s'il y a une raison particulière (pressage recherché, tirage massif, état visible).
+Trie du plus intéressant au moins intéressant.
+typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non.${indice}
+Réponds UNIQUEMENT en JSON : {"typeBac":"","resume":"","lot":[{"nom":"","artiste":"","annee":"","revente":0,"prixMax":0,"verdict":"","note":""}]}`;
+  callGemini(prompt, photoQueue, 'bac');
 }
 
 function askAIStand() {
@@ -1151,6 +1452,85 @@ function renderStandResult(j, image, avis) {
     </div>`;
 }
 
+function renderBacResult(j, images, avis){
+  const lot = Array.isArray(j.lot) ? j.lot : [];
+  const rows = lot.map(o => {
+    const dup = collMatch((o.artiste || "") + " " + (o.nom || ""));
+    return {o, dup: dup && dup.sur ? dup : null, flou: dup && !dup.sur ? dup : null};
+  });
+
+  /* Un doublon certain repasse en "laisse" quel que soit l'avis du modèle :
+     l'objet peut être une bonne affaire dans l'absolu et un mauvais achat
+     pour lui. */
+  const pris   = rows.filter(r => !r.dup && (r.o.verdict || "").toUpperCase() === "R");
+  const nego   = rows.filter(r => !r.dup && (r.o.verdict || "").toUpperCase() === "N");
+  const laisse = rows.filter(r => !r.dup && (r.o.verdict || "").toUpperCase() === "L");
+  const doub   = rows.filter(r => r.dup);
+
+  const valeur = pris.reduce((s,r) => s + (Number(r.o.revente)||0), 0);
+
+  const ligne = (r, i) => {
+    const o = r.o;
+    const v = (o.verdict || "N").toUpperCase();
+    const cls = r.dup ? "D" : (["R","N","L"].includes(v) ? v : "N");
+    const idx = rows.indexOf(r);
+    return `<div class="bacrow ${cls}">
+      <div class="bac-v">${r.dup ? "DÉJÀ" : cls}</div>
+      <div class="bac-c">
+        <div class="bac-n">${esc(o.nom || "—")}</div>
+        <div class="bac-a">${esc(o.artiste || "")}${o.annee ? " · " + esc(o.annee) : ""}</div>
+        ${r.flou ? `<div class="bac-warn">Ressemble à « ${esc(r.flou.e.t)} » que tu as déjà — vérifie l'édition.</div>` : ""}
+        ${o.note ? `<div class="bac-note">${esc(o.note)}</div>` : ""}
+      </div>
+      <div class="bac-p">
+        ${r.dup ? `<span class="bac-dup">en collection</span>`
+          : `<b>${Number(o.prixMax)||"?"}€</b><span>→ ${Number(o.revente)||"?"}€</span>
+             ${cls === "L" ? "" : `<button class="bac-spot" onclick="bacSpot(${idx})">Repérer</button>`}`}
+      </div>
+    </div>`;
+  };
+
+  const bloc = (titre, arr, sub) => arr.length
+    ? `<div class="bac-sect"><h4>${titre} <i>${arr.length}</i></h4>
+       ${sub ? `<p class="bac-sub">${sub}</p>` : ""}${arr.map(ligne).join("")}</div>`
+    : "";
+
+  BAC_ROWS = rows;
+
+  $('ai-results').innerHTML = `
+    <div class="aicard">
+      <div class="bac-strip">${images.slice(0,4).map(im => `<img src="${im.url}">`).join("")}</div>
+      <div class="aihead ${pris.length ? 'R' : doub.length && !nego.length ? 'L' : 'N'}">
+        <div class="p"><div class="num">${lot.length}</div><div class="cap">LUS</div></div>
+        <div class="t">
+          <div class="v">MODE BAC${j.typeBac ? " · " + esc(j.typeBac).toUpperCase() : ""}</div>
+          <div class="o">${pris.length} à prendre${doub.length ? ` · ${doub.length} déjà chez toi` : ""}</div>
+          ${valeur ? `<div class="r">valeur des « à prendre » ≈ ${valeur}€</div>` : ""}
+        </div>
+      </div>
+      ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
+      <div class="aibody">
+        ${j.resume ? `<div class="saywrap">${esc(j.resume)}</div>` : ""}
+        ${bloc("À prendre", pris)}
+        ${bloc("À négocier", nego, "Seulement sous le prix indiqué.")}
+        ${bloc("Tu l'as déjà", doub, "Sauf si l'édition diffère de la tienne.")}
+        ${bloc("Laisse", laisse)}
+        ${!lot.length ? `<div class="empty-state"><svg class="ico-big"><use href="#i-crate"/></svg>
+          <b>Rien de lisible</b><p>Rapproche-toi, ou écarte les pochettes pour dégager les tranches.</p></div>` : ""}
+      </div>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
+    </div>`;
+}
+
+let BAC_ROWS = [];
+function bacSpot(i){
+  const r = BAC_ROWS[i]; if(!r) return;
+  const o = r.o;
+  LAST = {objet: (o.artiste ? o.artiste + " — " : "") + (o.nom || ""),
+          revente: Number(o.revente)||0, prixMax: Number(o.prixMax)||0, demande: 0};
+  spotAdd();
+}
+
 /* ---------- COLLECTION : ANTI-DOUBLON ---------- */
 const COLL_STORE = "insertcoin.collection";
 
@@ -1215,22 +1595,73 @@ function collMatch(query){
   }
   if(!best || best.sc < 0.40) return null;
 
-  /* Certain = le titre est entièrement retrouvé ET l'artiste concorde. */
-  best.sur = best.couvert >= 0.99 && best.aSc >= 0.4;
+  /* Certain = titre entièrement retrouvé ET artiste concordant — mais un
+     album éponyme (« Bruel » de Patrick Bruel) ne peut pas être confirmé
+     par le seul nom de l'artiste : il faut un mot propre au titre. */
+  const at = collTokens(best.e.a || "");
+  const tt = collTokens(best.e.t || "");
+  const propre = tt.some(w => !at.includes(w) && qs.has(w));
+  best.sur = best.couvert >= 0.99 && best.aSc >= 0.4 && (propre || !tt.length);
+  if(!propre && tt.length && tt.every(w => at.includes(w))) return null;
   return best;
+}
+
+/* Niveau artiste : sur un stand on tape d'abord un nom, pas un titre.
+   « Patrick Bruel » ne prouve aucun doublon, mais savoir lesquels tu as
+   déjà est justement ce qui permet de décider, pouce sur le bac. */
+function collArtist(query){
+  const coll = collRead();
+  if(!coll.length) return null;
+  const qs = new Set(collTokens(query));
+  if(!qs.size) return null;
+
+  const groupes = {};
+  for(const e of coll){
+    const at = collTokens(e.a || "");
+    if(!at.length) continue;
+    /* Tous les mots de l'artiste doivent être dans la recherche.
+       Un artiste en un seul mot doit être assez long pour ne pas
+       déclencher sur n'importe quoi. */
+    if(at.length === 1 && at[0].length < 4) continue;
+    if(!at.every(w => qs.has(w))) continue;
+    const k = at.join(" ");
+    (groupes[k] = groupes[k] || {nom: e.a, kind: e.k, titres: []}).titres.push(e.t || "—");
+  }
+  const cles = Object.keys(groupes);
+  if(!cles.length) return null;
+  cles.sort((a,b) => groupes[b].titres.length - groupes[a].titres.length);
+  return groupes[cles[0]];
 }
 
 function collBanner(query){
   const m = collMatch(query);
-  if(!m) return "";
-  const cls = m.sur ? "dup-sure" : "dup-maybe";
-  const quoi = m.e.k === "jeux" ? "CE JEU" : "CE DISQUE";
-  const titre = m.sur ? ("TU AS DÉJÀ " + quoi) : "PEUT-ÊTRE UN DOUBLON";
-  return `<div class="dupbox ${cls}">
-    <div class="dt">${titre}</div>
-    <div class="dd">${esc(m.e.a || "")} — ${esc(m.e.t || "")}</div>
-    ${m.sur ? "" : `<div class="dn">Correspondance partielle : vérifie l'édition avant de renoncer.</div>`}
-  </div>`;
+  if(m){
+    const cls = m.sur ? "dup-sure" : "dup-maybe";
+    const quoi = m.e.k === "jeux" ? "CE JEU" : "CE DISQUE";
+    const titre = m.sur ? ("TU AS DÉJÀ " + quoi) : "PEUT-ÊTRE UN DOUBLON";
+    return `<div class="dupbox ${cls}">
+      <div class="dt">${titre}</div>
+      <div class="dd">${esc(m.e.a || "")} — ${esc(m.e.t || "")}</div>
+      ${m.sur ? "" : `<div class="dn">Correspondance partielle : vérifie l'édition avant de renoncer.</div>`}
+    </div>`;
+  }
+
+  const g = collArtist(query);
+  if(g){
+    const n = g.titres.length;
+    const mot = g.kind === "jeux"
+      ? (n > 1 ? "jeux sur cette console" : "jeu sur cette console")
+      : (n > 1 ? "disques de cet artiste" : "disque de cet artiste");
+    const liste = g.titres.slice(0, 8).map(t => `<li>${esc(t)}</li>`).join("");
+    const reste = n > 8 ? `<li class="plus">et ${n - 8} autre${n - 8 > 1 ? "s" : ""}…</li>` : "";
+    return `<div class="dupbox dup-artist">
+      <div class="dt">${n} ${mot}</div>
+      <div class="dd">${esc(g.nom)}</div>
+      <ul class="dup-list">${liste}${reste}</ul>
+      <div class="dn">Pas de doublon détecté sur ce titre précis — ajoute-le à ta recherche pour en être sûr.</div>
+    </div>`;
+  }
+  return "";
 }
 
 /* ---------- GOOGLE DRIVE ---------- */
@@ -1463,6 +1894,187 @@ function collPaint(){
   el.innerHTML = `<b style="color:var(--gold)">${c.length} entrées en mémoire.</b><br>`
     + (nv ? `${nv} vinyles` : "") + (nv && nj ? " · " : "") + (nj ? `${nj} jeux` : "") + "<br>"
     + `<span style="opacity:.7">${quand}</span>`;
+}
+
+/* ══════════ CALENDRIER DES BROCANTES ══════════
+   Aucun service public ne fournit ces dates sous forme exploitable : on
+   interroge le web via l'IA, puis on garde le résultat en local pour qu'il
+   reste consultable sans réseau. Les entrées ajoutées à la main ne sont
+   jamais écrasées par une recherche. */
+const CAL_STORE = "insertcoin.cal";
+let calFilter = "all";
+
+function calRead(){ try { return JSON.parse(localStorage.getItem(CAL_STORE) || "[]"); } catch(e){ return []; } }
+function calWrite(a){ try { localStorage.setItem(CAL_STORE, JSON.stringify(a)); } catch(e){} }
+
+function calKey(x){ return norm((x.date||"") + "|" + (x.ville||"")); }
+
+async function calFetch(){
+  const key = localStorage.getItem(KEY_STORE);
+  if(!key){ alert("Configure d'abord ta clé Gemini dans Réglages."); return; }
+  if(!navigator.onLine){ alert("Pas de réseau. Les dates déjà enregistrées restent visibles."); return; }
+
+  const el = $('cal-list');
+  el.innerHTML = `<div class="loading"><div class="dots"><span>●</span><span>●</span><span>●</span></div>
+    <p>Recherche des brocantes autour de Binche…</p></div>`;
+
+  const auj = new Date().toISOString().slice(0,10);
+  const brief = `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de Binche (7130, Belgique), en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes).
+Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
+Cherche sur brocabrac.fr, vide-greniers.org, brocantes.be, les sites communaux et les agendas locaux.
+Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis Binche en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
+N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
+Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
+
+  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
+  let lastErr = "";
+
+  for(const m of chain){
+    try{
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
+        {method:"POST", headers:{"Content-Type":"application/json","x-goog-api-key":key},
+         body: JSON.stringify({
+           contents:[{role:"user", parts:[{text:brief}]}],
+           tools:[{google_search:{}}],
+           generationConfig:{temperature:0.1, maxOutputTokens:2600, thinkingConfig:{thinkingBudget:0}}
+         })});
+      if(!res.ok){
+        let d=""; try{ d=(await res.json()).error?.message||""; }catch(e){}
+        lastErr = "HTTP " + res.status + (d?" — "+d:"");
+        if([400,403,404,429,500,503].includes(res.status)) continue;
+        throw new Error(lastErr);
+      }
+      const j = extractJSON(await res.json());
+      const trouve = (j.brocantes || []).filter(x => x && x.date && x.ville);
+      if(!trouve.length){ lastErr = "Aucune date exploitable"; continue; }
+
+      const cur = calRead();
+      const perso = cur.filter(x => x.manuel);          // on préserve tes ajouts
+      const marques = {};
+      cur.forEach(x => { if(x.go) marques[calKey(x)] = true; });
+
+      const fusion = [...perso];
+      const vus = new Set(perso.map(calKey));
+      trouve.forEach(x => {
+        const k = calKey(x);
+        if(vus.has(k)) return;
+        vus.add(k);
+        fusion.push({...x, km: Number(x.km)||0, exposants: Number(x.exposants)||0, go: !!marques[k]});
+      });
+      fusion.sort((a,b) => (a.date||"").localeCompare(b.date||""));
+      calWrite(fusion);
+      credBump();
+      renderCal();
+      return;
+    }catch(err){ lastErr = String(err.message || err); }
+  }
+
+  el.innerHTML = `<div class="aifail"><b>Recherche impossible.</b><br>
+    ${/429|quota/i.test(lastErr) ? "Quota Gemini indisponible pour l'instant." : "Réessaie dans un moment."}
+    <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(lastErr)}</span></div>`;
+}
+
+function calAddManual(){
+  const nom = prompt("Nom de la brocante ?"); if(!nom) return;
+  const ville = prompt("Ville ?") || "";
+  const date = prompt("Date (AAAA-MM-JJ) ?", new Date().toISOString().slice(0,10)) || "";
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){ alert("Date attendue au format AAAA-MM-JJ."); return; }
+  const km = parseInt(prompt("Distance depuis Binche en km ?", "20") || "0", 10) || 0;
+  const a = calRead();
+  a.push({date, nom, ville, pays:"BE", km, exposants:0, horaires:"", note:"", manuel:true, go:true});
+  a.sort((x,y) => (x.date||"").localeCompare(y.date||""));
+  calWrite(a); renderCal();
+}
+
+function calGo(i){
+  const a = calRead(); if(!a[i]) return;
+  a[i].go = !a[i].go; calWrite(a); renderCal(); vib();
+}
+function calDel(i){ const a = calRead(); a.splice(i,1); calWrite(a); renderCal(); }
+
+function calJours(d){
+  const j = Math.round((new Date(d + "T12:00:00") - new Date().setHours(12,0,0,0)) / 86400000);
+  if(j < 0) return null;
+  if(j === 0) return "Aujourd'hui";
+  if(j === 1) return "Demain";
+  if(j < 7) return "Dans " + j + " jours";
+  if(j < 14) return "La semaine prochaine";
+  return "Dans " + Math.round(j/7) + " semaines";
+}
+
+function renderCal(){
+  const el = $('cal-list'); if(!el) return;
+  let a = calRead().filter(x => calJours(x.date) !== null);
+  if(calFilter === "go")  a = a.filter(x => x.go);
+  if(calFilter === "big") a = a.filter(x => (x.exposants || 0) >= 150);
+
+  if(!a.length){
+    el.innerHTML = `<div class="empty-state">
+      <svg class="ico-big"><use href="#i-cal"/></svg>
+      <b>Aucune date</b>
+      <p>${calFilter === "all"
+        ? "Appuie sur « Chercher les prochaines dates » pour remplir ton agenda des trois prochains mois."
+        : "Rien sous ce filtre. Reviens sur « Toutes »."}</p></div>`;
+    return;
+  }
+
+  let moisCourant = "";
+  el.innerHTML = a.map((x, i) => {
+    const idx = calRead().findIndex(y => calKey(y) === calKey(x));
+    const dt = new Date(x.date + "T12:00:00");
+    const mois = dt.toLocaleDateString('fr-BE', {month:'long', year:'numeric'});
+    const sep = mois !== moisCourant ? `<div class="cal-mois">${mois}</div>` : "";
+    moisCourant = mois;
+    const grosse = (x.exposants || 0) >= 150;
+    const proche = (x.km || 0) <= 15;
+    return sep + `
+      <div class="cal ${x.go ? 'go' : ''}">
+        <div class="cal-d">
+          <b>${dt.getDate()}</b>
+          <span>${dt.toLocaleDateString('fr-BE',{weekday:'short'})}</span>
+        </div>
+        <div class="cal-c">
+          <div class="cal-n">${esc(x.nom || "Brocante")}
+            ${grosse ? `<svg class="ico16 hot"><use href="#i-flame"/></svg>` : ""}</div>
+          <div class="cal-v"><svg class="ico16"><use href="#i-pin"/></svg>${esc(x.ville)}
+            <em>${x.pays === "FR" ? "France" : "Belgique"}</em></div>
+          <div class="cal-tags">
+            <span class="${proche ? 'near' : ''}">${x.km || "?"} km</span>
+            ${x.exposants ? `<span>${x.exposants} exposants</span>` : ""}
+            ${x.horaires ? `<span>${esc(x.horaires)}</span>` : ""}
+            <span class="soon">${calJours(x.date)}</span>
+          </div>
+          ${x.note ? `<div class="cal-note">${esc(x.note)}</div>` : ""}
+          <div class="cal-act">
+            <button class="cal-go" onclick="calGo(${idx})">
+              <svg class="ico16"><use href="#i-star"/></svg>${x.go ? "J'y vais" : "Marquer"}</button>
+            <button class="li-x" onclick="calDel(${idx})">✕</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ══════════ THÈME ══════════ */
+const THEME_STORE = "insertcoin.theme";
+function themeGet(){ try { return localStorage.getItem(THEME_STORE) || "auto"; } catch(e){ return "auto"; } }
+function themeApply(mode){
+  const sombre = mode === "dark" || (mode === "auto" &&
+    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.setAttribute("data-theme", sombre ? "dark" : "light");
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute("content", sombre ? "#0a0a0c" : "#EFEADD");
+  document.querySelectorAll('#theme-seg button').forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.t === mode));
+}
+function themeSet(mode){
+  try{ localStorage.setItem(THEME_STORE, mode); }catch(e){}
+  themeApply(mode);
+}
+if(window.matchMedia){
+  window.matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => { if(themeGet() === "auto") themeApply("auto"); });
 }
 
 /* ══════════ HUD ══════════ */
@@ -1807,21 +2419,54 @@ function renderLocalList() {
 }
 
 function renderOfflineFull() {
-  // Simple dump of everything for offline mode
+  const t = norm((($('q-base') || {}).value || "").trim());
+  const out = D.filter(d =>
+    (localCat === "all" || d.c === localCat) &&
+    (localVf.size === 0 || localVf.has(d.v)) &&
+    (!t || norm(d.n + " " + d.s + " " + d.k).includes(t))
+  );
+
+  const cnt = $('base-count');
+  if(cnt) cnt.textContent = out.length
+    ? out.length + " repère" + (out.length > 1 ? "s" : "")
+    : "";
+
   const list = $('full-offline-list');
-  list.innerHTML = D.map((d, i) => {
-    const price = d.b > 0 ? d.b+"€" : "NON";
+  if(!out.length){
+    list.innerHTML = `<div class="empty-state">
+      <svg class="ico-big"><use href="#i-crate"/></svg>
+      <b>Rien sous ce filtre</b>
+      <p>Change de catégorie, ou vide la recherche pour tout revoir.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = out.map((d, i) => {
+    const mult = d.b > 0 ? Math.round(d.r/d.b*10)/10 : 0;
+    const price = d.b > 0 ? (d.b%1?d.b.toFixed(1):d.b)+"€" : "NON";
+    const cap = d.b > 0 ? "MAX" : "PASSE";
+    const mx = d.b > 0 ? `<span class="mult">×${mult}</span>` : "";
     return `
-      <div class="item ${d.v}" onclick="document.getElementById('kf${i}').classList.toggle('open')">
-        <div class="slab"><div class="num">${price}</div></div>
+      <div class="item ${d.v}" data-i="b${i}" tabindex="0">
+        <div class="slab"><div class="num">${price}</div><div class="cap">${cap}</div></div>
         <div class="meat">
           <div class="name">${d.n}</div>
-          <div class="sub">Revente ≈ ${d.r}€</div>
+          <div class="sub">${mx}<span>→ ${d.r}€</span></div>
         </div>
       </div>
-      <div class="check" id="kf${i}"><b>À vérifier</b>${d.k}</div>
-    `;
+      <div class="check" id="kb${i}"><b>À vérifier</b>${d.k}</div>`;
   }).join('');
+
+  list.querySelectorAll(".item").forEach(el => {
+    el.addEventListener("click", () => {
+      const k = $("k" + el.dataset.i);
+      if(k) k.classList.toggle("open");
+    });
+  });
+}
+
+function baseClear(){
+  const f = $('q-base'); if(f) f.value = "";
+  renderOfflineFull();
 }
 
 window.onload = init;
