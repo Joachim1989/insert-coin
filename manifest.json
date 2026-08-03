@@ -2,7 +2,7 @@
 "name": "Insert Coin - Pixel Papa",
 "short_name": "Insert Coin",
 "description": "L'argus de terrain ultime pour les chineurs.",
-"start_url": "./insert_coin_redesign.html",
+"start_url": "./index.html",
 "scope": "./",
 "display": "standalone",
 "orientation": "portrait",
