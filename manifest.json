@@ -1,13 +1,13 @@
 {
-  "name": "Pixel Papa Brocante",
+  "name": "Pixel Papa Live",
   "short_name": "Pixel Papa",
-  "description": "Recherche live par texte ou photo pour chiner en brocante, avec base hors ligne secondaire.",
-  "start_url": "./pixel-papa-brocante.html",
+  "description": "Recherche live par texte ou photo pour brocante, avec base hors ligne secondaire.",
+  "start_url": "./pixel-papa-live.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#130d1f",
-  "theme_color": "#130d1f",
+  "background_color": "#120c1d",
+  "theme_color": "#120c1d",
   "lang": "fr",
   "categories": ["shopping", "utilities", "productivity"],
   "icons": [
