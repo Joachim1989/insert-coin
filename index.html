@@ -96,6 +96,59 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .bac-spot{margin-top:7px;border:1px solid var(--crt-dim);background:transparent;color:var(--crt);
   border-radius:6px;padding:5px 9px;font-family:var(--mono);font-size:9.5px;letter-spacing:.6px;
   text-transform:uppercase;cursor:pointer}
+/* ── Jauge de prix ── */
+.gauge{padding:16px 14px 12px;border-top:1px solid var(--border)}
+.g-top,.g-bot{position:relative;height:16px}
+.g-top span,.g-bot span{
+  position:absolute;transform:translateX(-50%);white-space:nowrap;
+  font-family:var(--mono);font-size:10px;color:var(--text-muted);letter-spacing:.2px;
+}
+.g-top .g-gold{color:var(--gold);font-weight:700}
+.g-top .g-right{left:auto;right:0;transform:none}
+.g-bot .g-strong{color:var(--text);font-weight:700;font-size:11px}
+.g-bar{position:relative;display:flex;height:16px;border-radius:5px;overflow:visible;margin:3px 0 4px}
+.g-z{display:block;height:100%}
+.g-z:first-child{border-radius:5px 0 0 5px} .g-z:last-child{border-radius:0 5px 5px 0}
+.g-z.go{background:var(--go)} .g-z.mid{background:var(--mid)} .g-z.stop{background:var(--stop)}
+.g-band{position:absolute;top:-4px;height:24px;border:1px dashed var(--text);opacity:.45;border-radius:3px}
+.g-max{position:absolute;top:-4px;height:24px;width:2px;background:var(--gold);transform:translateX(-1px)}
+.g-cur{position:absolute;top:-7px;height:30px;width:3px;background:var(--text);
+  transform:translateX(-1.5px);border-radius:2px;box-shadow:0 0 0 2px var(--surface)}
+.g-key{display:flex;gap:13px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.g-key span{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;color:var(--text-muted)}
+.g-key i{width:9px;height:9px;border-radius:2px;display:block}
+.g-key i.go{background:var(--go)} .g-key i.mid{background:var(--mid)} .g-key i.stop{background:var(--stop)}
+
+/* ── Répartition d'un bac ── */
+.bacbar{margin-bottom:16px}
+.bb{display:flex;height:26px;border-radius:7px;overflow:hidden;background:var(--surface-light)}
+.bb-s{display:flex;align-items:center;justify-content:center;color:#fff;
+  font-family:var(--cond);font-size:13px;font-weight:700;min-width:22px}
+.bb-s.R{background:var(--go)} .bb-s.N{background:var(--mid)}
+.bb-s.D{background:var(--crt-dim)} .bb-s.L{background:var(--stop)}
+.bb-k{display:flex;gap:11px;flex-wrap:wrap;margin-top:8px}
+.bb-k span{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--text-muted)}
+.bb-k i{width:9px;height:9px;border-radius:2px;display:block}
+.bb-k i.R{background:var(--go)} .bb-k i.N{background:var(--mid)}
+.bb-k i.D{background:var(--crt-dim)} .bb-k i.L{background:var(--stop)}
+
+/* ── Graphiques du journal ── */
+.chart{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px;margin-bottom:12px}
+.chart-h{font-family:var(--mono);font-size:10px;letter-spacing:1.3px;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:11px;display:flex;align-items:baseline;gap:8px}
+.chart-h i{font-style:normal;font-size:9.5px;opacity:.75}
+.chart svg{width:100%;height:96px;display:block}
+.chart-f{display:flex;justify-content:space-between;align-items:baseline;margin-top:9px}
+.chart-f span{font-family:var(--mono);font-size:10px;color:var(--text-muted)}
+.chart-f b{font-family:var(--cond);font-size:23px}
+.chart-f b.pos{color:var(--go)} .chart-f b.neg{color:var(--stop)}
+.tb{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.tb-n{flex:0 0 38%;font-size:12.5px;line-height:1.25;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.tb-r{flex:1;height:11px;background:var(--surface-light);border-radius:6px;overflow:hidden}
+.tb-r i{display:block;height:100%;background:linear-gradient(90deg,var(--crt-dim),var(--go));border-radius:6px}
+.tb-v{flex:0 0 46px;text-align:right;font-family:var(--cond);font-size:15px;color:var(--go)}
 .chrono{
   font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-top:9px;letter-spacing:1px;
 }
@@ -596,6 +649,7 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 <div id="view-log" class="view">
   <h2 class="view-title">Journal de chasse</h2>
   <div id="log-sum" class="logsum"></div>
+  <div id="log-charts"></div>
   <div id="log-stats"></div>
   <h3 class="sect">Tes achats</h3>
   <div id="log-list"></div>
@@ -1395,6 +1449,7 @@ function renderResult(j, images, avis) {
       </div>
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${tirTxt}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
+      ${priceGauge(parseFloat($('price').value||"0")||0, j.prixMax, j.revente, j.fourchetteBas, j.fourchetteHaut)}
       <div class="aibody">
         ${j.identification ? `<div class="ident">${esc(j.identification)}</div>` : ''}
         ${j.preuves && j.preuves.length ? `<h4>Preuves / Marché</h4><ul>${j.preuves.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
@@ -1510,6 +1565,7 @@ function renderBacResult(j, images, avis){
       </div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
       <div class="aibody">
+        ${bacBar({R:pris.length, N:nego.length, D:doub.length, L:laisse.length})}
         ${j.resume ? `<div class="saywrap">${esc(j.resume)}</div>` : ""}
         ${bloc("À prendre", pris)}
         ${bloc("À négocier", nego, "Seulement sous le prix indiqué.")}
@@ -1950,17 +2006,29 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
       if(!trouve.length){ lastErr = "Aucune date exploitable"; continue; }
 
       const cur = calRead();
-      const perso = cur.filter(x => x.manuel);          // on préserve tes ajouts
-      const marques = {};
-      cur.forEach(x => { if(x.go) marques[calKey(x)] = true; });
+      /* Ce que tu as décidé toi ne se perd jamais : une date ajoutée à la main
+         OU marquée « j'y vais » survit à toutes les recherches suivantes,
+         même si la nouvelle recherche ne la retrouve pas. */
+      const garde = cur.filter(x => x.manuel || x.go);
 
-      const fusion = [...perso];
-      const vus = new Set(perso.map(calKey));
+      const fusion = [...garde];
+      const vus = new Set(garde.map(calKey));
       trouve.forEach(x => {
         const k = calKey(x);
-        if(vus.has(k)) return;
+        if(vus.has(k)){
+          /* Déjà conservée : on rafraîchit ses infos sans toucher au marquage. */
+          const dej = fusion.find(y => calKey(y) === k);
+          if(dej && !dej.manuel){
+            dej.nom = x.nom || dej.nom;
+            dej.km = Number(x.km) || dej.km;
+            dej.exposants = Number(x.exposants) || dej.exposants;
+            dej.horaires = x.horaires || dej.horaires;
+            dej.note = x.note || dej.note;
+          }
+          return;
+        }
         vus.add(k);
-        fusion.push({...x, km: Number(x.km)||0, exposants: Number(x.exposants)||0, go: !!marques[k]});
+        fusion.push({...x, km: Number(x.km)||0, exposants: Number(x.exposants)||0, go: false});
       });
       fusion.sort((a,b) => (a.date||"").localeCompare(b.date||""));
       calWrite(fusion);
@@ -2116,6 +2184,127 @@ function credBump(){
     localStorage.setItem(CRED_STORE, JSON.stringify(c));
   }catch(e){}
   hudPaint();
+}
+
+/* ══════════ LECTURE VISUELLE ══════════
+   Tout est en SVG écrit à la main : rien à télécharger, rien à initialiser,
+   ça s'affiche instantanément et fonctionne sans réseau. */
+
+/* Jauge de prix — l'élément le plus utile de l'app.
+   Une seule réglette : où tombe le prix demandé par rapport à ton plafond
+   et à la revente. Zone verte = tu gagnes, rouge = tu perds. */
+function priceGauge(demande, prixMax, revente, lo, hi){
+  const mx = Number(prixMax)||0, rv = Number(revente)||0, d = Number(demande)||0;
+  if(!mx && !rv) return "";
+  const haut = Math.max(rv, d, mx) * 1.15 || 10;
+  const pc = v => Math.max(0, Math.min(100, (v / haut) * 100));
+
+  const pMax = pc(mx), pRev = pc(rv), pD = pc(d);
+  /* L'étiquette se recentre pour ne jamais sortir de l'écran,
+     alors que le trait reste à sa position exacte. */
+  const lab = x => Math.max(16, Math.min(84, x));
+
+  const bande = (lo && hi && hi > lo)
+    ? `<i class="g-band" style="left:${pc(lo)}%;width:${Math.max(1.5, pc(hi)-pc(lo))}%"></i>` : "";
+
+  return `<div class="gauge">
+    <div class="g-top">
+      <span class="g-gold" style="left:${lab(pMax)}%">Ton max ${mx}€</span>
+      ${rv ? `<span class="g-right">Revente ${rv}€</span>` : ""}
+    </div>
+    <div class="g-bar">
+      <i class="g-z go" style="width:${pMax}%"></i>
+      <i class="g-z mid" style="width:${Math.max(0,pRev-pMax)}%"></i>
+      <i class="g-z stop" style="width:${Math.max(0,100-pRev)}%"></i>
+      ${bande}
+      <i class="g-max" style="left:${pMax}%"></i>
+      ${d ? `<i class="g-cur" style="left:${pD}%"></i>` : ""}
+    </div>
+    <div class="g-bot">
+      ${d ? `<span class="g-strong" style="left:${lab(pD)}%">Il demande ${d}€</span>` : ""}
+    </div>
+    <div class="g-key">
+      <span><i class="go"></i>Tu gagnes</span>
+      <span><i class="mid"></i>Marge faible</span>
+      <span><i class="stop"></i>Tu perds</span>
+    </div>
+  </div>`;
+}
+
+/* Barre de répartition d'un bac : proportions lisibles sans compter. */
+function bacBar(n){
+  const tot = n.R + n.N + n.D + n.L;
+  if(!tot) return "";
+  const seg = (v, cls, lbl) => v
+    ? `<div class="bb-s ${cls}" style="flex:${v}" title="${lbl}">${v}</div>` : "";
+  return `<div class="bacbar">
+    <div class="bb">${seg(n.R,"R","À prendre")}${seg(n.N,"N","À négocier")}${seg(n.D,"D","Déjà")}${seg(n.L,"L","Laisse")}</div>
+    <div class="bb-k">
+      ${n.R?`<span><i class="R"></i>${n.R} à prendre</span>`:""}
+      ${n.N?`<span><i class="N"></i>${n.N} à négocier</span>`:""}
+      ${n.D?`<span><i class="D"></i>${n.D} déjà</span>`:""}
+      ${n.L?`<span><i class="L"></i>${n.L} laisse</span>`:""}
+    </div>
+  </div>`;
+}
+
+/* Courbe de marge cumulée : la matinée d'un coup d'œil.
+   Une pente qui monte = ça se passe bien. Une pente qui s'aplatit = tu dépenses
+   sans rentabiliser. */
+function margeChart(){
+  const a = logRead().slice().reverse();          // du plus ancien au plus récent
+  if(a.length < 2) return "";
+  const W = 300, H = 96, pad = 6;
+  let cum = 0;
+  const pts = a.map((x,i) => { cum += (x.r||0)-(x.p||0); return {i, v: cum, o: x.o}; });
+  const vals = pts.map(p => p.v);
+  const vmin = Math.min(0, ...vals), vmax = Math.max(0, ...vals);
+  const span = (vmax - vmin) || 1;
+  const X = i => pad + (i / Math.max(1, pts.length-1)) * (W - pad*2);
+  const Y = v => H - pad - ((v - vmin) / span) * (H - pad*2);
+  const y0 = Y(0);
+
+  const ligne = pts.map((p,i) => `${i?"L":"M"}${X(p.i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(" ");
+  const aire = `M${X(0).toFixed(1)},${y0.toFixed(1)} ` +
+    pts.map(p => `L${X(p.i).toFixed(1)},${Y(p.v).toFixed(1)}`).join(" ") +
+    ` L${X(pts.length-1).toFixed(1)},${y0.toFixed(1)} Z`;
+  const fin = pts[pts.length-1];
+  const pos = fin.v >= 0;
+
+  return `<div class="chart">
+    <div class="chart-h">Marge cumulée <i>${a.length} achats</i></div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img"
+         aria-label="Marge cumulée : ${fin.v.toFixed(0)} euros après ${a.length} achats">
+      <line x1="0" y1="${y0.toFixed(1)}" x2="${W}" y2="${y0.toFixed(1)}"
+            stroke="var(--border)" stroke-width="1" stroke-dasharray="4 3"/>
+      <path d="${aire}" fill="${pos?'var(--go)':'var(--stop)'}" opacity=".16"/>
+      <path d="${ligne}" fill="none" stroke="${pos?'var(--go)':'var(--stop)'}"
+            stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${pts.map(p => `<circle cx="${X(p.i).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="2.5"
+            fill="${pos?'var(--go)':'var(--stop)'}"/>`).join("")}
+    </svg>
+    <div class="chart-f">
+      <span>Départ 0€</span>
+      <b class="${pos?'pos':'neg'}">${pos?'+':''}${fin.v.toFixed(0)}€</b>
+    </div>
+  </div>`;
+}
+
+/* Meilleures prises : un classement se lit mieux qu'une liste. */
+function topChart(){
+  const a = logRead().map(x => ({o:x.o, m:(x.r||0)-(x.p||0)}))
+                     .filter(x => x.m > 0).sort((p,q) => q.m - p.m).slice(0,5);
+  if(a.length < 2) return "";
+  const max = a[0].m || 1;
+  return `<div class="chart">
+    <div class="chart-h">Tes meilleures prises</div>
+    ${a.map(x => `
+      <div class="tb">
+        <div class="tb-n">${esc(x.o || "—")}</div>
+        <div class="tb-r"><i style="width:${Math.max(6,(x.m/max)*100)}%"></i></div>
+        <div class="tb-v">+${x.m.toFixed(0)}€</div>
+      </div>`).join("")}
+  </div>`;
 }
 
 /* ══════════ CONTRE-OFFRE ══════════ */
@@ -2289,6 +2478,9 @@ function renderLog(){
     <div class="sumbox"><div class="sn">${dep.toFixed(0)}€</div><div class="sc">Dépensé</div></div>
     <div class="sumbox"><div class="sn">${val.toFixed(0)}€</div><div class="sc">Revente est.</div></div>
     <div class="sumbox ${marge>=0?'pos':'neg'}"><div class="sn">${marge>=0?'+':''}${marge.toFixed(0)}€</div><div class="sc">Marge</div></div>`;
+
+  const ch = $('log-charts');
+  if(ch) ch.innerHTML = margeChart() + topChart();
 
   const st = negoStats();
   const stEl = $('log-stats');
