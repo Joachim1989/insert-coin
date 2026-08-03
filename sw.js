@@ -1,4 +1,4 @@
-const CACHE = 'pixel-papa-fusion-v1';
+const CACHE = 'pixel-papa-fusion-v2';
 const FILES = [
   './',
   './index.html',
