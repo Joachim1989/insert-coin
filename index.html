@@ -32,6 +32,23 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 .brand h1 { font-family: var(--cond); font-size: 22px; font-weight: 700; margin: 0; color: var(--text); letter-spacing: 0.5px; text-transform: uppercase; }
 .brand span { font-family: var(--cond); font-size: 12px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
 
+.avis{background:#3a2f10;color:#ffcf6b;font-family:var(--mono);font-size:11px;line-height:1.5;padding:9px 14px;border-bottom:1px solid var(--border)}
+.log-row{display:flex;gap:8px;padding:0 14px 12px}
+.log-row input{flex:0 0 110px;height:44px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:9px;padding:0 12px;font-size:15px;font-family:var(--mono)}
+.log-btn{flex:1;height:44px;border:0;border-radius:9px;background:var(--gold);color:#14110f;font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer}
+.log-btn:disabled{background:var(--go);color:#fff}
+.logsum{display:flex;gap:8px;margin-bottom:16px}
+.sumbox{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px 6px;text-align:center}
+.sumbox .sn{font-family:var(--cond);font-size:26px;font-weight:700;color:var(--text);line-height:1}
+.sumbox .sc{font-family:var(--mono);font-size:9.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-top:5px}
+.sumbox.pos .sn{color:var(--go)} .sumbox.neg .sn{color:var(--stop)}
+.logitem{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin-bottom:8px}
+.li-main{flex:1;min-width:0}
+.li-main b{display:block;font-size:14.5px;color:var(--text)}
+.li-main span{font-family:var(--mono);font-size:11px;color:var(--text-muted)}
+.li-m{font-family:var(--cond);font-size:19px;font-weight:700;flex:0 0 auto}
+.li-m.pos{color:var(--go)} .li-m.neg{color:var(--stop)}
+.li-x{background:none;border:0;color:var(--text-muted);font-size:17px;cursor:pointer;padding:6px 2px;flex:0 0 auto}
 /* VIEWS */
 .view { display: none; padding: 15px; }
 .view.active { display: block; }
@@ -259,6 +276,13 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 </div>
 
 <!-- VIEW: GUIDE / PROFIL -->
+<div id="view-log" class="view">
+  <h2 class="view-title">Journal de chasse</h2>
+  <div id="log-sum" class="logsum"></div>
+  <div id="log-list"></div>
+  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
+</div>
+
 <div id="view-guide" class="view">
   <h2 class="view-title">Menu Guide 🧔🏼‍♂️</h2>
   
@@ -272,6 +296,11 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <option value="gemini-2.5-flash">Gemini 2.5 Flash (Très Rapide)</option>
       <option value="gemini-2.0-flash">Gemini 2.0 Flash (Classique)</option>
     </select>
+    <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
+      <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
+      <span>Chercher les prix sur le web<br>
+      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
+    </label>
     <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
     <div id="keyState" class="diag" style="display:none;"></div>
   </div>
@@ -299,7 +328,7 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 2.0
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 2.1
   </p>
 </div>
 
@@ -309,6 +338,9 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   </div>
   <div class="nav-item" onclick="switchView('offline', this)">
     <i>🎒</i><span>Base Complète</span>
+  </div>
+  <div class="nav-item" onclick="switchView('log', this)">
+    <i>💰</i><span>Journal</span>
   </div>
   <div class="nav-item" onclick="switchView('guide', this)">
     <i>🧔🏼‍♂️</i><span>Guide / Clé</span>
@@ -377,6 +409,7 @@ function vib() {
 
 // --- UI LOGIC ---
 function switchView(viewId, navEl) {
+  if(viewId === 'log') setTimeout(renderLog, 0);
   vib();
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + viewId).classList.add('active');
@@ -388,7 +421,8 @@ function switchView(viewId, navEl) {
 
 function init() {
   $('api-key').value = localStorage.getItem(KEY_STORE) || "";
-  const savedModel = localStorage.getItem(MODEL_STORE) || "gemini-3.5-flash";
+  const savedModel = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  const gb = $('groundBox'); if(gb) gb.checked = getGround();
   $('api-model').value = savedModel;
   paintKeyState();
   
@@ -472,6 +506,7 @@ function saveSettings() {
     localStorage.removeItem(KEY_STORE);
   }
   localStorage.setItem(MODEL_STORE, modelVal);
+  try{ localStorage.setItem(GROUND_STORE, $('groundBox').checked ? "on" : "off"); }catch(e){}
   
   paintKeyState();
 }
@@ -568,18 +603,109 @@ TA MISSION: Trouver la cote RÉELLE de l'objet, pas une moyenne.
 1. Identifie précisément (titre, édition, variante).
 2. Cherche les prix de VENTES TERMINÉES (eBay, Vinted, Discogs). Ne te base pas sur les prix demandés.
 3. Juge le tirage (massif = faible valeur).
-4. Ne fabrique pas de chiffres. Si inconnu, dis-le.
-Calcul : prixMax = max à payer aujourd'hui (1/3 de revente). verdict = "R" (prends), "N" (sous prix max), "L" (laisse).`;
+4. Ne fabrique pas de chiffres. Si inconnu, dis-le et mets confiance "faible".
+5. RARETÉ : signale explicitement toute variante, édition limitée, erreur d'impression, premier pressage ou tirage régional qui vaut nettement plus que la version courante. C'est ce qui fait la perle rare. Si l'objet a une version commune ET une version recherchée, dis comment les distinguer À L'ŒIL dans "verifs".
+6. TIRAGE : un titre pressé en masse (grosse B.O., best-seller, jeu à très gros tirage) ne vaut presque rien même si sa catégorie est rentable. Dis-le franchement.
+Calcul : prixMax = max à payer aujourd'hui (environ 1/3 de la revente). verdict = "R" (prends), "N" (sous prix max), "L" (laisse).
+preuves : constats CHIFFRÉS avec leur source, issus de tes recherches. C'est son argument face au vendeur.
+nego : une phrase naturelle en français parlé, appuyée sur un fait vérifiable.
+Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés : objet, identification, verdict, prixMax, revente, fourchetteBas, fourchetteHaut, confiance, tirage, preuves[], verifs[], nego, note.`;
+
+/* Modèles du plus sûr au plus récent. Les plus neufs sont souvent à quota ZÉRO
+   sur l'offre gratuite : ils renvoient un 429 immédiat sur une clé neuve. */
+const MODELS = ["gemini-2.5-flash","gemini-2.0-flash","gemini-2.5-flash-lite","gemini-3.5-flash"];
+const GROUND_STORE = "insertcoin.gemini.ground";
+const getGround = () => { try { return localStorage.getItem(GROUND_STORE) !== "off"; } catch(e){ return true; } };
+
+/* Cache : une même recherche dans la matinée ne reconsomme pas de quota
+   et répond instantanément devant le vendeur. */
+const CACHE_STORE = "insertcoin.cache";
+function cacheGet(k){
+  try{
+    const c = JSON.parse(localStorage.getItem(CACHE_STORE) || "{}");
+    const hit = c[k];
+    if(hit && Date.now() - hit.t < 86400000) return hit.j;
+  }catch(e){}
+  return null;
+}
+function cacheSet(k, j){
+  try{
+    const c = JSON.parse(localStorage.getItem(CACHE_STORE) || "{}");
+    c[k] = {t: Date.now(), j};
+    const ks = Object.keys(c);
+    if(ks.length > 60) ks.sort((a,b)=>c[a].t-c[b].t).slice(0, ks.length-60).forEach(x=>delete c[x]);
+    localStorage.setItem(CACHE_STORE, JSON.stringify(c));
+  }catch(e){}
+}
+
+const SCHEMA_SINGLE = {
+  type:"OBJECT",
+  properties:{
+    objet:{type:"STRING"}, identification:{type:"STRING"}, verdict:{type:"STRING"},
+    prixMax:{type:"NUMBER"}, revente:{type:"NUMBER"},
+    fourchetteBas:{type:"NUMBER"}, fourchetteHaut:{type:"NUMBER"},
+    confiance:{type:"STRING"}, tirage:{type:"STRING"},
+    preuves:{type:"ARRAY",items:{type:"STRING"}},
+    verifs:{type:"ARRAY",items:{type:"STRING"}},
+    nego:{type:"STRING"}, note:{type:"STRING"}
+  }
+};
+const SCHEMA_STAND = {
+  type:"OBJECT",
+  properties:{
+    verdictGlobal:{type:"STRING"},
+    objetsReperes:{type:"ARRAY",items:{type:"OBJECT",properties:{
+      nom:{type:"STRING"}, reventeEstimee:{type:"NUMBER"},
+      interet:{type:"STRING"}, verifsStand:{type:"STRING"}}}},
+    conseil:{type:"STRING"}
+  }
+};
+
+/* Gemini refuse responseSchema ET tools dans la même requête.
+   La cote réelle prime sur le confort de parsing : on passe donc en priorité
+   par la recherche web SANS schéma (JSON demandé dans le texte, parsé large),
+   et on ne retombe sur le schéma strict que si le grounding est indisponible. */
+function buildBody(parts, mode, ground){
+  const b = { contents:[{role:"user", parts}], generationConfig:{ temperature:0.2, maxOutputTokens:2000 } };
+  if(ground){
+    b.tools = [{google_search:{}}];
+  }else{
+    b.generationConfig.responseMimeType = "application/json";
+    b.generationConfig.responseSchema = (mode === 'stand') ? SCHEMA_STAND : SCHEMA_SINGLE;
+  }
+  return b;
+}
+
+function extractJSON(data){
+  const cand = (data.candidates || [])[0];
+  if(!cand){
+    const bl = data.promptFeedback && data.promptFeedback.blockReason;
+    throw new Error(bl ? ("Requête bloquée : " + bl) : "Réponse vide");
+  }
+  if(cand.finishReason === "SAFETY") throw new Error("Réponse bloquée par le filtre de sécurité");
+  const raw = ((cand.content && cand.content.parts) || [])
+    .map(x => x.text || "").join("\n").replace(/```json|```/g, "").trim();
+  if(cand.finishReason === "MAX_TOKENS" && !raw) throw new Error("Réponse tronquée");
+  const a = raw.indexOf("{"), b = raw.lastIndexOf("}");
+  if(a < 0 || b < a) throw new Error("Réponse illisible");
+  return JSON.parse(raw.slice(a, b + 1));
+}
 
 async function callGemini(promptText, images = [], mode = 'single') {
   const key = localStorage.getItem(KEY_STORE);
-  const model = localStorage.getItem(MODEL_STORE) || "gemini-3.5-flash";
   const aiEl = $('ai-results');
-  
+
   if(!key) {
-    switchView('guide', document.querySelectorAll('.nav-item')[2]);
-    setTimeout(()=> alert("Veuillez configurer votre clé API Gemini pour utiliser l'IA."), 300);
+    switchView('guide', document.querySelectorAll('.nav-item')[3]);
+    setTimeout(()=> alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
     return;
+  }
+
+  // Cache : uniquement sur les recherches texte (une photo est toujours unique)
+  const ckey = (!images.length && mode === 'single') ? norm(promptText).slice(0, 180) : null;
+  if(ckey){
+    const hit = cacheGet(ckey);
+    if(hit){ renderResult(hit, [], "Résultat déjà obtenu ce jour — aucun quota consommé."); return; }
   }
 
   aiEl.innerHTML = `<div class="loading">
@@ -590,76 +716,65 @@ async function callGemini(promptText, images = [], mode = 'single') {
   window.scrollTo({top:0, behavior:'smooth'});
 
   const parts = [];
-  images.forEach(img => parts.push({inlineData: {mimeType: img.media, data: img.data}}));
+  images.forEach(img => parts.push({inlineData:{mimeType: img.media, data: img.data}}));
   parts.push({text: promptText});
 
-  let schema = {
-    type: "OBJECT",
-    properties: {
-      objet: {type: "STRING"},
-      identification: {type: "STRING"},
-      verdict: {type: "STRING"},
-      prixMax: {type: "NUMBER"},
-      revente: {type: "NUMBER"},
-      fourchetteBas: {type: "NUMBER"},
-      fourchetteHaut: {type: "NUMBER"},
-      confiance: {type: "STRING"},
-      tirage: {type: "STRING"},
-      preuves: {type: "ARRAY", items: {type: "STRING"}},
-      verifs: {type: "ARRAY", items: {type: "STRING"}},
-      nego: {type: "STRING"},
-      note: {type: "STRING"}
-    }
-  };
+  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
+  const attempts = [];
+  for(const m of chain){
+    if(getGround()) attempts.push({model:m, ground:true});
+    attempts.push({model:m, ground:false});
+  }
 
-  if(mode === 'stand') {
-    schema = {
-      type: "OBJECT",
-      properties: {
-        verdictGlobal: {type: "STRING"},
-        objetsReperes: {
-          type: "ARRAY", 
-          items: {
-            type: "OBJECT",
-            properties: {
-               nom: {type:"STRING"}, 
-               reventeEstimee: {type:"NUMBER"},
-               interet: {type:"STRING"},
-               verifsStand: {type:"STRING"}
-            }
-          }
-        },
-        conseil: {type: "STRING"}
+  let lastErr = "";
+  for(const at of attempts){
+    try{
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
+        {method:"POST",
+         headers:{"Content-Type":"application/json","x-goog-api-key":key},
+         body: JSON.stringify(buildBody(parts, mode, at.ground))});
+
+      if(!res.ok){
+        let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
+        lastErr = "HTTP " + res.status + (d ? " — " + d : "");
+        if([400,403,404,429,500,503].includes(res.status)) continue;
+        throw new Error(lastErr);
       }
-    };
+
+      const j = extractJSON(await res.json());
+      let avis = null;
+      if(!at.ground){
+        avis = "Sans recherche web : prix estimés de mémoire, à confirmer.";
+        if(mode !== 'stand') j.confiance = "faible";
+      }
+      if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
+
+      if(mode === 'stand') renderStandResult(j, images[0], avis);
+      else { renderResult(j, images, avis); if(ckey && !avis) cacheSet(ckey, j); }
+      return;
+
+    }catch(err){ lastErr = String(err.message || err); }
   }
 
-  const body = {
-    contents:[{role:"user", parts}],
-    generationConfig: {
-      temperature: 0.2,
-      responseMimeType: "application/json",
-      responseSchema: schema
-    }
-  };
-
-  try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-      method:"POST", headers:{"Content-Type":"application/json", "x-goog-api-key":key}, body:JSON.stringify(body)
-    });
-    
-    if(!res.ok) throw new Error("Erreur réseau ou clé invalide (HTTP " + res.status + ")");
-    const data = await res.json();
-    const raw = data.candidates[0].content.parts[0].text.replace(/```json|```/g,"").trim();
-    const j = JSON.parse(raw);
-    
-    if(mode === 'stand') renderStandResult(j, images[0]);
-    else renderResult(j, images);
-
-  } catch(err) {
-    aiEl.innerHTML = `<div class="aifail"><b>Échec de l'analyse IA.</b><br>${err.message}<br><br>Vérifiez votre clé API ou votre connexion. La base locale reste disponible en dessous.</div>
+  let titre = "Échec de l'analyse.", aide = "Vérifie ta connexion et réessaie.";
+  if(/401|403|API_KEY_INVALID|PERMISSION/i.test(lastErr)){
+    titre = "Clé refusée.";
+    aide = "Recolle ta clé dans l'onglet Guide, sans espace avant ni après.";
+  }else if(/429|quota|RESOURCE_EXHAUSTED/i.test(lastErr)){
+    titre = "Quota à zéro sur ta clé.";
+    aide = "Ce n'est pas une surconsommation : aucun des modèles testés n'a de quota gratuit disponible. "
+         + "Cause la plus fréquente : la facturation est activée sur le projet Google, ce qui supprime l'offre gratuite. "
+         + "Sinon, décoche la recherche web dans le Guide — elle a son propre quota.";
+  }else if(/404|NOT_FOUND/i.test(lastErr)){
+    titre = "Aucun modèle disponible.";
+    aide = "Les modèles testés n'existent plus sous ce nom. Vérifie la liste sur aistudio.google.com.";
+  }
+  aiEl.innerHTML = `<div class="aifail"><b>${titre}</b><br>${aide}
+    <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(lastErr)}</span>
+    <br><br>La base locale reste disponible dans l'onglet Base Complète.</div>
     <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Masquer</button>`;
-  }
 }
 
 function esc(s) {
@@ -708,7 +823,7 @@ function askAIMulti() {
 }
 
 function askAIStand() {
-  let prompt = BRIEF_BASE + `\nVue d'ensemble d'un stand. Liste les objets rentables visibles. Verdict global : 'S' (À fouiller) ou 'L' (Laisse).`;
+  let prompt = BRIEF_BASE + `\nVue d'ensemble d'un stand. Liste les objets rentables visibles, du plus au moins intéressant. Verdict global : 'S' (À fouiller) ou 'L' (Laisse). Réponds en JSON avec les clés : verdictGlobal, objetsReperes[] (nom, reventeEstimee, interet, verifsStand), conseil.`;
   
   const customText = $('q').value.trim();
   if(customText) {
@@ -719,7 +834,7 @@ function askAIStand() {
 }
 
 // --- RENDERERS ---
-function renderResult(j, images) {
+function renderResult(j, images, avis) {
   const v = ["R","N","L"].includes(j.verdict) ? j.verdict : "N";
   const label = {R:"RAFLE", N:"NÉGOCIE", L:"LAISSE"}[v];
   
@@ -746,6 +861,7 @@ function renderResult(j, images) {
         </div>
       </div>
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${tirTxt}</div>
+      ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div class="aibody">
         ${j.identification ? `<div class="ident">${esc(j.identification)}</div>` : ''}
         ${j.preuves && j.preuves.length ? `<h4>Preuves / Marché</h4><ul>${j.preuves.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
@@ -753,11 +869,16 @@ function renderResult(j, images) {
         ${j.nego ? `<h4>Ce que tu dis</h4><div class="saywrap">« ${esc(j.nego)} »</div>` : ''}
         ${j.note ? `<div class="aimeta">${esc(j.note)}</div>` : ''}
       </div>
+      <div class="log-row">
+        <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
+        <button class="log-btn" onclick="logFind()">＋ Journal</button>
+      </div>
       <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
     </div>`;
+  LAST = {objet:j.objet, revente:Number(j.revente)||Number(j.fourchetteBas)||0, prixMax:Number(j.prixMax)||0};
 }
 
-function renderStandResult(j, image) {
+function renderStandResult(j, image, avis) {
   const v = j.verdictGlobal.toLowerCase().includes('fouill') ? 'S' : 'L';
   
   let itemsHtml = "";
@@ -789,6 +910,58 @@ function renderStandResult(j, image) {
       </div>
       <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
     </div>`;
+}
+
+/* ---------- JOURNAL DE CHASSE ---------- */
+const LOG_STORE = "insertcoin.log";
+let LAST = null;
+
+function logRead(){ try { return JSON.parse(localStorage.getItem(LOG_STORE) || "[]"); } catch(e){ return []; } }
+function logWrite(a){ try { localStorage.setItem(LOG_STORE, JSON.stringify(a)); } catch(e){} }
+
+function logFind(){
+  if(!LAST) return;
+  const paye = parseFloat(($('log-price') || {}).value || "0") || 0;
+  const a = logRead();
+  a.unshift({d: Date.now(), o: LAST.objet, p: paye, r: LAST.revente});
+  logWrite(a);
+  vib();
+  const btn = document.querySelector('.log-btn');
+  if(btn){ btn.textContent = "✓ Ajouté"; btn.disabled = true; }
+  renderLog();
+}
+
+function logDel(i){ const a = logRead(); a.splice(i,1); logWrite(a); renderLog(); }
+function logClear(){
+  if(confirm("Vider le journal ? Le total de la matinée sera perdu.")){ logWrite([]); renderLog(); }
+}
+
+function renderLog(){
+  const el = $('log-list'); if(!el) return;
+  const a = logRead();
+  const dep = a.reduce((s,x)=>s+(x.p||0),0);
+  const val = a.reduce((s,x)=>s+(x.r||0),0);
+  const marge = val - dep;
+
+  $('log-sum').innerHTML = `
+    <div class="sumbox"><div class="sn">${dep.toFixed(0)}€</div><div class="sc">Dépensé</div></div>
+    <div class="sumbox"><div class="sn">${val.toFixed(0)}€</div><div class="sc">Revente est.</div></div>
+    <div class="sumbox ${marge>=0?'pos':'neg'}"><div class="sn">${marge>=0?'+':''}${marge.toFixed(0)}€</div><div class="sc">Marge</div></div>`;
+
+  if(!a.length){
+    el.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:14px;padding:30px 10px">
+      Aucune trouvaille enregistrée.<br>Après une analyse, saisis le prix payé et appuie sur « ＋ Journal ».</p>`;
+    return;
+  }
+  el.innerHTML = a.map((x,i)=>{
+    const m = (x.r||0)-(x.p||0);
+    return `<div class="logitem">
+      <div class="li-main"><b>${esc(x.o||"—")}</b>
+        <span>payé ${(x.p||0).toFixed(0)}€ · revente ${(x.r||0).toFixed(0)}€</span></div>
+      <div class="li-m ${m>=0?'pos':'neg'}">${m>=0?'+':''}${m.toFixed(0)}€</div>
+      <button class="li-x" onclick="logDel(${i})">✕</button>
+    </div>`;
+  }).join('');
 }
 
 function renderLocalList() {
