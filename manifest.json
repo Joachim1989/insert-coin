@@ -3,6 +3,7 @@
 "short_name": "Insert Coin",
 "description": "L'argus de terrain ultime pour les chineurs.",
 "start_url": "./insert_coin_redesign.html",
+"scope": "./",
 "display": "standalone",
 "orientation": "portrait",
 "background_color": "#0a0a0c",
