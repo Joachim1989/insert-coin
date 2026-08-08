@@ -1387,6 +1387,18 @@ function extractJSON(data){
    alors de memoire, dans un format strictement identique. La seule preuve
    qu'une recherche a reellement eu lieu est groundingMetadata. Sans ce
    controle, une estimation inventee s'affichait comme une cote verifiee. */
+/* Le grounding insere des marqueurs de citation ([1], [2.1.6]...) dans le
+   texte. Utiles a l'API, illisibles sur un stand : on les retire partout. */
+const deCite = t => String(t).replace(/\s*\[\d+(?:[.\d]+)*\]/g, "").replace(/\s+([.,;:])/g, "$1").trim();
+function cleanCites(o){
+  if(typeof o === "string") return deCite(o);
+  if(Array.isArray(o)) return o.map(cleanCites);
+  if(o && typeof o === "object"){
+    const r = {}; for(const k in o) r[k] = cleanCites(o[k]); return r;
+  }
+  return o;
+}
+
 function groundInfo(data){
   const md = ((data.candidates || [])[0] || {}).groundingMetadata || {};
   const queries = md.webSearchQueries || [];
@@ -1521,8 +1533,15 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
 
   if(out){
     credBump(); stopChrono();
-    const j = out.j, g = out.g;
+    const j = cleanCites(out.j), g = out.g;
     let avis = null;
+    /* Sans schema impose (le cas des appels avec recherche), le modele oublie
+       parfois la cle "confiance". Elle retombait alors sur "faible" et une
+       cote sourcee sur PriceCharting s'affichait "ESTIMATION" en rouge. Si la
+       recherche a bien eu lieu, le plancher est "moyenne". */
+    if(out.ground && g.searched && !String(j.confiance || "").trim()){
+      j.confiance = g.sources.length > 1 ? "haute" : "moyenne";
+    }
     /* Trois etats distincts, et un seul est une vraie cote. On ne les melange
        plus : une estimation de memoire ne doit jamais s'afficher comme un
        prix constate. */
@@ -1800,7 +1819,9 @@ function renderResult(j, images, avis, g) {
   
   const conf = (j.confiance||"").toLowerCase();
   const cKey = conf.startsWith("haut")?"h":conf.startsWith("moy")?"m":"f";
-  const cTxt = {h:"Cote vérifiée", m:"Cote partielle", f:"Estimation"}[cKey];
+  const srcN = (g && g.searched) ? (g.sources || []).length : 0;
+  const cTxt = {h:"Cote vérifiée", m:"Cote partielle", f:"Estimation"}[cKey]
+             + (srcN ? ` · ${srcN} source${srcN > 1 ? "s" : ""}` : "");
   const tirTxt = j.tirage ? ` · Tirage: ${j.tirage}` : "";
   const range = (j.fourchetteBas && j.fourchetteHaut) ? `Ventes : ${j.fourchetteBas}–${j.fourchetteHaut}€` : `Revente ≈ ${j.revente||"?"}€`;
 
