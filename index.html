@@ -1434,39 +1434,56 @@ async function geminiRaw(key, parts, mode, opts){
   if(getGround() && !(opts && opts.noGround)) chain.forEach(m => attempts.push({model:m, ground:true}));
   chain.forEach(m => attempts.push({model:m, ground:false}));
 
-  let lastErr = "", fallback = null;
+  const dire = txt => { const e = $('load-step'); if(e) e.textContent = txt; };
+  const dodo = ms => new Promise(r => setTimeout(r, ms));
+
+  let lastErr = "", groundErr = "", fallback = null;
   for(const at of attempts){
-    try{
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
-        {method:"POST",
-         headers:{"Content-Type":"application/json","x-goog-api-key":key},
-         body: JSON.stringify(buildBody(parts, mode, at.ground))});
+    /* Le 429 de l'offre gratuite est presque toujours une limite PAR MINUTE,
+       pas un quota journalier epuise : attendre quelques secondes suffit.
+       Avant, on abandonnait la recherche au premier 429 et on servait un prix
+       de memoire sans meme dire pourquoi. */
+    for(let essai = 0; essai <= (at.ground ? 2 : 0); essai++){
+      try{
+        if(essai) { dire(`Quota atteint, nouvelle tentative dans ${essai * 5}s…`); await dodo(essai * 5000); dire("Recherche des ventes…"); }
 
-      if(!res.ok){
-        let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
-        lastErr = "HTTP " + res.status + (d ? " — " + d : "");
-        if([400,403,404,429,500,503].includes(res.status)) continue;
-        throw new Error(lastErr);
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
+          {method:"POST",
+           headers:{"Content-Type":"application/json","x-goog-api-key":key},
+           body: JSON.stringify(buildBody(parts, mode, at.ground))});
+
+        if(!res.ok){
+          let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
+          lastErr = "HTTP " + res.status + (d ? " — " + d.slice(0,160) : "");
+          if(at.ground) groundErr = lastErr;
+          if(res.status === 429 && at.ground) continue;          // on repatiente
+          if([400,403,404,429,500,503].includes(res.status)) break; // modele suivant
+          throw new Error(lastErr);
+        }
+
+        const data = await res.json();
+        const j = extractJSON(data);
+        const g = groundInfo(data);
+        if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
+
+        /* Recherche demandee mais non declenchee : on garde la reponse sous le
+           coude et on tente d'abord un autre modele, qui cherchera peut-etre. */
+        if(at.ground && !g.searched){
+          if(!fallback) fallback = {j, g, ground:true, model:at.model};
+          groundErr = groundErr || "le modèle n'a lancé aucune recherche";
+          break;
+        }
+        return {j, g, ground:at.ground, model:at.model, groundErr};
+
+      }catch(err){
+        lastErr = String(err.message || err);
+        if(at.ground) groundErr = lastErr;
+        break;
       }
-
-      const data = await res.json();
-      const j = extractJSON(data);
-      const g = groundInfo(data);
-      if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
-
-      /* Recherche demandee mais non declenchee : on garde la reponse de cote
-         sous le coude et on tente d'abord un autre modele, qui cherchera
-         peut-etre vraiment. */
-      if(at.ground && !g.searched){
-        if(!fallback) fallback = {j, g, ground:true, model:at.model};
-        continue;
-      }
-      return {j, g, ground:at.ground, model:at.model};
-
-    }catch(err){ lastErr = String(err.message || err); }
+    }
   }
-  if(fallback) return fallback;
+  if(fallback) return Object.assign(fallback, {groundErr});
   throw new Error(lastErr || "Réponse vide");
 }
 
@@ -1546,7 +1563,13 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
        plus : une estimation de memoire ne doit jamais s'afficher comme un
        prix constate. */
     if(!out.ground){
-      avis = "Sans recherche web : prix estimés de mémoire, à confirmer.";
+      /* On nomme la cause : "sans recherche web" tout court laissait croire a
+         un choix, alors que c'est presque toujours un quota par minute. */
+      const q = /429|quota|rate/i.test(out.groundErr || "");
+      avis = "Prix estimés de mémoire, à confirmer — "
+           + (q ? "quota de recherche Google atteint. Attends une minute et relance : la cote réelle peut être très différente."
+                : getGround() ? ("recherche indisponible (" + esc(out.groundErr || "cause inconnue") + ").")
+                              : "la recherche web est décochée dans Réglages.");
       j.confiance = "faible";
     }else if(!g.searched){
       avis = "Le modèle n'a lancé aucune recherche : cote non vérifiée. "
@@ -1755,9 +1778,11 @@ Réponds UNIQUEMENT en JSON : {"typeBac":"","lot":[{"nom":"","artiste":"","annee
     }
 
     /* Respiration entre deux appels : l'offre gratuite plafonne le nombre de
-       requetes par minute, et un 429 en pleine serie ferait echouer la moitie
-       du bac. */
-    if(i < lot.length - 1) await bacSleep(1100);
+       requetes par minute (une dizaine sur l'offre gratuite), et un 429 en
+       pleine serie ferait echouer la moitie du bac. Quatre secondes coutent
+       une minute sur un bac de quinze pieces : c'est le prix de cotes qui
+       tiennent debout. */
+    if(i < lot.length - 1) await bacSleep(4000);
   }
 
   bacProgress(lot.length, lot.length, "", "Mise en forme…");
