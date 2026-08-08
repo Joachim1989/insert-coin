@@ -33,6 +33,9 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 .brand span { font-family: var(--cond); font-size: 12px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
 
 .avis{background:#3a2f10;color:#ffcf6b;font-family:var(--mono);font-size:11px;line-height:1.5;padding:9px 14px;border-bottom:1px solid var(--border)}
+.srcs{background:#12210f;color:#9fd48a;font-family:var(--mono);font-size:10.5px;line-height:1.6;padding:8px 14px;border-bottom:1px solid var(--border);word-break:break-word}
+.srcs b{color:#c8f0b4;font-weight:700}
+.bac-unv{font-family:var(--mono);font-size:10px;color:#ffcf6b;margin-top:3px}
 .log-row{display:flex;gap:8px;padding:0 14px 12px}
 .log-row input{flex:0 0 110px;height:44px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:9px;padding:0 12px;font-size:15px;font-family:var(--mono)}
 .log-btn{flex:1;height:44px;border:0;border-radius:9px;background:var(--gold);color:#14110f;font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer}
@@ -778,7 +781,7 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
       <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
       <span>Chercher les prix sur le web<br>
-      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
+      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoché, tous les prix affichés sont des estimations de mémoire, et l'app te le dira. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
     <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
 
@@ -1248,15 +1251,17 @@ function shrink(file){
 
 // --- AI API CALLS ---
 const BRIEF_BASE = `Tu es l'argus de terrain d'un chineur belge (Pixel Papa), en direct sur un stand de brocante.
-TA MISSION: Trouver la cote RÉELLE de l'objet, pas une moyenne.
-1. Identifie précisément (titre, édition, variante).
-2. Cherche les prix de VENTES TERMINÉES (eBay, Vinted, Discogs). Ne te base pas sur les prix demandés.
+TA MISSION: Trouver la cote RÉELLE de CE titre précis. Une moyenne de catégorie est une faute : deux jeux de la même console et de la même année peuvent valoir 3€ et 25€.
+0. Si l'outil de recherche t'est fourni, tu DOIS t'en servir avant de citer le moindre chiffre. Ne réponds jamais de mémoire quand tu peux chercher.
+1. Identifie précisément (titre, édition, variante, région).
+2. Cherche les VENTES TERMINÉES, jamais les annonces en cours : une annonce à 20€ qui ne part pas ne vaut pas 20€. Sources par ordre de fiabilité : pricecharting.com (jeux vidéo, prends la cote PAL et la ligne "Complete"), discogs.com (vinyles, onglet des ventes), puis eBay filtré sur les objets vendus. Marché européen, prix en euros.
+2b. Indique dans "preuves" le nombre de ventes récentes trouvées. Peu de ventes = cote peu fiable, dis-le.
 3. Juge le tirage (massif = faible valeur).
 4. Ne fabrique pas de chiffres. Si inconnu, dis-le et mets confiance "faible".
 5. RARETÉ : signale explicitement toute variante, édition limitée, erreur d'impression, premier pressage ou tirage régional qui vaut nettement plus que la version courante. C'est ce qui fait la perle rare. Si l'objet a une version commune ET une version recherchée, dis comment les distinguer À L'ŒIL dans "verifs".
 6. TIRAGE : un titre pressé en masse (grosse B.O., best-seller, jeu à très gros tirage) ne vaut presque rien même si sa catégorie est rentable. Dis-le franchement.
 Calcul : prixMax = max à payer aujourd'hui (environ 1/3 de la revente). verdict = "R" (prends), "N" (sous prix max), "L" (laisse).
-preuves : constats CHIFFRÉS avec leur source, issus de tes recherches. C'est son argument face au vendeur.
+preuves : constats CHIFFRÉS avec leur source nommée et, si possible, leur date. C'est son argument face au vendeur. Si tu n'as lancé AUCUNE recherche, écris-le noir sur blanc en première preuve et mets confiance "faible" : mieux vaut un trou qu'un chiffre inventé.
 nego : une phrase naturelle en français parlé, appuyée sur un fait vérifiable.
 Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés : objet, identification, verdict, prixMax, revente, fourchetteBas, fourchetteHaut, confiance, tirage, preuves[], verifs[], nego, note.`;
 
@@ -1302,6 +1307,16 @@ const SCHEMA_SINGLE = {
     nego:{type:"STRING"}, note:{type:"STRING"}
   }
 };
+/* Passe 1 du Mode Bac : identification seule, sans le moindre prix. */
+const SCHEMA_BACID = {
+  type:"OBJECT",
+  properties:{
+    typeBac:{type:"STRING"},
+    lot:{type:"ARRAY",items:{type:"OBJECT",properties:{
+      nom:{type:"STRING"}, artiste:{type:"STRING"},
+      annee:{type:"STRING"}, etat:{type:"STRING"}}}}
+  }
+};
 const SCHEMA_BAC = {
   type:"OBJECT",
   properties:{
@@ -1332,17 +1347,20 @@ function buildBody(parts, mode, ground){
   const b = { contents:[{role:"user", parts}],
     generationConfig:{
       temperature:0.2,
-      maxOutputTokens:1200,
-      /* Gemini 2.5 raisonne avant de repondre par defaut : 30 a 50 secondes
-         d'attente pour un gain nul sur une fiche de prix. On coupe. */
-      thinkingConfig:{thinkingBudget:0}
+      /* SANS recherche, le raisonnement n'apporte rien : on coupe, c'est du
+         temps perdu devant le vendeur. AVEC recherche, c'est lui qui lit les
+         ventes terminees et en tire une mediane. Le couper revenait a forcer
+         une reponse de memoire : c'etait la cause des cotes fantaisistes. */
+      maxOutputTokens: ground ? 4096 : 1400,
+      thinkingConfig:{thinkingBudget: ground ? 2048 : 0}
     }};
   if(ground){
     b.tools = [{google_search:{}}];
   }else{
     b.generationConfig.responseMimeType = "application/json";
     b.generationConfig.responseSchema = mode === 'stand' ? SCHEMA_STAND
-      : mode === 'bac' ? SCHEMA_BAC : SCHEMA_SINGLE;
+      : mode === 'bac' ? SCHEMA_BAC
+      : mode === 'bacid' ? SCHEMA_BACID : SCHEMA_SINGLE;
   }
   return b;
 }
@@ -1354,12 +1372,90 @@ function extractJSON(data){
     throw new Error(bl ? ("Requête bloquée : " + bl) : "Réponse vide");
   }
   if(cand.finishReason === "SAFETY") throw new Error("Réponse bloquée par le filtre de sécurité");
+  /* Avec un budget de raisonnement, la reponse peut contenir des blocs de
+     pensee : ils ne font pas partie du JSON et le casseraient. */
   const raw = ((cand.content && cand.content.parts) || [])
+    .filter(x => !x.thought)
     .map(x => x.text || "").join("\n").replace(/```json|```/g, "").trim();
   if(cand.finishReason === "MAX_TOKENS" && !raw) throw new Error("Réponse tronquée");
   const a = raw.indexOf("{"), b = raw.lastIndexOf("}");
   if(a < 0 || b < a) throw new Error("Réponse illisible");
   return JSON.parse(raw.slice(a, b + 1));
+}
+
+/* Gemini peut recevoir l'outil google_search et ne PAS s'en servir : il repond
+   alors de memoire, dans un format strictement identique. La seule preuve
+   qu'une recherche a reellement eu lieu est groundingMetadata. Sans ce
+   controle, une estimation inventee s'affichait comme une cote verifiee. */
+function groundInfo(data){
+  const md = ((data.candidates || [])[0] || {}).groundingMetadata || {};
+  const queries = md.webSearchQueries || [];
+  const sources = [];
+  (md.groundingChunks || []).forEach(c => {
+    const t = (c.web && (c.web.title || c.web.uri)) || "";
+    if(t && !sources.includes(t)) sources.push(t);
+  });
+  return {searched: queries.length > 0 || sources.length > 0, queries, sources};
+}
+
+/* Bloc "d'ou vient ce chiffre" : affiche sous la cote les requetes reellement
+   lancees et les sites lus. Si c'est vide, c'est que rien n'a ete cherche. */
+function srcBlock(g){
+  if(!g || !g.searched) return "";
+  const q = (g.queries || []).slice(0,4).map(esc).join(" · ");
+  const s = (g.sources || []).slice(0,6).map(esc).join(", ");
+  return `<div class="srcs"><b>Recherché :</b> ${q || "—"}`
+       + (s ? `<br><b>Sources lues :</b> ${s}` : "") + `</div>`;
+}
+
+/* Appel brut : renvoie {j, g, ground, model} ou leve une erreur. Separe du
+   rendu pour que le Mode Bac puisse enchainer plusieurs cotes lui-meme.
+
+   Ordre des tentatives : TOUTES les variantes avec recherche d'abord, puis
+   seulement en dernier recours celles sans. L'ancien ordre alternait
+   ground/no-ground modele par modele : au premier quota depasse sur la
+   recherche, on retombait aussitot sur une reponse de memoire. */
+async function geminiRaw(key, parts, mode, opts){
+  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
+  const attempts = [];
+  if(getGround() && !(opts && opts.noGround)) chain.forEach(m => attempts.push({model:m, ground:true}));
+  chain.forEach(m => attempts.push({model:m, ground:false}));
+
+  let lastErr = "", fallback = null;
+  for(const at of attempts){
+    try{
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
+        {method:"POST",
+         headers:{"Content-Type":"application/json","x-goog-api-key":key},
+         body: JSON.stringify(buildBody(parts, mode, at.ground))});
+
+      if(!res.ok){
+        let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
+        lastErr = "HTTP " + res.status + (d ? " — " + d : "");
+        if([400,403,404,429,500,503].includes(res.status)) continue;
+        throw new Error(lastErr);
+      }
+
+      const data = await res.json();
+      const j = extractJSON(data);
+      const g = groundInfo(data);
+      if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
+
+      /* Recherche demandee mais non declenchee : on garde la reponse de cote
+         sous le coude et on tente d'abord un autre modele, qui cherchera
+         peut-etre vraiment. */
+      if(at.ground && !g.searched){
+        if(!fallback) fallback = {j, g, ground:true, model:at.model};
+        continue;
+      }
+      return {j, g, ground:at.ground, model:at.model};
+
+    }catch(err){ lastErr = String(err.message || err); }
+  }
+  if(fallback) return fallback;
+  throw new Error(lastErr || "Réponse vide");
 }
 
 async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey) {
@@ -1419,45 +1515,30 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
   images.forEach(img => parts.push({inlineData:{mimeType: img.media, data: img.data}}));
   parts.push({text: promptText + ctx});
 
-  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
-  const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
-  const attempts = [];
-  for(const m of chain){
-    if(getGround()) attempts.push({model:m, ground:true});
-    attempts.push({model:m, ground:false});
-  }
+  let out = null, lastErr = "";
+  try{ out = await geminiRaw(key, parts, mode); }
+  catch(err){ lastErr = String(err.message || err); }
 
-  let lastErr = "";
-  for(const at of attempts){
-    try{
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
-        {method:"POST",
-         headers:{"Content-Type":"application/json","x-goog-api-key":key},
-         body: JSON.stringify(buildBody(parts, mode, at.ground))});
+  if(out){
+    credBump(); stopChrono();
+    const j = out.j, g = out.g;
+    let avis = null;
+    /* Trois etats distincts, et un seul est une vraie cote. On ne les melange
+       plus : une estimation de memoire ne doit jamais s'afficher comme un
+       prix constate. */
+    if(!out.ground){
+      avis = "Sans recherche web : prix estimés de mémoire, à confirmer.";
+      j.confiance = "faible";
+    }else if(!g.searched){
+      avis = "Le modèle n'a lancé aucune recherche : cote non vérifiée. "
+           + "Confirme avant d'acheter au-dessus de quelques euros.";
+      j.confiance = "faible";
+    }
 
-      if(!res.ok){
-        let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
-        lastErr = "HTTP " + res.status + (d ? " — " + d : "");
-        if([400,403,404,429,500,503].includes(res.status)) continue;
-        throw new Error(lastErr);
-      }
-
-      credBump(); stopChrono();
-      const j = extractJSON(await res.json());
-      let avis = null;
-      if(!at.ground){
-        avis = "Sans recherche web : prix estimés de mémoire, à confirmer.";
-        if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
-      }
-      if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
-
-      if(mode === 'bac') renderBacResult(j, images, avis);
-      else if(mode === 'stand') renderStandResult(j, images[0], avis);
-      else { renderResult(j, images, avis); if(ckey && !avis) cacheSet(ckey, j); }
-      return;
-
-    }catch(err){ lastErr = String(err.message || err); }
+    if(mode === 'bac') renderBacResult(j, images, avis, g);
+    else if(mode === 'stand') renderStandResult(j, images[0], avis, g);
+    else { renderResult(j, images, avis, g); if(ckey && !avis) cacheSet(ckey, j); }
+    return;
   }
 
   if(/Failed to fetch|NetworkError|network/i.test(lastErr) && !fromQueue){
@@ -1532,24 +1613,173 @@ function askAIMulti() {
   photoQueue = [];
 }
 
-function askAIBac() {
+/* MODE BAC — deux passes.
+
+   Avant : une seule requete devait identifier dix articles ET trouver dix
+   cotes. Meme quand la recherche se declenchait, elle portait sur un ou deux
+   titres au mieux ; les autres prix sortaient de la memoire du modele, sans
+   que rien ne le signale. C'est ce qui donnait un Portal 2 surevalue et un
+   Lightning Returns a un tiers de sa valeur.
+
+   Maintenant : passe 1 = identification pure (aucun prix demande), passe 2 =
+   une recherche de cote par article, en serie, avec verification que la
+   recherche a bien eu lieu. C'est plus lent et ca consomme davantage de
+   quota — c'est le prix d'une cote reelle. */
+const bacSleep = ms => new Promise(r => setTimeout(r, ms));
+
+function bacProgress(fait, total, titre, phase){
+  const el = $('ai-results');
+  if(!el) return;
+  const pct = total ? Math.round(fait / total * 100) : 0;
+  el.innerHTML = `<div class="aicard"><div class="loading">
+    <div class="dots"><span>●</span><span>●</span><span>●</span></div>
+    <p>${esc(phase)}</p>
+    ${total ? `<div class="chrono">${fait} / ${total} — ${pct}%</div>` : ""}
+    ${titre ? `<p style="font-size:12px;color:var(--text-muted);margin-top:6px">${esc(titre)}</p>` : ""}
+  </div></div>`;
+}
+
+async function askAIBac() {
   if(!photoQueue.length){ alert("Prends d'abord une ou plusieurs photos du bac."); return; }
-  /* On envoie la liste des artistes déjà possédés, tronquée : elle aide le
-     modèle à lire les pochettes floues, sans pour autant remplacer le
-     contrôle de doublon qui reste fait en local, exemplaire par exemplaire. */
+  const key = localStorage.getItem(KEY_STORE);
+  if(!key){
+    switchView('guide', document.querySelectorAll('.nav-item')[5]);
+    setTimeout(()=> alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
+    return;
+  }
+
+  /* On envoie la liste des artistes deja possedes, tronquee : elle aide le
+     modele a lire les pochettes floues, sans pour autant remplacer le
+     controle de doublon qui reste fait en local, exemplaire par exemplaire. */
   const artistes = [...new Set(collRead().map(x => x.a).filter(Boolean))].slice(0, 120);
   const indice = artistes.length
     ? `\nIndice de lecture : le chineur possède déjà des articles de ${artistes.join(", ")}. Ces noms t'aident à déchiffrer une tranche floue, mais ne suppose jamais qu'un article est présent s'il ne l'est pas visiblement.`
     : "";
 
-  const prompt = BRIEF_BASE + `
-BAC / LOT HOMOGÈNE. Les photos montrent un bac, un carton ou une pile d'articles du même type (pochettes de vinyles serrées, boîtes de jeux, cartouches, BD...).
-Identifie CHAQUE article LISIBLE, un par un. Ne devine pas ce qui est illisible ou masqué : ne liste que ce que tu lis vraiment.
-Pour chacun : nom (titre exact), artiste (ou console/éditeur), annee si visible, revente estimée en euros, prixMax à payer aujourd'hui, verdict "R" (prends), "N" (seulement sous prixMax) ou "L" (laisse), et une note très courte s'il y a une raison particulière (pressage recherché, tirage massif, état visible).
-Trie du plus intéressant au moins intéressant.
-typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non.${indice}
-Réponds UNIQUEMENT en JSON : {"typeBac":"","resume":"","lot":[{"nom":"","artiste":"","annee":"","revente":0,"prixMax":0,"verdict":"","note":""}]}`;
-  callGemini(prompt, photoQueue, 'bac');
+  const images = photoQueue.slice();
+  $('photo-queue').classList.remove('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  bacProgress(0, 0, "", "Lecture du bac…");
+
+  /* ---------- PASSE 1 : identification seule ---------- */
+  const idPrompt = `Tu lis un bac, un carton ou une pile d'articles du même type (pochettes de vinyles serrées, boîtes de jeux, cartouches, BD…).
+IDENTIFICATION UNIQUEMENT. Ne donne AUCUN prix, AUCUNE estimation, AUCUN verdict : ce n'est pas ta tâche ici.
+Identifie CHAQUE article LISIBLE, un par un. Ne devine jamais ce qui est illisible ou masqué : ne liste que ce que tu lis vraiment.
+Pour chacun : nom (titre exact tel qu'imprimé), artiste (ou console/éditeur), annee si visible, etat si un défaut est visible à l'œil (tranche pliée, boîtier fêlé, étiquette de magasin).
+typeBac = ce que contient le bac en trois mots.${indice}
+Réponds UNIQUEMENT en JSON : {"typeBac":"","lot":[{"nom":"","artiste":"","annee":"","etat":""}]}`;
+
+  const parts = images.map(img => ({inlineData:{mimeType: img.media, data: img.data}}));
+  parts.push({text: idPrompt});
+
+  let ident;
+  try{
+    ident = await geminiRaw(key, parts, 'bacid', {noGround:true});
+    credBump();
+  }catch(err){
+    $('ai-results').innerHTML = `<div class="aicard"><div class="aibody">
+      <h4>Lecture impossible</h4><p>${esc(String(err.message || err))}</p></div>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer</button></div>`;
+    return;
+  }
+
+  const brut = Array.isArray(ident.j.lot) ? ident.j.lot : [];
+  /* Plafond dur : au-dela, le temps d'attente et le quota deviennent absurdes
+     sur un stand. Mieux vaut deux photos que vingt requetes. */
+  const MAX = 14;
+  const lot = brut.filter(x => x && x.nom).slice(0, MAX);
+  const tronque = brut.length > MAX;
+
+  if(!lot.length){
+    renderBacResult({typeBac: ident.j.typeBac || "", resume: "", lot: []}, images, null, null);
+    return;
+  }
+
+  /* ---------- PASSE 2 : une cote reelle par article ---------- */
+  const out = [];
+  let verifies = 0, depuisCache = 0;
+  const toutesQueries = [], toutesSources = [];
+
+  for(let i = 0; i < lot.length; i++){
+    const it = lot[i];
+    const q = [it.artiste, it.nom, it.annee].filter(Boolean).join(" ").trim();
+    bacProgress(i, lot.length, q, "Recherche des ventes réelles…");
+
+    const ck = "t:" + norm(q) + "|";
+    const hit = cacheGet(ck);
+    if(hit){
+      depuisCache++; verifies++;
+      out.push(fusionBac(it, hit, false));
+      continue;
+    }
+
+    let r = null;
+    try{
+      r = await geminiRaw(key, [{text: BRIEF_BASE
+        + `\nObjet recherché : ${q}.`
+        + (it.etat ? ` État visible sur la photo : ${it.etat}.` : "")
+        + ` Donne la cote de CET article précis, pas d'une moyenne de sa catégorie.`}], 'single');
+      credBump();
+    }catch(err){ r = null; }
+
+    if(!r){
+      out.push(fusionBac(it, null, true));
+    }else{
+      const ok = r.ground && r.g.searched;
+      if(ok){
+        verifies++;
+        cacheSet(ck, r.j);
+        (r.g.queries || []).forEach(x => { if(!toutesQueries.includes(x)) toutesQueries.push(x); });
+        (r.g.sources || []).forEach(x => { if(!toutesSources.includes(x)) toutesSources.push(x); });
+      }
+      out.push(fusionBac(it, r.j, !ok));
+    }
+
+    /* Respiration entre deux appels : l'offre gratuite plafonne le nombre de
+       requetes par minute, et un 429 en pleine serie ferait echouer la moitie
+       du bac. */
+    if(i < lot.length - 1) await bacSleep(1100);
+  }
+
+  bacProgress(lot.length, lot.length, "", "Mise en forme…");
+
+  const avis = verifies === lot.length ? null
+    : verifies === 0
+      ? "Aucune cote n'a pu être vérifiée en ligne : tous les prix ci-dessous sont des estimations de mémoire."
+      : `${lot.length - verifies} article(s) sur ${lot.length} n'ont pas pu être vérifiés en ligne — ils sont signalés dans la liste.`;
+
+  const resume = `${lot.length} article(s) lus · ${verifies} cote(s) vérifiée(s) en ligne`
+    + (depuisCache ? ` (dont ${depuisCache} déjà en cache)` : "")
+    + (tronque ? ` · ${brut.length - MAX} article(s) non traités, refais une photo plus serrée` : "");
+
+  renderBacResult(
+    {typeBac: ident.j.typeBac || "", resume, lot: out},
+    images, avis,
+    {searched: !!toutesQueries.length || !!toutesSources.length,
+     queries: toutesQueries, sources: toutesSources});
+}
+
+/* Fusionne l'identification (passe 1) et la cote (passe 2). Si la cote manque,
+   on n'invente pas de chiffre : la ligne part en "L" avec l'avertissement. */
+function fusionBac(it, prix, nonVerifie){
+  const base = {nom: it.nom || "—", artiste: it.artiste || "", annee: it.annee || ""};
+  if(!prix){
+    return Object.assign(base, {revente:0, prixMax:0, verdict:"L",
+      note: it.etat ? ("Cote introuvable. " + it.etat) : "Cote introuvable.",
+      nonVerifie:true});
+  }
+  const notes = [];
+  if(prix.note) notes.push(prix.note);
+  if(prix.tirage) notes.push("Tirage : " + prix.tirage);
+  if(it.etat) notes.push(it.etat);
+  return Object.assign(base, {
+    revente: Number(prix.revente) || Number(prix.fourchetteBas) || 0,
+    prixMax: Number(prix.prixMax) || 0,
+    verdict: ["R","N","L"].includes(String(prix.verdict).toUpperCase())
+             ? String(prix.verdict).toUpperCase() : "N",
+    note: notes.join(" · "),
+    nonVerifie: !!nonVerifie
+  });
 }
 
 function askAIStand() {
@@ -1564,7 +1794,7 @@ function askAIStand() {
 }
 
 // --- RENDERERS ---
-function renderResult(j, images, avis) {
+function renderResult(j, images, avis, g) {
   const v = ["R","N","L"].includes(j.verdict) ? j.verdict : "N";
   const label = {R:"RAFLE", N:"NÉGOCIE", L:"LAISSE"}[v];
   
@@ -1594,6 +1824,7 @@ function renderResult(j, images, avis) {
       </div>
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${tirTxt}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
+      ${srcBlock(g)}
       ${priceGauge(parseFloat($('price').value||"0")||0, j.prixMax, j.revente, j.fourchetteBas, j.fourchetteHaut)}
       <div class="aibody">
         ${j.identification ? `<div class="ident">${esc(j.identification)}</div>` : ''}
@@ -1618,7 +1849,7 @@ function renderResult(j, images, avis) {
   if(np) np.innerHTML = negoPad(LAST.demande, LAST.prixMax);
 }
 
-function renderStandResult(j, image, avis) {
+function renderStandResult(j, image, avis, g) {
   const v = j.verdictGlobal.toLowerCase().includes('fouill') ? 'S' : 'L';
   
   let itemsHtml = "";
@@ -1643,6 +1874,8 @@ function renderStandResult(j, image, avis) {
           <div class="o" style="font-size:16px;">${esc(j.verdictGlobal)}</div>
         </div>
       </div>
+      ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
+      ${srcBlock(g)}
       <div class="aibody">
         <h4>Cibles Potentielles Repérées</h4>
         <ul style="list-style-type:none; padding-left:0;">${itemsHtml}</ul>
@@ -1652,7 +1885,7 @@ function renderStandResult(j, image, avis) {
     </div>`;
 }
 
-function renderBacResult(j, images, avis){
+function renderBacResult(j, images, avis, g){
   const lot = Array.isArray(j.lot) ? j.lot : [];
   const rows = lot.map(o => {
     const dup = collMatch((o.artiste || "") + " " + (o.nom || ""));
@@ -1681,6 +1914,7 @@ function renderBacResult(j, images, avis){
         <div class="bac-a">${esc(o.artiste || "")}${o.annee ? " · " + esc(o.annee) : ""}</div>
         ${r.flou ? `<div class="bac-warn">Ressemble à « ${esc(r.flou.e.t)} » que tu as déjà — vérifie l'édition.</div>` : ""}
         ${o.note ? `<div class="bac-note">${esc(o.note)}</div>` : ""}
+        ${o.nonVerifie ? `<div class="bac-unv">⚠︎ cote non vérifiée</div>` : ""}
       </div>
       <div class="bac-p">
         ${r.dup ? `<span class="bac-dup">en collection</span>`
@@ -1709,6 +1943,7 @@ function renderBacResult(j, images, avis){
         </div>
       </div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
+      ${srcBlock(g)}
       <div class="aibody">
         ${bacBar({R:pris.length, N:nego.length, D:doub.length, L:laisse.length})}
         ${j.resume ? `<div class="saywrap">${esc(j.resume)}</div>` : ""}
