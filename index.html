@@ -33,9 +33,6 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 .brand span { font-family: var(--cond); font-size: 12px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
 
 .avis{background:#3a2f10;color:#ffcf6b;font-family:var(--mono);font-size:11px;line-height:1.5;padding:9px 14px;border-bottom:1px solid var(--border)}
-.srcs{background:#12210f;color:#9fd48a;font-family:var(--mono);font-size:10.5px;line-height:1.6;padding:8px 14px;border-bottom:1px solid var(--border);word-break:break-word}
-.srcs b{color:#c8f0b4;font-weight:700}
-.bac-unv{font-family:var(--mono);font-size:10px;color:#ffcf6b;margin-top:3px}
 .log-row{display:flex;gap:8px;padding:0 14px 12px}
 .log-row input{flex:0 0 110px;height:44px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:9px;padding:0 12px;font-size:15px;font-family:var(--mono)}
 .log-btn{flex:1;height:44px;border:0;border-radius:9px;background:var(--gold);color:#14110f;font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer}
@@ -601,6 +598,56 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 .quick-macros::-webkit-scrollbar { display: none; }
 .macro-btn { flex: 0 0 auto; background: var(--surface-light); border: 1px dashed var(--gold-dim); color: var(--gold); padding: 8px 12px; border-radius: 8px; font-family: var(--cond); font-size: 13px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 .macro-btn:active { background: var(--surface); transform: scale(0.95); }
+
+/* ══════════ CASH OUT ══════════ */
+.vt-row{background:var(--surface);border:1px solid var(--border);border-radius:11px;margin-bottom:8px;overflow:hidden}
+.vt-row.open{border-color:var(--gold)}
+.vt-head{display:flex;align-items:stretch;gap:10px;cursor:pointer}
+.vt-bar{flex:0 0 5px}
+.vt-row.s-todo .vt-bar{background:var(--gold)}
+.vt-row.s-live .vt-bar{background:var(--crt)}
+.vt-row.s-done .vt-bar{background:var(--go)}
+.vt-row.s-keep .vt-bar{background:var(--stop)}
+.vt-c{flex:1;min-width:0;padding:11px 0}
+.vt-c b{display:block;font-size:14.5px;line-height:1.3}
+.vt-c span{display:block;font-family:var(--mono);font-size:10.5px;color:var(--text-muted);margin-top:3px}
+.vt-p{flex:0 0 auto;text-align:right;padding:11px 12px}
+.vt-p b{display:block;font-family:var(--cond);font-size:21px;color:var(--gold);line-height:1}
+.vt-row.s-done .vt-p b{color:var(--go)}
+.vt-p span{font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px}
+.vt-warn{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--mid);
+  border:1px solid var(--mid);border-radius:5px;padding:2px 6px;margin-top:6px;line-height:1.4}
+.vt-body{border-top:1px solid var(--border);padding:12px}
+.vt-fields{display:flex;gap:7px;margin-bottom:12px}
+.vt-f{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 9px}
+.vt-f label{display:block;font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px}
+.vt-f input{width:100%;background:none;border:0;outline:none;color:var(--text);font-family:var(--cond);font-size:19px;font-weight:700;padding:2px 0 0}
+.vt-piece{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.vt-ref{flex:0 0 auto;min-width:26px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;
+  background:var(--gold);color:#14110f;border-radius:4px;padding:3px 5px}
+.vt-piece.keep .vt-ref{background:var(--stop);color:#fff}
+.vt-piece.keep .vt-nm{text-decoration:line-through;color:var(--text-muted)}
+.vt-nm{flex:1;min-width:0;line-height:1.35}
+.vt-nm i{display:block;font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--text-muted);margin-top:2px}
+.vt-keep{flex:0 0 auto;background:none;border:1px solid var(--border);color:var(--text-muted);
+  border-radius:6px;padding:5px 8px;font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
+.vt-piece.keep .vt-keep{border-color:var(--stop);color:var(--stop)}
+.vt-acts{display:flex;gap:6px;margin:12px 0 0}
+.vt-acts button{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);
+  border-radius:8px;padding:10px 4px;font-family:var(--cond);font-size:13px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
+.vt-acts button.on{background:var(--gold);color:#14110f;border-color:var(--gold)}
+.vt-acts button.on.live{background:var(--crt);color:#04202E;border-color:var(--crt)}
+.vt-acts button.on.done{background:var(--go);color:#fff;border-color:var(--go)}
+.vt-sell{flex:0 0 auto;background:none;border:1px solid var(--gold);color:var(--gold);border-radius:6px;
+  padding:5px 8px;font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
+.vt-cote{display:flex;align-items:baseline;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.vt-cote b{flex:1;min-width:0;font-weight:600}
+.vt-cote span{font-family:var(--cond);font-size:17px;color:var(--go)}
+.vt-cote i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text-muted)}
+.dupbox.dup-vente{background:#2b2410;border-color:var(--gold)}
+html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
+.dup-vente .dt{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -650,8 +697,15 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     </button>
   </div>
   
-  <!-- capture="environment" force l'ouverture de la caméra arrière au lieu de la galerie -->
-  <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handleFileSelect(event)">
+  <div class="seg" id="src-seg" style="margin:0 0 14px">
+    <button data-s="ask" aria-pressed="true" onclick="srcSet('ask',this)">Photo ou galerie</button>
+    <button data-s="cam" aria-pressed="false" onclick="srcSet('cam',this)">Appareil photo direct</button>
+  </div>
+
+  <!-- Deux entrées : sans capture, le téléphone propose l'appareil photo ET la galerie.
+       Avec capture, il ouvre directement l'objectif arrière — plus rapide sur un stand. -->
+  <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
+  <input type="file" id="file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleFileSelect(event)">
 
   <div class="quick-macros">
     <button class="macro-btn" onclick="setMacro('Est-ce une contrefaçon ou un original ? Détaille les signes.')">🧐 Vrai ou Faux ?</button>
@@ -765,6 +819,30 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
 </div>
 
+<div id="view-vente" class="view">
+  <h2 class="view-title">Cash Out</h2>
+  <p class="view-sub">Ce qui ressort du stock. Le journal dit ce que tu as payé&nbsp;; ici tu suis ce que ça rapporte.</p>
+
+  <div id="vt-sum" class="logsum"></div>
+
+  <div class="seg" id="vt-filter" style="margin-bottom:16px">
+    <button data-f="all" aria-pressed="true" onclick="venteFiltre('all',this)">Tout</button>
+    <button data-f="todo" aria-pressed="false" onclick="venteFiltre('todo',this)">À publier</button>
+    <button data-f="live" aria-pressed="false" onclick="venteFiltre('live',this)">En vente</button>
+    <button data-f="done" aria-pressed="false" onclick="venteFiltre('done',this)">Vendu</button>
+  </div>
+
+  <div id="vt-blockers"></div>
+  <div id="vt-list"></div>
+
+  <button class="btn-save" style="margin-top:18px" onclick="venteAdd()">
+    <svg class="ico16"><use href="#i-tag"/></svg> Ajouter un article à vendre</button>
+  <button class="btn-save alt2" onclick="venteImportLog()">Importer mes achats du journal</button>
+
+  <h3 class="sect">Ta cote réelle</h3>
+  <div id="vt-cote"></div>
+</div>
+
 <div id="view-guide" class="view">
   <h2 class="view-title">Menu Guide 🧔🏼‍♂️</h2>
   
@@ -774,14 +852,14 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici">
     <p style="margin-top: 10px;">Modèle IA (Puissance vs Vitesse) :</p>
     <select id="api-model" class="model-select">
-      <option value="gemini-3.5-flash">Gemini 3.5 Flash (Plus intelligent & récent)</option>
-      <option value="gemini-2.5-flash">Gemini 2.5 Flash (Très Rapide)</option>
-      <option value="gemini-2.0-flash">Gemini 2.0 Flash (Classique)</option>
+      <option value="gemini-3.6-flash">Gemini 3.6 Flash (le plus fiable, recommandé)</option>
+      <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+      <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (le plus rapide)</option>
     </select>
     <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
       <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
       <span>Chercher les prix sur le web<br>
-      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoché, tous les prix affichés sont des estimations de mémoire, et l'app te le dira. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
+      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
     <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
 
@@ -870,6 +948,10 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   </div>
   <div class="nav-item" onclick="switchView('log', this)">
     <svg class="ico"><use href="#i-cash"/></svg><span>Journal</span>
+  </div>
+  <div class="nav-item" onclick="switchView('vente', this)">
+    <svg class="ico"><use href="#i-tag"/></svg><span>Vente</span>
+    <i class="badge" id="bdg-vente"></i>
   </div>
   <div class="nav-item" onclick="switchView('guide', this)">
     <svg class="ico"><use href="#i-pad"/></svg><span>Réglages</span>
@@ -1012,6 +1094,7 @@ function switchView(viewId, navEl) {
   if(viewId === 'log') setTimeout(() => { renderLog(); renderHist(); }, 0);
   if(viewId === 'spots') setTimeout(renderSpots, 0);
   if(viewId === 'cal') setTimeout(renderCal, 0);
+  if(viewId === 'vente') setTimeout(renderVente, 0);
   paintImminent();
   if(viewId === 'offline') setTimeout(renderOfflineFull, 0);
   vib();
@@ -1025,17 +1108,24 @@ function switchView(viewId, navEl) {
 
 function init() {
   $('api-key').value = localStorage.getItem(KEY_STORE) || "";
-  const savedModel = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  let savedModel = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  /* Un modèle retiré par Google resterait enregistré ici et renverrait un 404
+     à chaque analyse : on le remplace au démarrage. */
+  if(MODELS.indexOf(savedModel) === -1){
+    savedModel = MODELS[0];
+    try{ localStorage.setItem(MODEL_STORE, savedModel); }catch(e){}
+  }
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
   themeApply(themeGet());
-  collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull(); paintImminent(); renderHist(); backupState();
+  venteSeed();
+  collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull(); paintImminent(); renderHist(); renderVente(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
     if(Date.now() - last > 3600000) setTimeout(() => driveSync(false), 1500);
   }
   $('api-model').value = savedModel;
-  paintKeyState();
+  paintKeyState(); srcPaint();
   
   // Init chips
   document.querySelectorAll('.chip').forEach(c => {
@@ -1154,7 +1244,7 @@ function backupState(){
 
 function paintKeyState() {
   const k = localStorage.getItem(KEY_STORE);
-  const m = localStorage.getItem(MODEL_STORE) || "gemini-3.5-flash";
+  const m = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const st = $('keyState');
   st.style.display = 'block';
   if(k) {
@@ -1169,11 +1259,26 @@ function paintKeyState() {
 }
 
 // --- CAMERA LOGIC ---
+const SRC_STORE = "insertcoin.photosrc";
+function srcGet(){ try { return localStorage.getItem(SRC_STORE) === "cam" ? "cam" : "ask"; } catch(e){ return "ask"; } }
+function srcSet(v, el){
+  try{ localStorage.setItem(SRC_STORE, v); }catch(e){}
+  document.querySelectorAll('#src-seg button').forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
+  vib();
+}
+function srcPaint(){
+  const v = srcGet();
+  document.querySelectorAll('#src-seg button').forEach(b => b.setAttribute("aria-pressed", b.dataset.s === v ? "true" : "false"));
+}
+
 function triggerCamera(mode) {
   vib();
   currentCameraMode = mode;
-  const input = $('file-input');
-  input.multiple = (mode === 'multi');
+  /* « Photo ou galerie » laisse le téléphone proposer les deux ;
+     « Appareil photo direct » saute l'étape sur le terrain. */
+  const input = srcGet() === "cam" ? $('file-cam') : $('file-input');
+  /* Le mode Bac attend plusieurs vues, tout comme le multi. */
+  input.multiple = (mode === 'multi' || mode === 'bac');
   
   if(mode !== 'multi' || photoQueue.length === 0) {
     photoQueue = [];
@@ -1251,23 +1356,24 @@ function shrink(file){
 
 // --- AI API CALLS ---
 const BRIEF_BASE = `Tu es l'argus de terrain d'un chineur belge (Pixel Papa), en direct sur un stand de brocante.
-TA MISSION: Trouver la cote RÉELLE de CE titre précis. Une moyenne de catégorie est une faute : deux jeux de la même console et de la même année peuvent valoir 3€ et 25€.
-0. Si l'outil de recherche t'est fourni, tu DOIS t'en servir avant de citer le moindre chiffre. Ne réponds jamais de mémoire quand tu peux chercher.
-1. Identifie précisément (titre, édition, variante, région).
-2. Cherche les VENTES TERMINÉES, jamais les annonces en cours : une annonce à 20€ qui ne part pas ne vaut pas 20€. Sources par ordre de fiabilité : pricecharting.com (jeux vidéo, prends la cote PAL et la ligne "Complete"), discogs.com (vinyles, onglet des ventes), puis eBay filtré sur les objets vendus. Marché européen, prix en euros.
-2b. Indique dans "preuves" le nombre de ventes récentes trouvées. Peu de ventes = cote peu fiable, dis-le.
+TA MISSION: Trouver la cote RÉELLE de l'objet, pas une moyenne.
+1. Identifie précisément (titre, édition, variante).
+2. Cherche les prix de VENTES TERMINÉES (eBay, Vinted, Discogs). Ne te base pas sur les prix demandés.
 3. Juge le tirage (massif = faible valeur).
 4. Ne fabrique pas de chiffres. Si inconnu, dis-le et mets confiance "faible".
 5. RARETÉ : signale explicitement toute variante, édition limitée, erreur d'impression, premier pressage ou tirage régional qui vaut nettement plus que la version courante. C'est ce qui fait la perle rare. Si l'objet a une version commune ET une version recherchée, dis comment les distinguer À L'ŒIL dans "verifs".
 6. TIRAGE : un titre pressé en masse (grosse B.O., best-seller, jeu à très gros tirage) ne vaut presque rien même si sa catégorie est rentable. Dis-le franchement.
 Calcul : prixMax = max à payer aujourd'hui (environ 1/3 de la revente). verdict = "R" (prends), "N" (sous prix max), "L" (laisse).
-preuves : constats CHIFFRÉS avec leur source nommée et, si possible, leur date. C'est son argument face au vendeur. Si tu n'as lancé AUCUNE recherche, écris-le noir sur blanc en première preuve et mets confiance "faible" : mieux vaut un trou qu'un chiffre inventé.
+preuves : constats CHIFFRÉS avec leur source, issus de tes recherches. C'est son argument face au vendeur.
 nego : une phrase naturelle en français parlé, appuyée sur un fait vérifiable.
 Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés : objet, identification, verdict, prixMax, revente, fourchetteBas, fourchetteHaut, confiance, tirage, preuves[], verifs[], nego, note.`;
 
 /* Modèles du plus sûr au plus récent. Les plus neufs sont souvent à quota ZÉRO
    sur l'offre gratuite : ils renvoient un 429 immédiat sur une clé neuve. */
-const MODELS = ["gemini-2.5-flash","gemini-2.0-flash","gemini-2.5-flash-lite","gemini-3.5-flash"];
+/* Google ferme l'accès aux anciens modèles dès qu'une clé est jugée « nouvelle » :
+   la réponse est un 404 « no longer available to new users », pas une erreur de quota.
+   Cette liste ne contient donc que des modèles en service, du plus capable au plus rapide. */
+const MODELS = ["gemini-3.6-flash","gemini-3.5-flash","gemini-3.5-flash-lite"];
 const GROUND_STORE = "insertcoin.gemini.ground";
 const getGround = () => { try { return localStorage.getItem(GROUND_STORE) !== "off"; } catch(e){ return true; } };
 
@@ -1307,16 +1413,6 @@ const SCHEMA_SINGLE = {
     nego:{type:"STRING"}, note:{type:"STRING"}
   }
 };
-/* Passe 1 du Mode Bac : identification seule, sans le moindre prix. */
-const SCHEMA_BACID = {
-  type:"OBJECT",
-  properties:{
-    typeBac:{type:"STRING"},
-    lot:{type:"ARRAY",items:{type:"OBJECT",properties:{
-      nom:{type:"STRING"}, artiste:{type:"STRING"},
-      annee:{type:"STRING"}, etat:{type:"STRING"}}}}
-  }
-};
 const SCHEMA_BAC = {
   type:"OBJECT",
   properties:{
@@ -1343,24 +1439,26 @@ const SCHEMA_STAND = {
    La cote réelle prime sur le confort de parsing : on passe donc en priorité
    par la recherche web SANS schéma (JSON demandé dans le texte, parsé large),
    et on ne retombe sur le schéma strict que si le grounding est indisponible. */
-function buildBody(parts, mode, ground){
-  const b = { contents:[{role:"user", parts}],
-    generationConfig:{
-      temperature:0.2,
-      /* SANS recherche, le raisonnement n'apporte rien : on coupe, c'est du
-         temps perdu devant le vendeur. AVEC recherche, c'est lui qui lit les
-         ventes terminees et en tire une mediane. Le couper revenait a forcer
-         une reponse de memoire : c'etait la cause des cotes fantaisistes. */
-      maxOutputTokens: ground ? 4096 : 1400,
-      thinkingConfig:{thinkingBudget: ground ? 2048 : 0}
-    }};
+function buildBody(parts, mode, ground, model){
+  /* Gemini 3 a changé les règles : temperature/topP/topK sont dépréciés, et
+     thinkingBudget est refusé (400) au profit de thinkingLevel. Envoyer les deux
+     ferait échouer la requête, on choisit donc selon la famille du modèle. */
+  const g3 = /^gemini-3/.test(model || "");
+  const gc = {maxOutputTokens:1200};
+  if(g3){
+    gc.thinkingConfig = {thinkingLevel:"low"};
+  }else{
+    gc.temperature = 0.2;
+    /* Sans ça, 30 à 50 secondes d'attente pour un gain nul sur une fiche de prix. */
+    gc.thinkingConfig = {thinkingBudget:0};
+  }
+  const b = { contents:[{role:"user", parts}], generationConfig: gc };
   if(ground){
     b.tools = [{google_search:{}}];
   }else{
     b.generationConfig.responseMimeType = "application/json";
     b.generationConfig.responseSchema = mode === 'stand' ? SCHEMA_STAND
-      : mode === 'bac' ? SCHEMA_BAC
-      : mode === 'bacid' ? SCHEMA_BACID : SCHEMA_SINGLE;
+      : mode === 'bac' ? SCHEMA_BAC : SCHEMA_SINGLE;
   }
   return b;
 }
@@ -1372,10 +1470,7 @@ function extractJSON(data){
     throw new Error(bl ? ("Requête bloquée : " + bl) : "Réponse vide");
   }
   if(cand.finishReason === "SAFETY") throw new Error("Réponse bloquée par le filtre de sécurité");
-  /* Avec un budget de raisonnement, la reponse peut contenir des blocs de
-     pensee : ils ne font pas partie du JSON et le casseraient. */
   const raw = ((cand.content && cand.content.parts) || [])
-    .filter(x => !x.thought)
     .map(x => x.text || "").join("\n").replace(/```json|```/g, "").trim();
   if(cand.finishReason === "MAX_TOKENS" && !raw) throw new Error("Réponse tronquée");
   const a = raw.indexOf("{"), b = raw.lastIndexOf("}");
@@ -1383,116 +1478,12 @@ function extractJSON(data){
   return JSON.parse(raw.slice(a, b + 1));
 }
 
-/* Gemini peut recevoir l'outil google_search et ne PAS s'en servir : il repond
-   alors de memoire, dans un format strictement identique. La seule preuve
-   qu'une recherche a reellement eu lieu est groundingMetadata. Sans ce
-   controle, une estimation inventee s'affichait comme une cote verifiee. */
-/* Le grounding insere des marqueurs de citation ([1], [2.1.6]...) dans le
-   texte. Utiles a l'API, illisibles sur un stand : on les retire partout. */
-const deCite = t => String(t).replace(/\s*\[\d+(?:[.\d]+)*\]/g, "").replace(/\s+([.,;:])/g, "$1").trim();
-function cleanCites(o){
-  if(typeof o === "string") return deCite(o);
-  if(Array.isArray(o)) return o.map(cleanCites);
-  if(o && typeof o === "object"){
-    const r = {}; for(const k in o) r[k] = cleanCites(o[k]); return r;
-  }
-  return o;
-}
-
-function groundInfo(data){
-  const md = ((data.candidates || [])[0] || {}).groundingMetadata || {};
-  const queries = md.webSearchQueries || [];
-  const sources = [];
-  (md.groundingChunks || []).forEach(c => {
-    const t = (c.web && (c.web.title || c.web.uri)) || "";
-    if(t && !sources.includes(t)) sources.push(t);
-  });
-  return {searched: queries.length > 0 || sources.length > 0, queries, sources};
-}
-
-/* Bloc "d'ou vient ce chiffre" : affiche sous la cote les requetes reellement
-   lancees et les sites lus. Si c'est vide, c'est que rien n'a ete cherche. */
-function srcBlock(g){
-  if(!g || !g.searched) return "";
-  const q = (g.queries || []).slice(0,4).map(esc).join(" · ");
-  const s = (g.sources || []).slice(0,6).map(esc).join(", ");
-  return `<div class="srcs"><b>Recherché :</b> ${q || "—"}`
-       + (s ? `<br><b>Sources lues :</b> ${s}` : "") + `</div>`;
-}
-
-/* Appel brut : renvoie {j, g, ground, model} ou leve une erreur. Separe du
-   rendu pour que le Mode Bac puisse enchainer plusieurs cotes lui-meme.
-
-   Ordre des tentatives : TOUTES les variantes avec recherche d'abord, puis
-   seulement en dernier recours celles sans. L'ancien ordre alternait
-   ground/no-ground modele par modele : au premier quota depasse sur la
-   recherche, on retombait aussitot sur une reponse de memoire. */
-async function geminiRaw(key, parts, mode, opts){
-  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
-  const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
-  const attempts = [];
-  if(getGround() && !(opts && opts.noGround)) chain.forEach(m => attempts.push({model:m, ground:true}));
-  chain.forEach(m => attempts.push({model:m, ground:false}));
-
-  const dire = txt => { const e = $('load-step'); if(e) e.textContent = txt; };
-  const dodo = ms => new Promise(r => setTimeout(r, ms));
-
-  let lastErr = "", groundErr = "", fallback = null;
-  for(const at of attempts){
-    /* Le 429 de l'offre gratuite est presque toujours une limite PAR MINUTE,
-       pas un quota journalier epuise : attendre quelques secondes suffit.
-       Avant, on abandonnait la recherche au premier 429 et on servait un prix
-       de memoire sans meme dire pourquoi. */
-    for(let essai = 0; essai <= (at.ground ? 2 : 0); essai++){
-      try{
-        if(essai) { dire(`Quota atteint, nouvelle tentative dans ${essai * 5}s…`); await dodo(essai * 5000); dire("Recherche des ventes…"); }
-
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
-          {method:"POST",
-           headers:{"Content-Type":"application/json","x-goog-api-key":key},
-           body: JSON.stringify(buildBody(parts, mode, at.ground))});
-
-        if(!res.ok){
-          let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
-          lastErr = "HTTP " + res.status + (d ? " — " + d.slice(0,160) : "");
-          if(at.ground) groundErr = lastErr;
-          if(res.status === 429 && at.ground) continue;          // on repatiente
-          if([400,403,404,429,500,503].includes(res.status)) break; // modele suivant
-          throw new Error(lastErr);
-        }
-
-        const data = await res.json();
-        const j = extractJSON(data);
-        const g = groundInfo(data);
-        if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
-
-        /* Recherche demandee mais non declenchee : on garde la reponse sous le
-           coude et on tente d'abord un autre modele, qui cherchera peut-etre. */
-        if(at.ground && !g.searched){
-          if(!fallback) fallback = {j, g, ground:true, model:at.model};
-          groundErr = groundErr || "le modèle n'a lancé aucune recherche";
-          break;
-        }
-        return {j, g, ground:at.ground, model:at.model, groundErr};
-
-      }catch(err){
-        lastErr = String(err.message || err);
-        if(at.ground) groundErr = lastErr;
-        break;
-      }
-    }
-  }
-  if(fallback) return Object.assign(fallback, {groundErr});
-  throw new Error(lastErr || "Réponse vide");
-}
-
 async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
 
   if(!key) {
-    switchView('guide', document.querySelectorAll('.nav-item')[5]);
+    switchView('guide', document.querySelectorAll('.nav-item')[6]);
     setTimeout(()=> alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
     return;
   }
@@ -1544,43 +1535,45 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
   images.forEach(img => parts.push({inlineData:{mimeType: img.media, data: img.data}}));
   parts.push({text: promptText + ctx});
 
-  let out = null, lastErr = "";
-  try{ out = await geminiRaw(key, parts, mode); }
-  catch(err){ lastErr = String(err.message || err); }
+  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
+  const attempts = [];
+  for(const m of chain){
+    if(getGround()) attempts.push({model:m, ground:true});
+    attempts.push({model:m, ground:false});
+  }
 
-  if(out){
-    credBump(); stopChrono();
-    const j = cleanCites(out.j), g = out.g;
-    let avis = null;
-    /* Sans schema impose (le cas des appels avec recherche), le modele oublie
-       parfois la cle "confiance". Elle retombait alors sur "faible" et une
-       cote sourcee sur PriceCharting s'affichait "ESTIMATION" en rouge. Si la
-       recherche a bien eu lieu, le plancher est "moyenne". */
-    if(out.ground && g.searched && !String(j.confiance || "").trim()){
-      j.confiance = g.sources.length > 1 ? "haute" : "moyenne";
-    }
-    /* Trois etats distincts, et un seul est une vraie cote. On ne les melange
-       plus : une estimation de memoire ne doit jamais s'afficher comme un
-       prix constate. */
-    if(!out.ground){
-      /* On nomme la cause : "sans recherche web" tout court laissait croire a
-         un choix, alors que c'est presque toujours un quota par minute. */
-      const q = /429|quota|rate/i.test(out.groundErr || "");
-      avis = "Prix estimés de mémoire, à confirmer — "
-           + (q ? "quota de recherche Google atteint. Attends une minute et relance : la cote réelle peut être très différente."
-                : getGround() ? ("recherche indisponible (" + esc(out.groundErr || "cause inconnue") + ").")
-                              : "la recherche web est décochée dans Réglages.");
-      j.confiance = "faible";
-    }else if(!g.searched){
-      avis = "Le modèle n'a lancé aucune recherche : cote non vérifiée. "
-           + "Confirme avant d'acheter au-dessus de quelques euros.";
-      j.confiance = "faible";
-    }
+  let lastErr = "";
+  for(const at of attempts){
+    try{
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
+        {method:"POST",
+         headers:{"Content-Type":"application/json","x-goog-api-key":key},
+         body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))});
 
-    if(mode === 'bac') renderBacResult(j, images, avis, g);
-    else if(mode === 'stand') renderStandResult(j, images[0], avis, g);
-    else { renderResult(j, images, avis, g); if(ckey && !avis) cacheSet(ckey, j); }
-    return;
+      if(!res.ok){
+        let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
+        lastErr = "HTTP " + res.status + (d ? " — " + d : "");
+        if([400,403,404,429,500,503].includes(res.status)) continue;
+        throw new Error(lastErr);
+      }
+
+      credBump(); stopChrono();
+      const j = extractJSON(await res.json());
+      let avis = null;
+      if(!at.ground){
+        avis = "Sans recherche web : prix estimés de mémoire, à confirmer.";
+        if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
+      }
+      if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
+
+      if(mode === 'bac') renderBacResult(j, images, avis);
+      else if(mode === 'stand') renderStandResult(j, images[0], avis);
+      else { renderResult(j, images, avis); if(ckey && !avis) cacheSet(ckey, j); }
+      return;
+
+    }catch(err){ lastErr = String(err.message || err); }
   }
 
   if(/Failed to fetch|NetworkError|network/i.test(lastErr) && !fromQueue){
@@ -1655,175 +1648,24 @@ function askAIMulti() {
   photoQueue = [];
 }
 
-/* MODE BAC — deux passes.
-
-   Avant : une seule requete devait identifier dix articles ET trouver dix
-   cotes. Meme quand la recherche se declenchait, elle portait sur un ou deux
-   titres au mieux ; les autres prix sortaient de la memoire du modele, sans
-   que rien ne le signale. C'est ce qui donnait un Portal 2 surevalue et un
-   Lightning Returns a un tiers de sa valeur.
-
-   Maintenant : passe 1 = identification pure (aucun prix demande), passe 2 =
-   une recherche de cote par article, en serie, avec verification que la
-   recherche a bien eu lieu. C'est plus lent et ca consomme davantage de
-   quota — c'est le prix d'une cote reelle. */
-const bacSleep = ms => new Promise(r => setTimeout(r, ms));
-
-function bacProgress(fait, total, titre, phase){
-  const el = $('ai-results');
-  if(!el) return;
-  const pct = total ? Math.round(fait / total * 100) : 0;
-  el.innerHTML = `<div class="aicard"><div class="loading">
-    <div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p>${esc(phase)}</p>
-    ${total ? `<div class="chrono">${fait} / ${total} — ${pct}%</div>` : ""}
-    ${titre ? `<p style="font-size:12px;color:var(--text-muted);margin-top:6px">${esc(titre)}</p>` : ""}
-  </div></div>`;
-}
-
-async function askAIBac() {
+function askAIBac() {
   if(!photoQueue.length){ alert("Prends d'abord une ou plusieurs photos du bac."); return; }
-  const key = localStorage.getItem(KEY_STORE);
-  if(!key){
-    switchView('guide', document.querySelectorAll('.nav-item')[5]);
-    setTimeout(()=> alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
-    return;
-  }
-
-  /* On envoie la liste des artistes deja possedes, tronquee : elle aide le
-     modele a lire les pochettes floues, sans pour autant remplacer le
-     controle de doublon qui reste fait en local, exemplaire par exemplaire. */
+  /* On envoie la liste des artistes déjà possédés, tronquée : elle aide le
+     modèle à lire les pochettes floues, sans pour autant remplacer le
+     contrôle de doublon qui reste fait en local, exemplaire par exemplaire. */
   const artistes = [...new Set(collRead().map(x => x.a).filter(Boolean))].slice(0, 120);
   const indice = artistes.length
     ? `\nIndice de lecture : le chineur possède déjà des articles de ${artistes.join(", ")}. Ces noms t'aident à déchiffrer une tranche floue, mais ne suppose jamais qu'un article est présent s'il ne l'est pas visiblement.`
     : "";
 
-  const images = photoQueue.slice();
-  $('photo-queue').classList.remove('active');
-  window.scrollTo({top:0, behavior:'smooth'});
-  bacProgress(0, 0, "", "Lecture du bac…");
-
-  /* ---------- PASSE 1 : identification seule ---------- */
-  const idPrompt = `Tu lis un bac, un carton ou une pile d'articles du même type (pochettes de vinyles serrées, boîtes de jeux, cartouches, BD…).
-IDENTIFICATION UNIQUEMENT. Ne donne AUCUN prix, AUCUNE estimation, AUCUN verdict : ce n'est pas ta tâche ici.
-Identifie CHAQUE article LISIBLE, un par un. Ne devine jamais ce qui est illisible ou masqué : ne liste que ce que tu lis vraiment.
-Pour chacun : nom (titre exact tel qu'imprimé), artiste (ou console/éditeur), annee si visible, etat si un défaut est visible à l'œil (tranche pliée, boîtier fêlé, étiquette de magasin).
-typeBac = ce que contient le bac en trois mots.${indice}
-Réponds UNIQUEMENT en JSON : {"typeBac":"","lot":[{"nom":"","artiste":"","annee":"","etat":""}]}`;
-
-  const parts = images.map(img => ({inlineData:{mimeType: img.media, data: img.data}}));
-  parts.push({text: idPrompt});
-
-  let ident;
-  try{
-    ident = await geminiRaw(key, parts, 'bacid', {noGround:true});
-    credBump();
-  }catch(err){
-    $('ai-results').innerHTML = `<div class="aicard"><div class="aibody">
-      <h4>Lecture impossible</h4><p>${esc(String(err.message || err))}</p></div>
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer</button></div>`;
-    return;
-  }
-
-  const brut = Array.isArray(ident.j.lot) ? ident.j.lot : [];
-  /* Plafond dur : au-dela, le temps d'attente et le quota deviennent absurdes
-     sur un stand. Mieux vaut deux photos que vingt requetes. */
-  const MAX = 14;
-  const lot = brut.filter(x => x && x.nom).slice(0, MAX);
-  const tronque = brut.length > MAX;
-
-  if(!lot.length){
-    renderBacResult({typeBac: ident.j.typeBac || "", resume: "", lot: []}, images, null, null);
-    return;
-  }
-
-  /* ---------- PASSE 2 : une cote reelle par article ---------- */
-  const out = [];
-  let verifies = 0, depuisCache = 0;
-  const toutesQueries = [], toutesSources = [];
-
-  for(let i = 0; i < lot.length; i++){
-    const it = lot[i];
-    const q = [it.artiste, it.nom, it.annee].filter(Boolean).join(" ").trim();
-    bacProgress(i, lot.length, q, "Recherche des ventes réelles…");
-
-    const ck = "t:" + norm(q) + "|";
-    const hit = cacheGet(ck);
-    if(hit){
-      depuisCache++; verifies++;
-      out.push(fusionBac(it, hit, false));
-      continue;
-    }
-
-    let r = null;
-    try{
-      r = await geminiRaw(key, [{text: BRIEF_BASE
-        + `\nObjet recherché : ${q}.`
-        + (it.etat ? ` État visible sur la photo : ${it.etat}.` : "")
-        + ` Donne la cote de CET article précis, pas d'une moyenne de sa catégorie.`}], 'single');
-      credBump();
-    }catch(err){ r = null; }
-
-    if(!r){
-      out.push(fusionBac(it, null, true));
-    }else{
-      const ok = r.ground && r.g.searched;
-      if(ok){
-        verifies++;
-        cacheSet(ck, r.j);
-        (r.g.queries || []).forEach(x => { if(!toutesQueries.includes(x)) toutesQueries.push(x); });
-        (r.g.sources || []).forEach(x => { if(!toutesSources.includes(x)) toutesSources.push(x); });
-      }
-      out.push(fusionBac(it, r.j, !ok));
-    }
-
-    /* Respiration entre deux appels : l'offre gratuite plafonne le nombre de
-       requetes par minute (une dizaine sur l'offre gratuite), et un 429 en
-       pleine serie ferait echouer la moitie du bac. Quatre secondes coutent
-       une minute sur un bac de quinze pieces : c'est le prix de cotes qui
-       tiennent debout. */
-    if(i < lot.length - 1) await bacSleep(4000);
-  }
-
-  bacProgress(lot.length, lot.length, "", "Mise en forme…");
-
-  const avis = verifies === lot.length ? null
-    : verifies === 0
-      ? "Aucune cote n'a pu être vérifiée en ligne : tous les prix ci-dessous sont des estimations de mémoire."
-      : `${lot.length - verifies} article(s) sur ${lot.length} n'ont pas pu être vérifiés en ligne — ils sont signalés dans la liste.`;
-
-  const resume = `${lot.length} article(s) lus · ${verifies} cote(s) vérifiée(s) en ligne`
-    + (depuisCache ? ` (dont ${depuisCache} déjà en cache)` : "")
-    + (tronque ? ` · ${brut.length - MAX} article(s) non traités, refais une photo plus serrée` : "");
-
-  renderBacResult(
-    {typeBac: ident.j.typeBac || "", resume, lot: out},
-    images, avis,
-    {searched: !!toutesQueries.length || !!toutesSources.length,
-     queries: toutesQueries, sources: toutesSources});
-}
-
-/* Fusionne l'identification (passe 1) et la cote (passe 2). Si la cote manque,
-   on n'invente pas de chiffre : la ligne part en "L" avec l'avertissement. */
-function fusionBac(it, prix, nonVerifie){
-  const base = {nom: it.nom || "—", artiste: it.artiste || "", annee: it.annee || ""};
-  if(!prix){
-    return Object.assign(base, {revente:0, prixMax:0, verdict:"L",
-      note: it.etat ? ("Cote introuvable. " + it.etat) : "Cote introuvable.",
-      nonVerifie:true});
-  }
-  const notes = [];
-  if(prix.note) notes.push(prix.note);
-  if(prix.tirage) notes.push("Tirage : " + prix.tirage);
-  if(it.etat) notes.push(it.etat);
-  return Object.assign(base, {
-    revente: Number(prix.revente) || Number(prix.fourchetteBas) || 0,
-    prixMax: Number(prix.prixMax) || 0,
-    verdict: ["R","N","L"].includes(String(prix.verdict).toUpperCase())
-             ? String(prix.verdict).toUpperCase() : "N",
-    note: notes.join(" · "),
-    nonVerifie: !!nonVerifie
-  });
+  const prompt = BRIEF_BASE + `
+BAC / LOT HOMOGÈNE. Les photos montrent un bac, un carton ou une pile d'articles du même type (pochettes de vinyles serrées, boîtes de jeux, cartouches, BD...).
+Identifie CHAQUE article LISIBLE, un par un. Ne devine pas ce qui est illisible ou masqué : ne liste que ce que tu lis vraiment.
+Pour chacun : nom (titre exact), artiste (ou console/éditeur), annee si visible, revente estimée en euros, prixMax à payer aujourd'hui, verdict "R" (prends), "N" (seulement sous prixMax) ou "L" (laisse), et une note très courte s'il y a une raison particulière (pressage recherché, tirage massif, état visible).
+Trie du plus intéressant au moins intéressant.
+typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non.${indice}
+Réponds UNIQUEMENT en JSON : {"typeBac":"","resume":"","lot":[{"nom":"","artiste":"","annee":"","revente":0,"prixMax":0,"verdict":"","note":""}]}`;
+  callGemini(prompt, photoQueue, 'bac');
 }
 
 function askAIStand() {
@@ -1838,15 +1680,13 @@ function askAIStand() {
 }
 
 // --- RENDERERS ---
-function renderResult(j, images, avis, g) {
+function renderResult(j, images, avis) {
   const v = ["R","N","L"].includes(j.verdict) ? j.verdict : "N";
   const label = {R:"RAFLE", N:"NÉGOCIE", L:"LAISSE"}[v];
   
   const conf = (j.confiance||"").toLowerCase();
   const cKey = conf.startsWith("haut")?"h":conf.startsWith("moy")?"m":"f";
-  const srcN = (g && g.searched) ? (g.sources || []).length : 0;
-  const cTxt = {h:"Cote vérifiée", m:"Cote partielle", f:"Estimation"}[cKey]
-             + (srcN ? ` · ${srcN} source${srcN > 1 ? "s" : ""}` : "");
+  const cTxt = {h:"Cote vérifiée", m:"Cote partielle", f:"Estimation"}[cKey];
   const tirTxt = j.tirage ? ` · Tirage: ${j.tirage}` : "";
   const range = (j.fourchetteBas && j.fourchetteHaut) ? `Ventes : ${j.fourchetteBas}–${j.fourchetteHaut}€` : `Revente ≈ ${j.revente||"?"}€`;
 
@@ -1855,7 +1695,8 @@ function renderResult(j, images, avis, g) {
     imgHtml = `<div class="aithumb-container">` + images.map(img => `<img src="${img.url}" class="aithumb">`).join('') + `</div>`;
   }
 
-  const dupHtml = collBanner((j.objet||"") + " " + (j.identification||""));
+  const rq = (j.objet||"") + " " + (j.identification||"");
+  const dupHtml = venteBanner(rq) + collBanner(rq);
 
   $('ai-results').innerHTML = dupHtml + `
     <div class="aicard">
@@ -1870,7 +1711,6 @@ function renderResult(j, images, avis, g) {
       </div>
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${tirTxt}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
-      ${srcBlock(g)}
       ${priceGauge(parseFloat($('price').value||"0")||0, j.prixMax, j.revente, j.fourchetteBas, j.fourchetteHaut)}
       <div class="aibody">
         ${j.identification ? `<div class="ident">${esc(j.identification)}</div>` : ''}
@@ -1895,7 +1735,7 @@ function renderResult(j, images, avis, g) {
   if(np) np.innerHTML = negoPad(LAST.demande, LAST.prixMax);
 }
 
-function renderStandResult(j, image, avis, g) {
+function renderStandResult(j, image, avis) {
   const v = j.verdictGlobal.toLowerCase().includes('fouill') ? 'S' : 'L';
   
   let itemsHtml = "";
@@ -1920,8 +1760,6 @@ function renderStandResult(j, image, avis, g) {
           <div class="o" style="font-size:16px;">${esc(j.verdictGlobal)}</div>
         </div>
       </div>
-      ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
-      ${srcBlock(g)}
       <div class="aibody">
         <h4>Cibles Potentielles Repérées</h4>
         <ul style="list-style-type:none; padding-left:0;">${itemsHtml}</ul>
@@ -1931,7 +1769,7 @@ function renderStandResult(j, image, avis, g) {
     </div>`;
 }
 
-function renderBacResult(j, images, avis, g){
+function renderBacResult(j, images, avis){
   const lot = Array.isArray(j.lot) ? j.lot : [];
   const rows = lot.map(o => {
     const dup = collMatch((o.artiste || "") + " " + (o.nom || ""));
@@ -1960,7 +1798,6 @@ function renderBacResult(j, images, avis, g){
         <div class="bac-a">${esc(o.artiste || "")}${o.annee ? " · " + esc(o.annee) : ""}</div>
         ${r.flou ? `<div class="bac-warn">Ressemble à « ${esc(r.flou.e.t)} » que tu as déjà — vérifie l'édition.</div>` : ""}
         ${o.note ? `<div class="bac-note">${esc(o.note)}</div>` : ""}
-        ${o.nonVerifie ? `<div class="bac-unv">⚠︎ cote non vérifiée</div>` : ""}
       </div>
       <div class="bac-p">
         ${r.dup ? `<span class="bac-dup">en collection</span>`
@@ -1989,7 +1826,6 @@ function renderBacResult(j, images, avis, g){
         </div>
       </div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
-      ${srcBlock(g)}
       <div class="aibody">
         ${bacBar({R:pris.length, N:nego.length, D:doub.length, L:laisse.length})}
         ${j.resume ? `<div class="saywrap">${esc(j.resume)}</div>` : ""}
@@ -2419,7 +2255,9 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
          body: JSON.stringify({
            contents:[{role:"user", parts:[{text:brief}]}],
            tools:[{google_search:{}}],
-           generationConfig:{temperature:0.1, maxOutputTokens:2600, thinkingConfig:{thinkingBudget:0}}
+           generationConfig: /^gemini-3/.test(m)
+             ? {maxOutputTokens:2600, thinkingConfig:{thinkingLevel:"low"}}
+             : {temperature:0.1, maxOutputTokens:2600, thinkingConfig:{thinkingBudget:0}}
          })});
       if(!res.ok){
         let d=""; try{ d=(await res.json()).error?.message||""; }catch(e){}
@@ -2596,7 +2434,7 @@ function paintImminent(){
     <svg class="ico16"><use href="#i-${dem ? "cal" : "flame"}"/></svg>
     <div class="im-t"><b>${dem ? "Demain" : "Aujourd'hui"} : ${esc(o.x.nom || "brocante")}</b>
       <span>${esc(o.x.ville || "")}${o.x.km ? " · " + o.x.km + " km" : ""}${o.x.horaires ? " · " + esc(o.x.horaires) : ""}</span></div>
-    ${dem ? `<button onclick="switchView('guide', document.querySelectorAll('.nav-item')[5]);setTimeout(()=>document.getElementById('sac-ticks')?.scrollIntoView({behavior:'smooth'}),150)">Sac</button>` : ""}`;
+    ${dem ? `<button onclick="switchView('guide', document.querySelectorAll('.nav-item')[6]);setTimeout(()=>document.getElementById('sac-ticks')?.scrollIntoView({behavior:'smooth'}),150)">Sac</button>` : ""}`;
 }
 
 function renderCal(){
@@ -2690,6 +2528,10 @@ function hudPaint(){
   if($('hud-spots')) $('hud-spots').textContent = sp;
   const bd = $('bdg-spots');
   if(bd){ bd.textContent = sp || ""; bd.style.display = sp ? "block" : "none"; }
+
+  const vp = venteRead().filter(x => x.statut === "todo" && venteVives(x).length).length;
+  const bv = $('bdg-vente');
+  if(bv){ bv.textContent = vp || ""; bv.style.display = vp ? "block" : "none"; }
 
   if($('hud-cred')) $('hud-cred').textContent = credCount();
 
@@ -3183,6 +3025,7 @@ function renderLog(){
       <div class="li-main"><b>${esc(x.o||"—")}</b>
         <span>payé ${(x.p||0).toFixed(0)}€ · revente ${(x.r||0).toFixed(0)}€${rem}</span></div>
       <div class="li-m ${m>=0?'pos':'neg'}">${m>=0?'+':''}${m.toFixed(0)}€</div>
+      <button class="vt-sell" onclick="venteFromLog(${i})">Vendre</button>
       <button class="li-x" onclick="logDel(${i})">✕</button>
     </div>`;
   }).join('');
@@ -3223,6 +3066,10 @@ function sortieFin(){
 
   const a = sortieRead(); a.unshift(so);
   if(!sortieWrite(a)) return;
+
+  /* Avant de vider : ce qui a été acheté pour être revendu part vers Cash Out,
+     sinon terminer la sortie ferait disparaître la marchandise du circuit. */
+  venteDepuisSortie(achats);
 
   /* On vide le courant seulement une fois l'archive écrite. */
   logWrite([]); spotWrite([]);
@@ -3295,6 +3142,7 @@ function renderHist(){
    Un nettoyage de cache Android efface le stockage du navigateur sans
    prévenir. Ce fichier remet tout en place. */
 const CLES = ["insertcoin.log","insertcoin.spots","insertcoin.sorties","insertcoin.cal",
+              "insertcoin.vente","insertcoin.vente.seed","insertcoin.photosrc",
               "insertcoin.collection","insertcoin.cred","insertcoin.theme",
               "insertcoin.drive.files","insertcoin.drive.cid","insertcoin.gemini.model"];
 
@@ -3497,6 +3345,351 @@ function renderOfflineFull() {
 function baseClear(){
   const f = $('q-base'); if(f) f.value = "";
   renderOfflineFull();
+}
+
+/* ══════════ CASH OUT — LE STOCK QUI RESSORT ══════════
+   Le journal enregistre ce qui entre, Cash Out suit ce qui sort.
+   Une « annonce » regroupe une ou plusieurs pièces : sur Vinted, un lot
+   part beaucoup mieux qu'une pièce à 5 € écrasée par les frais de port. */
+
+const VENTE_STORE = "insertcoin.vente";
+const VENTE_SEED  = "insertcoin.vente.seed";
+let VT_FILTRE = "all";
+let VT_OPEN = null;
+
+function venteRead(){ try { return JSON.parse(localStorage.getItem(VENTE_STORE) || "[]"); } catch(e){ return []; } }
+function venteWrite(a){
+  try { localStorage.setItem(VENTE_STORE, JSON.stringify(a)); return true; }
+  catch(e){ alert("Mémoire du téléphone saturée."); return false; }
+}
+function venteFind(id){ return venteRead().find(x => x.id === id); }
+/* Pièces encore à vendre : celles que tu n'as pas reprises dans ta collection. */
+function venteVives(x){ return (x.pieces || []).filter(p => !p.keep); }
+
+/* ---------- Stock de départ : les 39 articles photographiés ---------- */
+const VT_ART = {
+A:["Super Mario Maker 2 (Switch)","Complet FR"],
+AA:["Lot ~15 figurines Skylanders + portail USB","Portail filaire"],
+AB:["Console Wii blanche RVL-001 + accessoires","Alim, AV, barre capteur, Zapper, Wiimote — cache de piles manquant"],
+AC:["God of War (PS4, PlayStation Hits)","Jaquette italienne, stickers magasin"],
+AD:["Les Sims 2 Animaux & Cie (PSP)","Complet FR"],
+AE:["Total Soccer 2002 (GBA)","Cartouche seule"],
+AF:["Nintendogs Teckel & ses amis (DS)","Cartouche seule"],
+AG:["The Sims Bustin' Out (GBA)","Cartouche seule"],
+AH:["Pistolet Sega Light Phaser","Master System"],
+AI:["Manette Control Pad Sega Master System",""],
+AJ:["Montre Marc Ecko à strass",""],
+AK:["Montre Swatch Irony Chrono","Bracelet cuir marron — référence à relever"],
+AL:["Montre chronographe tonneau, cuir noir","Fond gravé NO: B0340B"],
+AM:["Collier pendentif plaque acier 316","Cordon noir"],
+B:["Ring Fit Adventure (Switch)","Boîte + cartouche, sans Ring-Con ni sangle"],
+C:["Une Nouvelle Élève à Monster High (Wii U)","Neuf sous blister, FR"],
+D:["FIFA 11 (Wii)","Boîtier abîmé, étiquette arrachée"],
+E:["Call of Duty Vanguard (PS4)","Neuf sous blister, VF"],
+F:["Bratz Kidz Pyjama Party (Wii)","Complet"],
+G:["Just Dance 4 (Wii)","Complet avec notice"],
+H:["LEGO Marvel Super Heroes (PS Vita)","Boîtier + cartouche"],
+I:["Monster High 13 Souhaits (Wii)","Complet, tache sur la jaquette"],
+J:["Just Dance (Wii)","Complet, disque très rayé"],
+K:["Top Spin 4 (Wii)","Complet avec notice"],
+L:["Inazuma Eleven Strikers (Wii)","Complet, disque très rayé"],
+M:["Disney Infinity (Wii, jeu seul)","Sans base ni figurines"],
+N:["Wii Sports (Nintendo Selects)","Complet"],
+O:["Monopoly Collection (Wii)","2 jeux en 1, étiquette Cash Converters"],
+P:["Skylanders Trap Team (Wii)","Boîte + disque, disque rayé"],
+Q:["Frantix (PSP)","Ex-médiathèque, étiquettes de prêt"],
+R:["Ace Combat X Skies of Deception (PSP)","Édition originale, complet"],
+S:["Steel Horizon (PSP)","Complet"],
+T:["Professeur Sudoku (PSP)","Complet"],
+U:["Ace Combat X Platinum (PSP)","Doublon de R"],
+V:["Mind Quiz (PSP)","Boîtier + UMD"],
+W:["Go! Sudoku (PSP)","Étiquette Cash Converters"],
+X:["Archer Maclean's Mercury (PSP)","Complet"],
+Y:["Gran Turismo (PSP, Platinum)",""],
+Z:["Lot Disney Infinity","Base + 6 figurines + power disc + cristal + USB"]
+};
+
+const VT_LOTS = [
+ ["Bundle Wii complet",["AB","D","F","J","M","O","P"],89,75,"Commander un cache de piles Wiimote avant publication"],
+ ["Inazuma Eleven Strikers (Wii)",["L"],21,18,""],
+ ["Wii Sports — Nintendo Selects",["N"],14,12,""],
+ ["Monster High 13 Souhaits (Wii)",["I"],12,10,"Nettoyer la tache sur la jaquette"],
+ ["Top Spin 4 (Wii)",["K"],9,8,""],
+ ["Just Dance 4 (Wii)",["G"],9,8,""],
+ ["Super Mario Maker 2 (Switch)",["A"],32,28,""],
+ ["Lot Skylanders + portail",["AA"],48,42,""],
+ ["Monster High (Wii U) — scellé",["C"],34,30,""],
+ ["Call of Duty Vanguard (PS4) — scellé",["E"],19,17,""],
+ ["Ring Fit Adventure — jeu seul",["B"],19,17,""],
+ ["LEGO Marvel Super Heroes (PS Vita)",["H"],17,15,""],
+ ["God of War (PS4)",["AC"],11,9,"Retirer les stickers magasin"],
+ ["Lot PSP action",["Q","S","U"],25,22,"Décoller les étiquettes de médiathèque sur Frantix"],
+ ["Lot PSP réflexion",["T","V","W"],16,14,"Décoller l'étiquette Cash Converters sur Go! Sudoku"],
+ ["Lot PSP course & simulation",["R","X","Y","AD"],38,33,""],
+ ["Lot cartouches GBA & DS",["AE","AG","AF"],15,12,""],
+ ["Lot Sega Master System",["AH","AI"],49,45,""],
+ ["Lot Disney Infinity",["Z"],42,38,"Confirmer si la base est filaire ou sans fil"],
+ ["Montre Swatch Irony Chrono",["AK"],45,40,"Relever la référence au dos du boîtier"],
+ ["Montre Marc Ecko",["AJ"],28,25,""],
+ ["Montre chronographe tonneau",["AL"],21,18,""],
+ ["Collier acier 316",["AM"],14,12,""]
+];
+
+/* Le stock initial ne s'écrit qu'une fois : si tu le supprimes, il ne revient pas. */
+function venteSeed(){
+  try{ if(localStorage.getItem(VENTE_SEED) === "1") return; }catch(e){ return; }
+  if(!venteRead().length){
+    const t = Date.now();
+    venteWrite(VT_LOTS.map((l, i) => ({
+      id: t + i, t: l[0], prix: l[2], plancher: l[3], blocage: l[4],
+      cout: 0, vendu: 0, frais: 0, statut: "todo", d: t,
+      pieces: l[1].map(r => ({ref: r, n: (VT_ART[r]||["",""])[0], det: (VT_ART[r]||["",""])[1], keep: false}))
+    })));
+  }
+  try{ localStorage.setItem(VENTE_SEED, "1"); }catch(e){}
+}
+
+/* ---------- Entrées venues du terrain ---------- */
+function ventePush(o, cout, revente, blocage){
+  const a = venteRead();
+  const prix = Math.max(1, Math.round((revente || cout * 2 || 5) * 1.15));
+  a.unshift({
+    id: Date.now(), t: o, prix, plancher: Math.round(revente || cout * 2 || 5),
+    cout: cout || 0, vendu: 0, frais: 0, statut: "todo", blocage: blocage || "", d: Date.now(),
+    pieces: [{ref: "•", n: o, det: "", keep: false}]
+  });
+  return venteWrite(a);
+}
+
+function venteFromLog(i){
+  const x = logRead()[i]; if(!x) return;
+  ventePush(x.o, x.p || 0, x.r || 0, "");
+  vib(); hudPaint(); renderVente();
+  alert("« " + x.o + " » est passé dans Cash Out. Il reste dans ton journal : la marge d'achat et la marge de revente sont deux mesures différentes.");
+}
+
+function venteImportLog(){
+  const l = logRead();
+  if(!l.length){ alert("Ton journal est vide."); return; }
+  const deja = venteRead().map(x => norm(x.t));
+  const neufs = l.filter(x => deja.indexOf(norm(x.o || "")) === -1);
+  if(!neufs.length){ alert("Tous tes achats du journal sont déjà dans Cash Out."); return; }
+  if(!confirm("Envoyer " + neufs.length + " achat(s) vers Cash Out ?")) return;
+  neufs.forEach(x => ventePush(x.o, x.p || 0, x.r || 0, ""));
+  hudPaint(); renderVente();
+}
+
+/* Appelée par sortieFin() : le journal va être vidé, la marchandise ne doit pas
+   disparaître avec lui. */
+function venteDepuisSortie(achats){
+  if(!achats || !achats.length) return;
+  const deja = venteRead().map(x => norm(x.t));
+  const neufs = achats.filter(x => deja.indexOf(norm(x.o || "")) === -1);
+  if(!neufs.length) return;
+  if(!confirm("Envoyer les " + neufs.length + " achat(s) de cette sortie vers Cash Out ?\n\nSinon ils partent aux archives et sortent du circuit de revente.")) return;
+  neufs.forEach(x => ventePush(x.o, x.p || 0, x.r || 0, ""));
+}
+
+function venteAdd(){
+  const o = (prompt("Qu'est-ce que tu mets en vente ?", "") || "").trim();
+  if(!o) return;
+  const c = parseFloat(prompt("Combien l'as-tu payé ? (0 si tu l'avais déjà)", "0") || "0") || 0;
+  const p = parseFloat(prompt("Prix affiché en euros ?", "") || "0") || 0;
+  const a = venteRead();
+  a.unshift({id: Date.now(), t: o, prix: p, plancher: Math.round(p * 0.85), cout: c,
+             vendu: 0, frais: 0, statut: "todo", blocage: "", d: Date.now(),
+             pieces: [{ref: "•", n: o, det: "", keep: false}]});
+  venteWrite(a); vib(); hudPaint(); renderVente();
+}
+
+function venteDel(id){
+  const a = venteRead(); const i = a.findIndex(x => x.id === id); if(i < 0) return;
+  if(!confirm("Supprimer « " + a[i].t + " » de Cash Out ?")) return;
+  a.splice(i, 1); venteWrite(a); hudPaint(); renderVente();
+}
+
+function venteSet(id, champ, val){
+  const a = venteRead(); const x = a.find(y => y.id === id); if(!x) return;
+  x[champ] = parseFloat(val) || 0;
+  venteWrite(a); renderVente();
+}
+
+function venteStatut(id, st){
+  const a = venteRead(); const x = a.find(y => y.id === id); if(!x) return;
+  x.statut = st;
+  if(st === "done" && !x.vendu) x.vendu = x.prix;
+  venteWrite(a); vib(); hudPaint(); renderVente();
+}
+
+/* Reprendre une pièce dans la collection : elle quitte l'annonce, le lot se
+   recalcule, et elle réapparaît dans les doublons détectés sur le terrain. */
+function venteKeep(id, ref){
+  const a = venteRead(); const x = a.find(y => y.id === id); if(!x) return;
+  const p = x.pieces.find(q => q.ref === ref); if(!p) return;
+  p.keep = !p.keep;
+  if(!venteVives(x).length) x.statut = "keep";
+  else if(x.statut === "keep") x.statut = "todo";
+  venteWrite(a); vib(); hudPaint(); renderVente();
+}
+
+function venteToggle(id){
+  VT_OPEN = (VT_OPEN === id) ? null : id;
+  renderVente();
+}
+
+function venteFiltre(f, el){
+  VT_FILTRE = f;
+  document.querySelectorAll('#vt-filter button').forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
+  renderVente();
+}
+
+/* ---------- Texte d'annonce ---------- */
+function venteTexte(id){
+  const x = venteFind(id); if(!x) return;
+  const v = venteVives(x);
+  const titre = x.t + (v.length > 1 ? " — lot de " + v.length : "");
+  const lignes = v.map(p => "• " + p.n + (p.det ? " — " + p.det : "")).join("\n");
+  const txt = titre + "\n\nCE QUE TU REÇOIS\n" + lignes +
+    "\n\nÉTAT\nTesté et fonctionnel sauf mention contraire ci-dessus. Les défauts visibles sont décrits et photographiés : je préfère une annonce honnête à un litige." +
+    "\n\nENVOI\nExpédition sous 24-48 h, emballage protégé. D'autres jeux et consoles dans mon dressing — regroupement des frais de port possible." +
+    "\n\nPrix " + x.prix + " € · offres raisonnables acceptées.\n#jeuvideo #retrogaming #collection";
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(() => { vib(); alert("Texte d'annonce copié."); })
+      .catch(() => prompt("Copie le texte :", txt));
+  } else prompt("Copie le texte :", txt);
+}
+
+/* ---------- Le lien avec le terrain ----------
+   Reconnaître sur un stand un objet que tu as déjà en vente, ou que tu as
+   déjà vendu : dans le second cas ce n'est plus une estimation, c'est ta cote. */
+function venteMatch(query){
+  const a = venteRead(); if(!a.length) return null;
+  const qt = collTokens(query); if(!qt.length) return null;
+  let best = null;
+  a.forEach(x => {
+    venteVives(x).concat(x.statut === "done" ? x.pieces : []).forEach(p => {
+      const sc = collScore(qt, collTokens(p.n + " " + x.t));
+      if(sc >= 0.55 && (!best || sc > best.sc)) best = {sc, x, p};
+    });
+  });
+  return best;
+}
+
+function venteBanner(query){
+  const m = venteMatch(query);
+  if(!m) return "";
+  const x = m.x;
+  if(x.statut === "done"){
+    const net = (x.vendu || 0) - (x.frais || 0);
+    return '<div class="dupbox dup-vente"><div class="dt">Tu en as déjà vendu un</div>' +
+      '<div class="dd">' + esc(m.p.n) + '</div>' +
+      '<div class="dn">Parti à ' + net.toFixed(0) + ' € net' +
+      (x.cout ? ' pour ' + x.cout.toFixed(0) + ' € payés' : '') +
+      '. C\'est ta cote réelle, pas une moyenne de catégorie.</div></div>';
+  }
+  const etat = x.statut === "live" ? "en vente à " + x.prix + " €" : "à publier à " + x.prix + " €";
+  return '<div class="dupbox dup-vente"><div class="dt">Tu l\'as déjà, côté vente</div>' +
+    '<div class="dd">' + esc(m.p.n) + '</div>' +
+    '<div class="dn">' + esc(x.t) + ' — ' + etat + '. Un deuxième exemplaire ne se justifie que sous ton plancher de ' + x.plancher + ' €.</div></div>';
+}
+
+/* ---------- Rendu ---------- */
+function renderVente(){
+  const el = $('vt-list'); if(!el) return;
+  const a = venteRead();
+  const vifs = a.filter(x => x.statut !== "keep" && venteVives(x).length);
+  const vendus = vifs.filter(x => x.statut === "done");
+
+  const encaisse = vendus.reduce((s,x) => s + ((x.vendu||0) - (x.frais||0)), 0);
+  const coutVendu = vendus.reduce((s,x) => s + (x.cout||0), 0);
+  const marge = encaisse - coutVendu;
+  const potentiel = vifs.filter(x => x.statut !== "done").reduce((s,x) => s + (x.prix||0), 0);
+
+  const sum = $('vt-sum');
+  if(sum) sum.innerHTML =
+    '<div class="sumbox"><div class="sn">' + encaisse.toFixed(0) + '€</div><div class="sc">Encaissé</div></div>' +
+    '<div class="sumbox"><div class="sn">' + potentiel.toFixed(0) + '€</div><div class="sc">Reste à sortir</div></div>' +
+    '<div class="sumbox ' + (marge >= 0 ? 'pos' : 'neg') + '"><div class="sn">' + (marge >= 0 ? '+' : '') + marge.toFixed(0) + '€</div><div class="sc">Marge nette</div></div>';
+
+  const bl = $('vt-blockers');
+  if(bl){
+    const b = vifs.filter(x => x.blocage && x.statut === "todo");
+    bl.innerHTML = b.length
+      ? '<div class="dupbox dup-maybe" style="margin-bottom:14px"><div class="dt">' + b.length + ' point' + (b.length>1?'s':'') + ' à régler</div><ul class="dup-list">' +
+        b.map(x => '<li>' + esc(x.blocage) + '</li>').join('') + '</ul>' +
+        '<div class="dn">Chacun coûte quelques euros et débloque plusieurs dizaines à la vente.</div></div>'
+      : '';
+  }
+
+  if(!a.length){
+    el.innerHTML = '<div class="empty-state"><svg class="ico-big"><use href="#i-tag"/></svg>' +
+      '<b>Rien en vente</b><p>Ajoute un article, ou importe tes achats depuis le journal de chasse.</p></div>';
+    if($('vt-cote')) $('vt-cote').innerHTML = "";
+    return;
+  }
+
+  const rang = {todo:0, live:1, done:2, keep:3};
+  const liste = a.filter(x => VT_FILTRE === "all" ? true : x.statut === VT_FILTRE)
+                 .sort((x,y) => (rang[x.statut]-rang[y.statut]) || (y.prix-x.prix));
+
+  el.innerHTML = liste.map(x => {
+    const v = venteVives(x);
+    const val = x.statut === "done" ? (x.vendu || 0) : (x.prix || 0);
+    const cap = x.statut === "done" ? "encaissé" : x.statut === "live" ? "en vente" : x.statut === "keep" ? "gardé" : "à publier";
+    const ouvert = VT_OPEN === x.id;
+    const head =
+      '<div class="vt-head" onclick="venteToggle(' + x.id + ')">' +
+        '<div class="vt-bar"></div>' +
+        '<div class="vt-c"><b>' + esc(x.t) + '</b>' +
+          '<span>' + v.length + ' pièce' + (v.length>1?'s':'') +
+          (x.cout ? ' · payé ' + x.cout.toFixed(0) + '€' : '') +
+          ' · plancher ' + (x.plancher||0) + '€</span>' +
+          (x.blocage && x.statut === "todo" ? '<span class="vt-warn">' + esc(x.blocage) + '</span>' : '') +
+        '</div>' +
+        '<div class="vt-p"><b>' + val.toFixed(0) + '€</b><span>' + cap + '</span></div>' +
+      '</div>';
+    if(!ouvert) return '<div class="vt-row s-' + x.statut + '">' + head + '</div>';
+
+    const body =
+      '<div class="vt-body">' +
+        '<div class="vt-fields">' +
+          '<div class="vt-f"><label>Affiché €</label><input type="number" inputmode="decimal" value="' + (x.prix||0) + '" onchange="venteSet(' + x.id + ',\'prix\',this.value)"></div>' +
+          '<div class="vt-f"><label>Plancher €</label><input type="number" inputmode="decimal" value="' + (x.plancher||0) + '" onchange="venteSet(' + x.id + ',\'plancher\',this.value)"></div>' +
+          '<div class="vt-f"><label>Vendu €</label><input type="number" inputmode="decimal" value="' + (x.vendu||"") + '" placeholder="—" onchange="venteSet(' + x.id + ',\'vendu\',this.value)"></div>' +
+        '</div>' +
+        x.pieces.map(p =>
+          '<div class="vt-piece' + (p.keep ? ' keep' : '') + '">' +
+            '<span class="vt-ref">' + esc(p.ref) + '</span>' +
+            '<span class="vt-nm">' + esc(p.n) + (p.det ? '<i>' + esc(p.det) + '</i>' : '') + '</span>' +
+            '<button class="vt-keep" onclick="event.stopPropagation();venteKeep(' + x.id + ',\'' + p.ref + '\')">' +
+              (p.keep ? 'Revendre' : 'Je garde') + '</button>' +
+          '</div>').join('') +
+        '<div class="vt-acts">' +
+          '<button class="' + (x.statut==="todo"?"on":"") + '" onclick="venteStatut(' + x.id + ',\'todo\')">À publier</button>' +
+          '<button class="live ' + (x.statut==="live"?"on":"") + '" onclick="venteStatut(' + x.id + ',\'live\')">En vente</button>' +
+          '<button class="done ' + (x.statut==="done"?"on":"") + '" onclick="venteStatut(' + x.id + ',\'done\')">Vendu</button>' +
+        '</div>' +
+        '<button class="btn-save" style="margin-top:10px" onclick="venteTexte(' + x.id + ')">Copier le texte d\'annonce</button>' +
+        '<button class="btn-save alt2" style="background:transparent;color:var(--stop);border:1px solid var(--stop)" onclick="venteDel(' + x.id + ')">Retirer de Cash Out</button>' +
+      '</div>';
+    return '<div class="vt-row open s-' + x.statut + '">' + head + body + '</div>';
+  }).join('');
+
+  const ct = $('vt-cote');
+  if(ct){
+    ct.innerHTML = vendus.length
+      ? vendus.slice(0, 12).map(x => {
+          const net = (x.vendu||0) - (x.frais||0);
+          const m = net - (x.cout||0);
+          return '<div class="vt-cote"><b>' + esc(x.t) + '</b>' +
+            '<i>' + (x.cout ? 'payé ' + x.cout.toFixed(0) + '€ · ' : '') +
+            (m >= 0 ? '+' : '') + m.toFixed(0) + '€</i>' +
+            '<span>' + net.toFixed(0) + '€</span></div>';
+        }).join('')
+      : '<div class="statnote">Chaque vente enregistrée devient une cote réelle : ' +
+        'sur le terrain, l\'analyse te rappellera à quel prix cet objet est réellement parti chez toi, ' +
+        'au lieu d\'une moyenne de catégorie.</div>';
+  }
 }
 
 window.onload = init;
