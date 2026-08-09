@@ -1444,7 +1444,17 @@ function buildBody(parts, mode, ground, model){
      thinkingBudget est refusé (400) au profit de thinkingLevel. Envoyer les deux
      ferait échouer la requête, on choisit donc selon la famille du modèle. */
   const g3 = /^gemini-3/.test(model || "");
-  const gc = {maxOutputTokens:1200};
+
+  /* Le tri d'un bac produit une ligne par pièce, une vue d'ensemble plusieurs
+     objets : leur réponse est bien plus longue qu'une fiche unique. */
+  const utile = mode === 'bac' ? 3000 : mode === 'stand' ? 2000 : 1400;
+
+  /* Chez Gemini 3, les jetons de réflexion sont décomptés de maxOutputTokens.
+     Avec l'ancien plafond de 1200, la recherche web consommait tout le budget
+     en réflexion : la réponse revenait tronquée, l'app basculait en repli
+     « sans recherche web » — d'où des cotes de mémoire en multi et en bac
+     alors qu'une photo unique passait encore. */
+  const gc = {maxOutputTokens: g3 ? utile + 6000 : utile};
   if(g3){
     gc.thinkingConfig = {thinkingLevel:"low"};
   }else{
@@ -1472,7 +1482,7 @@ function extractJSON(data){
   if(cand.finishReason === "SAFETY") throw new Error("Réponse bloquée par le filtre de sécurité");
   const raw = ((cand.content && cand.content.parts) || [])
     .map(x => x.text || "").join("\n").replace(/```json|```/g, "").trim();
-  if(cand.finishReason === "MAX_TOKENS" && !raw) throw new Error("Réponse tronquée");
+  if(cand.finishReason === "MAX_TOKENS") throw new Error("Réponse tronquée (budget de jetons dépassé)");
   const a = raw.indexOf("{"), b = raw.lastIndexOf("}");
   if(a < 0 || b < a) throw new Error("Réponse illisible");
   return JSON.parse(raw.slice(a, b + 1));
@@ -1563,7 +1573,8 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
       const j = extractJSON(await res.json());
       let avis = null;
       if(!at.ground){
-        avis = "Sans recherche web : prix estimés de mémoire, à confirmer.";
+        avis = "Sans recherche web : prix estimés de mémoire, à confirmer."
+             + (lastErr ? " (recherche abandonnée — " + lastErr + ")" : "");
         if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
       }
       if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
