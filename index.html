@@ -599,6 +599,24 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 .macro-btn { flex: 0 0 auto; background: var(--surface-light); border: 1px dashed var(--gold-dim); color: var(--gold); padding: 8px 12px; border-radius: 8px; font-family: var(--cond); font-size: 13px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 .macro-btn:active { background: var(--surface); transform: scale(0.95); }
 
+/* ── Panier du Mode Bac ── */
+.bacrow{cursor:pointer}
+.bacrow.sel{border-color:var(--gold)}
+.bac-tick{flex:0 0 20px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:13px;color:var(--border)}
+.bacrow.sel .bac-tick{color:var(--gold)}
+.bac-cart{position:sticky;bottom:0;display:flex;align-items:center;gap:10px;
+  background:var(--surface-light);border-top:1px solid var(--gold);padding:11px 12px;z-index:5}
+.bac-cart .bc-t{flex:1;min-width:0}
+.bac-cart .bc-t b{display:block;font-family:var(--cond);font-size:17px;color:var(--text);line-height:1.15}
+.bac-cart .bc-t span{font-family:var(--mono);font-size:10.5px;color:var(--text-muted)}
+.bac-cart button{flex:0 0 auto;background:var(--gold);color:#14110f;border:0;border-radius:9px;
+  padding:11px 14px;font-family:var(--cond);font-size:14px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
+.bac-cart button.off{background:var(--surface);color:var(--text-muted)}
+.bac-cart.done{border-top-color:var(--go)}
+.bac-cart.done .bc-t b{color:var(--go)}
+
 /* ══════════ CASH OUT ══════════ */
 .vt-row{background:var(--surface);border:1px solid var(--border);border-radius:11px;margin-bottom:8px;overflow:hidden}
 .vt-row.open{border-color:var(--gold)}
@@ -1780,8 +1798,15 @@ function renderStandResult(j, image, avis) {
     </div>`;
 }
 
-function renderBacResult(j, images, avis){
+function renderBacResult(j, images, avis, garderSel){
   const lot = Array.isArray(j.lot) ? j.lot : [];
+  /* Le résultat est conservé pour pouvoir se redessiner à chaque coche
+     sans relancer une requête. */
+  BAC_VUE = {j, images, avis};
+  if(!garderSel){
+    BAC_ACHETE = false;
+    BAC_SEL = new Set();
+  }
   const rows = lot.map(o => {
     const dup = collMatch((o.artiste || "") + " " + (o.nom || ""));
     return {o, dup: dup && dup.sur ? dup : null, flou: dup && !dup.sur ? dup : null};
@@ -1802,8 +1827,10 @@ function renderBacResult(j, images, avis){
     const v = (o.verdict || "N").toUpperCase();
     const cls = r.dup ? "D" : (["R","N","L"].includes(v) ? v : "N");
     const idx = rows.indexOf(r);
-    return `<div class="bacrow ${cls}">
+    const coche = BAC_SEL.has(idx);
+    return `<div class="bacrow ${cls}${coche ? " sel" : ""}" onclick="bacToggle(${idx})">
       <div class="bac-v">${r.dup ? "DÉJÀ" : cls}</div>
+      <div class="bac-tick">${coche ? "☑" : "☐"}</div>
       <div class="bac-c">
         <div class="bac-n">${esc(o.nom || "—")}</div>
         <div class="bac-a">${esc(o.artiste || "")}${o.annee ? " · " + esc(o.annee) : ""}</div>
@@ -1813,7 +1840,7 @@ function renderBacResult(j, images, avis){
       <div class="bac-p">
         ${r.dup ? `<span class="bac-dup">en collection</span>`
           : `<b>${Number(o.prixMax)||"?"}€</b><span>→ ${Number(o.revente)||"?"}€</span>
-             ${cls === "L" ? "" : `<button class="bac-spot" onclick="bacSpot(${idx})">Repérer</button>`}`}
+             ${cls === "L" ? "" : `<button class="bac-spot" onclick="event.stopPropagation();bacSpot(${idx})">Repérer</button>`}`}
       </div>
     </div>`;
   };
@@ -1824,6 +1851,11 @@ function renderBacResult(j, images, avis){
     : "";
 
   BAC_ROWS = rows;
+  if(!garderSel){
+    rows.forEach((r, i) => {
+      if(!r.dup && (r.o.verdict || "").toUpperCase() === "R") BAC_SEL.add(i);
+    });
+  }
 
   $('ai-results').innerHTML = `
     <div class="aicard">
@@ -1847,11 +1879,100 @@ function renderBacResult(j, images, avis){
         ${!lot.length ? `<div class="empty-state"><svg class="ico-big"><use href="#i-crate"/></svg>
           <b>Rien de lisible</b><p>Rapproche-toi, ou écarte les pochettes pour dégager les tranches.</p></div>` : ""}
       </div>
+      ${lot.length ? bacCart() : ""}
       <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
     </div>`;
 }
 
+/* Le panier : ce que tu emportes réellement du bac, et à quel prix.
+   Sans lui, un lot négocié en bloc devait être ressaisi pièce par pièce. */
+function bacCart(){
+  if(BAC_ACHETE){
+    return `<div class="bac-cart done"><div class="bc-t">
+      <b>Lot enregistré</b>
+      <span>Journal de chasse et Cash Out mis à jour</span></div></div>`;
+  }
+  const sel = [...BAC_SEL].map(i => BAC_ROWS[i]).filter(Boolean);
+  const val = sel.reduce((s,r) => s + (Number(r.o.revente)||0), 0);
+  const max = sel.reduce((s,r) => s + (Number(r.o.prixMax)||0), 0);
+  return `<div class="bac-cart">
+    <div class="bc-t">
+      <b>${sel.length} pièce${sel.length>1?"s":""} · revente ≈ ${val}€</b>
+      <span>${sel.length ? "ne dépasse pas " + max + "€ pour le lot" : "coche ce que tu emportes"}</span>
+    </div>
+    <button class="${sel.length ? "" : "off"}" onclick="bacBuy()">J'ai acheté</button>
+  </div>`;
+}
+
+function bacToggle(i){
+  if(BAC_ACHETE) return;
+  if(BAC_SEL.has(i)) BAC_SEL.delete(i); else BAC_SEL.add(i);
+  vib();
+  if(BAC_VUE) renderBacResult(BAC_VUE.j, BAC_VUE.images, BAC_VUE.avis, true);
+}
+
+function bacNom(r){
+  const o = r.o;
+  return (o.artiste ? o.artiste + " — " : "") + (o.nom || "—");
+}
+
+function bacBuy(){
+  const idx = [...BAC_SEL].sort((a,b)=>a-b);
+  const sel = idx.map(i => BAC_ROWS[i]).filter(Boolean);
+  if(!sel.length){ alert("Coche d'abord les pièces que tu emportes."); return; }
+
+  const tot = parseFloat(prompt(
+    "Combien as-tu payé pour ces " + sel.length + " pièce(s) au total ?", "") || "");
+  if(isNaN(tot) || tot < 0) return;
+
+  /* Répartition au prorata de la revente estimée : dans un lot négocié en bloc,
+     la pièce qui vaut le plus doit porter la plus grosse part du prix, sinon
+     la marge par objet ne veut plus rien dire. */
+  const vals = sel.map(r => Number(r.o.revente) || 0);
+  const somme = vals.reduce((a,b) => a+b, 0);
+  let parts = somme > 0 ? vals.map(v => tot * v / somme) : sel.map(() => tot / sel.length);
+  parts = parts.map(x => Math.round(x * 100) / 100);
+  /* L'arrondi ne doit pas faire mentir le total payé : l'écart va sur la pièce
+     la plus chère. */
+  const ecart = Math.round((tot - parts.reduce((a,b)=>a+b, 0)) * 100) / 100;
+  if(ecart && parts.length) parts[vals.indexOf(Math.max.apply(null, vals))] += ecart;
+
+  const lg = logRead();
+  sel.forEach((r, i) => {
+    lg.unshift({d: Date.now() + i, o: bacNom(r), p: parts[i],
+                r: Number(r.o.revente) || 0, dem: 0, mx: Number(r.o.prixMax) || 0});
+  });
+  logWrite(lg);
+
+  if(confirm("Créer une annonce Cash Out avec ces " + sel.length + " pièce(s) ?\n\n"
+    + "Tu pourras la découper ou en retirer une pièce ensuite.")){
+    const rev = somme || tot * 2;
+    const typ = (BAC_VUE && BAC_VUE.j && BAC_VUE.j.typeBac) ? BAC_VUE.j.typeBac : "brocante";
+    const a = venteRead();
+    a.unshift({
+      id: Date.now(),
+      t: sel.length === 1 ? bacNom(sel[0]) : "Lot " + typ + " — " + sel.length + " pièces",
+      prix: Math.max(1, Math.round(rev)), plancher: Math.max(1, Math.round(rev * 0.85)),
+      cout: tot, vendu: 0, frais: 0, statut: "todo", blocage: "", d: Date.now(),
+      pieces: sel.map((r, i) => ({
+        ref: String.fromCharCode(65 + (i % 26)),
+        n: bacNom(r),
+        det: [r.o.annee, r.o.note].filter(Boolean).join(" · "),
+        keep: false
+      }))
+    });
+    venteWrite(a);
+  }
+
+  BAC_ACHETE = true;
+  vib(); hudPaint(); renderLog(); renderVente();
+  if(BAC_VUE) renderBacResult(BAC_VUE.j, BAC_VUE.images, BAC_VUE.avis, true);
+}
+
 let BAC_ROWS = [];
+let BAC_SEL = new Set();
+let BAC_VUE = null;
+let BAC_ACHETE = false;
 function bacSpot(i){
   const r = BAC_ROWS[i]; if(!r) return;
   const o = r.o;
