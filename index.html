@@ -983,7 +983,7 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 3.2 « Arcade »
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 3.3 « Arcade »
   </p>
 </div>
 
@@ -1661,6 +1661,55 @@ function buildBody(parts, mode, ground, model){
   return b;
 }
 
+/* ══════ LECTURE TOLÉRANTE DU JSON ══════
+   Avec la recherche web, Gemini ne renvoie pas un bloc propre : le texte arrive
+   en plusieurs morceaux, parfois coupé au milieu d'une phrase, avec des retours
+   à la ligne à l'intérieur des valeurs. JSON.parse refusait tout en bloc et
+   l'app basculait en « estimation de mémoire » — c'est-à-dire qu'elle jetait
+   une réponse correcte à 95 %. On répare avant de renoncer. */
+function jsonRepare(raw){
+  let t = String(raw || "").replace(/```json|```/g, "");
+  /* Les caractères de contrôle invisibles cassent JSON.parse sans rien dire. */
+  t = t.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "");
+  const dep = t.indexOf("{");
+  if(dep < 0) return null;
+
+  let out = "", pile = [], ins = false, ech = false, fini = false;
+  for(let i = dep; i < t.length && !fini; i++){
+    const c = t[i];
+    if(ech){ out += c; ech = false; continue; }
+    if(c === "\\"){ out += c; ech = true; continue; }
+    if(c === '"'){ ins = !ins; out += c; continue; }
+    if(ins){
+      /* Un retour à la ligne au milieu d'une valeur est illégal en JSON :
+         c'est le cas le plus fréquent quand la réponse arrive en morceaux. */
+      out += (c === "\n" || c === "\r" || c === "\t") ? " " : c;
+      continue;
+    }
+    if(c === "{" || c === "[") pile.push(c);
+    else if(c === "}" || c === "]"){
+      pile.pop();
+      if(!pile.length){ out += c; fini = true; break; }
+    }
+    out += c;
+  }
+
+  /* Réponse coupée en plein vol : on referme proprement ce qui reste ouvert
+     plutôt que de tout perdre. Les champs déjà lus sont exploitables. */
+  if(!fini){
+    if(ins) out += '"';
+    out = out.replace(/,\s*$/, "").replace(/:\s*$/, ": null");
+    while(pile.length) out += (pile.pop() === "[" ? "]" : "}");
+  }
+  out = out.replace(/,\s*([}\]])/g, "$1");
+
+  try{ return JSON.parse(out); }catch(e){}
+  /* Dernier recours : du premier { à la dernière }, méthode d'origine. */
+  const b = t.lastIndexOf("}");
+  if(b > dep){ try{ return JSON.parse(t.slice(dep, b + 1)); }catch(e){} }
+  return null;
+}
+
 function extractJSON(data){
   const cand = (data.candidates || [])[0];
   if(!cand){
@@ -1668,12 +1717,14 @@ function extractJSON(data){
     throw new Error(bl ? ("Requête bloquée : " + bl) : "Réponse vide");
   }
   if(cand.finishReason === "SAFETY") throw new Error("Réponse bloquée par le filtre de sécurité");
+  /* Les morceaux sont la suite les uns des autres : les coller avec un retour
+     à la ligne insérait une coupure au milieu des valeurs. */
   const raw = ((cand.content && cand.content.parts) || [])
-    .map(x => x.text || "").join("\n").replace(/```json|```/g, "").trim();
+    .map(x => x.text || "").join("").trim();
+  const j = jsonRepare(raw);
+  if(j) return j;
   if(cand.finishReason === "MAX_TOKENS") throw new Error("Réponse tronquée (budget de jetons dépassé)");
-  const a = raw.indexOf("{"), b = raw.lastIndexOf("}");
-  if(a < 0 || b < a) throw new Error("Réponse illisible");
-  return JSON.parse(raw.slice(a, b + 1));
+  throw new Error("Réponse illisible");
 }
 
 async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey) {
@@ -1737,7 +1788,11 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
   const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
   const attempts = [];
   for(const m of chain){
-    if(getGround()) attempts.push({model:m, ground:true});
+    /* Deux passages avec recherche web avant de renoncer : un JSON illisible
+       est le plus souvent un accident de génération, pas une incapacité du
+       modèle. Renoncer au premier essai, c'est troquer une vraie cote contre
+       une estimation de mémoire — exactement ce qu'on cherche à éviter. */
+    if(getGround()){ attempts.push({model:m, ground:true}); attempts.push({model:m, ground:true, bis:true}); }
     attempts.push({model:m, ground:false});
   }
 
@@ -1749,6 +1804,10 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
   let ok = null;
   for(const at of attempts){
     try{
+      if(at.bis){
+        const e = $('load-step');
+        if(e) e.textContent = "Réponse incomplète, nouvelle tentative…";
+      }
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
         {method:"POST",
@@ -1767,7 +1826,8 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
       let avis = null;
       if(!at.ground){
         avis = "Sans recherche web : prix estimés de mémoire, à confirmer."
-             + (lastErr ? " (recherche abandonnée — " + lastErr + ")" : "");
+             + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "")
+             + (lastErr ? " (cause : " + lastErr + ")" : "");
         if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
       }
       if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
@@ -1814,10 +1874,15 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
     titre = "Aucun modèle disponible.";
     aide = "Les modèles testés n'existent plus sous ce nom. Vérifie la liste sur aistudio.google.com.";
   }
+  /* L'IA a échoué, mais si tu as tapé un nom de disque, Discogs peut encore
+     répondre : c'est le seul chiffre qui compte devant le vendeur. */
+  const secours = ($('q').value || "").trim();
   aiEl.innerHTML = `<div class="aifail"><b>${titre}</b><br>${aide}
     <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(lastErr)}</span>
     <br><br>La base locale reste disponible dans l'onglet Base Complète.</div>
+    <div id="disc-slot"></div>
     <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Masquer</button>`;
+  if(discToken() && discMusique(secours)) discGreffe(secours, 'disc-slot');
 }
 
 function esc(s) {
