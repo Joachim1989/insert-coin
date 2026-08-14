@@ -65,7 +65,33 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .tick2{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
 .tick2 input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:2px}
 .tick2 i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text-muted)}
+.disc{background:var(--surface);border:1px solid var(--gold-dim);border-radius:12px;padding:14px;margin:14px 0}
+.disc-h{margin-bottom:11px}
+.disc-b{display:inline-block;background:var(--gold);color:#14110f;font-family:var(--cond);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-bottom:6px}
+.disc-h b{display:block;font-size:15px;line-height:1.3;color:var(--text)}
+.disc-h i{display:block;font-family:var(--mono);font-size:11px;color:var(--text-muted);font-style:normal;margin-top:3px}
+.disc-n{display:flex;gap:7px;margin-bottom:11px}
+.disc-n>div{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:9px 4px;text-align:center}
+.disc-n b{display:block;font-family:var(--cond);font-size:21px;font-weight:700;color:var(--text);line-height:1}
+.disc-n span{display:block;font-family:var(--mono);font-size:8.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
+.disc-v{background:var(--bg);border-left:3px solid var(--go);border-radius:0 9px 9px 0;padding:10px 12px;margin-bottom:10px}
+.disc-v b{display:block;font-family:var(--cond);font-size:22px;font-weight:700;color:var(--go);line-height:1}
+.disc-v span{display:block;font-size:12px;color:var(--text-muted);margin-top:4px;line-height:1.4}
+.disc-l{font-family:var(--cond);font-size:14px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);padding:7px 0 0;border-top:1px solid var(--border)}
+.disc-l.r{color:var(--go)} .disc-l.c{color:var(--mid)}
+.disc-d{font-size:12.5px;color:var(--text-muted);margin-top:4px;line-height:1.45}
+.disc-a{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dim)}
+.disc-load{font-family:var(--mono);font-size:12px;color:var(--text-muted);padding:12px 0;text-align:center}
+.disc-err{background:#3a2f10;border:1px solid var(--mid);border-radius:10px;padding:11px 13px;font-size:12.5px;color:#ffcf6b;line-height:1.5;margin:12px 0}
+.disc-err i{font-style:normal;opacity:.85;font-size:11.5px}
+.bac-disc{background:none;border:1px solid var(--gold-dim);color:var(--gold);border-radius:6px;font-family:var(--mono);font-size:9.5px;padding:4px 7px;margin-top:5px;cursor:pointer}
 .diagbox{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:11px 12px;font-family:var(--mono);font-size:12px;line-height:1.6}
+.memrow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.memrow span{text-transform:uppercase;letter-spacing:.7px;font-size:10px;color:var(--text-muted)}
+.memrow b{font-family:var(--cond);font-size:20px}
+.membar{height:7px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.membar i{display:block;height:100%;border-radius:4px;transition:width .3s}
+.memnote{font-size:11px;color:var(--text-muted);margin-top:7px;line-height:1.5}
 
 
 .cam-btn.bac{border-color:var(--crt-dim)}
@@ -636,10 +662,11 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 .vt-warn{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--mid);
   border:1px solid var(--mid);border-radius:5px;padding:2px 6px;margin-top:6px;line-height:1.4}
 .vt-body{border-top:1px solid var(--border);padding:12px}
-.vt-fields{display:flex;gap:7px;margin-bottom:12px}
+.vt-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
 .vt-f{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 9px}
 .vt-f label{display:block;font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px}
 .vt-f input{width:100%;background:none;border:0;outline:none;color:var(--text);font-family:var(--cond);font-size:19px;font-weight:700;padding:2px 0 0}
+.vt-hint{font-family:var(--mono);font-size:10.5px;line-height:1.5;color:var(--text-muted);margin:-4px 0 12px}
 .vt-piece{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px}
 .vt-ref{flex:0 0 auto;min-width:26px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;
   background:var(--gold);color:#14110f;border-radius:4px;padding:3px 5px}
@@ -869,11 +896,8 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
     <p>Clé API Gemini (stockée localement) :</p>
     <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici">
     <p style="margin-top: 10px;">Modèle IA (Puissance vs Vitesse) :</p>
-    <select id="api-model" class="model-select">
-      <option value="gemini-3.6-flash">Gemini 3.6 Flash (le plus fiable, recommandé)</option>
-      <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
-      <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (le plus rapide)</option>
-    </select>
+    <select id="api-model" class="model-select"></select>
+    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)">Vérifier les modèles disponibles</button>
     <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
       <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
       <span>Chercher les prix sur le web<br>
@@ -881,8 +905,21 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
     </label>
     <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
 
+    <h3 class="sect">Cotes Discogs (musique)</h3>
+    <div id="disc-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token.
+      Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA
+      par le prix réellement pratiqué et le nombre d'exemplaires en vente.
+    </p>
+    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false">
+    <button class="btn-save" onclick="discSave()">Enregistrer le jeton</button>
+    <button class="btn-save alt2" onclick="discTest()">Tester la connexion Discogs</button>
+
     <h3 class="sect">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
+    <div id="mem-state" class="diagbox" style="margin-top:9px"></div>
+    <button class="btn-save alt2" onclick="memFree()">Libérer de la place</button>
     <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
       Journal, sorties archivées, cibles, calendrier et bases : tout est stocké dans ce navigateur.
       Un nettoyage de cache Android l'effacerait sans prévenir.
@@ -946,7 +983,7 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 3.0 « Arcade »
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 3.2 « Arcade »
   </p>
 </div>
 
@@ -1102,6 +1139,36 @@ const MODEL_STORE = "insertcoin.gemini.model";
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 const $ = id => document.getElementById(id);
 
+/* ══════ ÉCRITURE PROTÉGÉE ══════
+   Quand le navigateur refusait une écriture (mémoire pleine), le catch était
+   vide : tu enregistrais un achat, l'écran affichait « ✓ Enregistré », et rien
+   n'était sauvé. Une panne muette est pire qu'une panne bruyante. */
+let MEM_ALERTE = 0;
+function storeSet(k, v, quoi){
+  try{ localStorage.setItem(k, v); return true; }
+  catch(e){
+    /* Une seule alerte par minute : sur un stand, on ne veut pas cliquer sur
+       dix pop-ups à la suite. */
+    if(Date.now() - MEM_ALERTE > 60000){
+      MEM_ALERTE = Date.now();
+      alert("Mémoire du téléphone pleine.\n\n« " + quoi + " » n'a PAS été enregistré.\n\nVa dans Réglages → Sauvegarde et appuie sur « Libérer de la place ».");
+    }
+    return false;
+  }
+}
+
+/* Poids réel des données de l'app, pour que la jauge ne soit pas décorative. */
+function memBytes(){
+  let n = 0;
+  try{
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(k && k.indexOf("insertcoin.") === 0) n += k.length + (localStorage.getItem(k) || "").length;
+    }
+  }catch(e){}
+  return n * 2; // UTF-16
+}
+
 // --- HAPTIC FEEDBACK ---
 function vib() {
   if (navigator.vibrate) navigator.vibrate(40);
@@ -1126,23 +1193,28 @@ function switchView(viewId, navEl) {
 
 function init() {
   $('api-key').value = localStorage.getItem(KEY_STORE) || "";
-  let savedModel = localStorage.getItem(MODEL_STORE) || MODELS[0];
-  /* Un modèle retiré par Google resterait enregistré ici et renverrait un 404
-     à chaque analyse : on le remplace au démarrage. */
-  if(MODELS.indexOf(savedModel) === -1){
-    savedModel = MODELS[0];
-    try{ localStorage.setItem(MODEL_STORE, savedModel); }catch(e){}
+  /* La liste des modèles vient de l'API, plus du code : voir modelsRefresh().
+     modelsPaint() affiche celle qu'on a déjà, la vérification se fait après,
+     sans bloquer l'ouverture de l'app. */
+  modelsPaint();
+  if(navigator.onLine && localStorage.getItem(KEY_STORE)){
+    const dern = parseInt(localStorage.getItem("insertcoin.gemini.models.t") || "0", 10);
+    if(Date.now() - dern > 604800000){
+      setTimeout(() => {
+        modelsRefresh(false);
+        try{ localStorage.setItem("insertcoin.gemini.models.t", String(Date.now())); }catch(e){}
+      }, 2500);
+    }
   }
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
   themeApply(themeGet());
   venteSeed();
-  collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull(); paintImminent(); renderHist(); renderVente(); backupState();
+  discPaint(); collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull(); paintImminent(); renderHist(); renderVente(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
     if(Date.now() - last > 3600000) setTimeout(() => driveSync(false), 1500);
   }
-  $('api-model').value = savedModel;
   paintKeyState(); srcPaint();
   
   // Init chips
@@ -1247,6 +1319,8 @@ function saveSettings() {
   try{ localStorage.setItem(GROUND_STORE, $('groundBox').checked ? "on" : "off"); }catch(e){}
   
   paintKeyState();
+  /* Une clé neuve n'ouvre pas forcément les mêmes modèles que l'ancienne. */
+  if(keyVal && navigator.onLine) modelsRefresh(false);
 }
 
 function backupState(){
@@ -1258,6 +1332,40 @@ function backupState(){
   el.style.borderLeft = "3px solid " + (alerte ? "var(--stop)" : "var(--go)");
   el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours · ${c} cible(s)<br>`
     + (t ? `Dernière sauvegarde : il y a ${jours} jour(s)` : "<b>Jamais sauvegardé</b>");
+  memPaint();
+}
+
+/* La limite du navigateur tourne autour de 5 Mo. On la montre AVANT d'être
+   dedans, parce que le jour où elle est atteinte, c'est en pleine brocante. */
+const MEM_MAX = 5 * 1024 * 1024;
+function memPaint(){
+  const el = $('mem-state'); if(!el) return;
+  const b = memBytes();
+  const pc = Math.min(100, Math.round(b / MEM_MAX * 100));
+  const col = pc >= 80 ? "var(--stop)" : pc >= 60 ? "var(--mid)" : "var(--go)";
+  const q = queueRead().length;
+  el.innerHTML = `<div class="memrow"><span>Mémoire utilisée</span><b style="color:${col}">${pc} %</b></div>
+    <div class="membar"><i style="width:${pc}%;background:${col}"></i></div>
+    <div class="memnote">${(b/1024/1024).toFixed(2)} Mo sur environ 5 Mo disponibles`
+    + (q ? ` · ${q} photo(s) en file d'attente` : "")
+    + (pc >= 80 ? `<br><b style="color:var(--stop)">Au-delà de 90 %, tes achats ne s'enregistreront plus.</b>` : "")
+    + `</div>`;
+}
+
+/* Ce qu'on peut jeter sans rien perdre : le cache des recherches du jour et
+   les photos en attente d'analyse. Le journal, les sorties et le stock, jamais. */
+function memFree(){
+  const q = queueRead().length;
+  if(!confirm("Libérer de la place ?\n\nCela efface le cache des recherches (IA et Discogs)"
+    + (q ? " et les " + q + " analyse(s) en file d'attente" : "")
+    + ".\n\nTon journal, tes sorties archivées et ton stock Cash Out ne sont pas touchés.")) return;
+  try{
+    localStorage.removeItem(CACHE_STORE);
+    localStorage.removeItem(Q_STORE);
+    localStorage.removeItem(DISC_CACHE);
+  }catch(e){}
+  vib(); hudPaint(); backupState();
+  alert("Place libérée.");
 }
 
 function paintKeyState() {
@@ -1391,7 +1499,69 @@ Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés : objet, identifi
 /* Google ferme l'accès aux anciens modèles dès qu'une clé est jugée « nouvelle » :
    la réponse est un 404 « no longer available to new users », pas une erreur de quota.
    Cette liste ne contient donc que des modèles en service, du plus capable au plus rapide. */
-const MODELS = ["gemini-3.6-flash","gemini-3.5-flash","gemini-3.5-flash-lite"];
+/* Liste de secours, utilisée tant que le vrai catalogue n'a pas été lu. */
+const MODELS_FALLBACK = ["gemini-3.6-flash","gemini-3.5-flash","gemini-3.5-flash-lite"];
+const MODELS_STORE = "insertcoin.gemini.models";
+let MODELS = MODELS_FALLBACK.slice();
+try{
+  const c = JSON.parse(localStorage.getItem(MODELS_STORE) || "null");
+  if(Array.isArray(c) && c.length) MODELS = c;
+}catch(e){}
+
+/* ══════ CATALOGUE DES MODÈLES ══════
+   Les noms codés en dur pourrissent : Google retire un modèle et l'app répond
+   404 en pleine brocante. On demande donc la vraie liste à l'API, on la garde
+   en local, et la liste de secours ne sert plus qu'au tout premier lancement. */
+function modelJoli(n){
+  return n.replace(/^gemini-/,"Gemini ").replace(/-/g," ")
+          .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+async function modelsRefresh(manuel){
+  const key = localStorage.getItem(KEY_STORE);
+  if(!key || !navigator.onLine){ if(manuel) alert("Il faut une clé enregistrée et du réseau."); return; }
+  try{
+    const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
+      {headers:{"x-goog-api-key": key}});
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    const d = await r.json();
+    const dispo = (d.models || [])
+      .filter(m => (m.supportedGenerationMethods || []).indexOf("generateContent") !== -1)
+      .map(m => String(m.name || "").replace(/^models\//, ""))
+      /* On ne garde que les modèles rapides et multimodaux : sur un stand,
+         trente secondes d'attente valent moins qu'une réponse correcte tout de suite. */
+      .filter(n => /gemini/.test(n) && /flash/.test(n))
+      .filter(n => !/(embedding|aqa|tts|audio|live|image|native)/.test(n));
+    if(!dispo.length) throw new Error("Aucun modèle exploitable");
+
+    /* Du plus capable au plus rapide : version décroissante, « lite » en dernier,
+       et les préversions après les modèles stables. */
+    const score = n => {
+      const v = parseFloat((n.match(/gemini-([\d.]+)/) || [0,"0"])[1]) || 0;
+      return v * 100 - (/lite/.test(n) ? 30 : 0) - (/(preview|exp)/.test(n) ? 50 : 0);
+    };
+    dispo.sort((a,b) => score(b) - score(a));
+    MODELS = dispo.slice(0, 8);
+    try{ localStorage.setItem(MODELS_STORE, JSON.stringify(MODELS)); }catch(e){}
+    modelsPaint();
+    if(manuel) alert(MODELS.length + " modèle(s) disponibles sur ta clé.\n\n" + MODELS.join("\n"));
+  }catch(err){
+    if(manuel) alert("Impossible de lire la liste des modèles.\n" + (err.message || err));
+  }
+}
+
+function modelsPaint(){
+  const sel = $('api-model'); if(!sel) return;
+  let cur = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  if(MODELS.indexOf(cur) === -1){
+    cur = MODELS[0];
+    try{ localStorage.setItem(MODEL_STORE, cur); }catch(e){}
+  }
+  sel.innerHTML = MODELS.map((m, i) =>
+    `<option value="${m}">${modelJoli(m)}${i === 0 ? " — recommandé" : ""}${/lite/.test(m) ? " (le plus rapide)" : ""}</option>`
+  ).join("");
+  sel.value = cur;
+}
 const GROUND_STORE = "insertcoin.gemini.ground";
 const getGround = () => { try { return localStorage.getItem(GROUND_STORE) !== "off"; } catch(e){ return true; } };
 
@@ -1572,6 +1742,11 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
   }
 
   let lastErr = "";
+  /* Le rendu ne doit JAMAIS se faire à l'intérieur de ce try : une clé
+     manquante dans le JSON faisait planter l'affichage, l'erreur tombait dans
+     le catch, et l'app relançait toute la requête sur le modèle suivant —
+     quota brûlé et « Échec de l'analyse » alors que Gemini avait répondu. */
+  let ok = null;
   for(const at of attempts){
     try{
       const res = await fetch(
@@ -1597,12 +1772,28 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
       }
       if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
 
-      if(mode === 'bac') renderBacResult(j, images, avis);
-      else if(mode === 'stand') renderStandResult(j, images[0], avis);
-      else { renderResult(j, images, avis); if(ckey && !avis) cacheSet(ckey, j); }
-      return;
+      ok = {j, avis};
+      break;
 
     }catch(err){ lastErr = String(err.message || err); }
+  }
+
+  if(ok){
+    stopChrono();
+    try{
+      if(mode === 'bac') renderBacResult(ok.j, images, ok.avis);
+      else if(mode === 'stand') renderStandResult(ok.j, images[0], ok.avis);
+      else { renderResult(ok.j, images, ok.avis); if(ckey && !ok.avis) cacheSet(ckey, ok.j); }
+    }catch(err){
+      /* La réponse est arrivée mais elle est incomplète : on le dit, on ne
+         relance pas une requête. */
+      aiEl.innerHTML = `<div class="aifail"><b>Réponse incomplète.</b><br>
+        Le modèle a répondu, mais il manque des informations pour afficher la fiche.
+        Relance l'analyse, ou reformule en une phrase courte.
+        <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(err.message || err)}</span></div>
+        <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Masquer</button>`;
+    }
+    return;
   }
 
   if(/Failed to fetch|NetworkError|network/i.test(lastErr) && !fromQueue){
@@ -1741,6 +1932,7 @@ function renderResult(j, images, avis) {
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${tirTxt}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       ${priceGauge(parseFloat($('price').value||"0")||0, j.prixMax, j.revente, j.fourchetteBas, j.fourchetteHaut)}
+      <div id="disc-slot"></div>
       <div class="aibody">
         ${j.identification ? `<div class="ident">${esc(j.identification)}</div>` : ''}
         ${j.preuves && j.preuves.length ? `<h4>Preuves / Marché</h4><ul>${j.preuves.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
@@ -1762,17 +1954,26 @@ function renderResult(j, images, avis) {
           prixMax:Number(j.prixMax)||0, demande:parseFloat($('price').value||"0")||0};
   const np = $('nego-pad');
   if(np) np.innerHTML = negoPad(LAST.demande, LAST.prixMax);
+
+  /* La vérification Discogs part en arrière-plan : la fiche est déjà lisible,
+     le chiffre du marché réel arrive une seconde plus tard. */
+  const req = (j.objet || "") + (j.identification && j.identification.length < 60 ? " " + j.identification : "");
+  if(discMusique(req)) discGreffe(req.trim(), 'disc-slot');
 }
 
 function renderStandResult(j, image, avis) {
-  const v = j.verdictGlobal.toLowerCase().includes('fouill') ? 'S' : 'L';
+  /* Le mode Stand est celui où le JSON revient le plus souvent amputé :
+     aucune clé n'est supposée présente. */
+  const vg = String(j.verdictGlobal || "");
+  const v = vg.toLowerCase().includes('fouill') ? 'S' : 'L';
   
+  const reperes = Array.isArray(j.objetsReperes) ? j.objetsReperes.filter(Boolean) : [];
   let itemsHtml = "";
-  if(j.objetsReperes && j.objetsReperes.length > 0) {
-    itemsHtml = j.objetsReperes.map(obj => `
+  if(reperes.length > 0) {
+    itemsHtml = reperes.map(obj => `
       <li style="margin-bottom:10px;">
-        <b style="color:var(--gold)">${esc(obj.nom)}</b> (Revente ≈ ${obj.reventeEstimee}€)<br>
-        <span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>
+        <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b>${obj.reventeEstimee ? ` (Revente ≈ ${Number(obj.reventeEstimee)||0}€)` : ""}<br>
+        ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
         ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ''}
       </li>`).join('');
   } else {
@@ -1781,14 +1982,15 @@ function renderStandResult(j, image, avis) {
 
   $('ai-results').innerHTML = `
     <div class="aicard">
-      <img src="${image.url}" style="width:100%; max-height:220px; object-fit:cover;">
+      ${image && image.url ? `<img src="${image.url}" style="width:100%; max-height:220px; object-fit:cover;">` : ""}
       <div class="aihead ${v}">
         <div class="p" style="flex: 0 0 80px;"><div class="num" style="font-size:38px;">🎯</div></div>
         <div class="t">
           <div class="v">ANALYSE DE STAND</div>
-          <div class="o" style="font-size:16px;">${esc(j.verdictGlobal)}</div>
+          <div class="o" style="font-size:16px;">${esc(vg || (v === 'S' ? "Stand à fouiller" : "Rien de flagrant"))}</div>
         </div>
       </div>
+      ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div class="aibody">
         <h4>Cibles Potentielles Repérées</h4>
         <ul style="list-style-type:none; padding-left:0;">${itemsHtml}</ul>
@@ -1836,6 +2038,9 @@ function renderBacResult(j, images, avis, garderSel){
         <div class="bac-a">${esc(o.artiste || "")}${o.annee ? " · " + esc(o.annee) : ""}</div>
         ${r.flou ? `<div class="bac-warn">Ressemble à « ${esc(r.flou.e.t)} » que tu as déjà — vérifie l'édition.</div>` : ""}
         ${o.note ? `<div class="bac-note">${esc(o.note)}</div>` : ""}
+        ${!r.dup && discToken() && discMusique((o.artiste||"") + " " + (o.nom||""))
+          ? `<button class="bac-disc" onclick="event.stopPropagation();bacDisc(${idx})">Cote Discogs</button>
+             <div id="disc-bac-${idx}"></div>` : ""}
       </div>
       <div class="bac-p">
         ${r.dup ? `<span class="bac-dup">en collection</span>`
@@ -1902,6 +2107,14 @@ function bacCart(){
     </div>
     <button class="${sel.length ? "" : "off"}" onclick="bacBuy()">J'ai acheté</button>
   </div>`;
+}
+
+/* Une pochette à la fois, à la demande : vérifier vingt disques d'un coup
+   viderait le quota Discogs de la minute pour rien. */
+function bacDisc(i){
+  const r = BAC_ROWS[i]; if(!r) return;
+  const q = ((r.o.artiste || "") + " " + (r.o.nom || "")).trim();
+  discGreffe(q, 'disc-bac-' + i);
 }
 
 function bacToggle(i){
@@ -2355,7 +2568,7 @@ const CAL_STORE = "insertcoin.cal";
 let calFilter = "all";
 
 function calRead(){ try { return JSON.parse(localStorage.getItem(CAL_STORE) || "[]"); } catch(e){ return []; } }
-function calWrite(a){ try { localStorage.setItem(CAL_STORE, JSON.stringify(a)); } catch(e){} }
+function calWrite(a){ return storeSet(CAL_STORE, JSON.stringify(a), "ton calendrier"); }
 
 function calKey(x){ return norm((x.date||"") + "|" + (x.ville||"")); }
 
@@ -2627,6 +2840,234 @@ function renderCal(){
 }
 
 /* ══════════ THÈME ══════════ */
+
+/* ══════════════════ COTES DISCOGS ══════════════════
+   Gemini devine, Discogs mesure. Pour tout ce qui est musique, la marketplace
+   donne trois chiffres qu'aucun modèle ne peut inventer : le prix le plus bas
+   réellement en vente, le nombre d'exemplaires disponibles (= le tirage), et
+   le rapport entre ceux qui l'ont et ceux qui le veulent.
+
+   Deux choix techniques volontaires :
+   - le jeton passe en paramètre d'URL, pas en en-tête Authorization. Un en-tête
+     personnalisé déclencherait une requête préliminaire (preflight) que Discogs
+     ne gère pas ; en paramètre, c'est un simple GET.
+   - aucun User-Agent forcé : le navigateur interdit de le modifier, et le sien
+     est accepté par Discogs. */
+const DISC_STORE = "insertcoin.discogs.token";
+const DISC_CACHE = "insertcoin.discogs.cache";
+const DISC_API   = "https://api.discogs.com";
+
+function discToken(){ try { return localStorage.getItem(DISC_STORE) || ""; } catch(e){ return ""; } }
+
+/* Discogs autorise 60 requêtes par minute. On espace d'une seconde : on ne se
+   fera jamais couper, même en enchaînant les pochettes d'un bac. */
+let DISC_LAST = 0;
+async function discThrottle(){
+  const attente = 1100 - (Date.now() - DISC_LAST);
+  if(attente > 0) await new Promise(r => setTimeout(r, attente));
+  DISC_LAST = Date.now();
+}
+
+async function discGet(chemin, params){
+  const t = discToken();
+  if(!t) throw new Error("Aucun jeton Discogs");
+  if(!navigator.onLine) throw new Error("Hors réseau");
+  await discThrottle();
+  const q = new URLSearchParams({...(params||{}), token: t});
+  const r = await fetch(DISC_API + chemin + "?" + q.toString());
+  if(r.status === 401 || r.status === 403) throw new Error("JETON");
+  if(r.status === 429) throw new Error("Trop de requêtes — attends une minute");
+  if(!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+
+/* Cache 7 jours : une cote de vinyle ne bouge pas d'un dimanche à l'autre,
+   et sur le terrain la réponse doit être instantanée devant le vendeur. */
+function discCacheGet(k){
+  try{
+    const c = JSON.parse(localStorage.getItem(DISC_CACHE) || "{}");
+    const h = c[k];
+    if(h && Date.now() - h.t < 604800000) return h.v;
+  }catch(e){}
+  return null;
+}
+function discCacheSet(k, v){
+  try{
+    const c = JSON.parse(localStorage.getItem(DISC_CACHE) || "{}");
+    c[k] = {t: Date.now(), v};
+    const ks = Object.keys(c);
+    if(ks.length > 120) ks.sort((a,b)=>c[a].t-c[b].t).slice(0, ks.length-120).forEach(x=>delete c[x]);
+    localStorage.setItem(DISC_CACHE, JSON.stringify(c));
+  }catch(e){}
+}
+
+/* Discogs répond toujours quelque chose : sans contrôle, « Just Dance 4 Wii »
+   tomberait sur une bande originale et donnerait une cote absurde. On exige
+   donc un vrai recouvrement de mots entre la demande et le titre trouvé. */
+function discPertinent(query, hit){
+  const qt = collTokens(query);
+  if(qt.length < 2) return 0;
+  return collScore(qt, collTokens((hit.title || "") + " " + (hit.year || "")));
+}
+
+/* Discogs ne référence que de la musique. Interroger l'API pour une manette
+   Master System, c'est deux requêtes perdues et un risque de faux positif sur
+   une bande originale homonyme. */
+const DISC_NON = /(wii|switch|playstation|ps[1-5]\b|xbox|nintendo|gamecube|dreamcast|megadrive|game ?boy|nes\b|snes\b|psp\b|ds\b|cartouche|manette|console|lego|playmobil|funko|figurine|puzzle|pokemon|magic the gathering|yu-?gi-?oh)/i;
+const DISC_OUI = /(vinyle?|vinyl|33 ?tours?|45 ?tours?|lp\b|ep\b|maxi|album|cd\b|pressage|discogs)/i;
+function discMusique(txt){
+  const t = String(txt || "");
+  if(t.trim().length < 3) return false;
+  if(DISC_OUI.test(t)) return true;
+  return !DISC_NON.test(t);
+}
+
+async function discCote(query){
+  const cle = "d:" + norm(query).slice(0, 80);
+  const cache = discCacheGet(cle);
+  if(cache !== null) return cache;
+
+  const s = await discGet("/database/search", {q: query, type: "release", per_page: 8});
+  const hits = (s.results || []).filter(x => x && x.id);
+  if(!hits.length){ discCacheSet(cle, false); return false; }
+
+  let best = null;
+  hits.forEach(h => {
+    const sc = discPertinent(query, h);
+    if(!best || sc > best.sc) best = {sc, h};
+  });
+  /* En dessous de ce seuil, c'est un homonyme : mieux vaut ne rien afficher
+     qu'un chiffre faux. */
+  if(!best || best.sc < 0.45){ discCacheSet(cle, false); return false; }
+
+  const r = await discGet("/releases/" + best.h.id, {curr_abbr: "EUR"});
+  const com = r.community || {};
+  const cote = {
+    id: r.id,
+    titre: r.title || best.h.title || "",
+    artiste: (r.artists || []).map(a => a.name).join(", "),
+    annee: r.year || best.h.year || "",
+    label: ((r.labels || [])[0] || {}).name || "",
+    format: (best.h.format || []).join(", "),
+    bas: Number(r.lowest_price) || 0,
+    envente: Number(r.num_for_sale) || 0,
+    ont: Number(com.have) || 0,
+    veulent: Number(com.want) || 0,
+    url: "https://www.discogs.com/release/" + r.id
+  };
+  discCacheSet(cle, cote);
+  return cote;
+}
+
+/* Lecture des chiffres. C'est ici que la donnée devient une décision. */
+function discLire(c){
+  const ratio = c.ont ? c.veulent / c.ont : 0;
+  let rarete, rcls;
+  if(c.envente === 0 && c.ont < 500){ rarete = "Aucun exemplaire en vente"; rcls = "r"; }
+  else if(c.envente > 150){ rarete = "Pressage massif — " + c.envente + " en vente"; rcls = "c"; }
+  else if(c.envente > 40){ rarete = c.envente + " exemplaires en vente"; rcls = "c"; }
+  else if(c.envente > 0){ rarete = "Seulement " + c.envente + " en vente"; rcls = "r"; }
+  else { rarete = "Marché introuvable"; rcls = ""; }
+
+  let demande = "";
+  if(ratio >= 1) demande = "Plus de gens le veulent que ne le possèdent (×" + ratio.toFixed(1) + ")";
+  else if(ratio >= 0.4) demande = "Demande correcte (" + Math.round(ratio*100) + " veulent pour 100 qui l'ont)";
+  else if(c.ont > 0) demande = "Peu demandé (" + Math.round(ratio*100) + " pour 100)";
+
+  /* Pour vendre, il faut passer sous le moins cher déjà en ligne : la revente
+     réaliste n'est pas le prix affiché sur Discogs, c'est un cran en dessous.
+     Et plus il y a d'exemplaires en vente, plus il faut mordre. */
+  let coef = c.envente > 150 ? 0.7 : c.envente > 40 ? 0.8 : 0.9;
+  const revente = c.bas ? Math.round(c.bas * coef) : 0;
+  const prixMax = revente ? Math.max(1, Math.round(revente / 3)) : 0;
+
+  return {ratio, rarete, rcls, demande, revente, prixMax, coef};
+}
+
+function discCarte(c){
+  const l = discLire(c);
+  return `<div class="disc">
+    <div class="disc-h"><span class="disc-b">Discogs</span>
+      <b>${esc(c.artiste ? c.artiste + " — " : "")}${esc(c.titre)}</b>
+      <i>${[c.annee, c.label, c.format].filter(Boolean).map(esc).join(" · ")}</i></div>
+    <div class="disc-n">
+      <div><b>${c.bas ? c.bas + "€" : "—"}</b><span>moins cher en vente</span></div>
+      <div><b>${c.envente}</b><span>exemplaires dispo</span></div>
+      <div><b>${c.ont}/${c.veulent}</b><span>l'ont / le veulent</span></div>
+    </div>
+    ${l.revente ? `<div class="disc-v"><b>${l.prixMax}€ maximum</b>
+      <span>pour revendre autour de ${l.revente}€ — un cran sous le moins cher en ligne</span></div>` : ""}
+    <div class="disc-l ${l.rcls}">${esc(l.rarete)}</div>
+    ${l.demande ? `<div class="disc-d">${esc(l.demande)}</div>` : ""}
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">Ouvrir la fiche Discogs</a>
+  </div>`;
+}
+
+/* Greffée sur la fiche Gemini : elle arrive après coup, sans faire attendre
+   l'affichage principal. Si Discogs ne connaît pas l'objet, rien ne s'affiche. */
+async function discGreffe(query, cibleId){
+  if(!discToken()) return;
+  const el = $(cibleId); if(!el) return;
+  el.innerHTML = `<div class="disc-load">Vérification de la cote Discogs…</div>`;
+  try{
+    const c = await discCote(query);
+    const cur = $(cibleId); if(!cur) return;
+    cur.innerHTML = c ? discCarte(c) : "";
+  }catch(err){
+    const cur = $(cibleId); if(!cur) return;
+    cur.innerHTML = String(err.message) === "JETON"
+      ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>`
+      : /Failed to fetch|NetworkError/i.test(String(err.message))
+        ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
+           <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>`
+        : `<div class="disc-err">${esc(err.message)}</div>`;
+  }
+}
+
+/* ---------- Réglages ---------- */
+function discSave(){
+  const v = ($('disc-token').value || "").trim();
+  if(v) { try{ localStorage.setItem(DISC_STORE, v); }catch(e){} }
+  else  { try{ localStorage.removeItem(DISC_STORE); }catch(e){} }
+  vib(); discPaint();
+}
+
+function discPaint(){
+  const el = $('disc-state'); if(!el) return;
+  const t = discToken();
+  const inp = $('disc-token');
+  if(inp && !inp.value) inp.value = t;
+  el.style.borderLeft = "3px solid " + (t ? "var(--go)" : "var(--border)");
+  el.innerHTML = t
+    ? "Jeton enregistré. Les cotes Discogs s'affichent sous chaque analyse de disque."
+    : "Aucun jeton. Les vinyles restent estimés par l'IA, sans vérification du marché réel.";
+}
+
+/* Le test que tu ne peux pas faire à l'œil : est-ce que le navigateur du
+   téléphone a le droit d'appeler Discogs ? */
+async function discTest(){
+  const el = $('disc-state');
+  if(!discToken()){ alert("Colle d'abord ton jeton, puis appuie sur Enregistrer."); return; }
+  el.innerHTML = "Test en cours…";
+  try{
+    const c = await discCote("Daft Punk Discovery");
+    el.style.borderLeft = "3px solid var(--go)";
+    el.innerHTML = c
+      ? `<b style="color:var(--go)">Connexion réussie.</b><br>Test sur « ${esc(c.titre)} » : `
+        + `${c.bas ? c.bas + "€ le moins cher, " : ""}${c.envente} en vente, ${c.ont} possesseurs.`
+      : `<b style="color:var(--mid)">Connexion établie, mais aucun résultat sur le disque test.</b>`;
+  }catch(err){
+    el.style.borderLeft = "3px solid var(--stop)";
+    el.innerHTML = String(err.message) === "JETON"
+      ? `<b style="color:var(--stop)">Jeton refusé.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne.`
+      : /Failed to fetch|NetworkError/i.test(String(err.message))
+        ? `<b style="color:var(--stop)">Discogs bloque l'appel depuis le navigateur.</b><br>`
+          + `C'est la restriction CORS. Le jeton est peut-être bon : teste la même URL dans un onglet. `
+          + `Si elle répond là mais pas ici, il faut passer par un relais.`
+        : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
+  }
+}
+
 const THEME_STORE = "insertcoin.theme";
 function themeGet(){ try { return localStorage.getItem(THEME_STORE) || "auto"; } catch(e){ return "auto"; } }
 function themeApply(mode){
@@ -2843,7 +3284,7 @@ function negoPad(demande, prixMax){
 /* ══════════ OBJETS REPÉRÉS ══════════ */
 const SPOT_STORE = "insertcoin.spots";
 function spotRead(){ try { return JSON.parse(localStorage.getItem(SPOT_STORE) || "[]"); } catch(e){ return []; } }
-function spotWrite(a){ try { localStorage.setItem(SPOT_STORE, JSON.stringify(a)); } catch(e){} }
+function spotWrite(a){ return storeSet(SPOT_STORE, JSON.stringify(a), "tes objets repérés"); }
 
 /* ══════════ RADAR ══════════
    Sur 580 emplacements, « stand 47, nappe bleue » ne suffit pas à retrouver
@@ -3032,11 +3473,22 @@ const Q_STORE = "insertcoin.queue";
 function queueRead(){ try { return JSON.parse(localStorage.getItem(Q_STORE) || "[]"); } catch(e){ return []; } }
 function queueWrite(a){ try { localStorage.setItem(Q_STORE, JSON.stringify(a)); return true; } catch(e){ return false; } }
 
+/* Une image mise en file pesait double : `data` (le base64 envoyé à Gemini)
+   ET `url` (le même base64 avec son en-tête, pour l'aperçu). Six photos
+   suffisaient à remplir les 5 Mo du navigateur — et c'est le journal de chasse
+   qui sautait en premier, silencieusement. On ne stocke plus que `data`,
+   l'aperçu se reconstruit au moment de l'analyse. */
+const qImgSlim = img => ({data: img.data, media: img.media});
+const qImgFull = img => ({...img, url: img.url || ("data:" + (img.media||"image/jpeg") + ";base64," + img.data)});
+
 function queuePush(promptText, images, mode, cacheKey){
   const a = queueRead();
-  if(a.length >= 6){ alert("File pleine (6 objets). Relance-la dès que tu captes."); return false; }
-  a.push({d: Date.now(), promptText, images, mode, cacheKey});
-  if(!queueWrite(a)){ alert("Mémoire saturée : impossible de mettre en file."); return false; }
+  if(a.length >= 4){ alert("File pleine (4 objets). Relance-la dès que tu captes."); return false; }
+  /* Au-delà de deux vues, le gain d'identification ne compense pas le risque
+     de saturer la mémoire du téléphone. */
+  const slim = (images || []).slice(0, 2).map(qImgSlim);
+  a.push({d: Date.now(), promptText, images: slim, mode, cacheKey});
+  if(!queueWrite(a)){ alert("Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place."); return false; }
   hudPaint();
   $('ai-results').innerHTML = `<div class="queued">
     <svg class="ico-big"><use href="#i-queue"/></svg>
@@ -3055,7 +3507,7 @@ async function queueRun(manuel){
   qBusy = true;
   const job = a.shift();
   queueWrite(a); hudPaint();
-  try{ await callGemini(job.promptText, job.images || [], job.mode || 'single', true, job.cacheKey); }
+  try{ await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || 'single', true, job.cacheKey); }
   finally{ qBusy = false; }
   if(queueRead().length) setTimeout(() => queueRun(false), 1200);
 }
@@ -3066,7 +3518,7 @@ const LOG_STORE = "insertcoin.log";
 let LAST = null;
 
 function logRead(){ try { return JSON.parse(localStorage.getItem(LOG_STORE) || "[]"); } catch(e){ return []; } }
-function logWrite(a){ try { localStorage.setItem(LOG_STORE, JSON.stringify(a)); } catch(e){} }
+function logWrite(a){ return storeSet(LOG_STORE, JSON.stringify(a), "ton journal de chasse"); }
 
 function logFind(){
   if(!LAST) return;
@@ -3168,7 +3620,7 @@ function renderLog(){
    et exportable. Le journal courant repart à zéro pour la suivante. */
 const SORTIE_STORE = "insertcoin.sorties";
 function sortieRead(){ try { return JSON.parse(localStorage.getItem(SORTIE_STORE) || "[]"); } catch(e){ return []; } }
-function sortieWrite(a){ try { localStorage.setItem(SORTIE_STORE, JSON.stringify(a)); return true; } catch(e){ alert("Mémoire saturée."); return false; } }
+function sortieWrite(a){ return storeSet(SORTIE_STORE, JSON.stringify(a), "cette sortie archivée"); }
 
 function rang(dep, val){
   if(!dep) return val > 0 ? "A" : "—";
@@ -3490,10 +3942,7 @@ let VT_FILTRE = "all";
 let VT_OPEN = null;
 
 function venteRead(){ try { return JSON.parse(localStorage.getItem(VENTE_STORE) || "[]"); } catch(e){ return []; } }
-function venteWrite(a){
-  try { localStorage.setItem(VENTE_STORE, JSON.stringify(a)); return true; }
-  catch(e){ alert("Mémoire du téléphone saturée."); return false; }
-}
+function venteWrite(a){ return storeSet(VENTE_STORE, JSON.stringify(a), "ton stock Cash Out"); }
 function venteFind(id){ return venteRead().find(x => x.id === id); }
 /* Pièces encore à vendre : celles que tu n'as pas reprises dans ta collection. */
 function venteVives(x){ return (x.pieces || []).filter(p => !p.keep); }
@@ -3649,8 +4098,21 @@ function venteSet(id, champ, val){
 function venteStatut(id, st){
   const a = venteRead(); const x = a.find(y => y.id === id); if(!x) return;
   x.statut = st;
-  if(st === "done" && !x.vendu) x.vendu = x.prix;
+  /* Un objet à 20 EUR parti en huit mois ne vaut pas un objet a 12 EUR parti
+     en une semaine. Sans ces deux dates, la duree d\'ecoulement est
+     inmesurable — et c\'est elle qui devrait dicter ce que tu rafles. */
+  if(st === "live" && !x.dLive) x.dLive = Date.now();
+  if(st === "done"){
+    if(!x.vendu) x.vendu = x.prix;
+    if(!x.dDone) x.dDone = Date.now();
+  }
   venteWrite(a); vib(); hudPaint(); renderVente();
+}
+
+/* Jours entre la mise en vente et la vente (ou aujourd\'hui si toujours en ligne). */
+function venteJours(x){
+  if(!x.dLive) return null;
+  return Math.max(0, Math.round(((x.dDone || Date.now()) - x.dLive) / 86400000));
 }
 
 /* Reprendre une pièce dans la collection : elle quitte l'annonce, le lot se
@@ -3761,7 +4223,9 @@ function renderVente(){
   }
 
   const rang = {todo:0, live:1, done:2, keep:3};
-  const liste = a.filter(x => VT_FILTRE === "all" ? true : x.statut === VT_FILTRE)
+  /* « Tout » = tout ce qui est encore dans le circuit. Les pieces reprises en
+     collection sortaient des totaux mais restaient dans la liste. */
+  const liste = a.filter(x => VT_FILTRE === "all" ? x.statut !== "keep" : x.statut === VT_FILTRE)
                  .sort((x,y) => (rang[x.statut]-rang[y.statut]) || (y.prix-x.prix));
 
   el.innerHTML = liste.map(x => {
@@ -3769,13 +4233,16 @@ function renderVente(){
     const val = x.statut === "done" ? (x.vendu || 0) : (x.prix || 0);
     const cap = x.statut === "done" ? "encaissé" : x.statut === "live" ? "en vente" : x.statut === "keep" ? "gardé" : "à publier";
     const ouvert = VT_OPEN === x.id;
+    const jrs = venteJours(x);
     const head =
       '<div class="vt-head" onclick="venteToggle(' + x.id + ')">' +
         '<div class="vt-bar"></div>' +
         '<div class="vt-c"><b>' + esc(x.t) + '</b>' +
           '<span>' + v.length + ' pièce' + (v.length>1?'s':'') +
           (x.cout ? ' · payé ' + x.cout.toFixed(0) + '€' : '') +
-          ' · plancher ' + (x.plancher||0) + '€</span>' +
+          ' · plancher ' + (x.plancher||0) + '€' +
+          (jrs !== null ? ' · ' + (x.statut === "done" ? 'parti en ' + jrs + ' j' : 'en ligne depuis ' + jrs + ' j') : '') +
+          '</span>' +
           (x.blocage && x.statut === "todo" ? '<span class="vt-warn">' + esc(x.blocage) + '</span>' : '') +
         '</div>' +
         '<div class="vt-p"><b>' + val.toFixed(0) + '€</b><span>' + cap + '</span></div>' +
@@ -3788,7 +4255,10 @@ function renderVente(){
           '<div class="vt-f"><label>Affiché €</label><input type="number" inputmode="decimal" value="' + (x.prix||0) + '" onchange="venteSet(' + x.id + ',\'prix\',this.value)"></div>' +
           '<div class="vt-f"><label>Plancher €</label><input type="number" inputmode="decimal" value="' + (x.plancher||0) + '" onchange="venteSet(' + x.id + ',\'plancher\',this.value)"></div>' +
           '<div class="vt-f"><label>Vendu €</label><input type="number" inputmode="decimal" value="' + (x.vendu||"") + '" placeholder="—" onchange="venteSet(' + x.id + ',\'vendu\',this.value)"></div>' +
+          '<div class="vt-f"><label>Payé €</label><input type="number" inputmode="decimal" value="' + (x.cout||"") + '" placeholder="0" onchange="venteSet(' + x.id + ',\'cout\',this.value)"></div>' +
+          '<div class="vt-f"><label>Frais €</label><input type="number" inputmode="decimal" value="' + (x.frais||"") + '" placeholder="0" onchange="venteSet(' + x.id + ',\'frais\',this.value)"></div>' +
         '</div>' +
+        '<p class="vt-hint">Frais = port non refacturé, pochette, pile de rechange. Sans eux, la marge nette est un chiffre de vitrine.</p>' +
         x.pieces.map(p =>
           '<div class="vt-piece' + (p.keep ? ' keep' : '') + '">' +
             '<span class="vt-ref">' + esc(p.ref) + '</span>' +
@@ -3813,9 +4283,11 @@ function renderVente(){
       ? vendus.slice(0, 12).map(x => {
           const net = (x.vendu||0) - (x.frais||0);
           const m = net - (x.cout||0);
+          const j = venteJours(x);
           return '<div class="vt-cote"><b>' + esc(x.t) + '</b>' +
             '<i>' + (x.cout ? 'payé ' + x.cout.toFixed(0) + '€ · ' : '') +
-            (m >= 0 ? '+' : '') + m.toFixed(0) + '€</i>' +
+            (m >= 0 ? '+' : '') + m.toFixed(0) + '€' +
+            (j !== null ? ' en ' + j + ' j' : '') + '</i>' +
             '<span>' + net.toFixed(0) + '€</span></div>';
         }).join('')
       : '<div class="statnote">Chaque vente enregistrée devient une cote réelle : ' +
@@ -3824,7 +4296,26 @@ function renderVente(){
   }
 }
 
-window.onload = init;
+/* Un plantage dans un seul rendu ne doit pas emporter toute l'app :
+   avant, une exception dans init() laissait un écran figé sans explication. */
+window.addEventListener('error', e => {
+  const el = document.getElementById('ai-results');
+  if(el && !el.innerHTML){
+    el.innerHTML = '<div class="aifail"><b>Un affichage a planté.</b><br>'
+      + 'Tes données sont intactes. Change d\'onglet et reviens ; si ça persiste, '
+      + 'sauvegarde depuis Réglages avant de recharger.<br><br>'
+      + '<span style="font-family:var(--mono);font-size:11px;opacity:.7">'
+      + String((e && e.message) || "").slice(0,200) + '</span></div>';
+  }
+});
+
+window.onload = function(){
+  try{ init(); }
+  catch(err){
+    console.error(err);
+    alert("Une erreur est survenue au démarrage.\n\nTes données ne sont pas perdues : va dans Réglages pour les sauvegarder.\n\n" + (err.message || err));
+  }
+};
 </script>
 </body>
 </html>
