@@ -65,6 +65,20 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .tick2{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
 .tick2 input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:2px}
 .tick2 i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text-muted)}
+.acte{display:flex;align-items:stretch;gap:12px;padding:14px;border-bottom:1px solid var(--border)}
+.acte-n{flex:0 0 84px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);border-radius:11px;padding:10px 4px}
+.acte-n b{font-family:var(--cond);font-size:34px;font-weight:700;line-height:1;color:var(--go)}
+.acte-n span{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-top:5px}
+.acte-t{flex:1;display:flex;flex-direction:column;justify-content:center}
+.acte-t b{font-size:17px;line-height:1.3;color:var(--text)}
+.acte-t span{font-size:12.5px;line-height:1.45;color:var(--mid);margin-top:6px}
+.acte.non .acte-n b{color:var(--stop)}
+.acte-plat{padding:16px 14px;border-bottom:1px solid var(--border)}
+.acte-plat b{display:block;font-family:var(--cond);font-size:21px;text-transform:uppercase;letter-spacing:.9px;color:var(--stop)}
+.acte-plat span{display:block;font-size:13px;color:var(--text-muted);margin-top:5px;line-height:1.45}
+.fi-ck label.v-n span{color:var(--stop)}
+.fi-ck label.v-q span{color:var(--mid)}
+.fi-ck span i{display:block;font-family:var(--mono);font-size:10px;font-style:normal;opacity:.85;margin-top:2px}
 .regs{padding:14px 14px 4px}
 .reg{margin-bottom:14px}
 .reg-t{font-family:var(--cond);font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:7px}
@@ -90,6 +104,13 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .px-calc{font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--text-muted);background:var(--bg);border-radius:8px;padding:9px 11px}
 .px-calc b{color:var(--text)}
 .px-dem{margin-top:9px;font-size:13.5px;line-height:1.45;color:var(--text);background:var(--surface-light);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 12px}
+.px-petit{background:var(--bg);border:1px solid var(--gold-dim);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.px-petit b{display:block;font-family:var(--cond);font-size:24px;color:var(--gold);line-height:1}
+.px-petit span{display:block;font-size:12.5px;color:var(--text-muted);line-height:1.5;margin-top:6px}
+.px-mien{margin-top:9px;font-size:12.5px;line-height:1.5;color:var(--text-muted);background:var(--bg);border-radius:8px;padding:9px 11px}
+.px-mien b{color:var(--text)}
+.px-mien.ok{border-left:3px solid var(--go)}
+.px-mien.warn{border-left:3px solid var(--mid);color:#ffcf6b}
 .px-vide{font-size:13px;color:var(--text-muted);line-height:1.5;background:var(--bg);border-radius:9px;padding:12px}
 .fi{margin-bottom:16px}
 .fi h5{display:flex;align-items:center;gap:8px;font-family:var(--cond);font-size:14px;text-transform:uppercase;letter-spacing:.9px;color:var(--gold);margin:0 0 8px}
@@ -1024,7 +1045,7 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 4.0 « Expert »
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 4.2 « Expert »
   </p>
 </div>
 
@@ -1321,6 +1342,15 @@ function init() {
   renderLocalList();
 }
 
+/* Le prix demandé appartient à l'objet qu'on vient d'analyser. S'il traîne
+   d'une fiche à l'autre, l'objet suivant est jugé contre le prix du précédent —
+   et le verdict est faux sans que rien ne le signale. */
+let PRIX_UTILISE = null;
+function prixNouveau(){
+  const p = $('price'); if(!p) return;
+  if(PRIX_UTILISE !== null && p.value === PRIX_UTILISE){ p.value = ""; PRIX_UTILISE = null; }
+}
+
 function setMacro(text) {
   vib();
   $('q').value = text;
@@ -1440,6 +1470,7 @@ function srcPaint(){
 
 function triggerCamera(mode) {
   vib();
+  prixNouveau();
   currentCameraMode = mode;
   /* « Photo ou galerie » laisse le téléphone proposer les deux ;
      « Appareil photo direct » saute l'étape sur le terrain. */
@@ -1542,6 +1573,12 @@ PIÈGE À SIGNALER : sur un jouet, la date moulée est celle du MOULE, pas de la
 
 2. QU'EST-CE QUI DEVRAIT L'ACCOMPAGNER ?
 Liste dans "attendu" les éléments qui doivent être présents pour que cet objet soit considéré complet, par leur nom concret et repérable : "le blaster noir", "les 4 pions rouges", "la notice", "la sous-pochette d'origine", "le socle", "la cale intérieure".
+Pour CHACUN, remplis "vu" à partir des photos, sans rien supposer :
+  "oui" = tu le vois réellement sur une des photos (boîtier ouvert montrant la cartouche en place, jaquette lisible, figurine tenant son accessoire) ;
+  "non" = tu constates son ABSENCE, c'est-à-dire que la photo montre l'endroit où il devrait être et qu'il n'y est pas ;
+  "?"   = les photos ne permettent pas de trancher.
+Ne mets "non" que si l'absence est visible. Dans le doute, mets "?".
+Remplis aussi "cle" : true si l'élément conditionne la valeur (la cartouche, le plateau de jeu, la figurine principale), false si son absence ne coûte que quelques pour cent (feuillet de sécurité, publicité, sachet de rechange).
 C'est la question qui décide du prix, pas l'état. Une pièce essentielle manquante ne coûte pas 30 % : elle peut coûter 85 %. Dis-le franchement dans "impactComplet".
 Sur un jouet, ce sont presque toujours de petits accessoires perdus depuis quarante ans : sois exhaustif, ce sont eux qui font la valeur.
 
@@ -1563,7 +1600,7 @@ RÈGLES GÉNÉRALES
 - Ne fabrique aucun chiffre. Si tu ne sais pas, mets "confiance":"faible" et dis-le.
 - Signale toute variante, premier pressage, édition limitée, erreur d'impression ou tirage régional qui vaut nettement plus que la version courante, et dis comment la distinguer À L'ŒIL dans "verifs".
 - "preuves" : des constats CHIFFRÉS avec leur source, tirés de tes recherches. C'est son argument face au vendeur.
-- "nego" : une phrase en français parlé, appuyée sur un fait vérifiable, courte et utilisable telle quelle.
+- "nego" : l'ARGUMENT que le chineur oppose au vendeur, en français parlé, court, appuyé sur un fait vérifiable (nombre d'exemplaires en circulation, défaut visible, édition courante). NE CITE JAMAIS DE PRIX ni de montant dans cette phrase : le chiffre est calculé par l'application à partir de l'état réel constaté, et un montant venant de toi le contredirait devant le vendeur. Écris l'argument seul, l'app ajoute l'offre.
 - "pieges" : ce qui peut transformer une bonne affaire en perte sur CET objet précis (contrefaçon, réédition, corrosion de piles, disque rayé, boîte vide).
 
 `;
@@ -1573,7 +1610,7 @@ RÈGLES GÉNÉRALES
    contradictoires dans le même prompt. */
 const BRIEF_JSON = `
 Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés :
-objet, categorie, identification, code, codeOu, attendu[], impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, preuves[], verifs[], pieges[], nego, note.`;
+objet, categorie, identification, code, codeOu, attendu[] (chaque entrée : {"n":"nom de l'élément","vu":"oui|non|?","cle":true|false}), impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, preuves[], verifs[], pieges[], nego, note.`;
 
 /* ---------- Les barèmes ----------
    Ils sont dans l'app, pas dans le prompt : un modèle qui improvise ses propres
@@ -1584,15 +1621,16 @@ const ETAT_LBL = {5:"Neuf / scellé", 4:"Excellent", 3:"Bon", 2:"Moyen", 1:"Abî
    à peu près tout ce qui se collectionne. */
 const ETAT_COEF = {5:1.45, 4:1, 3:0.62, 2:0.35, 1:0.15, 0:0.6};
 const COMPLET_LBL = {c:"Complet", p:"Presque complet", i:"Incomplet", "?":"À vérifier"};
-/* Une pièce essentielle manquante ne coûte pas 30 %. */
-const COMPLET_COEF = {c:1, p:0.55, i:0.18, "?":0.75};
+/* Deux poids très différents : un feuillet manquant coûte quelques pour cent,
+   une pièce maîtresse absente coûte l'essentiel de la valeur. */
+const COMPLET_COEF = {c:1, p:0.8, i:0.28, "?":0.85};
 const PORT_LBL = {pochette:"Pochette", petit:"Petit colis", moyen:"Colis moyen", gros:"Gros colis", encombrant:"Encombrant"};
 /* Sur Vinted, c'est l'acheteur qui paie le port. Ce qu'on retire ici n'est donc
    pas le tarif postal, c'est la PRESSION que le volume met sur ton prix : plus
    l'envoi coûte cher à l'acheteur, plus il faut baisser pour rester attractif —
    plus l'emballage et les casses. Un vinyle en subit à peine, un lampadaire
    énormément. */
-const PORT_COUT = {pochette:2, petit:3, moyen:5, gros:9, encombrant:14};
+const PORT_COUT = {pochette:1, petit:3, moyen:5, gros:9, encombrant:14};
 
 /* Modèles du plus sûr au plus récent. Les plus neufs sont souvent à quota ZÉRO
    sur l'offre gratuite : ils renvoient un 429 immédiat sur une clé neuve. */
@@ -1694,7 +1732,9 @@ const SCHEMA_SINGLE = {
   properties:{
     objet:{type:"STRING"}, categorie:{type:"STRING"}, identification:{type:"STRING"},
     code:{type:"STRING"}, codeOu:{type:"STRING"},
-    attendu:{type:"ARRAY",items:{type:"STRING"}}, impactComplet:{type:"STRING"},
+    attendu:{type:"ARRAY",items:{type:"OBJECT",properties:{
+      n:{type:"STRING"}, vu:{type:"STRING"}, cle:{type:"BOOLEAN"}}}},
+    impactComplet:{type:"STRING"},
     echelle:{type:"STRING"}, etatNote:{type:"NUMBER"}, etatDit:{type:"STRING"},
     circulation:{type:"STRING"}, marche:{type:"NUMBER"}, gabarit:{type:"STRING"},
     confiance:{type:"STRING"},
@@ -1994,6 +2034,7 @@ function esc(s) {
 
 // Fonction pour les recherches 100% texte
 function askAIText() {
+  prixNouveau();
   const q = $('q').value.trim();
   /* Contrôle local instantané : gratuit, hors ligne, avant toute requête. */
   const dup = collBanner(q);
@@ -2075,13 +2116,36 @@ function askAIStand() {
    différence entre « ça vaut combien » et « combien vaut CELUI-CI ». */
 let FICHE = null;
 
+/* Les éléments attendus arrivent maintenant constatés : vu = oui / non / ?.
+   On accepte encore l'ancien format (simple texte) pour ne rien casser. */
+function attNorm(a){
+  if(!Array.isArray(a)) return [];
+  return a.map(x => {
+    if(typeof x === "string") return {n:x, vu:"?", cle:true};
+    if(!x || typeof x !== "object") return null;
+    const v = String(x.vu || "").toLowerCase();
+    return {n: x.n || x.nom || "", vu: (v === "oui" || v === "non") ? v : "?", cle: x.cle !== false};
+  }).filter(x => x && x.n);
+}
+
+/* La complétude se déduit de ce que l'IA a réellement constaté : tu n'as plus
+   rien à trancher pour obtenir ton prix. Ce qui reste incertain est signalé,
+   pas facturé. */
+function attStatut(att){
+  if(!att.length) return "?";
+  const abs = att.filter(x => x.vu === "non");
+  if(abs.some(x => x.cle)) return "i";
+  if(abs.length) return "p";
+  return att.every(x => x.vu === "oui") ? "c" : "?";
+}
+
 function ficheNorm(j){
   const n = Math.round(Number(j.etatNote) || 0);
   const g = String(j.gabarit || "petit").toLowerCase();
   return {
     objet: j.objet || "", categorie: j.categorie || "", identification: j.identification || "",
     code: j.code || "", codeOu: j.codeOu || "",
-    attendu: Array.isArray(j.attendu) ? j.attendu.filter(Boolean) : [],
+    attendu: attNorm(j.attendu),
     impactComplet: j.impactComplet || "",
     echelle: j.echelle || "", etatDit: j.etatDit || "",
     circulation: String(j.circulation || "").toLowerCase(),
@@ -2091,10 +2155,39 @@ function ficheNorm(j){
     pieges: j.pieges || [], nego: j.nego || "", note: j.note || "",
     /* Réglages du chineur : ce que TOI tu constates, pas ce que la photo suggère. */
     etat: (n >= 1 && n <= 5) ? n : 0,
-    complet: "?",
+    complet: attStatut(attNorm(j.attendu)),
     /* Renseignée après coup par Discogs quand le disque est identifié. */
-    marcheReel: 0, marcheSrc: ""
+    marcheReel: 0, marcheSrc: "", mien: null
   };
+}
+
+/* Ce que TU as réellement encaissé écrase n'importe quelle estimation. Un prix
+   affiché, lui, n'est qu'une intention : on le montre sans l'imposer. */
+function ficheMienne(query){
+  const m = venteMatch(query);
+  if(!m) return null;
+  const x = m.x;
+  if(x.statut === "done"){
+    const net = (x.vendu || 0) - (x.frais || 0);
+    if(net > 0) return {prix: Math.round(net), src: "ta vente réelle", dur: true};
+  }
+  if(x.prix > 0) return {prix: Math.round(x.prix), src: "ton prix affiché", dur: false};
+  return null;
+}
+
+/* Encadré de confrontation : quand ton propre prix et le marché ne disent pas
+   la même chose, il vaut mieux le voir maintenant que le découvrir en vendant. */
+function ficheMien(f, c){
+  if(!f.mien || !c.base) return "";
+  const m = f.mien;
+  if(m.dur) return `<div class="px-mien ok">Référence : <b>${m.prix}€</b>, c'est ce que tu as encaissé
+    sur le même article. Pas une moyenne — ta cote.</div>`;
+  const ec = Math.round((m.prix - c.base) / c.base * 100);
+  if(Math.abs(ec) < 20) return `<div class="px-mien">Tu en demandes ${m.prix}€ dans Cash Out : cohérent avec le marché.</div>`;
+  return ec > 0
+    ? `<div class="px-mien warn">Tu affiches <b>${m.prix}€</b> dans Cash Out, soit ${ec}% au-dessus du marché estimé (${c.base}€).
+       Tant qu'il ne part pas à ce prix, c'est une intention, pas une cote.</div>`
+    : `<div class="px-mien warn">Tu affiches <b>${m.prix}€</b> alors que le marché est à ${c.base}€. Tu te sous-vends.</div>`;
 }
 
 function ficheCalc(f){
@@ -2108,14 +2201,27 @@ function ficheCalc(f){
   const brut = base * ce * cc;
   const net = Math.max(0, brut - port);
 
-  /* Un chiffre unique ne se négocie pas. Trois, oui : celui qu'on annonce,
-     celui qu'on vise, celui où on se lève. */
+  /* Un chiffre unique ne se négocie pas. Trois, oui — mais seulement si l'écart
+     entre eux est réel : sur un objet à 6 €, « annonce 1, vise 1, plafond 2 »
+     ne veut rien dire. En dessous de trois euros de plafond, on ne fait pas
+     semblant de négocier, on dit quoi proposer. */
   const plafond = Math.max(0, Math.round(net / 3));
+  let ouverture, cible, echelonne = false;
+  if(plafond >= 6){
+    ouverture = Math.max(1, Math.round(plafond * 0.45));
+    cible     = Math.max(ouverture + 1, Math.round(plafond * 0.72));
+    echelonne = true;
+  }else if(plafond >= 3){
+    ouverture = plafond - 2;
+    cible     = plafond - 1;
+    echelonne = true;
+  }else{
+    ouverture = Math.max(1, plafond - 1);
+    cible     = plafond;
+  }
   return {
     base, port, ce, cc, brut: Math.round(brut), net: Math.round(net),
-    ouverture: Math.max(1, Math.round(net * 0.15)),
-    cible: Math.max(1, Math.round(net * 0.24)),
-    plafond,
+    ouverture, cible, plafond, echelonne,
     verdict: !base ? "N" : plafond < 1 ? "L" : "R"
   };
 }
@@ -2146,10 +2252,14 @@ function fichePaint(){
   const dem = parseFloat(($('price') || {}).value || "0") || 0;
   const vd = ficheVerdict(FICHE, c, dem);
 
+  const ac = $('fiche-acte');
+  if(ac) ac.innerHTML = ficheAction(FICHE, c, dem);
   const px = $('fiche-prix');
   if(px) px.innerHTML = fichePrix(FICHE, c, dem);
   const rg = $('fiche-reglages');
   if(rg) rg.innerHTML = ficheReglages(FICHE, c);
+  const sy = $('fiche-say');
+  if(sy) sy.textContent = "« " + ficheDire(FICHE) + " »";
 
   const hd = $('fiche-head');
   if(hd){
@@ -2161,8 +2271,33 @@ function fichePaint(){
   }
   /* Ce qui part au journal et aux objets repérés doit suivre tes réglages. */
   LAST = {objet: FICHE.objet, revente: c.net, prixMax: c.plafond, demande: dem};
-  const np = $('nego-pad');
-  if(np) np.innerHTML = negoPad(dem, c.plafond);
+}
+
+/* Le vendeur attend. Une seule bande, juste sous le titre : le chiffre à dire
+   et le chiffre à ne pas dépasser. Tout le reste de la fiche est là pour après,
+   ou pour les cas où tu veux comprendre. */
+function ficheAction(f, c, dem){
+  if(!c.base) return `<div class="acte-plat"><b>Pas de prix fiable</b>
+    <span>Le marché n'a pas pu être établi. Ne t'engage pas au-delà de ce que l'objet vaut pour toi.</span></div>`;
+  if(!c.plafond) return `<div class="acte-plat"><b>Passe ton chemin</b>
+    <span>Ce que tu en tirerais ne couvrirait même pas l'emballage.</span></div>`;
+
+  const incertain = f.attendu.filter(x => x.vu === "?");
+  const absent = f.attendu.filter(x => x.vu === "non");
+  let alerte = "";
+  if(absent.some(x => x.cle)) alerte = "Il manque " + absent.filter(x => x.cle)[0].n + " : prix déjà corrigé.";
+  else if(incertain.length) alerte = "Vérifie d'abord : " + incertain.slice(0,2).map(x => x.n).join(", ") + ".";
+
+  let phrase, cls = "oui";
+  if(dem && dem <= c.ouverture){ phrase = "Il en demande " + dem + " € : ne négocie pas, prends."; }
+  else if(dem && dem > c.plafond){ phrase = "Il en demande " + dem + " €. Repose-le."; cls = "non"; }
+  else if(dem){ phrase = "Propose " + c.ouverture + " €. Tu peux monter jusqu'à " + c.plafond + " €."; }
+  else { phrase = "Propose " + c.ouverture + " €. Ne dépasse pas " + c.plafond + " €."; }
+
+  return `<div class="acte ${cls}">
+    <div class="acte-n"><b>${c.plafond}€</b><span>ton maximum</span></div>
+    <div class="acte-t"><b>${phrase}</b>${alerte ? `<span>${esc(alerte)}</span>` : ""}</div>
+  </div>`;
 }
 
 function ficheReglages(f, c){
@@ -2186,18 +2321,27 @@ function fichePrix(f, c, dem){
     Les réglages ci-dessus restent utiles : note l'objet, puis vérifie toi-même sur Vinted ou eBay.</div>`;
   const ligne = (cls, lbl, val, aide) =>
     `<div class="px ${cls}"><div class="px-l">${lbl}</div><div class="px-v">${val}€</div><div class="px-a">${aide}</div></div>`;
+  const grille = c.echelonne
+    ? `<div class="px-grid">
+        ${ligne("o","Tu annonces", c.ouverture,"le premier chiffre")}
+        ${ligne("c","Tu vises", c.cible,"l'accord normal")}
+        ${ligne("p","Tu te lèves", c.plafond,"au-delà, tu perds")}
+      </div>`
+    : `<div class="px-petit">
+        <b>${c.plafond ? c.plafond + "€ maximum" : "Seulement si c'est donné"}</b>
+        <span>${c.plafond
+          ? "À ce prix-là il n'y a rien à négocier : propose " + c.ouverture + "€, et n'insiste pas au-delà de " + c.plafond + "€. Ça n'a d'intérêt que glissé dans un lot."
+          : "La marge ne couvre même pas l'envoi. À prendre uniquement pour compléter un lot que tu vends déjà."}</span>
+      </div>`;
   return `
-    <div class="px-grid">
-      ${ligne("o","Tu annonces", c.ouverture,"le premier chiffre")}
-      ${ligne("c","Tu vises", c.cible,"l'accord normal")}
-      ${ligne("p","Tu te lèves", c.plafond,"au-delà, tu perds")}
-    </div>
+    ${grille}
     <div class="px-calc">
       <b>${c.base}€</b> le marché${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}
       · <b>×${c.ce}</b> état · <b>×${c.cc}</b> complétude
       ${c.port ? ` · <b>−${c.port}€</b> de volume` : ""}
       → <b>${c.net}€</b> nets pour toi
     </div>
+    ${ficheMien(f, c)}
     ${dem ? `<div class="px-dem">${dem <= c.cible
       ? "Il en demande " + dem + "€ : c'est déjà sous ta cible. Prends sans discuter."
       : dem <= c.plafond
@@ -2222,8 +2366,11 @@ function ficheCorps(f){
       <h5><i>2</i>Ce qui doit être là</h5>
       ${f.attendu.length
         ? `<div class="fi-ck">${f.attendu.map((x,i) =>
-            `<label><input type="checkbox" onchange="ficheCoche()"><span>${esc(x)}</span></label>`).join("")}</div>
-           <div class="fi-ck-n" id="fiche-ck-n">Coche ce que tu as sous les yeux.</div>`
+            `<label class="v-${x.vu === "oui" ? "o" : x.vu === "non" ? "n" : "q"}">
+              <input type="checkbox" data-cle="${x.cle ? 1 : 0}"${x.vu === "oui" ? " checked" : ""} onchange="ficheCoche()">
+              <span>${esc(x.n)}${x.vu === "non" ? `<i>absent sur la photo</i>`
+                : x.vu === "?" ? `<i>non visible — à vérifier</i>` : ""}</span></label>`).join("")}</div>
+           <div class="fi-ck-n" id="fiche-ck-n">${attResume(f.attendu)}</div>`
         : `<div class="fi-vide">Rien de particulier à contrôler.</div>`}
       ${f.impactComplet ? `<div class="fi-imp">${esc(f.impactComplet)}</div>` : ""}
     </div>
@@ -2239,19 +2386,54 @@ function ficheCorps(f){
       <h5><i>◎</i>À vérifier sur place</h5>
       <ul>${f.verifs.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
     ${f.nego ? `<div class="fi"><h5><i>“</i>Ce que tu dis</h5>
-      <div class="saywrap">« ${esc(f.nego)} »</div></div>` : ""}
+      <div class="saywrap" id="fiche-say">« ${esc(ficheDire(f))} »</div></div>` : ""}
     ${f.note ? `<div class="aimeta">${esc(f.note)}</div>` : ""}`;
 }
 
 /* La complétude se règle toute seule à mesure que tu coches. */
+/* L'argument vient du modèle, le chiffre vient du calcul. Séparer les deux
+   évite ce qui s'est produit : une phrase proposant 5 € sous un plafond à 2 €. */
+function ficheDire(f){
+  const c = ficheCalc(f);
+  let arg = String(f.nego || "").trim();
+  /* Filet : si le modèle a quand même glissé un montant, on retire la
+     proposition entière — pas seulement le chiffre — sinon il reste « je peux
+     t'en proposer. » au milieu de la phrase. On garde l'argument, on jette
+     l'offre. */
+  if(/\d+\s*(€|euros?)/i.test(arg)){
+    arg = arg.split(/([,;.!?])/)
+             .filter((x, i) => i % 2 === 0)
+             .filter(x => !/\d+\s*(€|euros?)/i.test(x))
+             .map(x => x.trim()).filter(Boolean)
+             .join(", ");
+  }
+  if(!arg) arg = "C'est un titre très courant";
+  if(!/[.!?]$/.test(arg)) arg += ".";
+  return c.plafond ? arg + " Je t'en donne " + c.ouverture + " €." : arg;
+}
+
+function attResume(att){
+  const q = att.filter(x => x.vu === "?").length;
+  const n = att.filter(x => x.vu === "non").length;
+  if(n && q) return "Pré-coché d'après les photos · " + n + " absent" + (n>1?"s":"") + " · " + q + " à vérifier";
+  if(n) return "Pré-coché d'après les photos · " + n + " élément" + (n>1?"s":"") + " manquant" + (n>1?"s":"");
+  if(q) return "Pré-coché d'après les photos · " + q + " élément" + (q>1?"s":"") + " non visible" + (q>1?"s":"");
+  return "Tout est visible sur les photos.";
+}
+
 function ficheCoche(){
   const cks = document.querySelectorAll('.fi-ck input');
   if(!cks.length || !FICHE) return;
-  const tot = cks.length;
-  let n = 0; cks.forEach(c => { if(c.checked) n++; });
+  let manqueCle = false, manque = 0;
+  cks.forEach(c => {
+    if(!c.checked){ manque++; if(c.dataset.cle === "1") manqueCle = true; }
+  });
+  FICHE.complet = manqueCle ? "i" : manque ? "p" : "c";
   const el = $('fiche-ck-n');
-  if(el) el.textContent = n + " sur " + tot + " présent" + (n > 1 ? "s" : "");
-  FICHE.complet = n === tot ? "c" : n >= tot - 1 && tot > 2 ? "p" : n === 0 ? "?" : "i";
+  if(el) el.textContent = manque
+    ? (cks.length - manque) + " sur " + cks.length + " présent" + (cks.length - manque > 1 ? "s" : "")
+      + (manqueCle ? " — il manque une pièce essentielle" : "")
+    : "Complet, vérifié par toi.";
   fichePaint();
 }
 
@@ -2267,6 +2449,9 @@ function ficheCopieCode(){
 function renderResult(j, images, avis) {
   FICHE = ficheNorm(j);
   const f = FICHE;
+  f.mien = ficheMienne((f.objet || "") + " " + (f.identification || ""));
+  /* Une vente que tu as réellement conclue devient la référence de calcul. */
+  if(f.mien && f.mien.dur){ f.marcheReel = f.mien.prix; f.marcheSrc = f.mien.src; }
   const c = ficheCalc(f);
   const dem = parseFloat($('price').value || "0") || 0;
   const vd = ficheVerdict(f, c, dem);
@@ -2296,6 +2481,7 @@ function renderResult(j, images, avis) {
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}
         ${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
+      <div id="fiche-acte">${ficheAction(f, c, dem)}</div>
       <div id="disc-slot"></div>
       <div id="fiche-reglages" class="regs">${ficheReglages(f, c)}</div>
       <div id="fiche-prix" class="prix">${fichePrix(f, c, dem)}</div>
@@ -2303,7 +2489,6 @@ function renderResult(j, images, avis) {
         ${f.identification ? `<div class="ident">${esc(f.identification)}</div>` : ''}
         ${ficheCorps(f)}
       </div>
-      <div id="nego-pad"></div>
       <div class="act-grid">
         <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
         <button class="act act-buy" onclick="logFind()">
@@ -2315,8 +2500,7 @@ function renderResult(j, images, avis) {
     </div>`;
 
   LAST = {objet: f.objet, revente: c.net, prixMax: c.plafond, demande: dem};
-  const np = $('nego-pad');
-  if(np) np.innerHTML = negoPad(dem, c.plafond);
+  PRIX_UTILISE = $('price').value;
 
   /* Changer le prix demandé refait le verdict sans relancer quoi que ce soit. */
   const pi = $('price');
