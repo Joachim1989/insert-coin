@@ -3,7 +3,7 @@
    absent du dépôt) faisait échouer TOUTE l'installation du service worker,
    donc aucun cache et aucun mode hors ligne. On met chaque fichier en cache
    individuellement : un manquant ne casse plus les autres. */
-const CACHE = 'insertcoin-v5';
+const CACHE = 'insertcoin-v5.1';
 const FILES = [
   './',
   './index.html',
