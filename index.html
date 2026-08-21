@@ -86,6 +86,14 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .reg-et .et span{display:block;font-family:var(--mono);font-size:7.5px;text-transform:uppercase;letter-spacing:.3px;margin-top:4px}
 .reg-et .et.on{background:var(--gold);border-color:var(--gold)}
 .reg-et .et.on b,.reg-et .et.on span{color:#14110f}
+.pq{margin-top:11px;border-top:1px solid var(--border);padding-top:9px}
+.pq summary{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--gold);cursor:pointer;list-style:none}
+.pq summary::-webkit-details-marker{display:none}
+.pq summary::after{content:" ▾"}
+.pq[open] summary::after{content:" ▴"}
+.pq ol{margin:10px 0 0;padding-left:20px;font-size:13px;line-height:1.55;color:var(--text-muted)}
+.pq li{margin-bottom:4px}
+.pq b{color:var(--text);font-family:var(--cond);font-size:15px}
 .reg-cp{display:flex;gap:5px}
 .reg-cp .cp{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:9px 4px;cursor:pointer;color:var(--text-muted);font-family:var(--cond);font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;line-height:1.2}
 .reg-cp .cp.on{background:var(--go);border-color:var(--go);color:#fff}
@@ -1042,7 +1050,7 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 4.3 « Expert »
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 4.4 « Expert »
   </p>
 </div>
 
@@ -1575,7 +1583,11 @@ Pour CHACUN, remplis "vu" à partir des photos, sans rien supposer :
   "non" = tu constates son ABSENCE, c'est-à-dire que la photo montre l'endroit où il devrait être et qu'il n'y est pas ;
   "?"   = les photos ne permettent pas de trancher.
 Ne mets "non" que si l'absence est visible. Dans le doute, mets "?".
-Remplis aussi "cle" : true si l'élément conditionne la valeur (la cartouche, le plateau de jeu, la figurine principale), false si son absence ne coûte que quelques pour cent (feuillet de sécurité, publicité, sachet de rechange).
+Remplis aussi "perte" : le POURCENTAGE de valeur que l'objet perd si CET élément-là est absent, d'après les ventes réelles que tu connais. Sois juste, pas punitif :
+  - un accessoire décoratif ou un imprimé secondaire (feuillet de sécurité, calot d'une peluche, publicité) : 5 à 15 ;
+  - un élément visible qui compte pour l'acheteur (jaquette, notice, boîte) : 20 à 35 ;
+  - la pièce sans laquelle l'objet ne fonctionne pas ou n'a plus d'intérêt (la cartouche, le plateau de jeu, le portail, le câble d'alimentation) : 50 à 70.
+Ces pourcentages s'additionnent : n'attribue 50 et plus qu'à ce qui rend vraiment l'objet inutilisable ou invendable.
 C'est la question qui décide du prix, pas l'état. Une pièce essentielle manquante ne coûte pas 30 % : elle peut coûter 85 %. Dis-le franchement dans "impactComplet".
 Sur un jouet, ce sont presque toujours de petits accessoires perdus depuis quarante ans : sois exhaustif, ce sont eux qui font la valeur.
 
@@ -1614,7 +1626,7 @@ RÈGLES GÉNÉRALES
    contradictoires dans le même prompt. */
 const BRIEF_JSON = `
 Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés :
-objet, categorie, lot, lotNb, identification, code, codeOu, attendu[] (chaque entrée : {"n":"nom de l'élément","vu":"oui|non|?","cle":true|false}), impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, preuves[], verifs[], pieges[], nego, note.`;
+objet, categorie, lot, lotNb, identification, code, codeOu, attendu[] (chaque entrée : {"n":"nom de l'élément","vu":"oui|non|?","perte":nombre}), impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, preuves[], verifs[], pieges[], nego, note.`;
 
 /* ---------- Les barèmes ----------
    Ils sont dans l'app, pas dans le prompt : un modèle qui improvise ses propres
@@ -1626,10 +1638,13 @@ const ETAT_LBL = {5:"Neuf / scellé", 4:"Excellent", 3:"Bon", 2:"Moyen", 1:"Abî
    sur Vinted ou eBay. Ancrer sur « excellent » revenait à pénaliser tout objet
    normal d'un tiers de sa valeur, sur la base d'un prix qui le décrivait déjà. */
 const ETAT_COEF = {5:1.8, 4:1.25, 3:1, 2:0.6, 1:0.3, 0:0.9};
-const COMPLET_LBL = {c:"Complet", p:"Presque complet", i:"Incomplet", "?":"À vérifier"};
-/* Deux poids très différents : un feuillet manquant coûte quelques pour cent,
-   une pièce maîtresse absente coûte l'essentiel de la valeur. */
-const COMPLET_COEF = {c:1.1, p:0.85, i:0.35, "?":1};
+/* Une échelle à trois crans ne peut pas dire la différence entre un calot de
+   peluche manquant et une cartouche de jeu manquante. Chaque élément porte
+   donc SON propre poids, donné par le modèle qui connaît le métier : la perte
+   de valeur, en pour cent, si cet élément-là est absent. La décote se calcule,
+   elle ne se choisit plus dans une liste. */
+const PERTE_DEFAUT = {cle: 40, autre: 8};
+const PERTE_PLANCHER = 0.15;
 const PORT_LBL = {pochette:"Pochette", petit:"Petit colis", moyen:"Colis moyen", gros:"Gros colis", encombrant:"Encombrant"};
 /* Sur Vinted, c'est l'acheteur qui paie le port. Ce qu'on retire ici n'est donc
    pas le tarif postal, c'est la PRESSION que le volume met sur ton prix : plus
@@ -1744,7 +1759,7 @@ const SCHEMA_SINGLE = {
     lot:{type:"BOOLEAN"}, lotNb:{type:"NUMBER"},
     code:{type:"STRING"}, codeOu:{type:"STRING"},
     attendu:{type:"ARRAY",items:{type:"OBJECT",properties:{
-      n:{type:"STRING"}, vu:{type:"STRING"}, cle:{type:"BOOLEAN"}}}},
+      n:{type:"STRING"}, vu:{type:"STRING"}, perte:{type:"NUMBER"}}}},
     impactComplet:{type:"STRING"},
     echelle:{type:"STRING"}, etatNote:{type:"NUMBER"}, etatDit:{type:"STRING"},
     circulation:{type:"STRING"}, marche:{type:"NUMBER"}, gabarit:{type:"STRING"},
@@ -2141,20 +2156,23 @@ function attNorm(a){
     if(typeof x === "string") return {n:x, vu:"?", cle:true};
     if(!x || typeof x !== "object") return null;
     const v = String(x.vu || "").toLowerCase();
-    return {n: x.n || x.nom || "", vu: (v === "oui" || v === "non") ? v : "?", cle: x.cle !== false};
+    /* On accepte l'ancien format (cle: true/false) en lui donnant un poids. */
+    let pe = Number(x.perte);
+    if(!isFinite(pe) || pe < 0) pe = (x.cle !== false) ? PERTE_DEFAUT.cle : PERTE_DEFAUT.autre;
+    return {n: x.n || x.nom || "", vu: (v === "oui" || v === "non") ? v : "?",
+            perte: Math.min(90, Math.round(pe)), cle: x.cle !== false};
   }).filter(x => x && x.n);
 }
 
-/* La complétude se déduit de ce que l'IA a réellement constaté : tu n'as plus
-   rien à trancher pour obtenir ton prix. Ce qui reste incertain est signalé,
-   pas facturé. */
-function attStatut(att){
-  if(!att.length) return "?";
-  const abs = att.filter(x => x.vu === "non");
-  if(abs.some(x => x.cle)) return "i";
-  if(abs.length) return "p";
-  return att.every(x => x.vu === "oui") ? "c" : "?";
+/* Seul ce qui est CONSTATÉ absent est facturé. Ce que la photo ne montre pas
+   reste en suspens : on le signale, on ne le fait pas payer. */
+function attPerte(att){
+  return att.filter(x => x.vu === "non").reduce((t, x) => t + x.perte, 0);
 }
+function attCoef(att){
+  return Math.max(PERTE_PLANCHER, 1 - attPerte(att) / 100);
+}
+function attManquants(att){ return att.filter(x => x.vu === "non"); }
 
 function ficheNorm(j){
   const n = Math.round(Number(j.etatNote) || 0);
@@ -2173,7 +2191,7 @@ function ficheNorm(j){
     pieges: j.pieges || [], nego: j.nego || "", note: j.note || "",
     /* Réglages du chineur : ce que TOI tu constates, pas ce que la photo suggère. */
     etat: (n >= 1 && n <= 5) ? n : 0,
-    complet: attStatut(attNorm(j.attendu)),
+
     /* Renseignée après coup par Discogs quand le disque est identifié. */
     marcheReel: 0, marcheSrc: "", mien: null
   };
@@ -2212,10 +2230,10 @@ function ficheCalc(f){
   const base = f.marcheReel || f.marche || 0;
   const port = Math.min(PORT_COUT[f.gabarit] || 0, Math.round(base * PORT_PART_MAX));
   const ce = ETAT_COEF[f.etat] !== undefined ? ETAT_COEF[f.etat] : 0.9;
-  /* Un lot en vrac n'a pas de version « complète » : le prix constaté porte
-     déjà sur un tas de pièces sans boîtes. Lui appliquer une décote
-     d'incomplétude, c'est facturer deux fois le même défaut. */
-  const cc = f.lot ? 1 : (COMPLET_COEF[f.complet] !== undefined ? COMPLET_COEF[f.complet] : 1);
+  /* Somme des pertes des seuls éléments constatés absents. Un lot en vrac n'a
+     pas de « boîte manquante » : le modèle ne la liste pas, donc rien ne se
+     facture deux fois. */
+  const cc = attCoef(f.attendu);
 
   /* Ce que tu encaisses réellement : le prix de référence corrigé de l'état et
      de la complétude, moins le port que tu avanceras. */
@@ -2241,7 +2259,8 @@ function ficheCalc(f){
     cible     = plafond;
   }
   return {
-    base, port, ce, cc, brut: Math.round(brut), net: Math.round(net),
+    base, port, ce: Math.round(ce * 100) / 100, cc: Math.round(cc * 100) / 100,
+    brut: Math.round(brut), net: Math.round(net),
     ouverture, cible, plafond, echelonne,
     verdict: !base ? "N" : plafond < 1 ? "L" : "R"
   };
@@ -2251,7 +2270,9 @@ function ficheCalc(f){
 function ficheVerdict(f, c, demande){
   if(!c.base) return {v:"N", t:"À VÉRIFIER"};
   if(c.plafond < 1) return {v:"L", t:"LAISSE"};
-  if(!demande) return {v:"R", t:"INTÉRESSANT"};
+  /* Le vert veut dire « prends », pas « l'objet existe ». Sans prix affiché,
+     rien n'est encore une bonne affaire. */
+  if(!demande) return {v:"N", t:"À CE PRIX SEULEMENT"};
   if(demande <= c.cible) return {v:"R", t:"RAFLE"};
   if(demande <= c.plafond) return {v:"N", t:"NÉGOCIE"};
   return {v:"L", t:"LAISSE"};
@@ -2260,10 +2281,6 @@ function ficheVerdict(f, c, demande){
 function ficheEtatSet(n){
   if(!FICHE) return;
   FICHE.etat = Number(n); vib(); fichePaint();
-}
-function ficheCompletSet(k){
-  if(!FICHE) return;
-  FICHE.complet = k; vib(); fichePaint();
 }
 
 /* Redessine uniquement les prix et le bandeau : pas de requête, pas d'attente. */
@@ -2304,10 +2321,9 @@ function ficheAction(f, c, dem){
     <span>Ce que tu en tirerais ne couvrirait même pas l'emballage.</span></div>`;
 
   const incertain = f.attendu.filter(x => x.vu === "?");
-  const absent = f.attendu.filter(x => x.vu === "non");
+  const absent = attManquants(f.attendu);
   let alerte = "";
-  if(absent.some(x => x.cle)) alerte = "Il manque " + absent.filter(x => x.cle)[0].n + " : prix déjà corrigé.";
-  else if(incertain.length) alerte = "Vérifie d'abord : " + incertain.slice(0,2).map(x => x.n).join(", ") + ".";
+  if(incertain.length) alerte = "Vérifie d'abord : " + incertain.slice(0,2).map(x => x.n).join(", ") + ".";
 
   /* Sur un lot, un chiffre nu est ambigu : 1 € la figurine ou 1 € le tas ?
      On le dit, et on donne le prix unitaire pour pouvoir négocier au détail. */
@@ -2326,22 +2342,33 @@ function ficheAction(f, c, dem){
     <div class="acte-t"><b>${phrase}</b>
       ${alerte ? `<span>${esc(alerte)}</span>` : ""}
       ${unite ? `<span class="acte-u">${unite}</span>` : ""}</div>
+    ${ficheParce(f, c, absent)}
   </div>`;
+}
+
+/* Le chiffre ne vaut rien si tu ne peux pas le contester. Toute la chaîne, en
+   phrases, à l'endroit exact où tu décides — et pas en petit caractères plus bas. */
+function ficheParce(f, c, absent){
+  const l = [];
+  l.push(`<b>${c.base}€</b> — ce que ça se vend en bon état${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? ", le lot entier" : ""}`);
+  if(c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — meilleur que l'état courant (${ETAT_LBL[f.etat].toLowerCase()})`);
+  else if(c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — état ${ETAT_LBL[f.etat].toLowerCase()}`);
+  absent.forEach(x => l.push(`<b>−${x.perte}%</b> — ${esc(x.n)} manque`));
+  if(c.port) l.push(`<b>−${c.port}€</b> — ce que le volume te coûte à l'envoi`);
+  l.push(`= <b>${c.net}€</b> dans ta poche à la revente`);
+  l.push(`<b>÷3</b> — ta règle : tu n'achètes jamais au-dessus du tiers`);
+  return `<details class="pq"><summary>Pourquoi ${c.plafond}€ ?</summary>
+    <ol>${l.map(x => `<li>${x}</li>`).join("")}</ol></details>`;
 }
 
 function ficheReglages(f, c){
   const b = (n) => `<button class="et${f.etat === n ? " on" : ""}" onclick="ficheEtatSet(${n})">
     <b>${n}</b><span>${ETAT_LBL[n]}</span></button>`;
-  const k = (id, lbl) => `<button class="cp${f.complet === id ? " on" : ""}" onclick="ficheCompletSet('${id}')">${lbl}</button>`;
   return `
     <div class="reg">
-      <div class="reg-t">État réel <i>${f.echelle ? esc(f.echelle) : "que TU constates"}</i></div>
+      <div class="reg-t">État réel <i>${f.echelle ? esc(f.echelle) : "que TU constates"} · la note 3 est la référence du marché</i></div>
       <div class="reg-et">${[5,4,3,2,1].map(b).join("")}</div>
       ${f.etatDit ? `<div class="reg-dit">Vu sur la photo : ${esc(f.etatDit)}</div>` : ""}
-    </div>
-    <div class="reg">
-      <div class="reg-t">Complétude <i>${f.complet === "?" ? "à trancher" : "×" + c.cc}</i></div>
-      <div class="reg-cp">${k("c","Complet")}${k("p","Il manque un détail")}${k("i","Pièce essentielle absente")}</div>
     </div>`;
 }
 
@@ -2396,9 +2423,11 @@ function ficheCorps(f){
       ${f.attendu.length
         ? `<div class="fi-ck">${f.attendu.map((x,i) =>
             `<label class="v-${x.vu === "oui" ? "o" : x.vu === "non" ? "n" : "q"}">
-              <input type="checkbox" data-cle="${x.cle ? 1 : 0}"${x.vu === "oui" ? " checked" : ""} onchange="ficheCoche()">
-              <span>${esc(x.n)}${x.vu === "non" ? `<i>absent sur la photo</i>`
-                : x.vu === "?" ? `<i>non visible — à vérifier</i>` : ""}</span></label>`).join("")}</div>
+              <input type="checkbox"${x.vu === "oui" ? " checked" : ""} onchange="ficheCoche(${i}, this.checked)">
+              <span>${esc(x.n)}
+                ${x.vu === "non" ? `<i>absent — ${x.perte}% de valeur en moins</i>`
+                : x.vu === "?" ? `<i>non visible — à vérifier (vaudrait ${x.perte}%)</i>`
+                : `<i>présent</i>`}</span></label>`).join("")}</div>
            <div class="fi-ck-n" id="fiche-ck-n">${attResume(f.attendu)}</div>`
         : `<div class="fi-vide">Rien de particulier à contrôler.</div>`}
       ${f.impactComplet ? `<div class="fi-imp">${esc(f.impactComplet)}</div>` : ""}
@@ -2442,28 +2471,27 @@ function ficheDire(f){
 }
 
 function attResume(att){
+  const perte = attPerte(att);
   const q = att.filter(x => x.vu === "?").length;
-  const n = att.filter(x => x.vu === "non").length;
-  if(n && q) return "Pré-coché d'après les photos · " + n + " absent" + (n>1?"s":"") + " · " + q + " à vérifier";
-  if(n) return "Pré-coché d'après les photos · " + n + " élément" + (n>1?"s":"") + " manquant" + (n>1?"s":"");
-  if(q) return "Pré-coché d'après les photos · " + q + " élément" + (q>1?"s":"") + " non visible" + (q>1?"s":"");
-  return "Tout est visible sur les photos.";
+  let t = perte ? "Manque constaté : −" + perte + "% appliqués" : "Rien ne manque : aucune décote";
+  if(q) t += " · " + q + " élément" + (q>1?"s":"") + " à vérifier sur place";
+  return t;
 }
 
-function ficheCoche(){
-  const cks = document.querySelectorAll('.fi-ck input');
-  if(!cks.length || !FICHE) return;
-  let manqueCle = false, manque = 0;
-  cks.forEach(c => {
-    if(!c.checked){ manque++; if(c.dataset.cle === "1") manqueCle = true; }
-  });
-  FICHE.complet = manqueCle ? "i" : manque ? "p" : "c";
+/* Décocher, c'est constater une absence — et l'absence est chiffrée. Un
+   élément que tu n'as pas encore touché reste « à vérifier » et ne coûte rien. */
+function ficheCoche(i, coche){
+  if(!FICHE || !FICHE.attendu[i]) return;
+  FICHE.attendu[i].vu = coche ? "oui" : "non";
+  const lb = document.querySelectorAll('.fi-ck label')[i];
+  if(lb){
+    lb.className = "v-" + (coche ? "o" : "n");
+    const it = lb.querySelector('i');
+    if(it) it.textContent = coche ? "présent" : "absent — " + FICHE.attendu[i].perte + "% de valeur en moins";
+  }
   const el = $('fiche-ck-n');
-  if(el) el.textContent = manque
-    ? (cks.length - manque) + " sur " + cks.length + " présent" + (cks.length - manque > 1 ? "s" : "")
-      + (manqueCle ? " — il manque une pièce essentielle" : "")
-    : "Complet, vérifié par toi.";
-  fichePaint();
+  if(el) el.textContent = attResume(FICHE.attendu);
+  vib(); fichePaint();
 }
 
 function ficheCopieCode(){
