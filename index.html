@@ -65,14 +65,11 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .tick2{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
 .tick2 input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:2px}
 .tick2 i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text-muted)}
-.acte{display:flex;align-items:stretch;gap:12px;padding:14px;border-bottom:1px solid var(--border)}
-.acte-n{flex:0 0 84px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);border-radius:11px;padding:10px 4px}
-.acte-n b{font-family:var(--cond);font-size:34px;font-weight:700;line-height:1;color:var(--go)}
-.acte-n span{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);margin-top:5px}
-.acte-t{flex:1;display:flex;flex-direction:column;justify-content:center}
-.acte-t b{font-size:17px;line-height:1.3;color:var(--text)}
-.acte-t span{font-size:12.5px;line-height:1.45;color:var(--mid);margin-top:6px}
-.acte.non .acte-n b{color:var(--stop)}
+.acte{padding:15px 14px;border-bottom:1px solid var(--border);background:var(--surface-light)}
+.acte-t b{display:block;font-size:19px;line-height:1.35;color:var(--text)}
+.acte-t span{display:block;font-size:12.5px;line-height:1.45;color:var(--mid);margin-top:7px}
+.acte-t .acte-u{color:var(--text-muted)}
+.acte.non .acte-t b{color:var(--stop)}
 .acte-plat{padding:16px 14px;border-bottom:1px solid var(--border)}
 .acte-plat b{display:block;font-family:var(--cond);font-size:21px;text-transform:uppercase;letter-spacing:.9px;color:var(--stop)}
 .acte-plat span{display:block;font-size:13px;color:var(--text-muted);margin-top:5px;line-height:1.45}
@@ -1045,7 +1042,7 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 4.2 « Expert »
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 4.3 « Expert »
   </p>
 </div>
 
@@ -1585,12 +1582,19 @@ Sur un jouet, ce sont presque toujours de petits accessoires perdus depuis quara
 3. DANS QUEL ÉTAT EST CELUI-CI, SUR SON PROPRE BARÈME ?
 Utilise le barème du métier concerné et nomme-le dans "echelle" : Goldmine pour les disques (M, NM, VG+, VG, G), CIB / en boîte / nu pour le jeu vidéo, scellé / complet / vrac pour le LEGO.
 Donne "etatNote" de 1 à 5 : 5 = neuf ou scellé, 4 = excellent, 3 = bon avec usure d'usage, 2 = moyen et visible, 1 = abîmé.
+La note 3 est la RÉFÉRENCE : c'est l'état normal d'un objet d'occasion, celui auquel correspondent les prix que tu constates en ligne.
 Justifie en une phrase à partir de CE QUE TU VOIS sur la photo. Si tu ne vois pas assez, dis-le et mets 0.
 
 4. COMBIEN EN CIRCULE-T-IL ?
 C'est ce qui sépare la pièce rare de l'objet banal. Cherche les VENTES TERMINÉES (eBay, Vinted, Discogs, Catawiki), jamais les prix demandés.
 "circulation" : "rare", "peu courant", "courant" ou "massif". Un titre pressé en masse ne vaut presque rien même dans une catégorie rentable — dis-le sans détour.
-"marche" = le prix courant d'un exemplaire COMPLET et en BON état (note 4), en euros. C'est un prix de référence, pas le prix de celui-ci : les décotes sont appliquées ensuite par l'app.
+"marche" = le prix auquel un exemplaire en BON ÉTAT D'USAGE (note 3) se vend réellement, en euros, tel que tu le constates dans les ventes terminées. C'est le prix de référence : l'app applique ensuite les écarts d'état et de complétude. N'anticipe aucune décote toi-même, tu la compterais en double.
+
+S'IL S'AGIT D'UN LOT (plusieurs objets vendus ensemble : un tas de figurines, une pile de disques, un carton de jouets) :
+- mets "lot": true et "lotNb" = le nombre de pièces que tu comptes.
+- "marche" est alors le prix du LOT ENTIER tel qu'il est, en vrac, sans boîtes — c'est ainsi que ces lots se vendent. Ne raisonne pas pièce par pièce et ne décote pas l'absence d'emballage : le prix d'un lot en vrac la contient déjà.
+- "attendu" ne sert alors qu'à signaler ce qui rendrait le lot inutilisable (le portail sans lequel les figurines ne servent à rien, le câble d'alimentation, la règle du jeu).
+Sinon, mets "lot": false.
 
 5. COMBIEN COÛTE DE L'EXPÉDIER ?
 "gabarit" : "pochette" (disque, manga, jeu, cartouche), "petit" (figurine, boîtier), "moyen" (jeu de société, console), "gros" (grosse boîte, luminaire) ou "encombrant" (remise en main propre uniquement).
@@ -1610,27 +1614,33 @@ RÈGLES GÉNÉRALES
    contradictoires dans le même prompt. */
 const BRIEF_JSON = `
 Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés :
-objet, categorie, identification, code, codeOu, attendu[] (chaque entrée : {"n":"nom de l'élément","vu":"oui|non|?","cle":true|false}), impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, preuves[], verifs[], pieges[], nego, note.`;
+objet, categorie, lot, lotNb, identification, code, codeOu, attendu[] (chaque entrée : {"n":"nom de l'élément","vu":"oui|non|?","cle":true|false}), impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, preuves[], verifs[], pieges[], nego, note.`;
 
 /* ---------- Les barèmes ----------
    Ils sont dans l'app, pas dans le prompt : un modèle qui improvise ses propres
    décotes donne un chiffre différent à chaque appel pour le même objet. */
 const ETAT_LBL = {5:"Neuf / scellé", 4:"Excellent", 3:"Bon", 2:"Moyen", 1:"Abîmé", 0:"Non évalué"};
-/* Référence = un exemplaire complet en bon état (note 4). Un VG+ vaut environ
-   la moitié d'un NM, un VG le quart : c'est la règle du disque, elle vaut pour
-   à peu près tout ce qui se collectionne. */
-const ETAT_COEF = {5:1.45, 4:1, 3:0.62, 2:0.35, 1:0.15, 0:0.6};
+/* ANCRAGE : la référence est le BON ÉTAT D'USAGE (note 3), pas l'exemplaire
+   excellent. C'est dans cet état que la quasi-totalité des objets d'occasion se
+   vendent réellement, et donc l'état auquel correspondent les prix constatés
+   sur Vinted ou eBay. Ancrer sur « excellent » revenait à pénaliser tout objet
+   normal d'un tiers de sa valeur, sur la base d'un prix qui le décrivait déjà. */
+const ETAT_COEF = {5:1.8, 4:1.25, 3:1, 2:0.6, 1:0.3, 0:0.9};
 const COMPLET_LBL = {c:"Complet", p:"Presque complet", i:"Incomplet", "?":"À vérifier"};
 /* Deux poids très différents : un feuillet manquant coûte quelques pour cent,
    une pièce maîtresse absente coûte l'essentiel de la valeur. */
-const COMPLET_COEF = {c:1, p:0.8, i:0.28, "?":0.85};
+const COMPLET_COEF = {c:1.1, p:0.85, i:0.35, "?":1};
 const PORT_LBL = {pochette:"Pochette", petit:"Petit colis", moyen:"Colis moyen", gros:"Gros colis", encombrant:"Encombrant"};
 /* Sur Vinted, c'est l'acheteur qui paie le port. Ce qu'on retire ici n'est donc
    pas le tarif postal, c'est la PRESSION que le volume met sur ton prix : plus
    l'envoi coûte cher à l'acheteur, plus il faut baisser pour rester attractif —
    plus l'emballage et les casses. Un vinyle en subit à peine, un lampadaire
    énormément. */
-const PORT_COUT = {pochette:1, petit:3, moyen:5, gros:9, encombrant:14};
+const PORT_COUT = {pochette:1, petit:2, moyen:3, gros:6, encombrant:10};
+/* Et surtout : plafonnée à un quart de la valeur. Une retenue fixe de 5 € sur
+   un objet à 14 € en mangeait plus des deux tiers — c'est ce qui transformait
+   un lot vendable 15 € en « ne dépasse pas 1 € ». */
+const PORT_PART_MAX = 0.25;
 
 /* Modèles du plus sûr au plus récent. Les plus neufs sont souvent à quota ZÉRO
    sur l'offre gratuite : ils renvoient un 429 immédiat sur une clé neuve. */
@@ -1731,6 +1741,7 @@ const SCHEMA_SINGLE = {
   type:"OBJECT",
   properties:{
     objet:{type:"STRING"}, categorie:{type:"STRING"}, identification:{type:"STRING"},
+    lot:{type:"BOOLEAN"}, lotNb:{type:"NUMBER"},
     code:{type:"STRING"}, codeOu:{type:"STRING"},
     attendu:{type:"ARRAY",items:{type:"OBJECT",properties:{
       n:{type:"STRING"}, vu:{type:"STRING"}, cle:{type:"BOOLEAN"}}}},
@@ -2118,6 +2129,12 @@ let FICHE = null;
 
 /* Les éléments attendus arrivent maintenant constatés : vu = oui / non / ?.
    On accepte encore l'ancien format (simple texte) pour ne rien casser. */
+/* « JEUX_VIDEO » s'affichait tel quel. */
+function catJoli(c){
+  const t = String(c || "").replace(/[_-]+/g, " ").trim().toLowerCase();
+  return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+}
+
 function attNorm(a){
   if(!Array.isArray(a)) return [];
   return a.map(x => {
@@ -2143,7 +2160,8 @@ function ficheNorm(j){
   const n = Math.round(Number(j.etatNote) || 0);
   const g = String(j.gabarit || "petit").toLowerCase();
   return {
-    objet: j.objet || "", categorie: j.categorie || "", identification: j.identification || "",
+    objet: j.objet || "", categorie: catJoli(j.categorie), identification: j.identification || "",
+    lot: j.lot === true, lotNb: Math.max(0, Math.round(Number(j.lotNb) || 0)),
     code: j.code || "", codeOu: j.codeOu || "",
     attendu: attNorm(j.attendu),
     impactComplet: j.impactComplet || "",
@@ -2192,9 +2210,12 @@ function ficheMien(f, c){
 
 function ficheCalc(f){
   const base = f.marcheReel || f.marche || 0;
-  const port = PORT_COUT[f.gabarit] || 0;
-  const ce = ETAT_COEF[f.etat] !== undefined ? ETAT_COEF[f.etat] : 0.6;
-  const cc = COMPLET_COEF[f.complet] !== undefined ? COMPLET_COEF[f.complet] : 0.75;
+  const port = Math.min(PORT_COUT[f.gabarit] || 0, Math.round(base * PORT_PART_MAX));
+  const ce = ETAT_COEF[f.etat] !== undefined ? ETAT_COEF[f.etat] : 0.9;
+  /* Un lot en vrac n'a pas de version « complète » : le prix constaté porte
+     déjà sur un tas de pièces sans boîtes. Lui appliquer une décote
+     d'incomplétude, c'est facturer deux fois le même défaut. */
+  const cc = f.lot ? 1 : (COMPLET_COEF[f.complet] !== undefined ? COMPLET_COEF[f.complet] : 1);
 
   /* Ce que tu encaisses réellement : le prix de référence corrigé de l'état et
      de la complétude, moins le port que tu avanceras. */
@@ -2288,15 +2309,23 @@ function ficheAction(f, c, dem){
   if(absent.some(x => x.cle)) alerte = "Il manque " + absent.filter(x => x.cle)[0].n + " : prix déjà corrigé.";
   else if(incertain.length) alerte = "Vérifie d'abord : " + incertain.slice(0,2).map(x => x.n).join(", ") + ".";
 
+  /* Sur un lot, un chiffre nu est ambigu : 1 € la figurine ou 1 € le tas ?
+     On le dit, et on donne le prix unitaire pour pouvoir négocier au détail. */
+  const pour = f.lot ? " pour le lot" + (f.lotNb ? " de " + f.lotNb + " pièces" : "") : "";
+  const unite = (f.lot && f.lotNb > 1)
+    ? "Soit " + (c.plafond / f.lotNb).toFixed(2).replace(".", ",") + " € la pièce — utile s'il veut vendre au détail."
+    : "";
+
   let phrase, cls = "oui";
   if(dem && dem <= c.ouverture){ phrase = "Il en demande " + dem + " € : ne négocie pas, prends."; }
   else if(dem && dem > c.plafond){ phrase = "Il en demande " + dem + " €. Repose-le."; cls = "non"; }
-  else if(dem){ phrase = "Propose " + c.ouverture + " €. Tu peux monter jusqu'à " + c.plafond + " €."; }
-  else { phrase = "Propose " + c.ouverture + " €. Ne dépasse pas " + c.plafond + " €."; }
+  else if(dem){ phrase = "Propose " + c.ouverture + " €. Tu peux monter jusqu'à " + c.plafond + " €" + pour + "."; }
+  else { phrase = "Propose " + c.ouverture + " €. Ne dépasse pas " + c.plafond + " €" + pour + "."; }
 
   return `<div class="acte ${cls}">
-    <div class="acte-n"><b>${c.plafond}€</b><span>ton maximum</span></div>
-    <div class="acte-t"><b>${phrase}</b>${alerte ? `<span>${esc(alerte)}</span>` : ""}</div>
+    <div class="acte-t"><b>${phrase}</b>
+      ${alerte ? `<span>${esc(alerte)}</span>` : ""}
+      ${unite ? `<span class="acte-u">${unite}</span>` : ""}</div>
   </div>`;
 }
 
@@ -2339,7 +2368,7 @@ function fichePrix(f, c, dem){
       <b>${c.base}€</b> le marché${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}
       · <b>×${c.ce}</b> état · <b>×${c.cc}</b> complétude
       ${c.port ? ` · <b>−${c.port}€</b> de volume` : ""}
-      → <b>${c.net}€</b> nets pour toi
+      → <b>${c.net}€</b> nets pour toi${f.lot && f.lotNb > 1 ? ` (le lot de ${f.lotNb})` : ""}
     </div>
     ${ficheMien(f, c)}
     ${dem ? `<div class="px-dem">${dem <= c.cible
@@ -2457,7 +2486,10 @@ function renderResult(j, images, avis) {
   const vd = ficheVerdict(f, c, dem);
 
   const conf = (f.confiance || "").toLowerCase();
-  const cKey = conf.startsWith("haut") ? "h" : conf.startsWith("moy") ? "m" : "f";
+  /* « Cote vérifiée » se mérite : sans source extérieure (Discogs ou une vente
+     que tu as conclue), c'est l'avis du modèle sur lui-même. On plafonne. */
+  let cKey = conf.startsWith("haut") ? "h" : conf.startsWith("moy") ? "m" : "f";
+  if(cKey === "h" && !f.marcheReel) cKey = "m";
   const cTxt = {h:"Cote vérifiée", m:"Cote partielle", f:"Estimation"}[cKey];
 
   const imgHtml = (images && images.length)
