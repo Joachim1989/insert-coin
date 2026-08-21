@@ -65,6 +65,40 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .tick2{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
 .tick2 input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:2px}
 .tick2 i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text-muted)}
+.vf-court{margin-top:12px}
+.acte-plat .vf-row{margin-top:11px}
+.acte-plat .vf-row input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;padding:11px;color:var(--text);font-family:var(--cond);font-size:19px;outline:none}
+.vf-h{font-size:12.5px;line-height:1.5;color:var(--text-muted);margin-bottom:11px}
+.vf-g{display:grid;gap:7px;margin-bottom:14px}
+.vf{display:block;text-decoration:none;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;padding:11px 13px}
+.vf b{display:block;font-family:var(--cond);font-size:16px;color:var(--gold);letter-spacing:.4px}
+.vf i{display:block;font-family:var(--mono);font-size:9.5px;font-style:normal;color:var(--text-muted);margin-top:2px}
+.vf em{display:block;font-family:var(--mono);font-size:10px;font-style:normal;color:var(--text);
+  opacity:.55;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vf-in{background:var(--bg);border:1px solid var(--gold-dim);border-radius:11px;padding:12px 13px}
+.vf-in label{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--gold);margin-bottom:8px}
+.vf-in label i{display:block;font-style:normal;text-transform:none;letter-spacing:0;
+  color:var(--text-muted);font-size:10px;margin-top:3px}
+.vf-row{display:flex;gap:7px}
+.vf-row input{flex:1;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:9px;
+  padding:11px;color:var(--text);font-family:var(--cond);font-size:21px;font-weight:700;outline:none}
+.vf-row button{background:var(--gold);color:#14110f;border:0;border-radius:9px;padding:0 15px;
+  font-family:var(--cond);font-size:14px;text-transform:uppercase;letter-spacing:.6px;cursor:pointer}
+.vf-ok{margin-top:9px;font-size:12px;line-height:1.5;color:var(--go)}
+.vf-x{display:block;margin-top:6px;background:none;border:0;color:var(--text-muted);
+  font-family:var(--mono);font-size:10px;text-decoration:underline;cursor:pointer;padding:0}
+.cmp{display:grid;gap:6px;margin-top:14px}
+.cmp-l{display:flex;align-items:center;gap:9px;text-decoration:none;background:var(--bg);
+  border:1px solid var(--border);border-radius:9px;padding:9px 11px}
+.cmp-l b{font-family:var(--cond);font-size:18px;color:var(--text);flex:0 0 auto}
+.cmp-l span{flex:1;font-size:12px;line-height:1.4;color:var(--text-muted)}
+.cmp-l i{font-family:var(--mono);font-size:9.5px;font-style:normal;color:var(--gold);
+  border:1px solid var(--gold-dim);border-radius:5px;padding:3px 7px}
+.cmp-l.muet{opacity:.6}
+.cmp-n{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:7px;line-height:1.5}
 .bc-btn{width:100%;display:flex;align-items:center;gap:11px;background:var(--surface);
   border:1px solid var(--gold-dim);border-radius:14px;padding:14px 16px;cursor:pointer;margin-bottom:14px;flex-wrap:wrap}
 .bc-btn .ico16{width:19px;height:19px;color:var(--gold);flex:0 0 19px}
@@ -1086,7 +1120,7 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 5.2 « Terrain »
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 5.4 « Terrain »
   </p>
 </div>
 
@@ -1661,7 +1695,9 @@ Justifie en une phrase à partir de CE QUE TU VOIS sur la photo. Si tu ne vois p
 4. COMBIEN EN CIRCULE-T-IL ?
 C'est ce qui sépare la pièce rare de l'objet banal. Cherche les VENTES TERMINÉES (eBay, Vinted, Discogs, Catawiki), jamais les prix demandés.
 "circulation" : "rare", "peu courant", "courant" ou "massif". Un titre pressé en masse ne vaut presque rien même dans une catégorie rentable — dis-le sans détour.
-"marche" = le prix auquel un exemplaire en BON ÉTAT D'USAGE (note 3) se vend réellement, en euros, tel que tu le constates dans les ventes terminées. C'est le prix de référence : l'app applique ensuite les écarts d'état et de complétude. N'anticipe aucune décote toi-même, tu la compterais en double.
+"marche" = le prix auquel un exemplaire en BON ÉTAT D'USAGE (note 3) se vend réellement, en euros, tel que tu le constates dans les ventes terminées.
+UN SEUL NOMBRE, JAMAIS UNE FOURCHETTE NI DE TEXTE : écris 15, pas "10-20" ni "environ 15 €".
+CE CHAMP EST OBLIGATOIRE ET NE PEUT PAS ÊTRE VIDE NI ZÉRO. Si tes recherches ne donnent rien, donne quand même ton meilleur ordre de grandeur d'après ce que tu connais du marché, et mets "confiance":"faible". Un chineur devant un vendeur a besoin d'un repère chiffré : refuser de répondre ne le protège pas, ça le laisse sans rien. C'est le niveau de confiance qui dit ce que vaut le chiffre, pas son absence. C'est le prix de référence : l'app applique ensuite les écarts d'état et de complétude. N'anticipe aucune décote toi-même, tu la compterais en double.
 
 S'IL S'AGIT D'UN LOT (plusieurs objets vendus ensemble : un tas de figurines, une pile de disques, un carton de jouets) :
 - mets "lot": true et "lotNb" = le nombre de pièces que tu comptes.
@@ -1674,9 +1710,11 @@ Sinon, mets "lot": false.
 Un objet volumineux à petit prix est une mauvaise affaire déguisée en bonne.
 
 RÈGLES GÉNÉRALES
-- Ne fabrique aucun chiffre. Si tu ne sais pas, mets "confiance":"faible" et dis-le.
+- Distingue ce que tu as trouvé de ce que tu estimes : les ventes trouvées vont dans "comparables", ton estimation va dans "marche" et se qualifie par "confiance" (haute / moyenne / faible). Tu donnes toujours une estimation ; tu n'inventes jamais une vente.
 - Signale toute variante, premier pressage, édition limitée, erreur d'impression ou tirage régional qui vaut nettement plus que la version courante, et dis comment la distinguer À L'ŒIL dans "verifs".
-- "preuves" : des constats CHIFFRÉS avec leur source, tirés de tes recherches. C'est son argument face au vendeur.
+- "comparables" : les ventes réelles que tes recherches ont trouvées, une par entrée, avec {"source":"eBay|Vinted|Discogs|PriceCharting|...","titre":"ce qui a été vendu, état compris","etat":"","prix":nombre en euros,"date":"","url":"le lien exact vers l'annonce ou la page consultée"}.
+  Mets l'URL dès que tu en as une : une affirmation qu'il peut ouvrir vaut dix fois une affirmation. Si tu n'as pas de lien, laisse "url" vide plutôt que d'en inventer un.
+  Trois entrées suffisent. Cette liste ne contient QUE des ventes réellement trouvées : si tu n'en as trouvé aucune, renvoie une liste vide — cela n'empêche pas de remplir "marche", qui reste obligatoire.
 - "nego" : l'ARGUMENT que le chineur oppose au vendeur, en français parlé, court, appuyé sur un fait vérifiable (nombre d'exemplaires en circulation, défaut visible, édition courante). NE CITE JAMAIS DE PRIX ni de montant dans cette phrase : le chiffre est calculé par l'application à partir de l'état réel constaté, et un montant venant de toi le contredirait devant le vendeur. Écris l'argument seul, l'app ajoute l'offre.
 - "pieges" : ce qui peut transformer une bonne affaire en perte sur CET objet précis (contrefaçon, réédition, corrosion de piles, disque rayé, boîte vide).
 
@@ -1687,7 +1725,7 @@ RÈGLES GÉNÉRALES
    contradictoires dans le même prompt. */
 const BRIEF_JSON = `
 Réponds UNIQUEMENT en JSON, sans texte autour, avec ces clés :
-objet, categorie, lot, lotNb, identification, code, codeOu, attendu[] (chaque entrée : {"n":"nom de l'élément","vu":"oui|non|?","perte":nombre}), impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, preuves[], verifs[], pieges[], nego, note.`;
+objet, categorie, lot, lotNb, identification, code, codeOu, attendu[] (chaque entrée : {"n":"nom de l'élément","vu":"oui|non|?","perte":nombre}), impactComplet, echelle, etatNote, etatDit, circulation, marche, gabarit, confiance, comparables[], verifs[], pieges[], nego, note.`;
 
 /* ---------- Les barèmes ----------
    Ils sont dans l'app, pas dans le prompt : un modèle qui improvise ses propres
@@ -1825,7 +1863,9 @@ const SCHEMA_SINGLE = {
     echelle:{type:"STRING"}, etatNote:{type:"NUMBER"}, etatDit:{type:"STRING"},
     circulation:{type:"STRING"}, marche:{type:"NUMBER"}, gabarit:{type:"STRING"},
     confiance:{type:"STRING"},
-    preuves:{type:"ARRAY",items:{type:"STRING"}},
+    comparables:{type:"ARRAY",items:{type:"OBJECT",properties:{
+      source:{type:"STRING"}, titre:{type:"STRING"}, etat:{type:"STRING"},
+      prix:{type:"NUMBER"}, date:{type:"STRING"}, url:{type:"STRING"}}}},
     verifs:{type:"ARRAY",items:{type:"STRING"}},
     pieges:{type:"ARRAY",items:{type:"STRING"}},
     nego:{type:"STRING"}, note:{type:"STRING"}
@@ -2209,6 +2249,22 @@ let FICHE = null;
 /* Les éléments attendus arrivent maintenant constatés : vu = oui / non / ?.
    On accepte encore l'ancien format (simple texte) pour ne rien casser. */
 /* « JEUX_VIDEO » s'affichait tel quel. */
+/* Avec la recherche web activée, Google interdit d'imposer un schéma de
+   réponse : le modèle écrit ce qu'il veut. Il renvoie régulièrement "10-20 €",
+   "environ 15", "12,50" ou "~8 EUR" au lieu d'un nombre. Number() rendait NaN,
+   qui devenait 0, et l'app affichait « PAS DE PRIX FIABLE » sur une analyse
+   pourtant réussie. On lit désormais le chiffre où qu'il soit. */
+function nombre(v){
+  if(typeof v === "number") return isFinite(v) ? v : 0;
+  const t = String(v || "").replace(/\s/g, "").replace(/,(\d)/g, ".$1");
+  const nb = (t.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(isFinite);
+  if(!nb.length) return 0;
+  /* Une fourchette « 10-20 » se lit par son milieu : c'est ce que le modèle
+     voulait dire, et c'est ce qu'un chineur en retiendrait. */
+  if(nb.length >= 2 && /\d\s*(?:-|–|à|a|et)\s*\d/.test(String(v))) return (nb[0] + nb[1]) / 2;
+  return nb[0];
+}
+
 function catJoli(c){
   const t = String(c || "").replace(/[_-]+/g, " ").trim().toLowerCase();
   return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
@@ -2221,7 +2277,7 @@ function attNorm(a){
     if(!x || typeof x !== "object") return null;
     const v = String(x.vu || "").toLowerCase();
     /* On accepte l'ancien format (cle: true/false) en lui donnant un poids. */
-    let pe = Number(x.perte);
+    let pe = nombre(x.perte);
     if(!isFinite(pe) || pe < 0) pe = (x.cle !== false) ? PERTE_DEFAUT.cle : PERTE_DEFAUT.autre;
     return {n: x.n || x.nom || "", vu: (v === "oui" || v === "non") ? v : "?",
             perte: Math.min(90, Math.round(pe)), cle: x.cle !== false};
@@ -2239,25 +2295,26 @@ function attCoef(att){
 function attManquants(att){ return att.filter(x => x.vu === "non"); }
 
 function ficheNorm(j){
-  const n = Math.round(Number(j.etatNote) || 0);
+  const n = Math.round(nombre(j.etatNote));
   const g = String(j.gabarit || "petit").toLowerCase();
   return {
     objet: j.objet || "", categorie: catJoli(j.categorie), identification: j.identification || "",
-    lot: j.lot === true, lotNb: Math.max(0, Math.round(Number(j.lotNb) || 0)),
+    lot: j.lot === true, lotNb: Math.max(0, Math.round(nombre(j.lotNb))),
     code: j.code || "", codeOu: j.codeOu || "",
     attendu: attNorm(j.attendu),
     impactComplet: j.impactComplet || "",
     echelle: j.echelle || "", etatDit: j.etatDit || "",
     circulation: String(j.circulation || "").toLowerCase(),
-    marche: Number(j.marche) || 0,
+    marche: nombre(j.marche),
     gabarit: PORT_COUT[g] !== undefined ? g : "petit",
-    confiance: j.confiance || "", preuves: j.preuves || [], verifs: j.verifs || [],
+    confiance: j.confiance || "", verifs: j.verifs || [],
     pieges: j.pieges || [], nego: j.nego || "", note: j.note || "",
     /* Réglages du chineur : ce que TOI tu constates, pas ce que la photo suggère. */
     etat: (n >= 1 && n <= 5) ? n : 0,
 
     /* Renseignée après coup par Discogs quand le disque est identifié. */
-    marcheReel: 0, marcheSrc: "", mien: null
+    marcheReel: 0, marcheVu: 0, marcheSrc: "", mien: null,
+    comparables: compNorm(j.comparables && j.comparables.length ? j.comparables : j.preuves)
   };
 }
 
@@ -2291,7 +2348,8 @@ function ficheMien(f, c){
 }
 
 function ficheCalc(f){
-  const base = f.marcheReel || f.marche || 0;
+  /* Ordre de confiance : ce que tu as vu > une source de données > le modèle. */
+  const base = f.marcheVu || f.marcheReel || f.marche || 0;
   const port = Math.min(PORT_COUT[f.gabarit] || 0, Math.round(base * PORT_PART_MAX));
   const ce = ETAT_COEF[f.etat] !== undefined ? ETAT_COEF[f.etat] : 0.9;
   /* Somme des pertes des seuls éléments constatés absents. Un lot en vrac n'a
@@ -2377,8 +2435,23 @@ function fichePaint(){
    et le chiffre à ne pas dépasser. Tout le reste de la fiche est là pour après,
    ou pour les cas où tu veux comprendre. */
 function ficheAction(f, c, dem){
-  if(!c.base) return `<div class="acte-plat"><b>Pas de prix fiable</b>
-    <span>Le marché n'a pas pu être établi. Ne t'engage pas au-delà de ce que l'objet vaut pour toi.</span></div>`;
+  /* Un écran qui dit « pas de prix » et s'arrête là ne sert à rien devant un
+     vendeur. L'objet est identifié : on enchaîne directement sur la
+     vérification, requête déjà écrite, et sur le champ où poser le chiffre. */
+  if(!c.base) return `<div class="acte-plat">
+    <b>Prix à vérifier</b>
+    <span>L'objet est identifié, mais aucune vente n'a pu être confirmée.
+      Ouvre eBay ci-dessous — la recherche est déjà prête — et note ce que tu vois.</span>
+    <div class="vf-g vf-court">${VERIF_SITES.slice(0, 3).map(x => {
+      const q = verifQuery(f, x.pref);
+      return `<a class="vf" href="${x.url(q)}" target="_blank" rel="noopener"><b>${x.nom}</b><i>${x.note}</i></a>`;
+    }).join("")}</div>
+    <div class="vf-row">
+      <input id="vf-prix-h" type="number" inputmode="decimal" placeholder="Prix constaté €"
+        onchange="verifSet(this.value)">
+      <button onclick="verifSet(document.getElementById('vf-prix-h').value)">Recalculer</button>
+    </div>
+  </div>`;
   if(!c.plafond) return `<div class="acte-plat"><b>Passe ton chemin</b>
     <span>Ce que tu en tirerais ne couvrirait même pas l'emballage.</span></div>`;
 
@@ -2412,7 +2485,7 @@ function ficheAction(f, c, dem){
    phrases, à l'endroit exact où tu décides — et pas en petit caractères plus bas. */
 function ficheParce(f, c, absent){
   const l = [];
-  l.push(`<b>${c.base}€</b> — ce que ça se vend en bon état${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? ", le lot entier" : ""}`);
+  l.push(`<b>${c.base}€</b> — ${f.marcheVu ? "le prix que TU as constaté" : "ce que ça se vend en bon état"}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? ", le lot entier" : ""}`);
   if(c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — meilleur que l'état courant (${ETAT_LBL[f.etat].toLowerCase()})`);
   else if(c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — état ${ETAT_LBL[f.etat].toLowerCase()}`);
   absent.forEach(x => l.push(`<b>−${x.perte}%</b> — ${esc(x.n)} manque`));
@@ -2494,6 +2567,9 @@ function ficheCorps(f){
            ${f.impactComplet ? `<div class="fi-imp">${esc(f.impactComplet)}</div>` : ""}`
         : "", true)}
 
+    ${bloc("vf", "Vérifier le prix pour de vrai",
+      `<div id="vf-slot">${verifBloc(f)}</div>${compBloc(f.comparables)}`, !ficheCalc(f).base)}
+
     ${bloc("dg", "Ce qui peut te coûter cher" + (f.pieges.length ? ` <i>${f.pieges.length}</i>` : ""),
       listes(f.pieges) + listes(f.verifs), f.pieges.length > 0)}
 
@@ -2505,7 +2581,6 @@ function ficheCorps(f){
               : `<div class="fi-vide">${f.codeOu ? esc(f.codeOu) : "Aucune référence visible."}</div>`)
       + (f.identification ? `<div class="ident">${esc(f.identification)}</div>` : "")
       + (ci ? `<div class="fi-circ ${ci[1]}">${ci[0]}</div>` : "")
-      + listes(f.preuves)
       + (f.note ? `<div class="aimeta">${esc(f.note)}</div>` : ""), false)}`;
 }
 
@@ -3683,7 +3758,7 @@ async function discGreffe(query, cibleId){
        complétude s'appliquent par-dessus : c'est ça, le prix de CET exemplaire. */
     if(c && cibleId === 'disc-slot' && FICHE){
       const l = discLire(c);
-      if(l.revente){
+      if(l.revente && !FICHE.marcheVu){
         FICHE.marcheReel = l.revente;
         FICHE.marcheSrc = "Discogs · " + c.envente + " en vente";
         FICHE.circulation = c.envente > 150 ? "massif" : c.envente > 40 ? "courant"
@@ -3747,6 +3822,99 @@ async function discTest(){
 }
 
 
+
+
+/* ══════════════════ VÉRIFIER POUR DE VRAI ══════════════════
+   Aucune API gratuite ne donne les prix de VENTE : eBay a fermé la sienne,
+   Vinted n'en a jamais eu, PriceCharting fait payer la sienne. Un modèle qui
+   « a cherché sur le web » produit une phrase, pas une preuve.
+
+   Alors on ne simule pas : on met les vraies recherches à un doigt. Deux
+   secondes pour ouvrir les ventes conclues d'eBay avec la bonne requête déjà
+   tapée — c'est plus fiable que n'importe quelle estimation, et c'est
+   exactement ce que fait un professionnel devant un stand. */
+function verifQuery(f, pref){
+  const code = String(f.code || "").trim();
+  const obj = String(f.objet || "").replace(/\s+/g, " ").trim();
+  /* Une référence alphanumérique (PCSB-00315, AMLH 68348) est bien plus
+     discriminante qu'un titre — mais seulement sur les sites qui l'indexent. */
+  const refUtile = code.length >= 5 && /\d/.test(code) && /[A-Za-z-]/.test(code);
+  if(pref === "ref" && refUtile) return code;
+  if(pref === "ref+" && refUtile) return code + " " + obj.slice(0, 40);
+  return obj;
+}
+
+const VERIF_SITES = [
+  {id:"ebay", nom:"eBay · ventes conclues", note:"le seul vrai prix payé", pref:"ref",
+   url: q => "https://www.ebay.fr/sch/i.html?_nkw=" + encodeURIComponent(q) + "&LH_Sold=1&LH_Complete=1&_sop=13"},
+  {id:"vinted", nom:"Vinted", note:"prix demandés, pas encore vendus", pref:"obj",
+   url: q => "https://www.vinted.fr/catalog?search_text=" + encodeURIComponent(q) + "&order=newest_first"},
+  {id:"pc", nom:"PriceCharting", note:"jeux vidéo, cotes par état", pref:"obj",
+   url: q => "https://www.pricecharting.com/search-products?q=" + encodeURIComponent(q) + "&type=prices"},
+  {id:"lbc", nom:"Leboncoin", note:"le marché local, souvent moins cher", pref:"obj",
+   url: q => "https://www.leboncoin.fr/recherche?text=" + encodeURIComponent(q)},
+  {id:"goo", nom:"Google", note:"tout le reste", pref:"ref+",
+   url: q => "https://www.google.com/search?q=" + encodeURIComponent(q + " prix vendu occasion")}
+];
+
+function verifBloc(f){
+  const liens = VERIF_SITES.map(s => {
+    const q = verifQuery(f, s.pref);
+    return `<a class="vf" href="${s.url(q)}" target="_blank" rel="noopener">
+      <b>${s.nom}</b><i>${s.note}</i>
+      <em>${esc(q.length > 34 ? q.slice(0, 34) + "…" : q)}</em></a>`;
+  }).join("");
+
+  const base = ficheCalc(f).base;
+  return `<div class="vf-h">La requête est déjà écrite : un doigt, tu vois les vrais prix.</div>
+    <div class="vf-g">${liens}</div>
+    <div class="vf-in">
+      <label>Prix constaté <i>ce que tu viens de voir, pour un exemplaire en bon état</i></label>
+      <div class="vf-row">
+        <input id="vf-prix" type="number" inputmode="decimal" placeholder="${base || "—"}"
+          value="${f.marcheVu || ""}" onchange="verifSet(this.value)">
+        <button onclick="verifSet(document.getElementById('vf-prix').value)">Recalculer</button>
+      </div>
+      ${f.marcheVu ? `<div class="vf-ok">Prix vérifié par toi : tout le calcul repose dessus.
+        <button class="vf-x" onclick="verifSet('')">Revenir à l'estimation</button></div>` : ""}
+    </div>`;
+}
+
+/* Ce que tu as vu de tes yeux prime sur tout : Discogs, Rebrickable, le modèle. */
+function verifSet(v){
+  if(!FICHE) return;
+  const n = parseFloat(String(v).replace(",", ".")) || 0;
+  FICHE.marcheVu = n > 0 ? n : 0;
+  if(FICHE.marcheVu) FICHE.marcheSrc = "vérifié par toi";
+  vib();
+  fichePaint();
+  const bl = $('vf-slot');
+  if(bl) bl.innerHTML = verifBloc(FICHE);
+}
+
+/* Les constats chiffrés que le modèle rapporte, avec leur lien quand il en a
+   un : une affirmation vérifiable vaut mieux qu'une affirmation. */
+function compNorm(a){
+  if(!Array.isArray(a)) return [];
+  return a.map(x => {
+    if(typeof x === "string") return {t: x, url: "", prix: 0};
+    if(!x || typeof x !== "object") return null;
+    return {t: [x.source, x.titre, x.etat, x.date].filter(Boolean).join(" · ") || String(x.titre || ""),
+            prix: nombre(x.prix),
+            url: /^https?:\/\//.test(String(x.url || "")) ? x.url : ""};
+  }).filter(x => x && (x.t || x.prix));
+}
+
+function compBloc(comp){
+  if(!comp.length) return "";
+  return `<div class="cmp">${comp.map(c => {
+    const dedans = `${c.prix ? `<b>${c.prix}€</b>` : ""}<span>${esc(c.t)}</span>`;
+    return c.url
+      ? `<a class="cmp-l" href="${c.url}" target="_blank" rel="noopener">${dedans}<i>voir</i></a>`
+      : `<div class="cmp-l muet">${dedans}</div>`;
+  }).join("")}</div>
+  <div class="cmp-n">Rapporté par l'IA. Ce qui n'a pas de lien n'a pas été vérifié.</div>`;
+}
 
 /* ══════════════════ LECTEUR DE CODE-BARRES ══════════════════
    Le geste le plus rapide de l'app : viser, c'est identifié. Pas d'analyse
@@ -3971,7 +4139,7 @@ async function legoGreffe(f, cibleId){
        pas une estimation. */
     if(FICHE){
       const v = legoValeur(c);
-      if(v.total > 0){
+      if(v.total > 0 && !FICHE.marcheVu){
         FICHE.marcheReel = v.total;
         FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + c.figs + " figurines";
         fichePaint();
