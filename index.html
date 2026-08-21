@@ -65,6 +65,80 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .tick2{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
 .tick2 input{width:21px;height:21px;accent-color:var(--gold);flex:0 0 auto;margin-top:2px}
 .tick2 i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--text-muted)}
+.bc-btn{width:100%;display:flex;align-items:center;gap:11px;background:var(--surface);
+  border:1px solid var(--gold-dim);border-radius:14px;padding:14px 16px;cursor:pointer;margin-bottom:14px;flex-wrap:wrap}
+.bc-btn .ico16{width:19px;height:19px;color:var(--gold);flex:0 0 19px}
+.bc-btn b{font-family:var(--cond);font-size:17px;text-transform:uppercase;letter-spacing:.8px;color:var(--gold)}
+.bc-btn span{flex:1 0 100%;font-family:var(--mono);font-size:9.5px;color:var(--text-muted);padding-left:30px}
+.bc-overlay{display:none;position:fixed;inset:0;z-index:200;background:#000}
+.bc-overlay.on{display:block}
+.bc-overlay video{width:100%;height:100%;object-fit:cover}
+.bc-cadre{position:absolute;top:50%;left:8%;width:84%;height:150px;transform:translateY(-50%);
+  border:2px solid var(--gold);border-radius:14px;box-shadow:0 0 0 100vmax rgba(0,0,0,.55)}
+.bc-msg{position:absolute;top:calc(50% + 100px);left:0;right:0;text-align:center;color:#fff;
+  font-family:var(--cond);font-size:17px;letter-spacing:.8px;text-transform:uppercase;text-shadow:0 1px 4px #000}
+.bc-close{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);background:var(--surface);
+  color:var(--text);border:1px solid var(--border);border-radius:10px;padding:13px 30px;
+  font-family:var(--cond);font-size:16px;text-transform:uppercase;letter-spacing:1px;cursor:pointer}
+.lego-tarif{display:flex;gap:8px;margin:10px 0}
+.lego-tarif label{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 11px;
+  font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted)}
+.lego-tarif input{width:100%;background:none;border:0;outline:none;color:var(--text);
+  font-family:var(--cond);font-size:19px;font-weight:700;padding:3px 0 0}
+.disc.lego{border-color:var(--go)}
+.disc.lego .disc-b{background:var(--go);color:#fff}
+
+/* ══ Écran Scan épuré ══ */
+.modes{display:flex;gap:6px;margin-bottom:9px}
+.md{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:11px;
+  padding:11px 4px;cursor:pointer;transition:background .15s}
+.md b{font-family:var(--cond);font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted)}
+.md.on{background:var(--surface-light);border-color:var(--gold)}
+.md.on b{color:var(--gold)}
+.mode-dit{font-family:var(--mono);font-size:10.5px;line-height:1.5;color:var(--text-muted);
+  text-align:center;margin-bottom:14px;min-height:16px}
+.shoot{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin-bottom:12px}
+.shoot-b{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  border-radius:16px;padding:26px 10px;cursor:pointer;border:1px solid var(--gold-dim);background:var(--surface)}
+.shoot-b.cam{background:var(--gold);border-color:var(--gold);padding:34px 10px}
+.shoot-b b{font-family:var(--cond);font-size:20px;text-transform:uppercase;letter-spacing:1px;color:var(--text)}
+.shoot-b span{font-family:var(--mono);font-size:9.5px;color:var(--text-muted);letter-spacing:.3px}
+.shoot-b.cam b,.shoot-b.cam span{color:#14110f}
+.shoot-b.cam span{opacity:.7}
+.shoot-b .ico-cam{width:30px;height:30px;color:var(--text)}
+.shoot-b.cam .ico-cam{width:38px;height:38px;color:#14110f}
+.askprix input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:15px;color:var(--text);font-family:var(--cond);font-size:17px;outline:none;text-align:center}
+.askprix{margin-bottom:16px}
+.autres{margin-top:22px;border-top:1px solid var(--border);padding-top:14px}
+.autres summary{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--text-muted);cursor:pointer;list-style:none;text-align:center}
+.autres summary::-webkit-details-marker{display:none}
+.autres summary::after{content:" ▾"}
+.autres[open] summary::after{content:" ▴"}
+.autres-in{padding-top:14px}
+.autres-modes{display:grid;gap:7px;margin:12px 0}
+.autres-modes button{text-align:left;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:11px 13px;cursor:pointer}
+.autres-modes b{display:block;font-family:var(--cond);font-size:15px;color:var(--text)}
+.autres-modes span{display:block;font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:2px}
+
+/* ══ Fiche : un bloc ouvert à la fois ══ */
+.say{margin:0 14px 14px;padding:13px 15px;background:var(--bg);border-left:3px solid var(--gold);
+  border-radius:0 10px 10px 0;font-size:15px;line-height:1.45;font-style:italic;color:var(--text)}
+.bl{border-top:1px solid var(--border)}
+.bl summary{display:flex;align-items:center;gap:8px;padding:13px 0;cursor:pointer;list-style:none;
+  font-family:var(--cond);font-size:15px;text-transform:uppercase;letter-spacing:.8px;color:var(--gold)}
+.bl summary::-webkit-details-marker{display:none}
+.bl summary::after{content:"▾";margin-left:auto;opacity:.6}
+.bl[open] summary::after{content:"▴"}
+.bl summary i{font-family:var(--mono);font-size:10px;font-style:normal;background:var(--surface-light);
+  color:var(--text-muted);border-radius:20px;padding:2px 7px}
+.bl-in{padding-bottom:14px}
+.bl-in ul{margin:0 0 10px;padding-left:18px;font-size:13.5px;line-height:1.55}
+.bl-in li{margin-bottom:5px}
+.bl-in .ident{margin:10px 0}
+.act-grid.deux{grid-template-columns:1fr auto}
 .acte{padding:15px 14px;border-bottom:1px solid var(--border);background:var(--surface-light)}
 .acte-t b{display:block;font-size:19px;line-height:1.35;color:var(--text)}
 .acte-t span{display:block;font-size:12.5px;line-height:1.45;color:var(--mid);margin-top:7px}
@@ -589,13 +663,14 @@ h3.sect i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--t
 .chip.active { background: var(--gold-dim); color: #fff; border-color: var(--gold); }
 
 /* MULTI PHOTO INDICATOR */
-.photo-queue { display: none; gap: 10px; overflow-x: auto; margin-bottom: 15px; padding: 10px; background: var(--surface); border-radius: 12px; border: 1px dashed var(--gold-dim); flex-direction: column; }
-.photo-queue.active { display: flex; }
+.photo-queue { display: none; margin-bottom: 15px; padding: 11px; background: var(--surface); border-radius: 14px; border: 1px dashed var(--gold-dim); }
+.photo-queue-imgs-container { margin-bottom: 11px; }
+.photo-queue.active { display: block; }
 .photo-queue-imgs-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
 .photo-thumb { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 2px solid var(--gold); position: relative; }
 .photo-thumb-wrap { position: relative; flex-shrink: 0; }
 .photo-remove { position: absolute; top: -5px; right: -5px; background: var(--stop); color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: pointer; border: none; }
-.analyze-multi-btn { background: var(--gold); color: #000; border: none; border-radius: 8px; font-family: var(--cond); font-weight: bold; padding: 12px 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+.analyze-multi-btn { width:100%; background: var(--gold); color: #14110f; border: none; border-radius: 12px; font-family: var(--cond); font-weight: 700; font-size:20px; padding: 17px 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1.2px; }
 
 /* VERDICTS FILTER */
 .verdicts { display: flex; gap: 6px; margin-bottom: 15px; }
@@ -774,13 +849,18 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
 
 <!-- VIEW: LIVE SEARCH (Main) -->
 <svg id="sprite" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-scan" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="3" y="0" width="5" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="3" y="10" width="7" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="9" y="12" width="3" height="1"/><rect x="10" y="13" width="3" height="1"/><rect x="11" y="14" width="2" height="1"/></symbol><symbol id="i-crate" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="2" height="1" opacity=".45"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="2" height="1" opacity=".45"/><rect x="12" y="3" width="1" height="1" opacity=".45"/><rect x="14" y="3" width="1" height="1"/><rect x="1" y="4" width="14" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1" opacity=".45"/><rect x="5" y="5" width="2" height="1" opacity=".45"/><rect x="8" y="5" width="2" height="1" opacity=".45"/><rect x="11" y="5" width="2" height="1" opacity=".45"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="14" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="3" y="8" width="2" height="1" opacity=".45"/><rect x="6" y="8" width="2" height="1" opacity=".45"/><rect x="9" y="8" width="2" height="1" opacity=".45"/><rect x="12" y="8" width="1" height="1" opacity=".45"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="14" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="5" y="11" width="2" height="1" opacity=".45"/><rect x="8" y="11" width="2" height="1" opacity=".45"/><rect x="11" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol><symbol id="i-target" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="7" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="6" y="11" width="4" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="13" y="12" width="1" height="1"/><rect x="3" y="13" width="2" height="1"/><rect x="11" y="13" width="2" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-cash" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="8" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="6" y="4" width="2" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="3" y="8" width="8" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="0" y="10" width="14" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="2" y="12" width="14" height="1"/><rect x="2" y="13" width="1" height="1"/><rect x="15" y="13" width="1" height="1"/><rect x="2" y="14" width="14" height="1"/></symbol><symbol id="i-pad" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="2" width="12" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="14" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="15" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/><rect x="15" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="9" y="6" width="2" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="10" y="9" width="2" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></symbol><symbol id="i-queue" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="12" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="11" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="4" height="1" opacity=".45"/><rect x="10" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="6" y="5" width="2" height="1" opacity=".45"/><rect x="9" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="6" y="8" width="2" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="6" y="10" width="2" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="4" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="4" y="12" width="6" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="1" y="13" width="1" height="1"/><rect x="3" y="13" width="8" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="1" y="14" width="12" height="1"/></symbol><symbol id="i-tag" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="4" y="1" width="10" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="3" y="4" width="4" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/></symbol><symbol id="i-disk" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="3" y="2" width="8" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="13" y="3" width="2" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="2" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="8" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="3" y="9" width="10" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="5" y="10" width="6" height="1" opacity=".45"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="6" height="1" opacity=".45"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="5" y="12" width="6" height="1" opacity=".45"/><rect x="12" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="0" y="13" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="5" y="13" width="6" height="1" opacity=".45"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="0" y="14" width="15" height="1"/></symbol><symbol id="i-cal" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="1" width="2" height="1"/><rect x="12" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="12" y="2" width="2" height="1"/><rect x="1" y="3" width="14" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="2" height="1" opacity=".45"/><rect x="6" y="7" width="2" height="1" opacity=".45"/><rect x="9" y="7" width="2" height="1" opacity=".45"/><rect x="14" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="3" y="9" width="2" height="1" opacity=".45"/><rect x="6" y="9" width="2" height="1" opacity=".45"/><rect x="9" y="9" width="2" height="1" opacity=".45"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="2" height="1" opacity=".45"/><rect x="6" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/></symbol><symbol id="i-pin" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="6" y="7" width="4" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="3" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/></symbol><symbol id="i-sun" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="5" y="4" width="6" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="2" y="6" width="3" height="1"/><rect x="11" y="6" width="3" height="1"/><rect x="0" y="7" width="2" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="12" y="7" width="1" height="1"/><rect x="14" y="7" width="2" height="1"/><rect x="0" y="8" width="2" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="2" height="1"/><rect x="2" y="9" width="3" height="1"/><rect x="11" y="9" width="3" height="1"/><rect x="4" y="10" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/><rect x="5" y="11" width="6" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="7" y="12" width="2" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="7" y="14" width="2" height="1"/></symbol><symbol id="i-moon" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="4" height="1"/><rect x="4" y="2" width="4" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="1" y="5" width="5" height="1"/><rect x="1" y="6" width="5" height="1"/><rect x="1" y="7" width="5" height="1"/><rect x="1" y="8" width="5" height="1"/><rect x="1" y="9" width="5" height="1"/><rect x="1" y="10" width="6" height="1"/><rect x="2" y="11" width="5" height="1"/><rect x="3" y="12" width="6" height="1"/><rect x="4" y="13" width="8" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-flame" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="6" y="2" width="4" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="1" height="1"/><rect x="5" y="4" width="2" height="1"/><rect x="7" y="4" width="2" height="1" opacity=".45"/><rect x="9" y="4" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="6" y="5" width="4" height="1" opacity=".45"/><rect x="10" y="5" width="2" height="1"/><rect x="3" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1" opacity=".45"/><rect x="9" y="6" width="2" height="1" opacity=".45"/><rect x="11" y="6" width="2" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="4" y="7" width="2" height="1" opacity=".45"/><rect x="10" y="7" width="2" height="1" opacity=".45"/><rect x="12" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="4" y="8" width="1" height="1" opacity=".45"/><rect x="11" y="8" width="1" height="1" opacity=".45"/><rect x="12" y="8" width="2" height="1"/><rect x="1" y="9" width="2" height="1"/><rect x="3" y="9" width="1" height="1" opacity=".45"/><rect x="7" y="9" width="2" height="1"/><rect x="12" y="9" width="1" height="1" opacity=".45"/><rect x="13" y="9" width="2" height="1"/><rect x="1" y="10" width="2" height="1"/><rect x="3" y="10" width="1" height="1" opacity=".45"/><rect x="6" y="10" width="4" height="1"/><rect x="12" y="10" width="1" height="1" opacity=".45"/><rect x="13" y="10" width="2" height="1"/><rect x="1" y="11" width="2" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="6" y="11" width="4" height="1"/><rect x="12" y="11" width="1" height="1" opacity=".45"/><rect x="13" y="11" width="2" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="4" y="12" width="1" height="1" opacity=".45"/><rect x="6" y="12" width="4" height="1"/><rect x="11" y="12" width="1" height="1" opacity=".45"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="10" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-star" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="6" y="3" width="4" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="0" y="5" width="16" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="2" y="7" width="12" height="1"/><rect x="3" y="8" width="10" height="1"/><rect x="4" y="9" width="8" height="1"/><rect x="3" y="10" width="10" height="1"/><rect x="2" y="11" width="4" height="1"/><rect x="10" y="11" width="4" height="1"/><rect x="1" y="12" width="4" height="1"/><rect x="11" y="12" width="4" height="1"/><rect x="1" y="13" width="3" height="1"/><rect x="12" y="13" width="3" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol></svg>
+<div class="bc-overlay" id="bc-overlay">
+  <video id="bc-video" playsinline muted></video>
+  <div class="bc-cadre"></div>
+  <div class="bc-msg" id="bc-msg">Cadre le code-barres</div>
+  <button class="bc-close" onclick="bcFermer()">Annuler</button>
+</div>
+
 <div class="scoreov" id="score-screen"></div>
 <div class="imminent" id="imminent"></div>
 <div class="hud" id="hud">
-  <div class="hud-cell" onclick="switchView('log', document.querySelectorAll('.nav-item')[4])">
+  <div class="hud-cell" onclick="switchView('log')">
     <span class="hl">Score</span><b id="hud-score">—</b></div>
-  <div class="hud-cell" onclick="switchView('spots', document.querySelectorAll('.nav-item')[3])">
-    <span class="hl">Cibles</span><b id="hud-spots">0</b></div>
   <div class="hud-cell">
     <span class="hl">Crédits</span><b id="hud-cred">0</b></div>
   <div class="hud-cell" id="hud-q-cell" onclick="queueRun(true)">
@@ -788,101 +868,74 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
 </div>
 
 <div id="view-live" class="view active">
-  <h2 class="view-title">Recherche en direct 🎯</h2>
-  
-  <div class="camera-grid">
-    <button class="cam-btn large" onclick="triggerCamera('single')">
-      <i>📷</i>
-      Scanner un objet
-    </button>
-    <button class="cam-btn" onclick="triggerCamera('multi')">
-      <i>🖼️</i>
-      Plusieurs vues<br><small>(Défauts/Détails)</small>
-    </button>
-    <button class="cam-btn" onclick="triggerCamera('stand')">
-      <i>👁️</i>
-      Vue d'ensemble<br><small>(Qu'y a-t-il sur ce stand ?)</small>
-    </button>
-    <button class="cam-btn bac" onclick="triggerCamera('bac')">
-      <svg class="ico-cam"><use href="#i-crate"/></svg>
-      Mode Bac<br><small>(Chaque pièce du lot)</small>
-    </button>
+
+  <!-- Le mode d'abord : il décide de ce qu'on demande à l'IA, pas de la façon
+       de prendre la photo. Trois situations réelles sur un stand. -->
+  <div class="modes" id="modes">
+    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b>Un objet</b></button>
+    <button class="md" data-m="bac" onclick="modeSet('bac')"><b>Un lot</b></button>
+    <button class="md" data-m="stand" onclick="modeSet('stand')"><b>Un stand</b></button>
   </div>
-  
-  <div class="seg" id="src-seg" style="margin:0 0 14px">
-    <button data-s="ask" aria-pressed="true" onclick="srcSet('ask',this)">Photo ou galerie</button>
-    <button data-s="cam" aria-pressed="false" onclick="srcSet('cam',this)">Appareil photo direct</button>
+  <div class="mode-dit" id="mode-dit"></div>
+
+  <!-- Les deux gestes empilent dans la même pile : plusieurs vues du même objet
+       se prennent aussi bien à l'appareil qu'en piochant dans la galerie. -->
+  <div class="shoot">
+    <button class="shoot-b cam" onclick="triggerCamera(currentCameraMode, 'cam')">
+      <svg class="ico-cam"><use href="#i-scan"/></svg>
+      <b>Photographier</b>
+      <span id="shoot-cam-s">l'appareil s'ouvre</span>
+    </button>
+    <button class="shoot-b gal" onclick="triggerCamera(currentCameraMode, 'ask')">
+      <svg class="ico-cam"><use href="#i-crate"/></svg>
+      <b>Galerie</b>
+      <span>plusieurs à la fois</span>
+    </button>
   </div>
 
-  <!-- Deux entrées : sans capture, le téléphone propose l'appareil photo ET la galerie.
-       Avec capture, il ouvre directement l'objectif arrière — plus rapide sur un stand. -->
+  <div id="photo-queue" class="photo-queue">
+    <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
+    <button class="analyze-multi-btn" onclick="askAIGo()">Analyser</button>
+  </div>
+
+  <button class="bc-btn" onclick="bcOuvrir()">
+    <svg class="ico16"><use href="#i-scan"/></svg>
+    <b>Scanner le code-barres</b>
+    <span>identification exacte, instantanée</span>
+  </button>
+
+  <div class="askprix">
+    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé">
+  </div>
+
   <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
   <input type="file" id="file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleFileSelect(event)">
 
-  <div class="quick-macros">
-    <button class="macro-btn" onclick="setMacro('Est-ce une contrefaçon ou un original ? Détaille les signes.')">🧐 Vrai ou Faux ?</button>
-    <button class="macro-btn" onclick="setMacro('Que manque-t-il pour que cet objet soit considéré complet (CIB) ?')">📦 Complet ?</button>
-    <button class="macro-btn" onclick="setMacro('Estime cet objet dans cet état exact (usure visible).')">💸 Cote Rapide</button>
-  </div>
-
-  <!-- Multi photo staging area -->
   <div id="photo-queue" class="photo-queue">
     <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
     <button class="analyze-multi-btn" onclick="askAIMulti()">Analyser ces photos 🚀</button>
   </div>
 
-  <div class="search-wrap">
-    <div class="search-bar">
+  <div id="ai-results"></div>
+
+  <!-- Replié : sur un stand, on ne descend jamais jusqu'ici. -->
+  <details class="autres">
+    <summary>Autres façons de chercher</summary>
+    <div class="autres-in">
       <div class="search-input-wrap">
-        <input type="text" id="q" placeholder="Nom de l'objet ou instruction spéciale..." autocomplete="off" autocapitalize="off" required>
+        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required>
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
-    </div>
-    <div class="askrow">
-      <input id="price" type="number" inputmode="decimal" placeholder="Prix €" aria-label="Prix demandé">
-      <button id="ask" disabled>✨ Demander à l'IA</button>
-    </div>
-  </div>
+      <button id="ask" class="btn-save" disabled>Demander à l'IA</button>
 
-  <div id="ai-results"></div>
-  <div class="count" id="local-count"></div>
-  <div id="local-results" class="list"></div>
+      <div class="quick-macros">
+        <button class="macro-btn" onclick="setMacro('Est-ce une contrefaçon ou un original ? Détaille les signes.')">Vrai ou faux ?</button>
+        <button class="macro-btn" onclick="setMacro('Que manque-t-il pour que cet objet soit considéré complet (CIB) ?')">Complet ?</button>
+      </div>
+    </div>
+  </details>
 </div>
 
-<!-- VIEW: OFFLINE BASE -->
-<div id="view-offline" class="view">
-  <h2 class="view-title">Barème Local Complet 🎒</h2>
-  <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-bottom: 20px; font-family: var(--mono);">
-    Moyennes de catégorie, consultables sans réseau.
-  </p>
-
-  <div class="search-input-wrap" style="margin-bottom:14px">
-    <input type="text" id="q-base" placeholder="Chercher : lego, ampli, holo..." autocomplete="off" autocapitalize="off">
-    <div class="clear" onclick="baseClear()">✕</div>
-  </div>
-
-  <div class="chips" id="chips">
-    <div class="chip active" data-c="all">Tout</div>
-    <div class="chip" data-c="jv">🎮 JV</div>
-    <div class="chip" data-c="vin">💿 Vinyles</div>
-    <div class="chip" data-c="tec">📻 Tech</div>
-    <div class="chip" data-c="jou">🧸 Jouets</div>
-    <div class="chip" data-c="soc">🎲 Société</div>
-    <div class="chip" data-c="car">🃏 Cartes</div>
-    <div class="chip" data-c="pop">✨ Pop</div>
-  </div>
-
-  <div class="verdicts" id="verdicts-filter">
-    <button class="vf" data-v="R">Rafle</button>
-    <button class="vf" data-v="N">Négocie</button>
-    <button class="vf" data-v="L">Laisse</button>
-  </div>
-
-  <div class="count" id="base-count"></div>
-  <div id="full-offline-list" class="list"></div>
-</div>
-
-<!-- VIEW: GUIDE / PROFIL -->
 <div id="view-cal" class="view">
   <h2 class="view-title">Calendrier</h2>
   <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France.</p>
@@ -904,17 +957,6 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   <div id="cal-list"></div>
 </div>
 
-<div id="view-spots" class="view">
-  <h2 class="view-title">Objets repérés</h2>
-  <p class="view-sub">Ta liste pour la seconde passe. Les prix cèdent au remballage, vers 13 h.</p>
-  <div class="seg" id="spot-mode" style="margin-bottom:16px">
-    <button data-m="list" aria-pressed="true">Liste</button>
-    <button data-m="radar" aria-pressed="false"><svg class="ico16"><use href="#i-target"/></svg>Radar</button>
-  </div>
-  <div id="spots-list"></div>
-  <div id="spots-radar" style="display:none"></div>
-</div>
-
 <div id="view-log" class="view">
   <h2 class="view-title">Journal de chasse</h2>
   <div id="log-sum" class="logsum"></div>
@@ -929,30 +971,6 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   <h3 class="sect">Sorties archivées</h3>
   <div id="hist-list"></div>
   <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
-</div>
-
-<div id="view-vente" class="view">
-  <h2 class="view-title">Cash Out</h2>
-  <p class="view-sub">Ce qui ressort du stock. Le journal dit ce que tu as payé&nbsp;; ici tu suis ce que ça rapporte.</p>
-
-  <div id="vt-sum" class="logsum"></div>
-
-  <div class="seg" id="vt-filter" style="margin-bottom:16px">
-    <button data-f="all" aria-pressed="true" onclick="venteFiltre('all',this)">Tout</button>
-    <button data-f="todo" aria-pressed="false" onclick="venteFiltre('todo',this)">À publier</button>
-    <button data-f="live" aria-pressed="false" onclick="venteFiltre('live',this)">En vente</button>
-    <button data-f="done" aria-pressed="false" onclick="venteFiltre('done',this)">Vendu</button>
-  </div>
-
-  <div id="vt-blockers"></div>
-  <div id="vt-list"></div>
-
-  <button class="btn-save" style="margin-top:18px" onclick="venteAdd()">
-    <svg class="ico16"><use href="#i-tag"/></svg> Ajouter un article à vendre</button>
-  <button class="btn-save alt2" onclick="venteImportLog()">Importer mes achats du journal</button>
-
-  <h3 class="sect">Ta cote réelle</h3>
-  <div id="vt-cote"></div>
 </div>
 
 <div id="view-guide" class="view">
@@ -982,6 +1000,24 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
     <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false">
     <button class="btn-save" onclick="discSave()">Enregistrer le jeton</button>
     <button class="btn-save alt2" onclick="discTest()">Tester la connexion Discogs</button>
+
+    <h3 class="sect">Sets LEGO (Rebrickable)</h3>
+    <div id="lego-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Clé gratuite et immédiate : rebrickable.com &rarr; ton profil &rarr; Settings &rarr; API &rarr; Generate.
+      Rebrickable ne publie pas de prix — il donne le nombre de pièces et de figurines,
+      les deux chiffres qui font vraiment la valeur d'un set d'occasion.
+    </p>
+    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false">
+    <div class="lego-tarif">
+      <label>€ la pièce<input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
+      <label>€ la figurine<input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+      Barème de revendeur, à corriger avec tes propres ventes.
+    </p>
+    <button class="btn-save" onclick="legoSave()">Enregistrer</button>
+    <button class="btn-save alt2" onclick="legoTest()">Tester la connexion Rebrickable</button>
 
     <h3 class="sect">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
@@ -1050,32 +1086,21 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
   </div>
   
   <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
-    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 4.4 « Expert »
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 5.2 « Terrain »
   </p>
 </div>
 
 <nav>
-  <div class="nav-item active" onclick="switchView('live', this)">
+  <div class="nav-item active" data-v="live" onclick="switchView('live')">
     <svg class="ico"><use href="#i-scan"/></svg><span>Scan</span>
   </div>
-  <div class="nav-item" onclick="switchView('offline', this)">
-    <svg class="ico"><use href="#i-crate"/></svg><span>Base</span>
-  </div>
-  <div class="nav-item" onclick="switchView('cal', this)">
+  <div class="nav-item" data-v="cal" onclick="switchView('cal')">
     <svg class="ico"><use href="#i-cal"/></svg><span>Dates</span>
   </div>
-  <div class="nav-item" onclick="switchView('spots', this)">
-    <svg class="ico"><use href="#i-target"/></svg><span>Repérés</span>
-    <i class="badge" id="bdg-spots"></i>
-  </div>
-  <div class="nav-item" onclick="switchView('log', this)">
+  <div class="nav-item" data-v="log" onclick="switchView('log')">
     <svg class="ico"><use href="#i-cash"/></svg><span>Journal</span>
   </div>
-  <div class="nav-item" onclick="switchView('vente', this)">
-    <svg class="ico"><use href="#i-tag"/></svg><span>Vente</span>
-    <i class="badge" id="bdg-vente"></i>
-  </div>
-  <div class="nav-item" onclick="switchView('guide', this)">
+  <div class="nav-item" data-v="guide" onclick="switchView('guide')">
     <svg class="ico"><use href="#i-pad"/></svg><span>Réglages</span>
   </div>
 </nav>
@@ -1242,19 +1267,20 @@ function vib() {
 }
 
 // --- UI LOGIC ---
+/* L'onglet se retrouve par son nom : avant, il était désigné par son rang dans
+   la barre, et retirer un onglet décalait silencieusement tous les autres. */
 function switchView(viewId, navEl) {
+  const vue = document.getElementById('view-' + viewId);
+  if(!vue) return;
   if(viewId === 'log') setTimeout(() => { renderLog(); renderHist(); }, 0);
-  if(viewId === 'spots') setTimeout(renderSpots, 0);
   if(viewId === 'cal') setTimeout(renderCal, 0);
-  if(viewId === 'vente') setTimeout(renderVente, 0);
   paintImminent();
-  if(viewId === 'offline') setTimeout(renderOfflineFull, 0);
   vib();
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + viewId).classList.add('active');
+  vue.classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  navEl.classList.add('active');
-  if(viewId === 'offline') renderOfflineFull();
+  const nav = navEl || document.querySelector('.nav-item[data-v="' + viewId + '"]');
+  if(nav) nav.classList.add('active');
   window.scrollTo(0,0);
 }
 
@@ -1276,7 +1302,8 @@ function init() {
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
   themeApply(themeGet());
   venteSeed();
-  discPaint(); collPaint(); hudPaint(); renderLog(); renderSpots(); renderCal(); renderOfflineFull(); paintImminent(); renderHist(); renderVente(); backupState();
+  modeSet('objet');
+  legoPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
@@ -1313,8 +1340,7 @@ function init() {
   $('q').addEventListener('input', (e) => {
     searchTerm = e.target.value;
     syncAskButton();
-    renderLocalList();
-  });
+    });
 
   $('q').addEventListener('keydown', (e) => {
     if(e.key === "Enter") { e.preventDefault(); askAIText(); }
@@ -1322,7 +1348,6 @@ function init() {
 
   $('ask').addEventListener('click', () => { vib(); askAIText(); });
 
-  $('q-base').addEventListener('input', () => renderOfflineFull());
   document.querySelectorAll('#spot-mode button').forEach(b =>
     b.addEventListener('click', () => {
       document.querySelectorAll('#spot-mode button').forEach(x => x.setAttribute('aria-pressed','false'));
@@ -1344,7 +1369,6 @@ function init() {
   // Ticks init
   $("sac-ticks").innerHTML = TICKS.map(t => `<label class="tick"><input type="checkbox"><span>${t}</span></label>`).join("");
 
-  renderLocalList();
 }
 
 /* Le prix demandé appartient à l'objet qu'on vient d'analyser. S'il traîne
@@ -1376,7 +1400,6 @@ function clearSearch() {
   $('q').value = "";
   searchTerm = "";
   syncAskButton();
-  renderLocalList();
   $('ai-results').innerHTML = "";
   $('q').focus();
 }
@@ -1439,6 +1462,7 @@ function memFree(){
     localStorage.removeItem(CACHE_STORE);
     localStorage.removeItem(Q_STORE);
     localStorage.removeItem(DISC_CACHE);
+    localStorage.removeItem(LEGO_CACHE);
   }catch(e){}
   vib(); hudPaint(); backupState();
   alert("Place libérée.");
@@ -1468,68 +1492,105 @@ function srcSet(v, el){
   document.querySelectorAll('#src-seg button').forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
   vib();
 }
-function srcPaint(){
-  const v = srcGet();
-  document.querySelectorAll('#src-seg button').forEach(b => b.setAttribute("aria-pressed", b.dataset.s === v ? "true" : "false"));
-}
+function srcPaint(){ /* le sélecteur a disparu de l'écran : plus rien à peindre */ }
 
-function triggerCamera(mode) {
+/* La source peut être imposée par le bouton : « Photographier » ouvre
+   l'objectif, « Galerie » laisse le téléphone proposer les deux. */
+function triggerCamera(mode, src) {
   vib();
   prixNouveau();
-  currentCameraMode = mode;
-  /* « Photo ou galerie » laisse le téléphone proposer les deux ;
-     « Appareil photo direct » saute l'étape sur le terrain. */
-  const input = srcGet() === "cam" ? $('file-cam') : $('file-input');
-  /* Le mode Bac attend plusieurs vues, tout comme le multi. */
-  input.multiple = (mode === 'multi' || mode === 'bac');
-  
-  if(mode !== 'multi' || photoQueue.length === 0) {
-    photoQueue = [];
-    updatePhotoQueueUI();
-  }
+  if(mode) currentCameraMode = mode;
+  /* « Photographier » ouvre l'objectif, « Galerie » laisse le téléphone
+     proposer ses images. Le choix est dans le bouton pressé. */
+  const input = (src || srcGet()) === "cam" ? $('file-cam') : $('file-input');
+  /* La galerie autorise toujours la sélection multiple, sauf pour une vue
+     d'ensemble qui n'en prend qu'une. On n'efface jamais la pile ici : c'est
+     précisément ce qui empêchait d'ajouter une deuxième vue du même objet. */
+  input.multiple = (currentCameraMode !== 'stand');
   input.click();
+}
+
+/* ══════════ LES TROIS SITUATIONS ══════════
+   Le mode ne dit pas comment prendre la photo, il dit ce qu'on demande :
+     objet — une pièce, autant de vues que tu veux (dos, dessous, défauts) ;
+     lot   — un carton, un bac : chaque pièce est évaluée séparément ;
+     stand — la table entière : qu'est-ce qui mérite qu'on s'arrête ?
+   Les photos s'empilent quelle que soit leur provenance : appareil, galerie,
+   ou les deux mélangés. C'est le même tas. */
+const MODE_DIT = {
+  objet: "Prends-en plusieurs si tu veux : le dos, le dessous, le défaut.",
+  bac:   "Une photo par pièce, ou une photo de plusieurs pièces. Chacune sera chiffrée.",
+  stand: "Une vue large de la table. L'app te dit s'il vaut la peine de fouiller."
+};
+const MODE_BTN = {objet: "Analyser", bac: "Trier ce lot", stand: "Lire ce stand"};
+
+function modeSet(m){
+  currentCameraMode = m;
+  document.querySelectorAll('#modes .md').forEach(b => b.classList.toggle("on", b.dataset.m === m));
+  const dd = $('mode-dit'); if(dd) dd.textContent = MODE_DIT[m] || "";
+  /* La vue d'ensemble ne traite qu'une seule image : on ne garde que la dernière. */
+  if(m === 'stand' && photoQueue.length > 1) photoQueue = [photoQueue[photoQueue.length - 1]];
+  vib(); updatePhotoQueueUI();
 }
 
 function handleFileSelect(e) {
   const files = e.target.files;
   if(!files.length) return;
+  const liste = Array.from(files);
+  /* Une vue d'ensemble, c'est une seule image : les autres seraient du bruit. */
+  const garder = currentCameraMode === 'stand' ? liste.slice(-1) : liste;
+  if(currentCameraMode === 'stand') photoQueue = [];
+  Promise.all(garder.map(shrink)).then(ps => {
+    ps.forEach(p => photoQueue.push(p));
+    /* Plafond volontaire : au-delà, la requête devient lourde et lente, et sur
+       un stand une analyse qui met une minute ne sert à rien. */
+    if(photoQueue.length > 8){
+      photoQueue = photoQueue.slice(0, 8);
+      alert("8 photos au maximum par analyse.");
+    }
+    updatePhotoQueueUI();
+  });
+  e.target.value = "";
+}
 
-  if (currentCameraMode === 'multi') {
-    Array.from(files).forEach(file => {
-      shrink(file).then(p => { photoQueue.push(p); updatePhotoQueueUI(); });
-    });
-  } else if (currentCameraMode === 'single') {
-    shrink(files[0]).then(p => { photoQueue = [p]; askAISingle(); });
-  } else if (currentCameraMode === 'stand') {
-    shrink(files[0]).then(p => { photoQueue = [p]; askAIStand(); });
-  } else if (currentCameraMode === 'bac') {
-    Array.from(files).forEach(file => {
-      shrink(file).then(p => { photoQueue.push(p); updatePhotoQueueUI(); });
-    });
-  }
-  e.target.value = ""; // reset
+/* Le bouton unique : il sait quoi lancer selon le mode et le nombre de vues. */
+/* La pile appartient à l'objet qu'on vient d'analyser : la garder ferait
+   partir les vues du vendeur précédent avec le suivant. */
+function photoVider(){
+  photoQueue = [];
+  updatePhotoQueueUI();
+}
+
+function askAIGo(){
+  if(!photoQueue.length) return;
+  if(currentCameraMode === 'bac') return askAIBac();
+  if(currentCameraMode === 'stand') return askAIStand();
+  return photoQueue.length > 1 ? askAIMulti() : askAISingle();
 }
 
 function updatePhotoQueueUI() {
   const q = $('photo-queue');
   const imgs = $('photo-queue-imgs');
+  if(!q || !imgs) return;
+  const n = photoQueue.length;
   const btn = q.querySelector('.analyze-multi-btn');
   if(btn){
-    btn.textContent = currentCameraMode === 'bac'
-      ? `Trier ce bac (${photoQueue.length} photo${photoQueue.length>1?'s':''}) 🚀`
-      : "Analyser ces photos 🚀";
-    btn.setAttribute("onclick", currentCameraMode === 'bac' ? "askAIBac()" : "askAIMulti()");
+    btn.textContent = (MODE_BTN[currentCameraMode] || "Analyser")
+      + (n > 1 ? ` · ${n} vues` : "");
   }
-  if(photoQueue.length > 0 && (currentCameraMode === 'multi' || currentCameraMode === 'bac')) {
+  const cs = $('shoot-cam-s');
+  if(cs) cs.textContent = n ? "ajouter une vue" : "l'appareil s'ouvre";
+  if(n > 0){
     q.classList.add('active');
     imgs.innerHTML = photoQueue.map((p, i) => `
       <div class="photo-thumb-wrap">
         <img src="${p.url}" class="photo-thumb">
-        <button class="photo-remove" onclick="removePhoto(${i})">X</button>
+        <button class="photo-remove" onclick="removePhoto(${i})">✕</button>
       </div>
     `).join('');
   } else {
     q.classList.remove('active');
+    imgs.innerHTML = "";
   }
 }
 
@@ -1901,7 +1962,7 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
   const aiEl = $('ai-results');
 
   if(!key) {
-    switchView('guide', document.querySelectorAll('.nav-item')[6]);
+    switchView('guide');
     setTimeout(()=> alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
     return;
   }
@@ -2086,6 +2147,7 @@ function askAISingle() {
   if(p) prompt += `\nPrix vendeur : ${p} EUR.`;
   
   callGemini(prompt, photoQueue, 'single');
+  photoVider();
 }
 
 function askAIMulti() {
@@ -2100,7 +2162,7 @@ function askAIMulti() {
   if(p) prompt += `\nPrix vendeur : ${p} EUR.`;
   
   callGemini(prompt, photoQueue, 'multi');
-  photoQueue = [];
+  photoVider();
 }
 
 function askAIBac() {
@@ -2121,6 +2183,7 @@ Trie du plus intéressant au moins intéressant.
 typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non.${indice}
 Réponds UNIQUEMENT en JSON : {"typeBac":"","resume":"","lot":[{"nom":"","artiste":"","annee":"","revente":0,"prixMax":0,"verdict":"","note":""}]}`;
   callGemini(prompt, photoQueue, 'bac');
+  photoVider();
 }
 
 function askAIStand() {
@@ -2132,6 +2195,7 @@ function askAIStand() {
   }
   
   callGemini(prompt, photoQueue, 'stand');
+  photoVider();
 }
 
 
@@ -2294,8 +2358,6 @@ function fichePaint(){
   if(ac) ac.innerHTML = ficheAction(FICHE, c, dem);
   const px = $('fiche-prix');
   if(px) px.innerHTML = fichePrix(FICHE, c, dem);
-  const rg = $('fiche-reglages');
-  if(rg) rg.innerHTML = ficheReglages(FICHE, c);
   const sy = $('fiche-say');
   if(sy) sy.textContent = "« " + ficheDire(FICHE) + " »";
 
@@ -2365,7 +2427,7 @@ function ficheReglages(f, c){
   const b = (n) => `<button class="et${f.etat === n ? " on" : ""}" onclick="ficheEtatSet(${n})">
     <b>${n}</b><span>${ETAT_LBL[n]}</span></button>`;
   return `
-    <div class="reg">
+    <div class="reg" id="fiche-reglages">
       <div class="reg-t">État réel <i>${f.echelle ? esc(f.echelle) : "que TU constates"} · la note 3 est la référence du marché</i></div>
       <div class="reg-et">${[5,4,3,2,1].map(b).join("")}</div>
       ${f.etatDit ? `<div class="reg-dit">Vu sur la photo : ${esc(f.etatDit)}</div>` : ""}
@@ -2410,17 +2472,17 @@ const CIRC_MOT = {rare:["Rare","r"], "peu courant":["Peu courant","r"],
 
 function ficheCorps(f){
   const ci = CIRC_MOT[f.circulation];
+  /* Un seul bloc ouvert : le reste attend. Sur un stand, on lit trois lignes,
+     on parle, et on ne fait défiler que si quelque chose cloche. */
+  const bloc = (id, titre, corps, ouvert) => corps
+    ? `<details class="bl"${ouvert ? " open" : ""}><summary>${titre}</summary><div class="bl-in">${corps}</div></details>`
+    : "";
+
+  const listes = (t) => t.length ? `<ul>${t.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+
   return `
-    <div class="fi">
-      <h5><i>1</i>Le code qui identifie</h5>
-      ${f.code
-        ? `<div class="fi-code">${esc(f.code)}</div>
-           <button class="fi-cp" onclick="ficheCopieCode()">Copier la référence</button>`
-        : `<div class="fi-vide">${f.codeOu ? esc(f.codeOu) : "Aucune référence visible sur la photo."}</div>`}
-    </div>
-    <div class="fi">
-      <h5><i>2</i>Ce qui doit être là</h5>
-      ${f.attendu.length
+    ${bloc("ck", "Ce qui doit être là" + (f.attendu.length ? ` <i>${f.attendu.length}</i>` : ""),
+      f.attendu.length
         ? `<div class="fi-ck">${f.attendu.map((x,i) =>
             `<label class="v-${x.vu === "oui" ? "o" : x.vu === "non" ? "n" : "q"}">
               <input type="checkbox"${x.vu === "oui" ? " checked" : ""} onchange="ficheCoche(${i}, this.checked)">
@@ -2428,24 +2490,23 @@ function ficheCorps(f){
                 ${x.vu === "non" ? `<i>absent — ${x.perte}% de valeur en moins</i>`
                 : x.vu === "?" ? `<i>non visible — à vérifier (vaudrait ${x.perte}%)</i>`
                 : `<i>présent</i>`}</span></label>`).join("")}</div>
-           <div class="fi-ck-n" id="fiche-ck-n">${attResume(f.attendu)}</div>`
-        : `<div class="fi-vide">Rien de particulier à contrôler.</div>`}
-      ${f.impactComplet ? `<div class="fi-imp">${esc(f.impactComplet)}</div>` : ""}
-    </div>
-    <div class="fi">
-      <h5><i>4</i>Combien en circule</h5>
-      ${ci ? `<div class="fi-circ ${ci[1]}">${ci[0]}</div>` : `<div class="fi-vide">Circulation inconnue.</div>`}
-      ${f.preuves.length ? `<ul>${f.preuves.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
-    </div>
-    ${f.pieges.length ? `<div class="fi danger">
-      <h5><i>!</i>Ce qui peut te coûter cher</h5>
-      <ul>${f.pieges.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
-    ${f.verifs.length ? `<div class="fi">
-      <h5><i>◎</i>À vérifier sur place</h5>
-      <ul>${f.verifs.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
-    ${f.nego ? `<div class="fi"><h5><i>“</i>Ce que tu dis</h5>
-      <div class="saywrap" id="fiche-say">« ${esc(ficheDire(f))} »</div></div>` : ""}
-    ${f.note ? `<div class="aimeta">${esc(f.note)}</div>` : ""}`;
+           <div class="fi-ck-n" id="fiche-ck-n">${attResume(f.attendu)}</div>
+           ${f.impactComplet ? `<div class="fi-imp">${esc(f.impactComplet)}</div>` : ""}`
+        : "", true)}
+
+    ${bloc("dg", "Ce qui peut te coûter cher" + (f.pieges.length ? ` <i>${f.pieges.length}</i>` : ""),
+      listes(f.pieges) + listes(f.verifs), f.pieges.length > 0)}
+
+    ${bloc("et", "L'état, si la photo t'a menti", ficheReglages(f, ficheCalc(f)), false)}
+
+    ${bloc("id", "L'identification",
+      (f.code ? `<div class="fi-code">${esc(f.code)}</div>
+                 <button class="fi-cp" onclick="ficheCopieCode()">Copier la référence</button>`
+              : `<div class="fi-vide">${f.codeOu ? esc(f.codeOu) : "Aucune référence visible."}</div>`)
+      + (f.identification ? `<div class="ident">${esc(f.identification)}</div>` : "")
+      + (ci ? `<div class="fi-circ ${ci[1]}">${ci[0]}</div>` : "")
+      + listes(f.preuves)
+      + (f.note ? `<div class="aimeta">${esc(f.note)}</div>` : ""), false)}`;
 }
 
 /* La complétude se règle toute seule à mesure que tu coches. */
@@ -2538,25 +2599,20 @@ function renderResult(j, images, avis) {
           <div class="r">${c.net ? "Revente nette ≈ " + c.net + "€" : "Marché inconnu"}</div>
         </div>
       </div>
-      <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}
-        ${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
-      ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div id="fiche-acte">${ficheAction(f, c, dem)}</div>
+      ${f.nego ? `<div class="say" id="fiche-say">« ${esc(ficheDire(f))} »</div>` : ""}
       <div id="disc-slot"></div>
-      <div id="fiche-reglages" class="regs">${ficheReglages(f, c)}</div>
+      <div id="lego-slot"></div>
+      <div class="aibody">${ficheCorps(f)}</div>
       <div id="fiche-prix" class="prix">${fichePrix(f, c, dem)}</div>
-      <div class="aibody">
-        ${f.identification ? `<div class="ident">${esc(f.identification)}</div>` : ''}
-        ${ficheCorps(f)}
-      </div>
-      <div class="act-grid">
+      <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
+      ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
+      <div class="act-grid deux">
         <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
         <button class="act act-buy" onclick="logFind()">
-          <svg class="ico16"><use href="#i-cash"/></svg>Acheté</button>
-        <button class="act act-spot" onclick="spotAdd()">
-          <svg class="ico16"><use href="#i-target"/></svg>Repérer</button>
+          <svg class="ico16"><use href="#i-cash"/></svg>Je l'achète</button>
       </div>
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer</button>
     </div>`;
 
   LAST = {objet: f.objet, revente: c.net, prixMax: c.plafond, demande: dem};
@@ -2568,6 +2624,7 @@ function renderResult(j, images, avis) {
 
   const req = (f.objet || "") + (f.identification && f.identification.length < 60 ? " " + f.identification : "");
   if(discMusique(req)) discGreffe(req.trim(), 'disc-slot');
+  legoGreffe(f, 'lego-slot');
 }
 
 function renderStandResult(j, image, avis) {
@@ -3388,7 +3445,7 @@ function paintImminent(){
     <svg class="ico16"><use href="#i-${dem ? "cal" : "flame"}"/></svg>
     <div class="im-t"><b>${dem ? "Demain" : "Aujourd'hui"} : ${esc(o.x.nom || "brocante")}</b>
       <span>${esc(o.x.ville || "")}${o.x.km ? " · " + o.x.km + " km" : ""}${o.x.horaires ? " · " + esc(o.x.horaires) : ""}</span></div>
-    ${dem ? `<button onclick="switchView('guide', document.querySelectorAll('.nav-item')[6]);setTimeout(()=>document.getElementById('sac-ticks')?.scrollIntoView({behavior:'smooth'}),150)">Sac</button>` : ""}`;
+    ${dem ? `<button onclick="switchView('guide');setTimeout(()=>document.getElementById('sac-ticks')?.scrollIntoView({behavior:'smooth'}),150)">Sac</button>` : ""}`;
 }
 
 function renderCal(){
@@ -3685,6 +3742,287 @@ async function discTest(){
         ? `<b style="color:var(--stop)">Discogs bloque l'appel depuis le navigateur.</b><br>`
           + `C'est la restriction CORS. Le jeton est peut-être bon : teste la même URL dans un onglet. `
           + `Si elle répond là mais pas ici, il faut passer par un relais.`
+        : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
+  }
+}
+
+
+
+/* ══════════════════ LECTEUR DE CODE-BARRES ══════════════════
+   Le geste le plus rapide de l'app : viser, c'est identifié. Pas d'analyse
+   d'image par l'IA, pas d'ambiguïté de titre — le code EAN désigne une
+   référence et une seule. Sur les jeux de société, les figurines en boîte et
+   les mangas, on passe de quinze secondes à deux.
+
+   L'API BarcodeDetector est native à Chrome sur Android : ni bibliothèque, ni
+   téléchargement. Là où elle manque, on le dit et on propose la saisie. */
+let BC_FLUX = null, BC_BOUCLE = null;
+
+function bcDispo(){ return typeof window.BarcodeDetector !== "undefined"; }
+
+async function bcOuvrir(){
+  vib();
+  if(!bcDispo()){
+    const t = prompt("Ton navigateur ne sait pas lire les codes-barres.\n\nTape le code à la main (les chiffres sous les barres) :");
+    if(t && t.trim()) bcTrouve(t.trim());
+    return;
+  }
+  const ov = $('bc-overlay');
+  ov.classList.add('on');
+  $('bc-msg').textContent = "Cadre le code-barres";
+  try{
+    BC_FLUX = await navigator.mediaDevices.getUserMedia({
+      video: {facingMode: {ideal: "environment"}}
+    });
+    const v = $('bc-video');
+    v.srcObject = BC_FLUX;
+    await v.play();
+    bcBoucle();
+  }catch(err){
+    $('bc-msg').textContent = "Accès à la caméra refusé.";
+    setTimeout(bcFermer, 1600);
+  }
+}
+
+async function bcBoucle(){
+  let det;
+  try{
+    det = new window.BarcodeDetector({
+      formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128", "code_39"]
+    });
+  }catch(e){ $('bc-msg').textContent = "Lecture impossible sur cet appareil."; return; }
+
+  const v = $('bc-video');
+  BC_BOUCLE = setInterval(async () => {
+    if(!v || v.readyState < 2) return;
+    try{
+      const codes = await det.detect(v);
+      if(codes && codes.length){
+        const brut = String(codes[0].rawValue || "").trim();
+        if(brut){ bcFermer(); bcTrouve(brut); }
+      }
+    }catch(e){}
+  }, 400);
+}
+
+function bcFermer(){
+  if(BC_BOUCLE){ clearInterval(BC_BOUCLE); BC_BOUCLE = null; }
+  if(BC_FLUX){ BC_FLUX.getTracks().forEach(t => t.stop()); BC_FLUX = null; }
+  const v = $('bc-video'); if(v) v.srcObject = null;
+  const ov = $('bc-overlay'); if(ov) ov.classList.remove('on');
+}
+
+/* Un code-barres est une référence exacte : on le donne tel quel au moteur, en
+   lui interdisant de deviner à partir d'un titre approchant. */
+function bcTrouve(code){
+  vib();
+  const q = $('q');
+  if(q) q.value = "Code-barres " + code;
+  const chp = $('ask'); if(chp) chp.disabled = false;
+  askAICode(code);
+}
+
+function askAICode(code){
+  const prompt = BRIEF_BASE + BRIEF_JSON + `
+IDENTIFICATION PAR CODE-BARRES. Le code lu sur l'emballage est : ${code}
+Ce code désigne une référence précise et une seule. Cherche à quoi il correspond exactement (produit, édition, région, année) avant toute estimation.
+Si tu ne trouves pas ce code exact, dis-le franchement dans "note", mets "confiance":"faible", et n'invente pas un produit approchant.
+Recopie le code dans "code".`
+    + (($('price').value || "").trim() ? `\nPrix vendeur : ${$('price').value.trim()} EUR.` : "");
+  callGemini(prompt, [], 'single');
+}
+
+/* ══════════════════ COTES LEGO (Rebrickable) ══════════════════
+   Rebrickable ne donne pas de prix — aucune API gratuite n'en donne pour le
+   LEGO d'occasion. Mais il donne les deux chiffres dont se sert tout revendeur :
+   le nombre de pièces et le nombre de figurines. Un set se valorise à la pièce
+   et à la figurine ; savoir « 1 200 pièces, 6 figurines, 2015 » vaut mieux
+   qu'une estimation sortie de nulle part.
+
+   Même choix technique que Discogs : la clé passe en paramètre d'URL, pas en
+   en-tête Authorization, pour rester une requête simple. */
+const LEGO_STORE = "insertcoin.rebrickable.key";
+const LEGO_CACHE = "insertcoin.rebrickable.cache";
+const LEGO_API   = "https://rebrickable.com/api/v3/lego";
+/* Barème du revendeur, ajustable : c'est une règle de pouce, pas une cote.
+   À corriger avec tes propres ventes au fil du temps. */
+const LEGO_PIECE_STORE = "insertcoin.lego.piece";
+const LEGO_FIG_STORE   = "insertcoin.lego.fig";
+function legoTarifs(){
+  let pc = parseFloat(localStorage.getItem(LEGO_PIECE_STORE) || ""), fg = parseFloat(localStorage.getItem(LEGO_FIG_STORE) || "");
+  return {piece: isFinite(pc) && pc > 0 ? pc : 0.07, fig: isFinite(fg) && fg > 0 ? fg : 3};
+}
+function legoKey(){ try { return localStorage.getItem(LEGO_STORE) || ""; } catch(e){ return ""; } }
+
+let LEGO_LAST = 0;
+async function legoGet(chemin, params){
+  const k = legoKey();
+  if(!k) throw new Error("Aucune clé Rebrickable");
+  if(!navigator.onLine) throw new Error("Hors réseau");
+  const attente = 900 - (Date.now() - LEGO_LAST);
+  if(attente > 0) await new Promise(r => setTimeout(r, attente));
+  LEGO_LAST = Date.now();
+  const q = new URLSearchParams({...(params || {}), key: k});
+  const r = await fetch(LEGO_API + chemin + "?" + q.toString());
+  if(r.status === 401 || r.status === 403) throw new Error("CLE");
+  if(r.status === 404) return null;
+  if(r.status === 429) throw new Error("Trop de requêtes — attends une minute");
+  if(!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+
+/* Rebrickable numérote « 75192-1 » : le suffixe est la version du set. */
+function legoNum(n){
+  const t = String(n || "").trim();
+  return /-\d+$/.test(t) ? t : t + "-1";
+}
+
+function legoCacheGet(k){
+  try{
+    const c = JSON.parse(localStorage.getItem(LEGO_CACHE) || "{}");
+    const h = c[k];
+    if(h && Date.now() - h.t < 2592000000) return h.v; /* 30 jours : un set ne change pas */
+  }catch(e){}
+  return null;
+}
+function legoCacheSet(k, v){
+  try{
+    const c = JSON.parse(localStorage.getItem(LEGO_CACHE) || "{}");
+    c[k] = {t: Date.now(), v};
+    const ks = Object.keys(c);
+    if(ks.length > 80) ks.sort((a,b)=>c[a].t-c[b].t).slice(0, ks.length-80).forEach(x=>delete c[x]);
+    localStorage.setItem(LEGO_CACHE, JSON.stringify(c));
+  }catch(e){}
+}
+
+async function legoSet(num){
+  const cle = "l:" + legoNum(num);
+  const cache = legoCacheGet(cle);
+  if(cache !== null) return cache;
+
+  const s = await legoGet("/sets/" + legoNum(num) + "/");
+  if(!s || !s.set_num){ legoCacheSet(cle, false); return false; }
+
+  /* Les figurines pèsent lourd dans le prix d'un set d'occasion : on va les
+     compter plutôt que de les deviner. */
+  let figs = 0;
+  try{
+    const m = await legoGet("/sets/" + legoNum(num) + "/minifigs/", {page_size: 100});
+    if(m && Array.isArray(m.results)) figs = m.results.reduce((t, x) => t + (Number(x.quantity) || 1), 0);
+  }catch(e){}
+
+  const cote = {
+    num: s.set_num, nom: s.name || "", annee: s.year || "",
+    pieces: Number(s.num_parts) || 0, figs,
+    img: s.set_img_url || ""
+  };
+  legoCacheSet(cle, cote);
+  return cote;
+}
+
+/* La conversion en euros. Elle est affichée en toutes lettres : c'est une
+   règle de pouce, pas une cote de marché, et elle doit pouvoir être contestée. */
+function legoValeur(c){
+  const t = legoTarifs();
+  const parts = c.pieces * t.piece;
+  const figs = c.figs * t.fig;
+  return {parts, figs, total: Math.round(parts + figs), t};
+}
+
+function legoCarte(c){
+  const v = legoValeur(c);
+  return `<div class="disc lego">
+    <div class="disc-h"><span class="disc-b">Rebrickable</span>
+      <b>${esc(c.nom)}</b>
+      <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
+    <div class="disc-n">
+      <div><b>${c.pieces}</b><span>pièces</span></div>
+      <div><b>${c.figs}</b><span>figurines</span></div>
+      <div><b>${v.total}€</b><span>complet, sans boîte</span></div>
+    </div>
+    <div class="disc-l">${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€</div>
+    <div class="disc-d">Barème de revendeur, pas une cote : Rebrickable ne publie pas de prix.
+      Ajuste-le dans Réglages avec ce que tu encaisses réellement.</div>
+    <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">Voir le set</a>
+  </div>`;
+}
+
+/* On ne cherche un set que si l'objet en est manifestement un. */
+function legoNumTrouve(f){
+  const txt = ((f.objet || "") + " " + (f.categorie || "") + " " + (f.identification || ""));
+  if(!/lego/i.test(txt)) return null;
+  const src = (f.code || "") + " " + txt;
+  const m = src.match(/\b(\d{4,7})(?:-\d+)?\b/);
+  return m ? m[1] : null;
+}
+
+async function legoGreffe(f, cibleId){
+  if(!legoKey()) return;
+  const num = legoNumTrouve(f);
+  if(!num) return;
+  const el = $(cibleId); if(!el) return;
+  el.innerHTML = `<div class="disc-load">Recherche du set ${esc(num)} sur Rebrickable…</div>`;
+  try{
+    const c = await legoSet(num);
+    const cur = $(cibleId); if(!cur) return;
+    if(!c){ cur.innerHTML = ""; return; }
+    cur.innerHTML = legoCarte(c);
+    /* Le comptage de pièces devient la référence de calcul : c'est de la donnée,
+       pas une estimation. */
+    if(FICHE){
+      const v = legoValeur(c);
+      if(v.total > 0){
+        FICHE.marcheReel = v.total;
+        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + c.figs + " figurines";
+        fichePaint();
+      }
+    }
+  }catch(err){
+    const cur = $(cibleId); if(!cur) return;
+    cur.innerHTML = String(err.message) === "CLE"
+      ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>` : "";
+  }
+}
+
+function legoSave(){
+  const v = ($('lego-key').value || "").trim();
+  try{ v ? localStorage.setItem(LEGO_STORE, v) : localStorage.removeItem(LEGO_STORE); }catch(e){}
+  const pc = ($('lego-piece').value || "").trim(), fg = ($('lego-fig').value || "").trim();
+  try{
+    pc ? localStorage.setItem(LEGO_PIECE_STORE, pc) : localStorage.removeItem(LEGO_PIECE_STORE);
+    fg ? localStorage.setItem(LEGO_FIG_STORE, fg) : localStorage.removeItem(LEGO_FIG_STORE);
+  }catch(e){}
+  vib(); legoPaint();
+}
+
+function legoPaint(){
+  const el = $('lego-state'); if(!el) return;
+  const k = legoKey(), t = legoTarifs();
+  if($('lego-key') && !$('lego-key').value) $('lego-key').value = k;
+  if($('lego-piece') && !$('lego-piece').value) $('lego-piece').value = t.piece;
+  if($('lego-fig') && !$('lego-fig').value) $('lego-fig').value = t.fig;
+  el.style.borderLeft = "3px solid " + (k ? "var(--go)" : "var(--border)");
+  el.innerHTML = k
+    ? `Clé enregistrée. Barème actuel : ${t.piece.toFixed(2).replace(".", ",")}€ la pièce, ${t.fig}€ la figurine.`
+    : "Aucune clé. Les sets LEGO restent estimés par l'IA, sans comptage de pièces.";
+}
+
+async function legoTest(){
+  const el = $('lego-state');
+  if(!legoKey()){ alert("Colle d'abord ta clé, puis appuie sur Enregistrer."); return; }
+  el.innerHTML = "Test en cours…";
+  try{
+    const c = await legoSet("10182");  /* Café Corner, un set connu */
+    el.style.borderLeft = "3px solid var(--go)";
+    el.innerHTML = c
+      ? `<b style="color:var(--go)">Connexion réussie.</b><br>Test : « ${esc(c.nom)} » (${c.annee}) — ${c.pieces} pièces, ${c.figs} figurines.`
+      : `<b style="color:var(--mid)">Connexion établie, set test introuvable.</b>`;
+  }catch(err){
+    el.style.borderLeft = "3px solid var(--stop)";
+    el.innerHTML = String(err.message) === "CLE"
+      ? `<b style="color:var(--stop)">Clé refusée.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne.`
+      : /Failed to fetch|NetworkError/i.test(String(err.message))
+        ? `<b style="color:var(--stop)">Rebrickable bloque l'appel depuis le navigateur.</b><br>Dis-le-moi, on passera par un relais.`
         : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
   }
 }
@@ -4062,6 +4400,8 @@ function renderRadar(){
 }
 
 function renderSpots(){
+  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
+  if(!$('spot-list')) return;
   const el = $('spots-list'); if(!el) return;
   const a = spotRead();
   if(!a.length){
@@ -4461,6 +4801,8 @@ async function logExport(){
 }
 
 function renderLocalList() {
+  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
+  if(!$('local-results')) return;
   const t = norm(searchTerm.trim());
   const out = D.filter(d => 
     (localCat === "all" || d.c === localCat) && 
@@ -4502,6 +4844,8 @@ function renderLocalList() {
 }
 
 function renderOfflineFull() {
+  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
+  if(!$('full-offline-list')) return;
   const t = norm((($('q-base') || {}).value || "").trim());
   const out = D.filter(d =>
     (localCat === "all" || d.c === localCat) &&
@@ -4810,6 +5154,8 @@ function venteBanner(query){
 
 /* ---------- Rendu ---------- */
 function renderVente(){
+  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
+  if(!$('vt-list')) return;
   const el = $('vt-list'); if(!el) return;
   const a = venteRead();
   const vifs = a.filter(x => x.statut !== "keep" && venteVives(x).length);
