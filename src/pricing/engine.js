@@ -82,11 +82,30 @@ export function attPerte(att){
   return att.filter(x => x.vu === "non").reduce((t, x) => t + x.perte, 0);
 }
 
-export function attCoef(att){
-  return Math.max(PERTE_PLANCHER, 1 - attPerte(att) / 100);
-}
-
 export function attManquants(att){ return att.filter(x => x.vu === "non"); }
+
+/* Cas réel (Skylanders, 22/08/2026) : un lot de ~15 figurines dont seul le
+   portail (accessoire PARTAGÉ) n'est pas confirmé sur la photo ressortait à
+   1 € au lieu des 12-15 € du marché. La décote "élément clé absent" est
+   pensée pour un objet unique — une pièce essentielle manquante le rend
+   inutilisable, d'où un poids lourd (jusqu'à 90%). Appliquée telle quelle à
+   un lot, cette même décote retire la valeur du portail à la valeur du LOT
+   ENTIER, pas juste au portail : double comptage, puisque le prix marché
+   d'un lot ("en vrac, sans boîtes") a déjà encaissé l'absence d'accessoires
+   individuels. Même logique et même plafond que PORT_PART_MAX côté port :
+   on borne la décote de complétude à 25% de la valeur — mais SEULEMENT
+   quand un seul élément du lot est constaté absent, signe d'un accessoire
+   partagé. Dès qu'un DEUXIÈME élément manque, ce n'est plus le profil d'un
+   accessoire partagé unique : la décote complète repart sans plafond, pour
+   ne pas masquer un lot réellement vide (voir
+   tests/fixtures/lot-boites-vides.js et docs/diagnostic-cotation.md, Cas 1). */
+export const LOT_PERTE_MAX = 25;
+
+export function attCoef(att, isLot){
+  let perte = attPerte(att);
+  if(isLot && attManquants(att).length === 1) perte = Math.min(perte, LOT_PERTE_MAX);
+  return Math.max(PERTE_PLANCHER, 1 - perte / 100);
+}
 
 
 export function ficheNorm(j){
@@ -121,8 +140,9 @@ export function ficheCalc(f){
   const ce = ETAT_COEF[f.etat] !== undefined ? ETAT_COEF[f.etat] : 0.9;
   /* Somme des pertes des seuls éléments constatés absents. Un lot en vrac n'a
      pas de « boîte manquante » : le modèle ne la liste pas, donc rien ne se
-     facture deux fois. */
-  const cc = attCoef(f.attendu);
+     facture deux fois. f.lot passé pour le plafond de 25% sur les lots à un
+     seul élément manquant (accessoire partagé) — voir attCoef. */
+  const cc = attCoef(f.attendu, f.lot);
 
   /* Ce que tu encaisses réellement : le prix de référence corrigé de l'état et
      de la complétude, moins le port que tu avanceras. */

@@ -100,13 +100,30 @@ estime l'objet". Tâche d'interface à traiter séparément — voir
 `src/ui/fiche.js`, fonctions `renderResult` / `fichePaint` (bloc `.aihead`
 vs `.px-calc`) : rien à changer dans le moteur de cotation pour ça.
 
-**Cas 1 — en attente du chiffrage.** Cause confirmée (décote de complétude
+**Cas 1 — CORRIGÉ (23/08/2026).** Cause confirmée (décote de complétude
 appliquée en double sur les lots). Autres décotes vérifiées pour le même
 risque : `ce` (état) et `port` s'appliquent une seule fois, globalement, sur
 la fiche entière — ni l'un ni l'autre ne dépend de `f.attendu` ni ne
 compose avec un autre mécanisme spécifique aux lots. Le seul point de double
-comptage trouvé est `attCoef`/`attPerte`. Proposition de règle envoyée en
-chat, pas encore écrite dans le code.
+comptage trouvé est `attCoef`/`attPerte`.
+
+Règle écrite dans `attCoef` (`src/pricing/engine.js`) : sur un lot
+(`f.lot === true`, posé par Gemini — jamais par les modes "Un lot"/bac ni
+"Un stand", qui ne passent pas par `ficheCalc`), la décote de complétude est
+plafonnée à 25 % de la valeur, mais uniquement quand un seul élément de
+`f.attendu` est constaté absent. Dès qu'un deuxième élément manque, la
+décote complète repart sans plafond — vérifié par un garde-fou dédié
+(`tests/fixtures/lot-boites-vides.js`, un lot de boîtiers vides à deux
+éléments manquants, reste à 0 €). "Un stand" n'est pas traité comme un lot :
+question sans objet techniquement, et la mauvaise réponse sur le fond même
+si le code changeait — un stand, ce sont des objets indépendants, rien de
+partagé à décoter en trop.
+
+Skylanders : 1 € → 3 € (plafond, un prix d'achat maximum — pas la valeur du
+lot, même verrou que le cas 2). Tests à jour dans `tests/pricing.test.js` :
+l'ancien test qui documentait le 1 € a été retiré (son rôle était de
+caractériser le bug, pas de figer un comportement à garder), remplacé par le
+test qui verrouille le 3 € correct.
 
 **Cas 3 — investigation Discogs, avant tout câblage de `circulation`.**
 Deux hypothèses testées avec les vraies fonctions du projet (pas de
