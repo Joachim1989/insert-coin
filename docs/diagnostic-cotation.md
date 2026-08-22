@@ -300,3 +300,62 @@ Le comportement réseau déjà présent dans `sw.js` (network-first sur
 continue de bien faire son travail pour le contenu de la page — cette
 proposition ajoute seulement la couche manquante : le worker lui-même, et
 un signal visible quand il change de version.
+
+## Bug de terrain — `currentCameraMode` (23/08/2026)
+
+Trouvé par l'utilisateur sur téléphone, sur le sous-dossier `preview/` :
+`Uncaught ReferenceError: currentCameraMode is not defined`, en cliquant
+"Photographier"/"Galerie" sur l'écran Scan. Même classe que `credCount`
+(`ui/hud.js`, trouvé pendant le découpage) : une variable qui vivait comme
+`let` de haut niveau dans l'`index.html` monolithique — visible depuis
+n'importe quel `onclick="..."` inline, parce que tout partageait le même
+scope global — devenue une variable de MODULE ES après le découpage
+(`export let currentCameraMode` dans `ui/capture.js`), donc invisible
+depuis le HTML même si elle est exportée : un `import` ne rend rien visible
+à un attribut HTML, seul `window.x` le fait.
+
+**Correctif :** un getter exporté, `cameraMode()`, exposé sur `window`
+comme les autres fonctions ; les deux `onclick="triggerCamera(...)"` de
+`dev.html` l'appellent au lieu de lire la variable directement. Comportement
+inchangé : `triggerCamera` ne réassigne `currentCameraMode` que si
+l'argument reçu est non vide, donc relire la valeur courante pour se la
+repasser à soi-même était déjà un no-op avant même le bug.
+
+**Balayage complet du graphe de modules**, pas seulement ce cas :
+- `npx eslint src public/sw.js` (règle `no-undef` seule, globals
+  navigateur/service-worker + liste exposée sur `window` par `main.js`) :
+  après correctif, **zéro autre occurrence**. `google` (`api/googledrive.js`)
+  et `XLSX` (`ui/drive.js`) remontent d'abord comme non définis, mais ce
+  sont des globals chargés dynamiquement par un `<script>` injecté à
+  l'exécution (même mécanisme que l'`index.html` d'origine) — allowlistés,
+  pas corrigés.
+- `scripts/checkhandlers.mjs` (nouveau) : ESLint ne lit jamais de HTML, donc
+  jamais les `onclick="..."` inline — exactement où vivait ce bug. Ce script
+  extrait tous les attributs `onXxx="..."` de `dev.html` et des template
+  literals générés dans `src/ui/*.js`, et les fait relire par le moteur
+  ESLint (mêmes globals) comme des mini-scripts. 81 attributs vérifiés,
+  0 problème après correctif. Vérifié à l'aveugle : en réintroduisant
+  temporairement `currentCameraMode` dans `dev.html`, le script détecte les
+  deux occurrences exactes.
+
+**Garde-fou permanent :** `npm run lint` (les deux vérifications ci-dessus)
+tourne désormais en première étape de `npm run build` et `npm test` — ce
+défaut ne peut plus atteindre un build ni être marqué vert par erreur.
+
+**Pourquoi la vérification navigateur des 4 vues ne l'a pas attrapé :**
+cette vérification changeait de vue (`switchView`) et regardait la console
+à chaque fois — un test de *rendu*, pas d'*interaction*. Le code JS d'un
+attribut `onclick="..."` n'est compilé/évalué par le navigateur qu'à son
+premier déclenchement, jamais au chargement de la page ni à l'affichage de
+la vue qui le contient. Contrairement à `credCount` (qui plantait dans
+`hudPaint()`, appelée automatiquement à chaque rendu — donc visible dès
+qu'une vue s'affichait), `currentCameraMode` ne se déclenche que sur un
+clic précis, sur un bouton précis (« Photographier »/« Galerie »), que la
+procédure n'a pas simulé — se contenter de changer d'onglet et lire la
+console ne pouvait pas le voir, quel que soit le nombre de vues parcourues.
+Plus largement : *aucune* quantité de clics manuels ne peut prouver
+l'absence de ce bug — seule une preuve exhaustive comme `no-undef` (qui
+n'a pas besoin qu'un chemin de code s'exécute pour le vérifier) le peut.
+C'est précisément pourquoi le garde-fou ci-dessus est statique, pas un test
+d'interaction de plus : il remplace "espérer avoir cliqué le bon bouton"
+par "prouver que chaque identifiant se résout, cliqué ou non".
