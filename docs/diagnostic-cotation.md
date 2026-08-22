@@ -137,3 +137,166 @@ Hypothèses restantes, non tranchables sans les données réelles du cas :
 
 Question pour trancher : la carte "Cote Discogs" est-elle apparue sous la
 fiche au moment des faits, et si oui, qu'affichait-elle ?
+
+## Suite du tranchage (22/08/2026, deuxième passe)
+
+### Cas 1 — règle chiffrée validée, deux vérifications faites avant d'écrire
+
+**1. Le drapeau `lot` arrive-t-il jusqu'à `attCoef` ?** Oui, par un seul
+chemin, tracé dans le code (pas supposé) :
+
+- `src/pricing/engine.js`, dans `ficheNorm` : `lot: j.lot === true, lotNb:
+  Math.max(0, Math.round(nombre(j.lotNb)))`. `f.lot` vient donc du champ
+  `lot` que **Gemini renvoie dans son JSON**, pas d'un bouton d'interface.
+- `src/api/gemini.js` (le dispatch de `callGemini`) : trois branches selon
+  le mode de capture — `bac` → `renderBacResult`, `stand` →
+  `renderStandResult`, sinon (single/multi) → `renderResult`.
+- Seule `renderResult` appelle `ficheNorm`/`ficheCalc`. `renderBacResult`
+  utilise un `j.lot` complètement différent : `const lot =
+  Array.isArray(j.lot) ? j.lot : []` (le tableau des objets du bac), un
+  champ homonyme sans rapport. `renderStandResult` n'appelle `ficheCalc` nulle
+  part.
+
+Donc : le plafond de 25 % que je m'apprête à écrire dans `attCoef` ne peut
+se déclencher QUE quand Gemini répond en mode single/multi avec `lot: true`
+dans son JSON — jamais depuis le mode "Un lot" (bac) ni "Un stand", qui ne
+traversent tout simplement pas cette fonction. Si Gemini oublie de mettre
+`lot: true` sur un objet qui est visiblement un lot, le plafond ne se
+déclenche pas — mais c'est un problème de fiabilité du JSON renvoyé par
+l'IA, pas un problème de câblage entre les mêmes fonctions.
+
+**2. "Un stand" doit-il compter comme un lot ?** Question sans objet
+techniquement (le mode stand ne passe jamais par `ficheCalc`, donc le
+plafond ne peut de toute façon pas s'y appliquer), mais sur le fond : non,
+et je pense que c'est la bonne réponse même si un jour le code changeait.
+Un lot, c'est plusieurs UNITÉS d'une même logique de décote (les figurines
+d'un même Skylanders, où il manque UN portail partagé). Un stand, c'est
+plusieurs OBJETS indépendants (un jeu, une figurine, un DVD, sans rapport
+entre eux) — rien n'y est "partagé", donc le raisonnement "un seul élément
+manquant ne doit pas décoter tout le lot" n'a pas de sens à cette échelle :
+chaque objet du stand a sa propre complétude, sans élément commun à
+manquer.
+
+**3. Le plafond de 25 % peut-il masquer une vraie perte ?** Oui, en
+principe — c'est pour ça que je ne l'ai pas écrit à plat. Le risque concret
+avec les données que le modèle renvoie : `f.attendu` est un tableau, un
+élément par ligne "vu / non vu" avec sa propre `perte`. Rien n'empêche
+Gemini de renvoyer plusieurs lignes `vu: "non"` sur un lot réellement vide
+(boîtiers sans disques, ni notices — testé avec la fixture
+`lot-boites-vides.js`). La distinction que je propose et que j'ai codée
+dans le test : le plafond de 25 % ne s'applique que si **un seul** élément
+de `f.attendu` est constaté manquant. Dès qu'un deuxième élément distinct
+est signalé absent, la décote complète (non plafonnée) s'applique — le lot
+n'a plus le profil "accessoire partagé unique", il a le profil "plusieurs
+pièces vraiment perdues". Vérifié : la fixture à deux éléments manquants
+(disques + notices) donne bien `plafond: 0`, aujourd'hui et après la
+correction prévue (test de garde-fou dans `tests/pricing.test.js`, doit
+rester vert).
+
+**Tests à jour** (dans `tests/pricing.test.js`, encore rouges pour les deux
+premiers jusqu'à l'écriture du correctif) :
+- Skylanders, un seul élément manquant (le portail) → `plafond` attendu à
+  3 € (calcul détaillé en commentaire dans le test).
+- `lot-boites-vides`, deux éléments manquants → `plafond` attendu à 0 €,
+  déjà vert, doit le rester.
+
+Ces deux nombres restent des **prix d'achat maximum**, pas des estimations
+de valeur de revente — même verrou que le cas 2, pour la même raison :
+"3 €" ne veut pas dire "le lot vaut 3 €", ça veut dire "tu ne payes pas plus
+que 3 € pour ce lot".
+
+Correctif pas encore écrit dans `src/pricing/engine.js` — j'attends ta
+confirmation sur cette règle avant de toucher `attCoef`.
+
+### Cas 3 — ce que voit l'utilisateur sans jeton Discogs
+
+Tracé dans `src/ui/fiche.js`. Réponse à ta question : **les deux origines
+s'affichent bien de la même façon** — c'est le vrai défaut à corriger.
+
+- `discGreffe` (ligne 606) s'arrête à la toute première ligne :
+  `if(!discToken()) return;` — avant même de toucher au DOM. Le
+  `<div id="disc-slot"></div>` placeholder (ligne 338 de `renderResult`)
+  reste vide, silencieusement. Aucun message, aucune trace visible qu'un
+  disque aurait normalement dû être vérifié.
+- Le badge de confiance (`cKey`, ligne 313) ne regarde que `f.marcheReel`
+  (jamais posé, puisque Discogs n'a pas tourné) et `f.confiance` — **le
+  propre avis de Gemini sur lui-même**. Résultat concret : sur un disque
+  sans jeton configuré, le badge affiche "Cote partielle" (si Gemini se dit
+  confiant) ou "Estimation" — visuellement identique à ce qu'affiche
+  n'importe quel objet non musical jamais vérifié par aucune source.
+
+Autrement dit, rien sur la fiche ne distingue aujourd'hui trois situations
+pourtant très différentes : "aucun jeton configuré, Discogs n'a jamais été
+interrogé", "Discogs interrogé, rien trouvé pour ce pressage" et "l'IA a
+deviné, sans aucune vérification externe possible". Les trois rendent un
+`disc-slot` vide et un badge "Estimation"/"Cote partielle" identique. Ça
+confirme directement ton hypothèse la plus probable pour ce cas précis (pas
+de jeton enregistré au moment du test) : si c'était le cas, tu n'avais
+strictement aucun moyen de le voir sur la fiche elle-même.
+
+Aucun code touché ici, comme demandé — j'attends ton retest avec le jeton
+configuré avant de proposer quoi que ce soit (correctif du badge et/ou
+garde-fou circulation).
+
+### Service worker — proposition (pas implémenté)
+
+Découverte en préparant cette section, qui change la portée de la tâche :
+**`sw.js` n'est actuellement enregistré nulle part.** J'ai cherché
+`serviceWorker`/`register(` dans `src/`, `dev.html` et `index.html` (la
+version publiée) : aucune occurrence. Le fichier existe, avec des
+commentaires soignés sur le mode hors ligne, mais aucun code n'appelle
+`navigator.serviceWorker.register(...)` — le navigateur ne l'installe
+donc jamais. Le mode hors ligne décrit dans `sw.js` n'est pas juste
+perfectible, il n'est **pas actif du tout** aujourd'hui. C'est plus
+important que la stratégie de mise à jour elle-même : sans enregistrement,
+la question de rester bloqué sur une version périmée ne se pose même pas
+encore.
+
+Proposition en deux temps :
+
+**1. Enregistrement.** Dans `src/ui/main.js`, à la fin de `init()` (ou dans
+le `window.onload` de `src/main.js`) :
+```js
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
+```
+Comportement attendu dès ce seul ajout : première installation du cache
+(les fichiers listés dans `FILES`), app utilisable hors ligne dès la
+deuxième visite. `sw.js` a déjà `skipWaiting()`/`clients.claim()` — la
+première installation prend effet immédiatement, sans rien à changer côté
+`sw.js` pour ça.
+
+**2. Stratégie de mise à jour, pour éviter le blocage silencieux sur une
+version périmée.** Le risque précis : `skipWaiting()` +`clients.claim()`
+font prendre le contrôle au nouveau SW dès son activation, mais l'onglet
+déjà ouvert continue d'exécuter le JS déjà chargé en mémoire — il ne se
+recharge pas tout seul. Sans rien de plus, tu peux avoir un nouveau SW actif
+et un vieil écran affiché en même temps, sans le savoir. Deux ajouts pour
+couvrir ça, à faire dans une tâche séparée après validation de cette
+branche :
+
+- **Détecter la bascule et le signaler, sans recharger tout seul** (un
+  rechargement automatique en pleine brocante, au milieu d'une photo ou
+  d'une négociation, serait pire que le problème) :
+  ```js
+  let dejaAverti = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (dejaAverti) return;
+    dejaAverti = true;
+    // afficher un bandeau non bloquant : "Nouvelle version disponible —
+    // recharger", avec un bouton qui fait window.location.reload()
+  });
+  ```
+- **Forcer la vérification à l'ouverture**, pour ne pas dépendre du délai
+  de vérification automatique du navigateur (jusqu'à ~24h) : appeler
+  `registration.update()` explicitement quand l'app redevient visible
+  (`visibilitychange` → `document.visibilityState === 'visible'`), pas
+  seulement au chargement — utile en brocante où l'app reste ouverte en
+  arrière-plan entre deux fiches et ne recharge jamais toute seule.
+
+Le comportement réseau déjà présent dans `sw.js` (network-first sur
+`index.html`, avec repli sur le cache si hors ligne) reste inchangé et
+continue de bien faire son travail pour le contenu de la page — cette
+proposition ajoute seulement la couche manquante : le worker lui-même, et
+un signal visible quand il change de version.

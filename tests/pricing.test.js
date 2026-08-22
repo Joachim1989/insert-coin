@@ -19,6 +19,7 @@ import { ficheNorm, ficheCalc } from "../src/pricing/engine.js";
 import { skylandersLot } from "./fixtures/skylanders-lot.js";
 import { rememberMePS3 } from "./fixtures/remember-me-ps3.js";
 import { topGunOST } from "./fixtures/top-gun-ost.js";
+import { lotBoitesVides } from "./fixtures/lot-boites-vides.js";
 
 describe("Cas réel 1 — Lot Skylanders (sous-évaluation massive)", () => {
   it("chiffre exact aujourd'hui : reproduit le 1 € signalé sur le terrain", () => {
@@ -30,15 +31,39 @@ describe("Cas réel 1 — Lot Skylanders (sous-évaluation massive)", () => {
     expect(c.plafond).toBe(1);
   });
 
-  it("le plafond ne devrait pas être quasi nul pour un lot dont le marché est correctement estimé", () => {
+  it("plafond attendu une fois le double comptage corrigé : 3 € (prix d'achat max, pas la valeur de revente)", () => {
     const c = ficheCalc(ficheNorm(skylandersLot));
-    // Le marché (14 €) est déjà, par construction du prompt, "le prix du LOT
-    // ENTIER tel qu'il est, en vrac, sans boîtes" — la décote de complétude
-    // s'applique donc par-dessus un prix qui a déjà encaissé l'état vrac du
-    // lot. Sans cette double pénalisation, un plafond ≈ marché/3 (14/3 ≈ 4-5€)
-    // serait cohérent avec la règle du tiers que l'app applique partout
-    // ailleurs. Échoue aujourd'hui : 1 (attendu : au moins 4).
-    expect(c.plafond).toBeGreaterThanOrEqual(4);
+    // Règle validée avec l'utilisateur le 22/08/2026, pas encore écrite dans
+    // ficheCalc : sur un lot, la décote de complétude (attCoef) est plafonnée
+    // à 25 % — même plafond et même raisonnement que PORT_PART_MAX, qui
+    // existe déjà pour la même raison côté port. Ce plafond ne protège QUE le
+    // cas "un seul élément partagé constaté absent" (ex. le portail d'un lot
+    // de figurines) : dès qu'un DEUXIÈME élément est confirmé absent sur le
+    // même lot, la décote complète s'applique de nouveau, sans plafond — un
+    // lot dont plusieurs pièces manquent n'a plus le profil d'un accessoire
+    // partagé, il ressemble à plusieurs pièces vraiment cassées.
+    //
+    // Comme pour le cas 2, ce 3 € est un PRIX D'ACHAT MAXIMUM ("tu ne payes
+    // pas plus que ça"), pas une estimation de la valeur du lot — ne pas
+    // confondre les deux au moment de lire ce nombre.
+    //
+    // Calcul : base=14, état×1, port=min(3, 14×0.25)=3,
+    // complétude = 1 − min(65,25)/100 = 0.75 → brut=10.5, net=7.5,
+    // plafond=round(7.5/3)=3.
+    //
+    // Échoue aujourd'hui (1€) : attCoef n'a pas encore le plafond de 25 %.
+    expect(c.plafond).toBe(3);
+  });
+
+  it("garde-fou : le plafond de 25 % ne doit PAS s'appliquer quand plusieurs éléments manquent — un lot vraiment vide reste proche de zéro", () => {
+    const c = ficheCalc(ficheNorm(lotBoitesVides));
+    // Ce test est VERT aujourd'hui ET doit le rester après la correction :
+    // deux éléments distincts sont constatés absents ici (les disques ET les
+    // notices), pas un accessoire partagé unique — le plafond de 25 % décrit
+    // ci-dessus ne doit s'appliquer que sur UN SEUL élément manquant. Sitôt
+    // la correction écrite, relancer ce test précis pour confirmer qu'il est
+    // resté vert ; s'il devient rouge, le plafond masque une vraie perte.
+    expect(c.plafond).toBe(0);
   });
 });
 
