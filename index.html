@@ -33,6 +33,15 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 .brand span { font-family: var(--cond); font-size: 12px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
 
 .avis{background:#3a2f10;color:#ffcf6b;font-family:var(--mono);font-size:11px;line-height:1.5;padding:9px 14px;border-bottom:1px solid var(--border)}
+/* Le piège le plus important, montré AVANT le prix : dans le tiroir "Ce qui
+   peut te coûter cher" plus bas, il se lit après coup — trop tard pour changer
+   la façon dont on regarde l'objet en le prenant en main. */
+.piege-top{background:#4a1512;border:1px solid var(--stop);border-radius:10px;
+  padding:11px 13px;margin:14px 14px 0;font-size:13.5px;line-height:1.45;color:#ffb4ab}
+.piege-top b{color:#fff}
+.piege-top span{display:block;margin-top:4px;font-family:var(--mono);font-size:10.5px;color:var(--text-muted)}
+html[data-theme="light"] .piege-top{background:#FBE2E0;color:#7A1F17}
+html[data-theme="light"] .piege-top b{color:#5A120C}
 .log-row{display:flex;gap:8px;padding:0 14px 12px}
 .log-row input{flex:0 0 110px;height:44px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:9px;padding:0 12px;font-size:15px;font-family:var(--mono)}
 .log-btn{flex:1;height:44px;border:0;border-radius:9px;background:var(--gold);color:#14110f;font-family:var(--cond);font-size:15px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer}
@@ -48,6 +57,9 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 .li-main span{font-family:var(--mono);font-size:11px;color:var(--text-muted)}
 .li-m{font-family:var(--cond);font-size:19px;font-weight:700;flex:0 0 auto}
 .li-m.pos{color:var(--go)} .li-m.neg{color:var(--stop)}
+.li-vendre{background:none;border:1px solid var(--gold-dim);color:var(--gold);border-radius:6px;
+  font-family:var(--mono);font-size:9.5px;padding:6px 8px;cursor:pointer;white-space:nowrap;flex:0 0 auto}
+.li-vendu{font-family:var(--mono);font-size:10px;color:var(--go);white-space:nowrap;flex:0 0 auto}
 .li-x{background:none;border:0;color:var(--text-muted);font-size:17px;cursor:pointer;padding:6px 2px;flex:0 0 auto}
 .dupbox{border-radius:12px;padding:14px 16px;margin-bottom:12px;border:2px solid}
 .dupbox.dup-sure{background:#4a1512;border-color:var(--stop)}
@@ -220,10 +232,6 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .px-petit{background:var(--bg);border:1px solid var(--gold-dim);border-radius:10px;padding:12px 14px;margin-bottom:10px}
 .px-petit b{display:block;font-family:var(--cond);font-size:24px;color:var(--gold);line-height:1}
 .px-petit span{display:block;font-size:12.5px;color:var(--text-muted);line-height:1.5;margin-top:6px}
-.px-mien{margin-top:9px;font-size:12.5px;line-height:1.5;color:var(--text-muted);background:var(--bg);border-radius:8px;padding:9px 11px}
-.px-mien b{color:var(--text)}
-.px-mien.ok{border-left:3px solid var(--go)}
-.px-mien.warn{border-left:3px solid var(--mid);color:#ffcf6b}
 .px-vide{font-size:13px;color:var(--text-muted);line-height:1.5;background:var(--bg);border-radius:9px;padding:12px}
 .fi{margin-bottom:16px}
 .fi h5{display:flex;align-items:center;gap:8px;font-family:var(--cond);font-size:14px;text-transform:uppercase;letter-spacing:.9px;color:var(--gold);margin:0 0 8px}
@@ -294,28 +302,6 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .bac-p b{font-family:var(--cond);font-size:20px;color:var(--gold);line-height:1}
 .bac-p span{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:2px}
 .bac-p .bac-dup{font-family:var(--mono);font-size:10px;color:var(--crt);text-align:right;line-height:1.3}
-.bac-spot{margin-top:7px;border:1px solid var(--crt-dim);background:transparent;color:var(--crt);
-  border-radius:6px;padding:5px 9px;font-family:var(--mono);font-size:9.5px;letter-spacing:.6px;
-  text-transform:uppercase;cursor:pointer}
-/* ── Radar ── */
-.radar{background:#07090b;border:1px solid var(--crt-dim);border-radius:14px;padding:10px;margin-bottom:14px}
-html[data-theme="light"] .radar{background:#0E1416}
-.radar svg{width:100%;max-width:340px;display:block;margin:0 auto}
-.r-n{font-family:var(--mono);font-size:11px;fill:#4de1e8;font-weight:700}
-.r-d{font-family:var(--mono);font-size:9px;fill:#8AA7A9}
-.r-i{font-family:var(--cond);font-size:10px;fill:#14110f;font-weight:700}
-.radar-note{text-align:center;font-family:var(--mono);font-size:9.5px;color:#8AA7A9;margin-top:6px;letter-spacing:.4px}
-.radar-warn{font-family:var(--mono);font-size:10.5px;color:var(--mid);margin-top:10px;text-align:center;line-height:1.5}
-.rline{display:flex;align-items:center;gap:11px;background:var(--surface);
-  border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:7px}
-.rl-i{flex:0 0 26px;height:26px;border-radius:50%;background:var(--gold);color:#14110f;
-  display:flex;align-items:center;justify-content:center;font-family:var(--cond);font-size:14px;font-weight:700}
-.rl-c{flex:1;min-width:0}
-.rl-c b{display:block;font-size:14px;line-height:1.3}
-.rl-c span{font-family:var(--mono);font-size:10.5px;color:var(--text-muted)}
-.rl-d{flex:0 0 auto;text-align:right}
-.rl-d b{display:block;font-family:var(--cond);font-size:17px;color:var(--crt)}
-.rl-d span{font-family:var(--mono);font-size:10px;color:var(--text-muted)}
 
 /* ── Écran de fin de sortie ── */
 .scoreov{display:none}
@@ -343,6 +329,17 @@ html[data-theme="light"] .radar{background:#0E1416}
   border-bottom:1px solid var(--border);font-size:13.5px}
 .sc-lines span{color:var(--text-muted)}
 .sc-lines b{text-align:right;color:var(--gold)}
+.sc-vendu{text-align:left;background:var(--bg);border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.sc-vendu-t{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--text-muted);margin-bottom:8px}
+.sc-item{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.sc-item:last-of-type{border-bottom:0}
+.sc-item span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-item b.pos{color:var(--go);flex:0 0 auto}
+.sc-item button{flex:0 0 auto;background:none;border:1px solid var(--gold-dim);color:var(--gold);
+  border-radius:6px;font-family:var(--mono);font-size:9.5px;padding:5px 8px;cursor:pointer}
+.sc-vendu-n{font-size:11px;color:var(--text-muted);line-height:1.5;margin:9px 0 0}
 .btn-save.alt2{background:var(--surface-light);color:var(--text);margin-top:9px}
 
 /* ── Historique ── */
@@ -480,6 +477,10 @@ html[data-theme="light"] .imminent.aujourdhui{background:#FBE2CE;color:#8A3D00}
 .cal-tags .near{background:var(--go);color:#fff}
 .cal-tags .soon{background:transparent;border:1px solid var(--border)}
 .cal-note{font-size:12.5px;color:var(--text-muted);margin-top:8px;line-height:1.45}
+.cal-verif{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:8px;
+  font-family:var(--mono);font-size:10px;color:var(--mid)}
+.cal-verif.ok{color:var(--go)}
+.cal-verif a{color:var(--crt);text-decoration:none;border-bottom:1px solid var(--crt-dim)}
 .cal-act{display:flex;align-items:center;gap:8px;margin-top:10px}
 .cal-go{
   flex:1;height:36px;border:1px solid var(--gold);border-radius:7px;background:transparent;
@@ -609,27 +610,8 @@ h3.sect i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--t
   font-family:var(--cond);font-size:14px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
 }
 .act-buy{background:var(--gold);color:#14110f}
-.act-spot{background:var(--surface-light);color:var(--crt);border:1px solid var(--crt-dim)}
 .act.done{background:var(--go);color:#fff;border-color:var(--go)}
 .act:active{transform:scale(.97)}
-
-/* ── Cibles repérées ── */
-.spot{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--crt);
-  border-radius:10px;padding:13px 14px;margin-bottom:10px}
-.spot-h{display:flex;align-items:flex-start;gap:10px}
-.spot-h b{flex:1;font-size:15.5px;line-height:1.3}
-.spot-w{
-  display:flex;align-items:center;gap:7px;margin-top:7px;
-  font-family:var(--mono);font-size:12px;color:var(--crt);
-}
-.spot-p{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px}
-.spot-p span{font-family:var(--mono);font-size:11px;color:var(--text-muted)}
-.spot-p b{color:var(--gold);font-family:var(--cond);font-size:15px}
-.spot-buy{
-  width:100%;margin-top:11px;height:40px;border:1px solid var(--gold);border-radius:8px;
-  background:transparent;color:var(--gold);font-family:var(--cond);font-size:13px;
-  font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;
-}
 
 /* ── Statistiques de négociation ── */
 .stat{margin-bottom:16px}
@@ -818,57 +800,6 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 .bac-cart button.off{background:var(--surface);color:var(--text-muted)}
 .bac-cart.done{border-top-color:var(--go)}
 .bac-cart.done .bc-t b{color:var(--go)}
-
-/* ══════════ CASH OUT ══════════ */
-.vt-row{background:var(--surface);border:1px solid var(--border);border-radius:11px;margin-bottom:8px;overflow:hidden}
-.vt-row.open{border-color:var(--gold)}
-.vt-head{display:flex;align-items:stretch;gap:10px;cursor:pointer}
-.vt-bar{flex:0 0 5px}
-.vt-row.s-todo .vt-bar{background:var(--gold)}
-.vt-row.s-live .vt-bar{background:var(--crt)}
-.vt-row.s-done .vt-bar{background:var(--go)}
-.vt-row.s-keep .vt-bar{background:var(--stop)}
-.vt-c{flex:1;min-width:0;padding:11px 0}
-.vt-c b{display:block;font-size:14.5px;line-height:1.3}
-.vt-c span{display:block;font-family:var(--mono);font-size:10.5px;color:var(--text-muted);margin-top:3px}
-.vt-p{flex:0 0 auto;text-align:right;padding:11px 12px}
-.vt-p b{display:block;font-family:var(--cond);font-size:21px;color:var(--gold);line-height:1}
-.vt-row.s-done .vt-p b{color:var(--go)}
-.vt-p span{font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px}
-.vt-warn{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--mid);
-  border:1px solid var(--mid);border-radius:5px;padding:2px 6px;margin-top:6px;line-height:1.4}
-.vt-body{border-top:1px solid var(--border);padding:12px}
-.vt-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
-.vt-f{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 9px}
-.vt-f label{display:block;font-family:var(--mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px}
-.vt-f input{width:100%;background:none;border:0;outline:none;color:var(--text);font-family:var(--cond);font-size:19px;font-weight:700;padding:2px 0 0}
-.vt-hint{font-family:var(--mono);font-size:10.5px;line-height:1.5;color:var(--text-muted);margin:-4px 0 12px}
-.vt-piece{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px}
-.vt-ref{flex:0 0 auto;min-width:26px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;
-  background:var(--gold);color:#14110f;border-radius:4px;padding:3px 5px}
-.vt-piece.keep .vt-ref{background:var(--stop);color:#fff}
-.vt-piece.keep .vt-nm{text-decoration:line-through;color:var(--text-muted)}
-.vt-nm{flex:1;min-width:0;line-height:1.35}
-.vt-nm i{display:block;font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--text-muted);margin-top:2px}
-.vt-keep{flex:0 0 auto;background:none;border:1px solid var(--border);color:var(--text-muted);
-  border-radius:6px;padding:5px 8px;font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
-.vt-piece.keep .vt-keep{border-color:var(--stop);color:var(--stop)}
-.vt-acts{display:flex;gap:6px;margin:12px 0 0}
-.vt-acts button{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);
-  border-radius:8px;padding:10px 4px;font-family:var(--cond);font-size:13px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
-.vt-acts button.on{background:var(--gold);color:#14110f;border-color:var(--gold)}
-.vt-acts button.on.live{background:var(--crt);color:#04202E;border-color:var(--crt)}
-.vt-acts button.on.done{background:var(--go);color:#fff;border-color:var(--go)}
-.vt-sell{flex:0 0 auto;background:none;border:1px solid var(--gold);color:var(--gold);border-radius:6px;
-  padding:5px 8px;font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer}
-.vt-cote{display:flex;align-items:baseline;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px}
-.vt-cote b{flex:1;min-width:0;font-weight:600}
-.vt-cote span{font-family:var(--cond);font-size:17px;color:var(--go)}
-.vt-cote i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--text-muted)}
-.dupbox.dup-vente{background:#2b2410;border-color:var(--gold)}
-html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
-.dup-vente .dt{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -972,7 +903,7 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
 
 <div id="view-cal" class="view">
   <h2 class="view-title">Calendrier</h2>
-  <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France.</p>
+  <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
 
   <div class="cal-actions">
     <button class="btn-save" onclick="calFetch()">
@@ -1053,12 +984,24 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
     <button class="btn-save" onclick="legoSave()">Enregistrer</button>
     <button class="btn-save alt2" onclick="legoTest()">Tester la connexion Rebrickable</button>
 
+    <h3 class="sect">Sets LEGO (Brickset)</h3>
+    <div id="brick-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Clé gratuite sur demande : brickset.com &rarr; ton compte &rarr; API &rarr; Request a key.
+      Brickset donne les mêmes pièces et figurines que Rebrickable, plus le prix de vente neuf
+      officiel LEGO. Sert de second avis quand tu n'as pas de clé Rebrickable — les deux ne
+      s'affichent jamais en double sur une même fiche.
+    </p>
+    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false">
+    <button class="btn-save" onclick="brickSave()">Enregistrer</button>
+    <button class="btn-save alt2" onclick="brickTest()">Tester la connexion Brickset</button>
+
     <h3 class="sect">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
     <div id="mem-state" class="diagbox" style="margin-top:9px"></div>
     <button class="btn-save alt2" onclick="memFree()">Libérer de la place</button>
     <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
-      Journal, sorties archivées, cibles, calendrier et bases : tout est stocké dans ce navigateur.
+      Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur.
       Un nettoyage de cache Android l'effacerait sans prévenir.
     </p>
     <button class="btn-save" onclick="backupDrive()">
@@ -1141,7 +1084,6 @@ html[data-theme="light"] .dupbox.dup-vente{background:#FBF2D9}
 
 <script>
 // --- FULL LOCAL DATA (Restored from original) ---
-const CATS=[["jv","🎮 Jeux vidéo"],["vin","💿 Vinyles"],["tec","📻 Rétro-tech"],["jou","🧸 Jouets"],["soc","🎲 Société"],["car","🃏 Cartes"],["pop","✨ Pop culture"]];
 const D=[{"c":"jv","n":"N64 — jeu complet en boîte","b":25,"r":60,"v":"R","k":"Boîte carton = ultra fragile. Cale intérieure présente ? Sans elle, −40 %.","s":"nintendo 64 n64 cib"},
 {"c":"jv","n":"N64 — cartouche seule","b":8,"r":18,"v":"N","k":"Souffle dans le connecteur devant lui : ça fait vendeur pressé, ça fait baisser.","s":"nintendo 64 loose"},
 {"c":"jv","n":"SNES — cartouche seule","b":6,"r":15,"v":"N","k":"Étiquette trop nette + vis cruciforme = repro. Nintendo utilise du 3,8 mm tri-wing.","s":"super nintendo snes famicom"},
@@ -1250,15 +1192,20 @@ const D=[{"c":"jv","n":"N64 — jeu complet en boîte","b":25,"r":60,"v":"R","k"
 {"c":"pop","n":"Cartes postales anciennes","b":0.3,"r":2,"v":"N","k":"Les « animées » (avec des gens, des métiers) valent 5 à 10× les paysages.","s":"cartes postales anciennes cpa"},
 {"c":"pop","n":"Timbres en vrac","b":2,"r":4,"v":"L","k":"Marché quasi mort. Ne prends que si c'est offert avec autre chose.","s":"timbres philatelie collection"},
 {"c":"pop","n":"Outils anciens bois et laiton","b":3,"r":20,"v":"N","k":"Marque frappée dans le manche = vendable. Anonyme = déco à 5 €.","s":"outils anciens rabot laiton menuisier"},
-{"c":"vin","n":"Metal 80s originaux","b":8,"r":45,"v":"R","k":"Pochette gatefold intacte, insert paroles présent.","s":"metal iron maiden metallica hard rock"}];
+{"c":"vin","n":"Metal 80s originaux","b":8,"r":45,"v":"R","k":"Pochette gatefold intacte, insert paroles présent.","s":"metal iron maiden metallica hard rock"},
+{"c":"pop","n":"Céramique Boch Keramis / La Louvière","b":15,"r":80,"v":"R","k":"Marque au dos, souvent « Boch Frères Keramis » ou « BFK ». Les pièces Art Déco signées valent le plus. Vérifie l'absence de fêlures au toucher, pas seulement à l'œil.","s":"boch keramis ceramique la louviere faience belge"},
+{"c":"pop","n":"Cristal Val Saint Lambert","b":10,"r":60,"v":"R","k":"Cherche l'étiquette autocollante ou la signature gravée « Val St Lambert » sous la pièce. Le cristal sonne clair quand tu le tapes doucement de l'ongle — un son mat trahit une fêlure.","s":"val saint lambert cristal verrerie belge"},
+{"c":"pop","n":"Schtroumpfs — figurines Peyo/Schleich vintage","b":3,"r":25,"v":"R","k":"Le marquage sous le pied donne l'année : les plus anciennes (années 60-70) valent le plus. Peinture d'origine non repeinte.","s":"schtroumpfs smurfs peyo schleich figurine vintage"},
+{"c":"pop","n":"BD Peyo — premières éditions Schtroumpfs/Johan et Pirlouit","b":8,"r":50,"v":"R","k":"Dos toilé et mentions d'éditions au dos datent le tirage. Une édition originale des années 60 vaut nettement plus qu'une réédition récente.","s":"peyo schtroumpfs johan pirlouit bd premiere edition"},
+{"c":"pop","n":"Bob et Bobette — Willy Vandersteen, tomes anciens","b":3,"r":20,"v":"R","k":"Les toutes premières éditions (couverture souple, numérotation basse) sont recherchées par les collectionneurs flamands. En français ou en néerlandais, les deux se vendent.","s":"bob et bobette suske en wiske willy vandersteen bd"},
+{"c":"pop","n":"Cyclisme vintage — maillots, affiches, vélos de course","b":10,"r":80,"v":"R","k":"La Belgique est le pays du cyclisme : maillots d'équipe 70s-80s, affiches du Tour des Flandres ou de Liège-Bastogne-Liège, vélos de course en acier (Merckx, Colnago) partent bien. Vérifie l'état du cadre pour un vélo, les taches et trous de mite pour un maillot.","s":"cyclisme velo vintage maillot merckx tour des flandres liege bastogne"},
+{"c":"pop","n":"Objets brassicoles belges anciens — Duvel, Chimay, Jupiler","b":2,"r":15,"v":"N","k":"Verres à pied, cendriers émaillés, plateaux publicitaires des années 60-80. Les brasseries fermées ou les logos abandonnés valent plus que les modèles actuels toujours en circulation.","s":"biere belge duvel chimay jupiler verre cendrier plateau brasserie vintage"}];
 
 const TICKS=["Espèces en petites coupures","Sacs solides ou cabas pliables","Téléphone chargé (l'IA en dépend)","Batterie externe","Piles AA et AAA pour tester"];
 
 // --- STATE ---
 let currentCameraMode = null; // 'single', 'multi', 'stand'
 let photoQueue = [];
-let localCat = "all";
-let localVf = new Set();
 let searchTerm = "";
 const KEY_STORE = "insertcoin.gemini.key";
 const MODEL_STORE = "insertcoin.gemini.model";
@@ -1335,40 +1282,14 @@ function init() {
   }
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
   themeApply(themeGet());
-  venteSeed();
   modeSet('objet');
-  legoPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); backupState();
+  legoPaint(); brickPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
     if(Date.now() - last > 3600000) setTimeout(() => driveSync(false), 1500);
   }
   paintKeyState(); srcPaint();
-  
-  // Init chips
-  document.querySelectorAll('.chip').forEach(c => {
-    c.addEventListener('click', (e) => {
-      document.querySelectorAll('.chip').forEach(ch => ch.classList.remove('active'));
-      e.target.classList.add('active');
-      localCat = e.target.dataset.c;
-      renderOfflineFull();
-    });
-  });
-
-  // Init Verdicts filter
-  document.querySelectorAll('.vf').forEach(v => {
-    v.addEventListener('click', (e) => {
-      const val = e.target.dataset.v;
-      if(localVf.has(val)) {
-        localVf.delete(val);
-        e.target.classList.remove('active');
-      } else {
-        localVf.add(val);
-        e.target.classList.add('active');
-      }
-      renderOfflineFull();
-    });
-  });
 
   // Search input
   $('q').addEventListener('input', (e) => {
@@ -1381,16 +1302,6 @@ function init() {
   });
 
   $('ask').addEventListener('click', () => { vib(); askAIText(); });
-
-  document.querySelectorAll('#spot-mode button').forEach(b =>
-    b.addEventListener('click', () => {
-      document.querySelectorAll('#spot-mode button').forEach(x => x.setAttribute('aria-pressed','false'));
-      b.setAttribute('aria-pressed','true');
-      SPOT_VUE = b.dataset.m;
-      $('spots-list').style.display  = SPOT_VUE === 'list' ? '' : 'none';
-      $('spots-radar').style.display = SPOT_VUE === 'radar' ? '' : 'none';
-      if(SPOT_VUE === 'radar') radarRefresh();
-    }));
 
   document.querySelectorAll('#cal-filter button').forEach(b =>
     b.addEventListener('click', () => {
@@ -1459,11 +1370,11 @@ function saveSettings() {
 function backupState(){
   const el = $('backup-state'); if(!el) return;
   let t = 0; try{ t = parseInt(localStorage.getItem("insertcoin.lastbackup")||"0",10); }catch(e){}
-  const n = sortieRead().length, j = logRead().length, c = spotRead().length;
+  const n = sortieRead().length, j = logRead().length;
   const jours = t ? Math.floor((Date.now()-t)/86400000) : null;
   const alerte = (jours === null || jours > 14);
   el.style.borderLeft = "3px solid " + (alerte ? "var(--stop)" : "var(--go)");
-  el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours · ${c} cible(s)<br>`
+  el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours<br>`
     + (t ? `Dernière sauvegarde : il y a ${jours} jour(s)` : "<b>Jamais sauvegardé</b>");
   memPaint();
 }
@@ -1491,7 +1402,7 @@ function memFree(){
   const q = queueRead().length;
   if(!confirm("Libérer de la place ?\n\nCela efface le cache des recherches (IA et Discogs)"
     + (q ? " et les " + q + " analyse(s) en file d'attente" : "")
-    + ".\n\nTon journal, tes sorties archivées et ton stock Cash Out ne sont pas touchés.")) return;
+    + ".\n\nTon journal et tes sorties archivées ne sont pas touchés.")) return;
   try{
     localStorage.removeItem(CACHE_STORE);
     localStorage.removeItem(Q_STORE);
@@ -1662,7 +1573,7 @@ function shrink(file){
    tient quand même. */
 const BRIEF_BASE = `Tu es l'expert de terrain d'un chineur belge (Pixel Papa), en direct sur un stand de brocante, entre Binche et le nord de la France.
 
-Tu couvres TOUT ce qui se chine : jeux vidéo, jeux de société, vinyles et CD, jouets anciens, figurines, LEGO, mangas et BD, décoration et pop culture, céramique et verrerie régionales (Boch Keramis, Val Saint Lambert), vaisselle (Pyrex, Le Creuset), montres, appareils photo, luminaires. Si l'objet ne rentre dans aucune de ces familles, raisonne quand même : la méthode ne change pas.
+Tu couvres TOUT ce qui se chine : jeux vidéo, jeux de société, vinyles et CD, jouets anciens, figurines, LEGO, mangas et BD franco-belge (Tintin, Spirou, mais aussi Peyo/Schtroumpfs et Willy Vandersteen/Bob et Bobette), décoration et pop culture, céramique et verrerie régionales (Boch Keramis, Val Saint Lambert), vaisselle (Pyrex, Le Creuset), montres, appareils photo, luminaires, cyclisme vintage belge (maillots, affiches, vélos de course anciens), objets brassicoles anciens (Duvel, Chimay, Jupiler — verres, cendriers, plateaux publicitaires). Si l'objet ne rentre dans aucune de ces familles, raisonne quand même : la méthode ne change pas.
 
 TU RÉPONDS TOUJOURS AUX CINQ MÊMES QUESTIONS, DANS CET ORDRE.
 
@@ -2148,8 +2059,7 @@ async function callGemini(promptText, images = [], mode = 'single', fromQueue, c
      répondre : c'est le seul chiffre qui compte devant le vendeur. */
   const secours = ($('q').value || "").trim();
   aiEl.innerHTML = `<div class="aifail"><b>${titre}</b><br>${aide}
-    <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(lastErr)}</span>
-    <br><br>La base locale reste disponible dans l'onglet Base Complète.</div>
+    <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(lastErr)}</span></div>
     <div id="disc-slot"></div>
     <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Masquer</button>`;
   if(discToken() && discMusique(secours)) discGreffe(secours, 'disc-slot');
@@ -2312,39 +2222,10 @@ function ficheNorm(j){
     /* Réglages du chineur : ce que TOI tu constates, pas ce que la photo suggère. */
     etat: (n >= 1 && n <= 5) ? n : 0,
 
-    /* Renseignée après coup par Discogs quand le disque est identifié. */
-    marcheReel: 0, marcheVu: 0, marcheSrc: "", mien: null,
+    /* Renseignée après coup par Discogs ou Rebrickable/Brickset quand l'objet est identifié. */
+    marcheReel: 0, marcheVu: 0, marcheSrc: "",
     comparables: compNorm(j.comparables && j.comparables.length ? j.comparables : j.preuves)
   };
-}
-
-/* Ce que TU as réellement encaissé écrase n'importe quelle estimation. Un prix
-   affiché, lui, n'est qu'une intention : on le montre sans l'imposer. */
-function ficheMienne(query){
-  const m = venteMatch(query);
-  if(!m) return null;
-  const x = m.x;
-  if(x.statut === "done"){
-    const net = (x.vendu || 0) - (x.frais || 0);
-    if(net > 0) return {prix: Math.round(net), src: "ta vente réelle", dur: true};
-  }
-  if(x.prix > 0) return {prix: Math.round(x.prix), src: "ton prix affiché", dur: false};
-  return null;
-}
-
-/* Encadré de confrontation : quand ton propre prix et le marché ne disent pas
-   la même chose, il vaut mieux le voir maintenant que le découvrir en vendant. */
-function ficheMien(f, c){
-  if(!f.mien || !c.base) return "";
-  const m = f.mien;
-  if(m.dur) return `<div class="px-mien ok">Référence : <b>${m.prix}€</b>, c'est ce que tu as encaissé
-    sur le même article. Pas une moyenne — ta cote.</div>`;
-  const ec = Math.round((m.prix - c.base) / c.base * 100);
-  if(Math.abs(ec) < 20) return `<div class="px-mien">Tu en demandes ${m.prix}€ dans Cash Out : cohérent avec le marché.</div>`;
-  return ec > 0
-    ? `<div class="px-mien warn">Tu affiches <b>${m.prix}€</b> dans Cash Out, soit ${ec}% au-dessus du marché estimé (${c.base}€).
-       Tant qu'il ne part pas à ce prix, c'est une intention, pas une cote.</div>`
-    : `<div class="px-mien warn">Tu affiches <b>${m.prix}€</b> alors que le marché est à ${c.base}€. Tu te sous-vends.</div>`;
 }
 
 function ficheCalc(f){
@@ -2532,7 +2413,6 @@ function fichePrix(f, c, dem){
       ${c.port ? ` · <b>−${c.port}€</b> de volume` : ""}
       → <b>${c.net}€</b> nets pour toi${f.lot && f.lotNb > 1 ? ` (le lot de ${f.lotNb})` : ""}
     </div>
-    ${ficheMien(f, c)}
     ${dem ? `<div class="px-dem">${dem <= c.cible
       ? "Il en demande " + dem + "€ : c'est déjà sous ta cible. Prends sans discuter."
       : dem <= c.plafond
@@ -2638,22 +2518,46 @@ function ficheCopieCode(){
   } else prompt("Copie la référence :", t);
 }
 
+/* ══════ TA VRAIE COTE ══════
+   Une estimation IA vaut ce qu'elle vaut ; ce que TU as réellement encaissé
+   sur le même objet, une autre fois, est un fait. On le cherche dans le
+   journal en cours ET dans les sorties déjà archivées — la revente arrive
+   presque toujours des semaines après l'achat, bien après que la sortie ait
+   été rangée. */
+function coteReelle(query){
+  const qt = collTokens(query); if(qt.length < 2) return null;
+  const pool = [];
+  logRead().forEach(x => { if(x.vendu > 0) pool.push(x); });
+  sortieRead().forEach(so => (so.achats || []).forEach(x => { if(x.vendu > 0) pool.push(x); }));
+  let best = null;
+  pool.forEach(x => {
+    const sc = collScore(qt, collTokens(x.o || ""));
+    if(sc >= 0.55 && (!best || sc > best.sc)) best = {sc, x};
+  });
+  if(!best) return null;
+  return {prix: Math.round(best.x.vendu), d: best.x.venduD || 0};
+}
+
 // --- RENDERERS ---
 function renderResult(j, images, avis) {
   FICHE = ficheNorm(j);
   const f = FICHE;
-  f.mien = ficheMienne((f.objet || "") + " " + (f.identification || ""));
-  /* Une vente que tu as réellement conclue devient la référence de calcul. */
-  if(f.mien && f.mien.dur){ f.marcheReel = f.mien.prix; f.marcheSrc = f.mien.src; }
+  /* Ce que TU as réellement encaissé sur le même objet, une autre fois, écrase
+     n'importe quelle estimation — la tienne comme celle du modèle. */
+  const cote = coteReelle((f.objet || "") + " " + (f.identification || ""));
+  if(cote){
+    f.marcheReel = cote.prix;
+    f.marcheSrc = "ta vente réelle" + (cote.d ? " · " + new Date(cote.d).toLocaleDateString('fr-BE') : "");
+  }
   const c = ficheCalc(f);
   const dem = parseFloat($('price').value || "0") || 0;
   const vd = ficheVerdict(f, c, dem);
 
   const conf = (f.confiance || "").toLowerCase();
-  /* « Cote vérifiée » se mérite : sans source extérieure (Discogs ou une vente
-     que tu as conclue), c'est l'avis du modèle sur lui-même. On plafonne. */
-  let cKey = conf.startsWith("haut") ? "h" : conf.startsWith("moy") ? "m" : "f";
-  if(cKey === "h" && !f.marcheReel) cKey = "m";
+  /* « Cote vérifiée » se mérite : sans source extérieure (Discogs, Rebrickable,
+     Brickset ou une vente que tu as réellement conclue), c'est l'avis du
+     modèle sur lui-même — quelle que soit la confiance qu'il s'accorde. */
+  let cKey = f.marcheReel ? "h" : (conf.startsWith("haut") ? "m" : conf.startsWith("moy") ? "m" : "f");
   const cTxt = {h:"Cote vérifiée", m:"Cote partielle", f:"Estimation"}[cKey];
 
   const imgHtml = (images && images.length)
@@ -2661,7 +2565,7 @@ function renderResult(j, images, avis) {
     : "";
 
   const rq = (f.objet || "") + " " + (f.identification || "");
-  const dupHtml = venteBanner(rq) + collBanner(rq);
+  const dupHtml = collBanner(rq);
 
   $('ai-results').innerHTML = dupHtml + `
     <div class="aicard">
@@ -2674,10 +2578,13 @@ function renderResult(j, images, avis) {
           <div class="r">${c.net ? "Revente nette ≈ " + c.net + "€" : "Marché inconnu"}</div>
         </div>
       </div>
+      ${f.pieges.length ? `<div class="piege-top">⚠ <b>${esc(f.pieges[0])}</b>${f.pieges.length > 1
+        ? `<span>+ ${f.pieges.length - 1} autre${f.pieges.length > 2 ? "s" : ""} piège${f.pieges.length > 2 ? "s" : ""} détaillé${f.pieges.length > 2 ? "s" : ""} plus bas</span>` : ""}</div>` : ""}
       <div id="fiche-acte">${ficheAction(f, c, dem)}</div>
       ${f.nego ? `<div class="say" id="fiche-say">« ${esc(ficheDire(f))} »</div>` : ""}
       <div id="disc-slot"></div>
       <div id="lego-slot"></div>
+      <div id="brick-slot"></div>
       <div class="aibody">${ficheCorps(f)}</div>
       <div id="fiche-prix" class="prix">${fichePrix(f, c, dem)}</div>
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
@@ -2700,6 +2607,7 @@ function renderResult(j, images, avis) {
   const req = (f.objet || "") + (f.identification && f.identification.length < 60 ? " " + f.identification : "");
   if(discMusique(req)) discGreffe(req.trim(), 'disc-slot');
   legoGreffe(f, 'lego-slot');
+  brickGreffe(f, 'brick-slot');
 }
 
 function renderStandResult(j, image, avis) {
@@ -2785,8 +2693,7 @@ function renderBacResult(j, images, avis, garderSel){
       </div>
       <div class="bac-p">
         ${r.dup ? `<span class="bac-dup">en collection</span>`
-          : `<b>${Number(o.prixMax)||"?"}€</b><span>→ ${Number(o.revente)||"?"}€</span>
-             ${cls === "L" ? "" : `<button class="bac-spot" onclick="event.stopPropagation();bacSpot(${idx})">Repérer</button>`}`}
+          : `<b>${Number(o.prixMax)||"?"}€</b><span>→ ${Number(o.revente)||"?"}€</span>`}
       </div>
     </div>`;
   };
@@ -2836,7 +2743,7 @@ function bacCart(){
   if(BAC_ACHETE){
     return `<div class="bac-cart done"><div class="bc-t">
       <b>Lot enregistré</b>
-      <span>Journal de chasse et Cash Out mis à jour</span></div></div>`;
+      <span>Journal de chasse mis à jour</span></div></div>`;
   }
   const sel = [...BAC_SEL].map(i => BAC_ROWS[i]).filter(Boolean);
   const val = sel.reduce((s,r) => s + (Number(r.o.revente)||0), 0);
@@ -2898,28 +2805,8 @@ function bacBuy(){
   });
   logWrite(lg);
 
-  if(confirm("Créer une annonce Cash Out avec ces " + sel.length + " pièce(s) ?\n\n"
-    + "Tu pourras la découper ou en retirer une pièce ensuite.")){
-    const rev = somme || tot * 2;
-    const typ = (BAC_VUE && BAC_VUE.j && BAC_VUE.j.typeBac) ? BAC_VUE.j.typeBac : "brocante";
-    const a = venteRead();
-    a.unshift({
-      id: Date.now(),
-      t: sel.length === 1 ? bacNom(sel[0]) : "Lot " + typ + " — " + sel.length + " pièces",
-      prix: Math.max(1, Math.round(rev)), plancher: Math.max(1, Math.round(rev * 0.85)),
-      cout: tot, vendu: 0, frais: 0, statut: "todo", blocage: "", d: Date.now(),
-      pieces: sel.map((r, i) => ({
-        ref: String.fromCharCode(65 + (i % 26)),
-        n: bacNom(r),
-        det: [r.o.annee, r.o.note].filter(Boolean).join(" · "),
-        keep: false
-      }))
-    });
-    venteWrite(a);
-  }
-
   BAC_ACHETE = true;
-  vib(); hudPaint(); renderLog(); renderVente();
+  vib(); hudPaint(); renderLog();
   if(BAC_VUE) renderBacResult(BAC_VUE.j, BAC_VUE.images, BAC_VUE.avis, true);
 }
 
@@ -2927,13 +2814,6 @@ let BAC_ROWS = [];
 let BAC_SEL = new Set();
 let BAC_VUE = null;
 let BAC_ACHETE = false;
-function bacSpot(i){
-  const r = BAC_ROWS[i]; if(!r) return;
-  const o = r.o;
-  LAST = {objet: (o.artiste ? o.artiste + " — " : "") + (o.nom || ""),
-          revente: Number(o.revente)||0, prixMax: Number(o.prixMax)||0, demande: 0};
-  spotAdd();
-}
 
 /* ---------- COLLECTION : ANTI-DOUBLON ---------- */
 const COLL_STORE = "insertcoin.collection";
@@ -3325,7 +3205,7 @@ async function calFetch(){
   const auj = new Date().toISOString().slice(0,10);
   const brief = `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de Binche (7130, Belgique), en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes).
 Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
-Cherche sur brocabrac.fr, vide-greniers.org, brocantes.be, les sites communaux et les agendas locaux.
+Cherche en priorité sur quefaire.be (le plus gros agenda de brocantes en Belgique), puis recoupe avec brocabrac.fr, vide-greniers.org, brocantes.be, les sites communaux et les agendas locaux.
 Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis Binche en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
 N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
 Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
@@ -3490,6 +3370,22 @@ function calGo(i){
 }
 function calDel(i){ const a = calRead(); a.splice(i,1); calWrite(a); renderCal(); }
 
+/* ══════ VÉRIFICATION DE LA DATE ══════
+   L'IA cherche sur le web, mais une date de brocante reste une affirmation,
+   pas une preuve — contrairement à un prix, personne ne peut la confirmer par
+   du grounding fiable à 100 %. On donne donc le même geste qu'ailleurs dans
+   l'app : la recherche déjà tapée, à un doigt, avant de marquer « j'y vais ».
+   Cliquer ne PROUVE rien de plus, mais dit que TOI tu as regardé. */
+function calVerifQuery(x){
+  return ((x.ville || "") + " brocante").trim();
+}
+function calVerifMark(i){
+  const a = calRead(); if(!a[i]) return;
+  a[i].verifie = true; calWrite(a);
+  /* Pas de renderCal() ici : rouvrir la page pendant que l'onglet quefaire.be
+     s'ouvre ferait perdre le tap. Le badge se met à jour au prochain rendu. */
+}
+
 function calJours(d){
   const j = Math.round((new Date(d + "T12:00:00") - new Date().setHours(12,0,0,0)) / 86400000);
   if(j < 0) return null;
@@ -3566,6 +3462,13 @@ function renderCal(){
             <span class="soon">${calJours(x.date)}</span>
           </div>
           ${x.note ? `<div class="cal-note">${esc(x.note)}</div>` : ""}
+          ${!x.manuel ? `<div class="cal-verif${x.verifie ? " ok" : ""}">
+            <span>${x.verifie ? "✓ Vérifiée par toi" : "Non vérifiée — trouvée par l'IA"}</span>
+            <a href="https://www.quefaire.be/annonces/index.php?word=${encodeURIComponent(calVerifQuery(x))}"
+              target="_blank" rel="noopener" onclick="calVerifMark(${idx})">quefaire.be</a>
+            <a href="https://www.google.com/search?q=${encodeURIComponent(calVerifQuery(x) + ' ' + (x.date||''))}"
+              target="_blank" rel="noopener" onclick="calVerifMark(${idx})">Google</a>
+          </div>` : ""}
           <div class="cal-act">
             <button class="cal-go" onclick="calGo(${idx})">
               <svg class="ico16"><use href="#i-star"/></svg>${x.go ? "J'y vais" : "Marquer"}</button>
@@ -4195,6 +4098,170 @@ async function legoTest(){
   }
 }
 
+/* ══════════════════ COTES LEGO (Brickset) ══════════════════
+   Second avis sur les sets : mêmes pièces/figurines que Rebrickable, plus le
+   prix de vente neuf officiel LEGO (ce que Rebrickable ne donne pas). Il ne
+   s'affiche que si Rebrickable n'est pas configuré — deux cartes qui répètent
+   les mêmes pièces/figurines sur la même fiche n'aideraient personne. */
+const BRICK_STORE = "insertcoin.brickset.key";
+const BRICK_CACHE = "insertcoin.brickset.cache";
+const BRICK_API   = "https://brickset.com/api/v3.asmx";
+function brickKey(){ try { return localStorage.getItem(BRICK_STORE) || ""; } catch(e){ return ""; } }
+
+let BRICK_LAST = 0;
+async function brickGet(method, params){
+  const k = brickKey();
+  if(!k) throw new Error("Aucune clé Brickset");
+  if(!navigator.onLine) throw new Error("Hors réseau");
+  const attente = 900 - (Date.now() - BRICK_LAST);
+  if(attente > 0) await new Promise(r => setTimeout(r, attente));
+  BRICK_LAST = Date.now();
+  const q = new URLSearchParams({apiKey: k, ...(params || {})});
+  const r = await fetch(BRICK_API + "/" + method + "?" + q.toString());
+  if(!r.ok) throw new Error("HTTP " + r.status);
+  const d = await r.json();
+  /* Toutes les réponses Brickset portent un statut : "success" ou "error"
+     avec un message, quel que soit le code HTTP renvoyé. */
+  if(d.status !== "success"){
+    const msg = d.message || "";
+    throw new Error(/invalid|key/i.test(msg) ? "CLE" : (msg || "Erreur Brickset"));
+  }
+  return d;
+}
+
+function brickCacheGet(k){
+  try{
+    const c = JSON.parse(localStorage.getItem(BRICK_CACHE) || "{}");
+    const h = c[k];
+    if(h && Date.now() - h.t < 2592000000) return h.v; /* 30 jours : un set ne change pas */
+  }catch(e){}
+  return null;
+}
+function brickCacheSet(k, v){
+  try{
+    const c = JSON.parse(localStorage.getItem(BRICK_CACHE) || "{}");
+    c[k] = {t: Date.now(), v};
+    const ks = Object.keys(c);
+    if(ks.length > 80) ks.sort((a,b)=>c[a].t-c[b].t).slice(0, ks.length-80).forEach(x=>delete c[x]);
+    localStorage.setItem(BRICK_CACHE, JSON.stringify(c));
+  }catch(e){}
+}
+
+/* Le nom exact du champ de prix a changé d'une version de l'API à l'autre ;
+   on essaie plusieurs chemins plausibles et on n'affiche que ce qui répond
+   vraiment — jamais un prix inventé sous un mauvais nom de champ. */
+function brickPrixNeuf(s){
+  const essais = [
+    ["EU", s.LEGOCom && s.LEGOCom.EU && s.LEGOCom.EU.retailPrice],
+    ["DE", s.LEGOCom && s.LEGOCom.DE && s.LEGOCom.DE.retailPrice],
+    ["EU", s.EURetailPrice], ["DE", s.DERetailPrice]
+  ];
+  for(const [dev, v] of essais){ const n = Number(v); if(n > 0) return {val: Math.round(n), dev}; }
+  return {val: 0, dev: ""};
+}
+
+async function brickSet(num){
+  const cle = "b:" + legoNum(num);
+  const cache = brickCacheGet(cle);
+  if(cache !== null) return cache;
+
+  const d = await brickGet("getSets", {userHash: "", params: JSON.stringify({setNumber: legoNum(num)})});
+  const s = (d.sets || [])[0];
+  if(!s){ brickCacheSet(cle, false); return false; }
+
+  const prix = brickPrixNeuf(s);
+  const cote = {
+    num: s.number ? (s.number + "-" + (s.numberVariant || 1)) : legoNum(num),
+    nom: s.name || "", annee: s.year || "",
+    pieces: Number(s.pieces) || 0, figs: Number(s.minifigs) || 0,
+    prixNeuf: prix.val, prixDev: prix.dev,
+    url: s.bricksetURL || ("https://brickset.com/sets/" + legoNum(num))
+  };
+  brickCacheSet(cle, cote);
+  return cote;
+}
+
+function brickCarte(c){
+  return `<div class="disc lego">
+    <div class="disc-h"><span class="disc-b">Brickset</span>
+      <b>${esc(c.nom)}</b>
+      <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
+    <div class="disc-n">
+      <div><b>${c.pieces}</b><span>pièces</span></div>
+      <div><b>${c.figs}</b><span>figurines</span></div>
+      <div><b>${c.prixNeuf ? c.prixNeuf + "€" : "—"}</b><span>${c.prixNeuf ? "neuf (" + c.prixDev + ")" : "prix neuf"}</span></div>
+    </div>
+    <div class="disc-d">Prix neuf officiel LEGO à la sortie du set, pas une cote d'occasion :
+      sert de plafond de référence, pas de prix de revente.</div>
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">Voir le set</a>
+  </div>`;
+}
+
+/* On ne cherche un set que si l'objet en est manifestement un, et seulement
+   si Rebrickable n'a rien à montrer — voir la note en tête de section. */
+async function brickGreffe(f, cibleId){
+  if(!brickKey() || legoKey()) return;
+  const num = legoNumTrouve(f);
+  if(!num) return;
+  const el = $(cibleId); if(!el) return;
+  el.innerHTML = `<div class="disc-load">Recherche du set ${esc(num)} sur Brickset…</div>`;
+  try{
+    const c = await brickSet(num);
+    const cur = $(cibleId); if(!cur) return;
+    if(!c){ cur.innerHTML = ""; return; }
+    cur.innerHTML = brickCarte(c);
+    if(FICHE && (c.pieces || c.figs) && !FICHE.marcheVu && !FICHE.marcheReel){
+      const t = legoTarifs();
+      const total = Math.round(c.pieces * t.piece + c.figs * t.fig);
+      if(total > 0){
+        FICHE.marcheReel = total;
+        FICHE.marcheSrc = "Brickset · " + c.pieces + " pièces, " + c.figs + " figurines";
+        fichePaint();
+      }
+    }
+  }catch(err){
+    const cur = $(cibleId); if(!cur) return;
+    cur.innerHTML = String(err.message) === "CLE"
+      ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>` : "";
+  }
+}
+
+function brickSave(){
+  const v = ($('brick-key').value || "").trim();
+  try{ v ? localStorage.setItem(BRICK_STORE, v) : localStorage.removeItem(BRICK_STORE); }catch(e){}
+  vib(); brickPaint();
+}
+
+function brickPaint(){
+  const el = $('brick-state'); if(!el) return;
+  const k = brickKey();
+  if($('brick-key') && !$('brick-key').value) $('brick-key').value = k;
+  el.style.borderLeft = "3px solid " + (k ? "var(--go)" : "var(--border)");
+  el.innerHTML = k
+    ? "Clé enregistrée." + (legoKey() ? " Rebrickable est configuré : Brickset ne sert que si Rebrickable ne répond pas." : " Sert de source pour les sets LEGO.")
+    : "Aucune clé. Optionnelle : Rebrickable suffit pour les pièces et figurines.";
+}
+
+async function brickTest(){
+  const el = $('brick-state');
+  if(!brickKey()){ alert("Colle d'abord ta clé, puis appuie sur Enregistrer."); return; }
+  el.innerHTML = "Test en cours…";
+  try{
+    const c = await brickSet("10182");  /* Café Corner, même set test que Rebrickable */
+    el.style.borderLeft = "3px solid var(--go)";
+    el.innerHTML = c
+      ? `<b style="color:var(--go)">Connexion réussie.</b><br>Test : « ${esc(c.nom)} » (${c.annee}) — ${c.pieces} pièces, ${c.figs} figurines${c.prixNeuf ? ", " + c.prixNeuf + "€ neuf" : ""}.`
+      : `<b style="color:var(--mid)">Clé valide, mais set test introuvable.</b>`;
+  }catch(err){
+    el.style.borderLeft = "3px solid var(--stop)";
+    el.innerHTML = String(err.message) === "CLE"
+      ? `<b style="color:var(--stop)">Clé refusée.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne.`
+      : /Failed to fetch|NetworkError/i.test(String(err.message))
+        ? `<b style="color:var(--stop)">Brickset bloque l'appel depuis le navigateur.</b><br>Dis-le-moi, on passera par un relais.`
+        : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
+  }
+}
+
 const THEME_STORE = "insertcoin.theme";
 function themeGet(){ try { return localStorage.getItem(THEME_STORE) || "auto"; } catch(e){ return "auto"; } }
 function themeApply(mode){
@@ -4224,15 +4291,6 @@ function hudPaint(){
     sc.textContent = (marge >= 0 ? "+" : "") + marge.toFixed(0) + "€";
     sc.className = marge > 0 ? "pos" : marge < 0 ? "neg" : "";
   }
-  const sp = spotRead().length;
-  if($('hud-spots')) $('hud-spots').textContent = sp;
-  const bd = $('bdg-spots');
-  if(bd){ bd.textContent = sp || ""; bd.style.display = sp ? "block" : "none"; }
-
-  const vp = venteRead().filter(x => x.statut === "todo" && venteVives(x).length).length;
-  const bv = $('bdg-vente');
-  if(bv){ bv.textContent = vp || ""; bv.style.display = vp ? "block" : "none"; }
-
   if($('hud-cred')) $('hud-cred').textContent = credCount();
 
   const q = queueRead().length;
@@ -4408,195 +4466,6 @@ function negoPad(demande, prixMax){
   </div>`;
 }
 
-/* ══════════ OBJETS REPÉRÉS ══════════ */
-const SPOT_STORE = "insertcoin.spots";
-function spotRead(){ try { return JSON.parse(localStorage.getItem(SPOT_STORE) || "[]"); } catch(e){ return []; } }
-function spotWrite(a){ return storeSet(SPOT_STORE, JSON.stringify(a), "tes objets repérés"); }
-
-/* ══════════ RADAR ══════════
-   Sur 580 emplacements, « stand 47, nappe bleue » ne suffit pas à retrouver
-   son chemin. On enregistre la position au moment du repérage. */
-let MA_POS = null;
-
-function geoNow(timeout){
-  return new Promise(res => {
-    if(!navigator.geolocation) return res(null);
-    navigator.geolocation.getCurrentPosition(
-      p => res({lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy}),
-      () => res(null),
-      {enableHighAccuracy: true, timeout: timeout || 8000, maximumAge: 30000}
-    );
-  });
-}
-
-/* Distance en mètres entre deux points (formule de haversine). */
-function geoDist(a, b){
-  const R = 6371000, rad = x => x * Math.PI / 180;
-  const dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
-  const h = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon/2)**2;
-  return 2 * R * Math.asin(Math.sqrt(h));
-}
-/* Cap en degrés depuis le nord. */
-function geoCap(a, b){
-  const rad = x => x * Math.PI / 180, deg = x => x * 180 / Math.PI;
-  const dLon = rad(b.lon - a.lon);
-  const y = Math.sin(dLon) * Math.cos(rad(b.lat));
-  const x = Math.cos(rad(a.lat)) * Math.sin(rad(b.lat)) -
-            Math.sin(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.cos(dLon);
-  return (deg(Math.atan2(y, x)) + 360) % 360;
-}
-const CARDINAUX = ["N","NE","E","SE","S","SO","O","NO"];
-const capNom = d => CARDINAUX[Math.round(d / 45) % 8];
-
-function spotAdd(){
-  if(!LAST) return;
-  const stand = prompt("Où l'as-tu vu ? (numéro de stand, repère, couleur de la nappe…)", "");
-  if(stand === null) return;
-  const a = spotRead();
-  const e = {d: Date.now(), o: LAST.objet, s: stand.trim(),
-             dem: LAST.demande || 0, mx: LAST.prixMax || 0, r: LAST.revente || 0};
-  a.unshift(e);
-  spotWrite(a); vib(); hudPaint();
-  /* La position arrive après coup : inutile de faire attendre devant le vendeur. */
-  geoNow(6000).then(pos => {
-    if(!pos) return;
-    const l = spotRead();
-    const t = l.find(x => x.d === e.d);
-    if(t){ t.lat = pos.lat; t.lon = pos.lon; spotWrite(l); if($('spots-list')) renderSpots(); }
-  });
-  const b = document.querySelector('.act-spot');
-  if(b){ b.classList.add("done"); b.innerHTML = "✓ Repéré"; }
-}
-function spotDel(i){ const a = spotRead(); a.splice(i,1); spotWrite(a); renderSpots(); hudPaint(); }
-function spotBuy(i){
-  const a = spotRead(); const x = a[i]; if(!x) return;
-  const paye = parseFloat(prompt(`« ${x.o} » — prix payé en euros ?`, String(x.mx || "")) || "");
-  if(isNaN(paye)) return;
-  const lg = logRead();
-  lg.unshift({d: Date.now(), o: x.o, p: paye, r: x.r || 0, dem: x.dem || 0, mx: x.mx || 0});
-  logWrite(lg);
-  a.splice(i,1); spotWrite(a); renderSpots(); hudPaint();
-}
-function spotClear(){
-  if(confirm("Vider la liste des objets repérés ?")){ spotWrite([]); renderSpots(); hudPaint(); }
-}
-
-let SPOT_VUE = "list";
-
-async function radarRefresh(){
-  const el = $('spots-radar'); if(!el) return;
-  el.innerHTML = `<div class="loading"><div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p>Recherche du signal GPS…</p></div>`;
-  MA_POS = await geoNow(10000);
-  renderRadar();
-}
-
-function renderRadar(){
-  const el = $('spots-radar'); if(!el) return;
-  const tous = spotRead();
-  const geo = tous.filter(x => x.lat && x.lon);
-
-  if(!MA_POS){
-    el.innerHTML = `<div class="empty-state">
-      <svg class="ico-big"><use href="#i-target"/></svg>
-      <b>Pas de position</b>
-      <p>Le GPS n'a rien renvoyé. Autorise la localisation et vérifie que tu es dehors.</p>
-      <button class="btn-save" style="margin-top:14px" onclick="radarRefresh()">Réessayer</button></div>`;
-    return;
-  }
-  if(!geo.length){
-    el.innerHTML = `<div class="empty-state">
-      <svg class="ico-big"><use href="#i-target"/></svg>
-      <b>Aucune cible localisée</b>
-      <p>Les cibles repérées à partir de maintenant enregistrent leur position.
-      Celles d'avant n'en ont pas.</p></div>`;
-    return;
-  }
-
-  const cibles = geo.map(x => ({
-    x, dist: geoDist(MA_POS, x), cap: geoCap(MA_POS, x)
-  })).sort((a,b) => a.dist - b.dist);
-
-  /* Échelle : la cible la plus lointaine touche le bord du dernier cercle. */
-  const maxD = Math.max(60, ...cibles.map(c => c.dist));
-  const R = 130, CX = 150, CY = 150;
-  const pts = cibles.map((c, i) => {
-    const r = (c.dist / maxD) * R;
-    const a = (c.cap - 90) * Math.PI / 180;
-    return {...c, px: CX + r * Math.cos(a), py: CY + r * Math.sin(a), i};
-  });
-
-  const cercles = [0.33, 0.66, 1].map(f =>
-    `<circle cx="${CX}" cy="${CY}" r="${(R*f).toFixed(0)}" fill="none"
-       stroke="var(--crt-dim)" stroke-width="1" opacity="${f===1?".9":".45"}"/>`).join("");
-
-  el.innerHTML = `
-    <div class="radar">
-      <svg viewBox="0 0 300 300" role="img" aria-label="Radar des cibles repérées">
-        <line x1="${CX}" y1="${CY-R-8}" x2="${CX}" y2="${CY+R+8}" stroke="var(--crt-dim)" stroke-width="1" opacity=".35"/>
-        <line x1="${CX-R-8}" y1="${CY}" x2="${CX+R+8}" y2="${CY}" stroke="var(--crt-dim)" stroke-width="1" opacity=".35"/>
-        ${cercles}
-        <text x="${CX}" y="${CY-R-13}" text-anchor="middle" class="r-n">N</text>
-        <text x="${CX+R+4}" y="${CY-R*0.66-4}" text-anchor="end" class="r-d">${Math.round(maxD)} m</text>
-        ${pts.map(pt => `
-          <g>
-            <line x1="${CX}" y1="${CY}" x2="${pt.px.toFixed(1)}" y2="${pt.py.toFixed(1)}"
-                  stroke="var(--gold)" stroke-width="1" opacity=".3"/>
-            <circle cx="${pt.px.toFixed(1)}" cy="${pt.py.toFixed(1)}" r="7" fill="var(--gold)"/>
-            <text x="${pt.px.toFixed(1)}" y="${(pt.py+3.5).toFixed(1)}" text-anchor="middle" class="r-i">${pt.i+1}</text>
-          </g>`).join("")}
-        <circle cx="${CX}" cy="${CY}" r="6" fill="var(--crt)"/>
-        <circle cx="${CX}" cy="${CY}" r="11" fill="none" stroke="var(--crt)" stroke-width="1.5" opacity=".5"/>
-      </svg>
-      <div class="radar-note">Nord en haut · tu es au centre${MA_POS.acc ? ` · précision ±${Math.round(MA_POS.acc)} m` : ""}</div>
-    </div>
-    ${pts.map(pt => `
-      <div class="rline">
-        <div class="rl-i">${pt.i+1}</div>
-        <div class="rl-c">
-          <b>${esc(pt.x.o || "—")}</b>
-          ${pt.x.s ? `<span>${esc(pt.x.s)}</span>` : ""}
-        </div>
-        <div class="rl-d">
-          <b>${pt.dist < 1000 ? Math.round(pt.dist) + " m" : (pt.dist/1000).toFixed(1) + " km"}</b>
-          <span>${capNom(pt.cap)}</span>
-        </div>
-      </div>`).join("")}
-    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:14px"
-      onclick="radarRefresh()">Actualiser ma position</button>
-    ${tous.length > geo.length ? `<p class="radar-warn">${tous.length-geo.length} cible(s) sans position enregistrée — visibles dans la liste.</p>` : ""}`;
-}
-
-function renderSpots(){
-  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
-  if(!$('spot-list')) return;
-  const el = $('spots-list'); if(!el) return;
-  const a = spotRead();
-  if(!a.length){
-    el.innerHTML = `<div class="empty-state">
-      <svg class="ico-big"><use href="#i-target"/></svg>
-      <b>Aucune cible</b>
-      <p>Après une analyse, appuie sur « Repérer » pour noter un objet et son stand.
-      Tu retrouveras la liste ici pour ta seconde passe.</p></div>`;
-    return;
-  }
-  el.innerHTML = a.map((x,i) => `
-    <div class="spot">
-      <div class="spot-h">
-        <b>${esc(x.o || "—")}</b>
-        <button class="li-x" onclick="spotDel(${i})">✕</button>
-      </div>
-      ${x.s ? `<div class="spot-w"><svg class="ico16"><use href="#i-target"/></svg>${esc(x.s)}</div>` : ""}
-      <div class="spot-p">
-        ${x.dem ? `<span>demandé <b>${x.dem}€</b></span>` : ""}
-        ${x.mx ? `<span>ton max <b>${x.mx}€</b></span>` : ""}
-        ${x.r ? `<span>revente <b>${x.r}€</b></span>` : ""}
-      </div>
-      <button class="spot-buy" onclick="spotBuy(${i})">Je l'ai acheté</button>
-    </div>`).join('')
-    + `<button class="btn-save" style="background:transparent;color:var(--stop);border:1px solid var(--stop);margin-top:14px" onclick="spotClear()">Vider les cibles</button>`;
-}
-
 /* ══════════ FILE D'ATTENTE HORS LIGNE ══════════ */
 const Q_STORE = "insertcoin.queue";
 function queueRead(){ try { return JSON.parse(localStorage.getItem(Q_STORE) || "[]"); } catch(e){ return []; } }
@@ -4734,14 +4603,29 @@ function renderLog(){
   el.innerHTML = a.map((x,i)=>{
     const m = (x.r||0)-(x.p||0);
     const rem = (x.dem && x.p && x.dem > x.p) ? ` · −${Math.round((x.dem-x.p)/x.dem*100)}%` : "";
+    const vendu = x.vendu
+      ? `<span class="li-vendu">vendu ${x.vendu}€</span>`
+      : `<button class="li-vendre" onclick="logVendre(${i})">Vendu ?</button>`;
     return `<div class="logitem">
       <div class="li-main"><b>${esc(x.o||"—")}</b>
         <span>payé ${(x.p||0).toFixed(0)}€ · revente ${(x.r||0).toFixed(0)}€${rem}</span></div>
       <div class="li-m ${m>=0?'pos':'neg'}">${m>=0?'+':''}${m.toFixed(0)}€</div>
-      <button class="vt-sell" onclick="venteFromLog(${i})">Vendre</button>
+      ${vendu}
       <button class="li-x" onclick="logDel(${i})">✕</button>
     </div>`;
   }).join('');
+}
+
+/* Le prix payé fixe ta marge d'achat ; le prix vendu fixe ta vraie cote.
+   Les deux comptent, mais ils ne mesurent pas la même chose — et seul le
+   second sert de référence la prochaine fois que tu croises le même objet. */
+function logVendre(i){
+  const a = logRead(); const x = a[i]; if(!x) return;
+  const v = parseFloat(prompt(`« ${x.o} » — vendu pour combien ?`, String(x.r || "")) || "");
+  if(isNaN(v) || v < 0) return;
+  x.vendu = Math.round(v); x.venduD = Date.now();
+  if(!logWrite(a)) return;
+  vib(); renderLog();
 }
 
 /* ══════════ SORTIES ARCHIVÉES ══════════
@@ -4771,7 +4655,7 @@ function sortieFin(){
 
   const so = {
     id: Date.now(), date: new Date().toISOString().slice(0,10), lieu,
-    achats, cibles: spotRead(),
+    achats,
     dep, val, marge: val - dep, rang: rang(dep, val),
     best: best ? {o: best.o, m: (best.r||0)-(best.p||0)} : null,
     nego: st || null
@@ -4780,13 +4664,9 @@ function sortieFin(){
   const a = sortieRead(); a.unshift(so);
   if(!sortieWrite(a)) return;
 
-  /* Avant de vider : ce qui a été acheté pour être revendu part vers Cash Out,
-     sinon terminer la sortie ferait disparaître la marchandise du circuit. */
-  venteDepuisSortie(achats);
-
   /* On vide le courant seulement une fois l'archive écrite. */
-  logWrite([]); spotWrite([]);
-  hudPaint(); renderLog(); renderSpots();
+  logWrite([]);
+  hudPaint(); renderLog();
   showScore(so);
 }
 
@@ -4807,12 +4687,35 @@ function showScore(so){
       <div class="sc-lines">
         <div><span>Pièces achetées</span><b>${so.achats.length}</b></div>
         ${so.best ? `<div><span>Meilleure prise</span><b>${esc(so.best.o||"—")} +${so.best.m.toFixed(0)}€</b></div>` : ""}
-        ${so.cibles.length ? `<div><span>Cibles repérées</span><b>${so.cibles.length}</b></div>` : ""}
         ${so.nego ? `<div><span>Remise moyenne</span><b>${so.nego.remise}%</b></div>` : ""}
+      </div>
+      <div class="sc-vendu">
+        <div class="sc-vendu-t">Ce qui est réellement parti</div>
+        ${so.achats.map((x,i) => `
+          <div class="sc-item">
+            <span>${esc(x.o || "—")}</span>
+            ${x.vendu
+              ? `<b class="pos">vendu ${x.vendu}€</b>`
+              : `<button onclick="sortieVendre(${so.id},${i})">Vendu ?</button>`}
+          </div>`).join('')}
+        <p class="sc-vendu-n">Chaque vente notée ici devient ta cote réelle, sur le terrain, la prochaine fois.</p>
       </div>
       <button class="btn-save" onclick="scoreClose()">Continuer</button>
       <button class="btn-save alt2" onclick="sortieExport(${so.id})">Exporter cette sortie</button>
     </div>`;
+}
+
+/* Une vente arrive presque toujours des semaines après la sortie, bien après
+   que le journal ait été vidé et archivé — c'est ici, en revoyant une sortie
+   passée, qu'elle se note. */
+function sortieVendre(sid, i){
+  const a = sortieRead(); const so = a.find(s => s.id === sid); if(!so) return;
+  const x = so.achats[i]; if(!x) return;
+  const v = parseFloat(prompt(`« ${x.o} » — vendu pour combien ?`, String(x.r || "")) || "");
+  if(isNaN(v) || v < 0) return;
+  x.vendu = Math.round(v); x.venduD = Date.now();
+  if(!sortieWrite(a)) return;
+  vib(); showScore(so);
 }
 function scoreClose(){ $('score-screen').className = "scoreov"; renderHist(); }
 
@@ -4854,8 +4757,8 @@ function renderHist(){
 /* ══════════ SAUVEGARDE COMPLÈTE ══════════
    Un nettoyage de cache Android efface le stockage du navigateur sans
    prévenir. Ce fichier remet tout en place. */
-const CLES = ["insertcoin.log","insertcoin.spots","insertcoin.sorties","insertcoin.cal",
-              "insertcoin.vente","insertcoin.vente.seed","insertcoin.photosrc",
+const CLES = ["insertcoin.log","insertcoin.sorties","insertcoin.cal",
+              "insertcoin.photosrc",
               "insertcoin.collection","insertcoin.cred","insertcoin.theme",
               "insertcoin.drive.files","insertcoin.drive.cid","insertcoin.gemini.model"];
 
@@ -4966,469 +4869,6 @@ async function logExport(){
   const link = document.createElement("a");
   link.href = url; link.download = nom; link.click();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
-}
-
-function renderLocalList() {
-  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
-  if(!$('local-results')) return;
-  const t = norm(searchTerm.trim());
-  const out = D.filter(d => 
-    (localCat === "all" || d.c === localCat) && 
-    (localVf.size === 0 || localVf.has(d.v)) &&
-    (!t || norm(d.n + " " + d.s + " " + d.k).includes(t))
-  );
-  
-  $('local-count').textContent = out.length ? out.length + " repères (moyennes locales)" : "";
-  const list = $('local-results');
-  
-  if(!out.length && t) {
-    list.innerHTML = `<div class="empty">Rien sous ce nom dans la base locale.<br>Appuyez sur « Demander à l'IA » au-dessus.</div>`;
-    return;
-  }
-  
-  list.innerHTML = out.map((d, i) => {
-    const mult = d.b > 0 ? Math.round(d.r/d.b*10)/10 : 0;
-    const price = d.b > 0 ? (d.b%1?d.b.toFixed(1):d.b)+"€" : "NON";
-    const cap = d.b > 0 ? "MAX" : "PASSE";
-    const mx = d.b > 0 ? `<span class="mult">×${mult}</span>` : "";
-    return `
-      <div class="item ${d.v}" data-i="${i}" tabindex="0">
-        <div class="slab"><div class="num">${price}</div><div class="cap">${cap}</div></div>
-        <div class="meat">
-          <div class="name">${d.n}</div>
-          <div class="sub">${mx}<span>→ ${d.r}€</span></div>
-        </div>
-      </div>
-      <div class="check" id="k${i}"><b>À vérifier</b>${d.k}</div>
-    `;
-  }).join('');
-
-  list.querySelectorAll(".item").forEach(el => {
-    el.addEventListener("click", () => {
-      const k = $("k" + el.dataset.i);
-      k.classList.toggle("open");
-    });
-  });
-}
-
-function renderOfflineFull() {
-  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
-  if(!$('full-offline-list')) return;
-  const t = norm((($('q-base') || {}).value || "").trim());
-  const out = D.filter(d =>
-    (localCat === "all" || d.c === localCat) &&
-    (localVf.size === 0 || localVf.has(d.v)) &&
-    (!t || norm(d.n + " " + d.s + " " + d.k).includes(t))
-  );
-
-  const cnt = $('base-count');
-  if(cnt) cnt.textContent = out.length
-    ? out.length + " repère" + (out.length > 1 ? "s" : "")
-    : "";
-
-  const list = $('full-offline-list');
-  if(!out.length){
-    list.innerHTML = `<div class="empty-state">
-      <svg class="ico-big"><use href="#i-crate"/></svg>
-      <b>Rien sous ce filtre</b>
-      <p>Change de catégorie, ou vide la recherche pour tout revoir.</p></div>`;
-    return;
-  }
-
-  list.innerHTML = out.map((d, i) => {
-    const mult = d.b > 0 ? Math.round(d.r/d.b*10)/10 : 0;
-    const price = d.b > 0 ? (d.b%1?d.b.toFixed(1):d.b)+"€" : "NON";
-    const cap = d.b > 0 ? "MAX" : "PASSE";
-    const mx = d.b > 0 ? `<span class="mult">×${mult}</span>` : "";
-    return `
-      <div class="item ${d.v}" data-i="b${i}" tabindex="0">
-        <div class="slab"><div class="num">${price}</div><div class="cap">${cap}</div></div>
-        <div class="meat">
-          <div class="name">${d.n}</div>
-          <div class="sub">${mx}<span>→ ${d.r}€</span></div>
-        </div>
-      </div>
-      <div class="check" id="kb${i}"><b>À vérifier</b>${d.k}</div>`;
-  }).join('');
-
-  list.querySelectorAll(".item").forEach(el => {
-    el.addEventListener("click", () => {
-      const k = $("k" + el.dataset.i);
-      if(k) k.classList.toggle("open");
-    });
-  });
-}
-
-function baseClear(){
-  const f = $('q-base'); if(f) f.value = "";
-  renderOfflineFull();
-}
-
-/* ══════════ CASH OUT — LE STOCK QUI RESSORT ══════════
-   Le journal enregistre ce qui entre, Cash Out suit ce qui sort.
-   Une « annonce » regroupe une ou plusieurs pièces : sur Vinted, un lot
-   part beaucoup mieux qu'une pièce à 5 € écrasée par les frais de port. */
-
-const VENTE_STORE = "insertcoin.vente";
-const VENTE_SEED  = "insertcoin.vente.seed";
-let VT_FILTRE = "all";
-let VT_OPEN = null;
-
-function venteRead(){ try { return JSON.parse(localStorage.getItem(VENTE_STORE) || "[]"); } catch(e){ return []; } }
-function venteWrite(a){ return storeSet(VENTE_STORE, JSON.stringify(a), "ton stock Cash Out"); }
-function venteFind(id){ return venteRead().find(x => x.id === id); }
-/* Pièces encore à vendre : celles que tu n'as pas reprises dans ta collection. */
-function venteVives(x){ return (x.pieces || []).filter(p => !p.keep); }
-
-/* ---------- Stock de départ : les 39 articles photographiés ---------- */
-const VT_ART = {
-A:["Super Mario Maker 2 (Switch)","Complet FR"],
-AA:["Lot ~15 figurines Skylanders + portail USB","Portail filaire"],
-AB:["Console Wii blanche RVL-001 + accessoires","Alim, AV, barre capteur, Zapper, Wiimote — cache de piles manquant"],
-AC:["God of War (PS4, PlayStation Hits)","Jaquette italienne, stickers magasin"],
-AD:["Les Sims 2 Animaux & Cie (PSP)","Complet FR"],
-AE:["Total Soccer 2002 (GBA)","Cartouche seule"],
-AF:["Nintendogs Teckel & ses amis (DS)","Cartouche seule"],
-AG:["The Sims Bustin' Out (GBA)","Cartouche seule"],
-AH:["Pistolet Sega Light Phaser","Master System"],
-AI:["Manette Control Pad Sega Master System",""],
-AJ:["Montre Marc Ecko à strass",""],
-AK:["Montre Swatch Irony Chrono","Bracelet cuir marron — référence à relever"],
-AL:["Montre chronographe tonneau, cuir noir","Fond gravé NO: B0340B"],
-AM:["Collier pendentif plaque acier 316","Cordon noir"],
-B:["Ring Fit Adventure (Switch)","Boîte + cartouche, sans Ring-Con ni sangle"],
-C:["Une Nouvelle Élève à Monster High (Wii U)","Neuf sous blister, FR"],
-D:["FIFA 11 (Wii)","Boîtier abîmé, étiquette arrachée"],
-E:["Call of Duty Vanguard (PS4)","Neuf sous blister, VF"],
-F:["Bratz Kidz Pyjama Party (Wii)","Complet"],
-G:["Just Dance 4 (Wii)","Complet avec notice"],
-H:["LEGO Marvel Super Heroes (PS Vita)","Boîtier + cartouche"],
-I:["Monster High 13 Souhaits (Wii)","Complet, tache sur la jaquette"],
-J:["Just Dance (Wii)","Complet, disque très rayé"],
-K:["Top Spin 4 (Wii)","Complet avec notice"],
-L:["Inazuma Eleven Strikers (Wii)","Complet, disque très rayé"],
-M:["Disney Infinity (Wii, jeu seul)","Sans base ni figurines"],
-N:["Wii Sports (Nintendo Selects)","Complet"],
-O:["Monopoly Collection (Wii)","2 jeux en 1, étiquette Cash Converters"],
-P:["Skylanders Trap Team (Wii)","Boîte + disque, disque rayé"],
-Q:["Frantix (PSP)","Ex-médiathèque, étiquettes de prêt"],
-R:["Ace Combat X Skies of Deception (PSP)","Édition originale, complet"],
-S:["Steel Horizon (PSP)","Complet"],
-T:["Professeur Sudoku (PSP)","Complet"],
-U:["Ace Combat X Platinum (PSP)","Doublon de R"],
-V:["Mind Quiz (PSP)","Boîtier + UMD"],
-W:["Go! Sudoku (PSP)","Étiquette Cash Converters"],
-X:["Archer Maclean's Mercury (PSP)","Complet"],
-Y:["Gran Turismo (PSP, Platinum)",""],
-Z:["Lot Disney Infinity","Base + 6 figurines + power disc + cristal + USB"]
-};
-
-const VT_LOTS = [
- ["Bundle Wii complet",["AB","D","F","J","M","O","P"],89,75,"Commander un cache de piles Wiimote avant publication"],
- ["Inazuma Eleven Strikers (Wii)",["L"],21,18,""],
- ["Wii Sports — Nintendo Selects",["N"],14,12,""],
- ["Monster High 13 Souhaits (Wii)",["I"],12,10,"Nettoyer la tache sur la jaquette"],
- ["Top Spin 4 (Wii)",["K"],9,8,""],
- ["Just Dance 4 (Wii)",["G"],9,8,""],
- ["Super Mario Maker 2 (Switch)",["A"],32,28,""],
- ["Lot Skylanders + portail",["AA"],48,42,""],
- ["Monster High (Wii U) — scellé",["C"],34,30,""],
- ["Call of Duty Vanguard (PS4) — scellé",["E"],19,17,""],
- ["Ring Fit Adventure — jeu seul",["B"],19,17,""],
- ["LEGO Marvel Super Heroes (PS Vita)",["H"],17,15,""],
- ["God of War (PS4)",["AC"],11,9,"Retirer les stickers magasin"],
- ["Lot PSP action",["Q","S","U"],25,22,"Décoller les étiquettes de médiathèque sur Frantix"],
- ["Lot PSP réflexion",["T","V","W"],16,14,"Décoller l'étiquette Cash Converters sur Go! Sudoku"],
- ["Lot PSP course & simulation",["R","X","Y","AD"],38,33,""],
- ["Lot cartouches GBA & DS",["AE","AG","AF"],15,12,""],
- ["Lot Sega Master System",["AH","AI"],49,45,""],
- ["Lot Disney Infinity",["Z"],42,38,"Confirmer si la base est filaire ou sans fil"],
- ["Montre Swatch Irony Chrono",["AK"],45,40,"Relever la référence au dos du boîtier"],
- ["Montre Marc Ecko",["AJ"],28,25,""],
- ["Montre chronographe tonneau",["AL"],21,18,""],
- ["Collier acier 316",["AM"],14,12,""]
-];
-
-/* Le stock initial ne s'écrit qu'une fois : si tu le supprimes, il ne revient pas. */
-function venteSeed(){
-  try{ if(localStorage.getItem(VENTE_SEED) === "1") return; }catch(e){ return; }
-  if(!venteRead().length){
-    const t = Date.now();
-    venteWrite(VT_LOTS.map((l, i) => ({
-      id: t + i, t: l[0], prix: l[2], plancher: l[3], blocage: l[4],
-      cout: 0, vendu: 0, frais: 0, statut: "todo", d: t,
-      pieces: l[1].map(r => ({ref: r, n: (VT_ART[r]||["",""])[0], det: (VT_ART[r]||["",""])[1], keep: false}))
-    })));
-  }
-  try{ localStorage.setItem(VENTE_SEED, "1"); }catch(e){}
-}
-
-/* ---------- Entrées venues du terrain ---------- */
-function ventePush(o, cout, revente, blocage){
-  const a = venteRead();
-  const prix = Math.max(1, Math.round((revente || cout * 2 || 5) * 1.15));
-  a.unshift({
-    id: Date.now(), t: o, prix, plancher: Math.round(revente || cout * 2 || 5),
-    cout: cout || 0, vendu: 0, frais: 0, statut: "todo", blocage: blocage || "", d: Date.now(),
-    pieces: [{ref: "•", n: o, det: "", keep: false}]
-  });
-  return venteWrite(a);
-}
-
-function venteFromLog(i){
-  const x = logRead()[i]; if(!x) return;
-  ventePush(x.o, x.p || 0, x.r || 0, "");
-  vib(); hudPaint(); renderVente();
-  alert("« " + x.o + " » est passé dans Cash Out. Il reste dans ton journal : la marge d'achat et la marge de revente sont deux mesures différentes.");
-}
-
-function venteImportLog(){
-  const l = logRead();
-  if(!l.length){ alert("Ton journal est vide."); return; }
-  const deja = venteRead().map(x => norm(x.t));
-  const neufs = l.filter(x => deja.indexOf(norm(x.o || "")) === -1);
-  if(!neufs.length){ alert("Tous tes achats du journal sont déjà dans Cash Out."); return; }
-  if(!confirm("Envoyer " + neufs.length + " achat(s) vers Cash Out ?")) return;
-  neufs.forEach(x => ventePush(x.o, x.p || 0, x.r || 0, ""));
-  hudPaint(); renderVente();
-}
-
-/* Appelée par sortieFin() : le journal va être vidé, la marchandise ne doit pas
-   disparaître avec lui. */
-function venteDepuisSortie(achats){
-  if(!achats || !achats.length) return;
-  const deja = venteRead().map(x => norm(x.t));
-  const neufs = achats.filter(x => deja.indexOf(norm(x.o || "")) === -1);
-  if(!neufs.length) return;
-  if(!confirm("Envoyer les " + neufs.length + " achat(s) de cette sortie vers Cash Out ?\n\nSinon ils partent aux archives et sortent du circuit de revente.")) return;
-  neufs.forEach(x => ventePush(x.o, x.p || 0, x.r || 0, ""));
-}
-
-function venteAdd(){
-  const o = (prompt("Qu'est-ce que tu mets en vente ?", "") || "").trim();
-  if(!o) return;
-  const c = parseFloat(prompt("Combien l'as-tu payé ? (0 si tu l'avais déjà)", "0") || "0") || 0;
-  const p = parseFloat(prompt("Prix affiché en euros ?", "") || "0") || 0;
-  const a = venteRead();
-  a.unshift({id: Date.now(), t: o, prix: p, plancher: Math.round(p * 0.85), cout: c,
-             vendu: 0, frais: 0, statut: "todo", blocage: "", d: Date.now(),
-             pieces: [{ref: "•", n: o, det: "", keep: false}]});
-  venteWrite(a); vib(); hudPaint(); renderVente();
-}
-
-function venteDel(id){
-  const a = venteRead(); const i = a.findIndex(x => x.id === id); if(i < 0) return;
-  if(!confirm("Supprimer « " + a[i].t + " » de Cash Out ?")) return;
-  a.splice(i, 1); venteWrite(a); hudPaint(); renderVente();
-}
-
-function venteSet(id, champ, val){
-  const a = venteRead(); const x = a.find(y => y.id === id); if(!x) return;
-  x[champ] = parseFloat(val) || 0;
-  venteWrite(a); renderVente();
-}
-
-function venteStatut(id, st){
-  const a = venteRead(); const x = a.find(y => y.id === id); if(!x) return;
-  x.statut = st;
-  /* Un objet à 20 EUR parti en huit mois ne vaut pas un objet a 12 EUR parti
-     en une semaine. Sans ces deux dates, la duree d\'ecoulement est
-     inmesurable — et c\'est elle qui devrait dicter ce que tu rafles. */
-  if(st === "live" && !x.dLive) x.dLive = Date.now();
-  if(st === "done"){
-    if(!x.vendu) x.vendu = x.prix;
-    if(!x.dDone) x.dDone = Date.now();
-  }
-  venteWrite(a); vib(); hudPaint(); renderVente();
-}
-
-/* Jours entre la mise en vente et la vente (ou aujourd\'hui si toujours en ligne). */
-function venteJours(x){
-  if(!x.dLive) return null;
-  return Math.max(0, Math.round(((x.dDone || Date.now()) - x.dLive) / 86400000));
-}
-
-/* Reprendre une pièce dans la collection : elle quitte l'annonce, le lot se
-   recalcule, et elle réapparaît dans les doublons détectés sur le terrain. */
-function venteKeep(id, ref){
-  const a = venteRead(); const x = a.find(y => y.id === id); if(!x) return;
-  const p = x.pieces.find(q => q.ref === ref); if(!p) return;
-  p.keep = !p.keep;
-  if(!venteVives(x).length) x.statut = "keep";
-  else if(x.statut === "keep") x.statut = "todo";
-  venteWrite(a); vib(); hudPaint(); renderVente();
-}
-
-function venteToggle(id){
-  VT_OPEN = (VT_OPEN === id) ? null : id;
-  renderVente();
-}
-
-function venteFiltre(f, el){
-  VT_FILTRE = f;
-  document.querySelectorAll('#vt-filter button').forEach(b => b.setAttribute("aria-pressed", b === el ? "true" : "false"));
-  renderVente();
-}
-
-/* ---------- Texte d'annonce ---------- */
-function venteTexte(id){
-  const x = venteFind(id); if(!x) return;
-  const v = venteVives(x);
-  const titre = x.t + (v.length > 1 ? " — lot de " + v.length : "");
-  const lignes = v.map(p => "• " + p.n + (p.det ? " — " + p.det : "")).join("\n");
-  const txt = titre + "\n\nCE QUE TU REÇOIS\n" + lignes +
-    "\n\nÉTAT\nTesté et fonctionnel sauf mention contraire ci-dessus. Les défauts visibles sont décrits et photographiés : je préfère une annonce honnête à un litige." +
-    "\n\nENVOI\nExpédition sous 24-48 h, emballage protégé. D'autres jeux et consoles dans mon dressing — regroupement des frais de port possible." +
-    "\n\nPrix " + x.prix + " € · offres raisonnables acceptées.\n#jeuvideo #retrogaming #collection";
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(() => { vib(); alert("Texte d'annonce copié."); })
-      .catch(() => prompt("Copie le texte :", txt));
-  } else prompt("Copie le texte :", txt);
-}
-
-/* ---------- Le lien avec le terrain ----------
-   Reconnaître sur un stand un objet que tu as déjà en vente, ou que tu as
-   déjà vendu : dans le second cas ce n'est plus une estimation, c'est ta cote. */
-function venteMatch(query){
-  const a = venteRead(); if(!a.length) return null;
-  const qt = collTokens(query); if(!qt.length) return null;
-  let best = null;
-  a.forEach(x => {
-    venteVives(x).concat(x.statut === "done" ? x.pieces : []).forEach(p => {
-      const sc = collScore(qt, collTokens(p.n + " " + x.t));
-      if(sc >= 0.55 && (!best || sc > best.sc)) best = {sc, x, p};
-    });
-  });
-  return best;
-}
-
-function venteBanner(query){
-  const m = venteMatch(query);
-  if(!m) return "";
-  const x = m.x;
-  if(x.statut === "done"){
-    const net = (x.vendu || 0) - (x.frais || 0);
-    return '<div class="dupbox dup-vente"><div class="dt">Tu en as déjà vendu un</div>' +
-      '<div class="dd">' + esc(m.p.n) + '</div>' +
-      '<div class="dn">Parti à ' + net.toFixed(0) + ' € net' +
-      (x.cout ? ' pour ' + x.cout.toFixed(0) + ' € payés' : '') +
-      '. C\'est ta cote réelle, pas une moyenne de catégorie.</div></div>';
-  }
-  const etat = x.statut === "live" ? "en vente à " + x.prix + " €" : "à publier à " + x.prix + " €";
-  return '<div class="dupbox dup-vente"><div class="dt">Tu l\'as déjà, côté vente</div>' +
-    '<div class="dd">' + esc(m.p.n) + '</div>' +
-    '<div class="dn">' + esc(x.t) + ' — ' + etat + '. Un deuxième exemplaire ne se justifie que sous ton plancher de ' + x.plancher + ' €.</div></div>';
-}
-
-/* ---------- Rendu ---------- */
-function renderVente(){
-  /* Vue retirée de l'interface : la fonction reste, elle ne fait plus rien. */
-  if(!$('vt-list')) return;
-  const el = $('vt-list'); if(!el) return;
-  const a = venteRead();
-  const vifs = a.filter(x => x.statut !== "keep" && venteVives(x).length);
-  const vendus = vifs.filter(x => x.statut === "done");
-
-  const encaisse = vendus.reduce((s,x) => s + ((x.vendu||0) - (x.frais||0)), 0);
-  const coutVendu = vendus.reduce((s,x) => s + (x.cout||0), 0);
-  const marge = encaisse - coutVendu;
-  const potentiel = vifs.filter(x => x.statut !== "done").reduce((s,x) => s + (x.prix||0), 0);
-
-  const sum = $('vt-sum');
-  if(sum) sum.innerHTML =
-    '<div class="sumbox"><div class="sn">' + encaisse.toFixed(0) + '€</div><div class="sc">Encaissé</div></div>' +
-    '<div class="sumbox"><div class="sn">' + potentiel.toFixed(0) + '€</div><div class="sc">Reste à sortir</div></div>' +
-    '<div class="sumbox ' + (marge >= 0 ? 'pos' : 'neg') + '"><div class="sn">' + (marge >= 0 ? '+' : '') + marge.toFixed(0) + '€</div><div class="sc">Marge nette</div></div>';
-
-  const bl = $('vt-blockers');
-  if(bl){
-    const b = vifs.filter(x => x.blocage && x.statut === "todo");
-    bl.innerHTML = b.length
-      ? '<div class="dupbox dup-maybe" style="margin-bottom:14px"><div class="dt">' + b.length + ' point' + (b.length>1?'s':'') + ' à régler</div><ul class="dup-list">' +
-        b.map(x => '<li>' + esc(x.blocage) + '</li>').join('') + '</ul>' +
-        '<div class="dn">Chacun coûte quelques euros et débloque plusieurs dizaines à la vente.</div></div>'
-      : '';
-  }
-
-  if(!a.length){
-    el.innerHTML = '<div class="empty-state"><svg class="ico-big"><use href="#i-tag"/></svg>' +
-      '<b>Rien en vente</b><p>Ajoute un article, ou importe tes achats depuis le journal de chasse.</p></div>';
-    if($('vt-cote')) $('vt-cote').innerHTML = "";
-    return;
-  }
-
-  const rang = {todo:0, live:1, done:2, keep:3};
-  /* « Tout » = tout ce qui est encore dans le circuit. Les pieces reprises en
-     collection sortaient des totaux mais restaient dans la liste. */
-  const liste = a.filter(x => VT_FILTRE === "all" ? x.statut !== "keep" : x.statut === VT_FILTRE)
-                 .sort((x,y) => (rang[x.statut]-rang[y.statut]) || (y.prix-x.prix));
-
-  el.innerHTML = liste.map(x => {
-    const v = venteVives(x);
-    const val = x.statut === "done" ? (x.vendu || 0) : (x.prix || 0);
-    const cap = x.statut === "done" ? "encaissé" : x.statut === "live" ? "en vente" : x.statut === "keep" ? "gardé" : "à publier";
-    const ouvert = VT_OPEN === x.id;
-    const jrs = venteJours(x);
-    const head =
-      '<div class="vt-head" onclick="venteToggle(' + x.id + ')">' +
-        '<div class="vt-bar"></div>' +
-        '<div class="vt-c"><b>' + esc(x.t) + '</b>' +
-          '<span>' + v.length + ' pièce' + (v.length>1?'s':'') +
-          (x.cout ? ' · payé ' + x.cout.toFixed(0) + '€' : '') +
-          ' · plancher ' + (x.plancher||0) + '€' +
-          (jrs !== null ? ' · ' + (x.statut === "done" ? 'parti en ' + jrs + ' j' : 'en ligne depuis ' + jrs + ' j') : '') +
-          '</span>' +
-          (x.blocage && x.statut === "todo" ? '<span class="vt-warn">' + esc(x.blocage) + '</span>' : '') +
-        '</div>' +
-        '<div class="vt-p"><b>' + val.toFixed(0) + '€</b><span>' + cap + '</span></div>' +
-      '</div>';
-    if(!ouvert) return '<div class="vt-row s-' + x.statut + '">' + head + '</div>';
-
-    const body =
-      '<div class="vt-body">' +
-        '<div class="vt-fields">' +
-          '<div class="vt-f"><label>Affiché €</label><input type="number" inputmode="decimal" value="' + (x.prix||0) + '" onchange="venteSet(' + x.id + ',\'prix\',this.value)"></div>' +
-          '<div class="vt-f"><label>Plancher €</label><input type="number" inputmode="decimal" value="' + (x.plancher||0) + '" onchange="venteSet(' + x.id + ',\'plancher\',this.value)"></div>' +
-          '<div class="vt-f"><label>Vendu €</label><input type="number" inputmode="decimal" value="' + (x.vendu||"") + '" placeholder="—" onchange="venteSet(' + x.id + ',\'vendu\',this.value)"></div>' +
-          '<div class="vt-f"><label>Payé €</label><input type="number" inputmode="decimal" value="' + (x.cout||"") + '" placeholder="0" onchange="venteSet(' + x.id + ',\'cout\',this.value)"></div>' +
-          '<div class="vt-f"><label>Frais €</label><input type="number" inputmode="decimal" value="' + (x.frais||"") + '" placeholder="0" onchange="venteSet(' + x.id + ',\'frais\',this.value)"></div>' +
-        '</div>' +
-        '<p class="vt-hint">Frais = port non refacturé, pochette, pile de rechange. Sans eux, la marge nette est un chiffre de vitrine.</p>' +
-        x.pieces.map(p =>
-          '<div class="vt-piece' + (p.keep ? ' keep' : '') + '">' +
-            '<span class="vt-ref">' + esc(p.ref) + '</span>' +
-            '<span class="vt-nm">' + esc(p.n) + (p.det ? '<i>' + esc(p.det) + '</i>' : '') + '</span>' +
-            '<button class="vt-keep" onclick="event.stopPropagation();venteKeep(' + x.id + ',\'' + p.ref + '\')">' +
-              (p.keep ? 'Revendre' : 'Je garde') + '</button>' +
-          '</div>').join('') +
-        '<div class="vt-acts">' +
-          '<button class="' + (x.statut==="todo"?"on":"") + '" onclick="venteStatut(' + x.id + ',\'todo\')">À publier</button>' +
-          '<button class="live ' + (x.statut==="live"?"on":"") + '" onclick="venteStatut(' + x.id + ',\'live\')">En vente</button>' +
-          '<button class="done ' + (x.statut==="done"?"on":"") + '" onclick="venteStatut(' + x.id + ',\'done\')">Vendu</button>' +
-        '</div>' +
-        '<button class="btn-save" style="margin-top:10px" onclick="venteTexte(' + x.id + ')">Copier le texte d\'annonce</button>' +
-        '<button class="btn-save alt2" style="background:transparent;color:var(--stop);border:1px solid var(--stop)" onclick="venteDel(' + x.id + ')">Retirer de Cash Out</button>' +
-      '</div>';
-    return '<div class="vt-row open s-' + x.statut + '">' + head + body + '</div>';
-  }).join('');
-
-  const ct = $('vt-cote');
-  if(ct){
-    ct.innerHTML = vendus.length
-      ? vendus.slice(0, 12).map(x => {
-          const net = (x.vendu||0) - (x.frais||0);
-          const m = net - (x.cout||0);
-          const j = venteJours(x);
-          return '<div class="vt-cote"><b>' + esc(x.t) + '</b>' +
-            '<i>' + (x.cout ? 'payé ' + x.cout.toFixed(0) + '€ · ' : '') +
-            (m >= 0 ? '+' : '') + m.toFixed(0) + '€' +
-            (j !== null ? ' en ' + j + ' j' : '') + '</i>' +
-            '<span>' + net.toFixed(0) + '€</span></div>';
-        }).join('')
-      : '<div class="statnote">Chaque vente enregistrée devient une cote réelle : ' +
-        'sur le terrain, l\'analyse te rappellera à quel prix cet objet est réellement parti chez toi, ' +
-        'au lieu d\'une moyenne de catégorie.</div>';
-  }
 }
 
 /* Un plantage dans un seul rendu ne doit pas emporter toute l'app :
