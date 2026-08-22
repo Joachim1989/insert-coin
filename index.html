@@ -417,6 +417,7 @@ const PERTE_PLANCHER = 0.15;
 const PORT_LBL = { pochette: "Pochette", petit: "Petit colis", moyen: "Colis moyen", gros: "Gros colis", encombrant: "Encombrant" };
 const PORT_COUT = { pochette: 1, petit: 2, moyen: 3, gros: 6, encombrant: 10 };
 const PORT_PART_MAX = 0.25;
+const CIRCULATION_COEF = { rare: 1, "peu courant": 1, courant: 1, massif: 0.6 };
 function nombre(v) {
   if (typeof v === "number") return isFinite(v) ? v : 0;
   const t = String(v || "").replace(/\s/g, "").replace(/,(\d)/g, ".$1");
@@ -448,11 +449,14 @@ function attNorm(a) {
 function attPerte(att) {
   return att.filter((x) => x.vu === "non").reduce((t, x) => t + x.perte, 0);
 }
-function attCoef(att) {
-  return Math.max(PERTE_PLANCHER, 1 - attPerte(att) / 100);
-}
 function attManquants(att) {
   return att.filter((x) => x.vu === "non");
+}
+const LOT_PERTE_MAX = 25;
+function attCoef(att, isLot) {
+  let perte = attPerte(att);
+  if (isLot && attManquants(att).length === 1) perte = Math.min(perte, LOT_PERTE_MAX);
+  return Math.max(PERTE_PLANCHER, 1 - perte / 100);
 }
 function ficheNorm(j) {
   const n = Math.round(nombre(j.etatNote));
@@ -487,10 +491,12 @@ function ficheNorm(j) {
   };
 }
 function ficheCalc(f) {
-  const base = f.marcheVu || f.marcheReel || f.marche || 0;
+  const verifie = f.marcheVu || f.marcheReel || 0;
+  const circCoef = verifie ? 1 : CIRCULATION_COEF[f.circulation] !== void 0 ? CIRCULATION_COEF[f.circulation] : 1;
+  const base = verifie || (f.marche || 0) * circCoef;
   const port = Math.min(PORT_COUT[f.gabarit] || 0, Math.round(base * PORT_PART_MAX));
   const ce = ETAT_COEF[f.etat] !== void 0 ? ETAT_COEF[f.etat] : 0.9;
-  const cc = attCoef(f.attendu);
+  const cc = attCoef(f.attendu, f.lot);
   const brut = base * ce * cc;
   const net = Math.max(0, brut - port);
   const plafond = Math.max(0, Math.round(net / 3));
@@ -1556,7 +1562,7 @@ function renderResult(j, images, avis) {
   const vd = ficheVerdict(f, c, dem);
   const conf = (f.confiance || "").toLowerCase();
   let cKey = f.marcheReel ? "h" : conf.startsWith("haut") ? "m" : conf.startsWith("moy") ? "m" : "f";
-  const cTxt = { h: "Cote vérifiée", m: "Cote partielle", f: "Estimation" }[cKey];
+  const cTxt = { h: "Cote vérifiée", m: "Estimation confiante", f: "Estimation" }[cKey];
   const imgHtml = images && images.length ? `<div class="aithumb-container">` + images.map((im) => `<img src="${im.url}" class="aithumb">`).join("") + `</div>` : "";
   const rq = (f.objet || "") + " " + (f.identification || "");
   const dupHtml = collBanner(rq);
