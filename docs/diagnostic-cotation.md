@@ -152,6 +152,39 @@ Hypothèses restantes, non tranchables sans les données réelles du cas :
    la cote Discogs aurait alors bien remplacé l'IA, avec un prix réel mais
    pour le mauvais exemplaire.
 
+**Cas 3 — TRANCHÉ (23/08/2026).** Retest sur téléphone, jeton Discogs
+configuré : carte "Cote Discogs" affichée, cote à 9 €, prix final de la
+fiche recalculé à partir de cette valeur (le mécanisme de remplacement dans
+`discGreffe`/`renderResult` fonctionne comme conçu — confirmé, pas
+seulement lu dans le code). Ça confirme l'hypothèse 1 : le 20 € rapporté à
+l'origine venait très probablement d'un jeton non configuré au moment des
+faits, pas d'un bug de calcul. Les hypothèses 2 et 3 restent possibles dans
+l'absolu mais ne sont plus la piste principale — rien dans ce retest ne les
+confirme.
+
+Deux correctifs écrits malgré tout, un par défaut réel identifié en cours
+de route :
+
+- **Badge de confiance ambigu.** Le badge "Cote partielle" laissait croire
+  à une vérification externe partielle, alors qu'il ne reflétait que
+  l'auto-évaluation de l'IA (`f.confiance`) — même apparence, jeton
+  configuré ou pas, match trouvé ou pas. Renommé "Estimation confiante"
+  dans `src/ui/fiche.js` (`renderResult`). Aucun changement de calcul,
+  seulement le libellé — "Cote vérifiée" reste réservé aux sources
+  externes réelles (`f.marcheReel`).
+- **Filet de sécurité "circulation".** Le modèle renvoie `circulation` en
+  même temps que son estimation chiffrée et le prompt lui dit que ça doit
+  peser sur le prix, mais `ficheCalc` ne s'en servait jamais. Ajouté
+  `CIRCULATION_COEF` dans `src/pricing/engine.js` : seul le niveau
+  "massif" est tempéré (×0.6), et uniquement sur l'estimation IA quand
+  aucune source vérifiée n'existe — jamais sur un prix Discogs/
+  Rebrickable/Brickset/vente réelle, qui décrit déjà l'exemplaire précis.
+  Volontairement étroit : "courant" et "peu courant" restent neutres pour
+  ne pas rouvrir les cas 1 (Skylanders, "courant") et 2 (Remember Me,
+  "peu courant"), sans rapport avec ce défaut. C'est un filet SECONDAIRE :
+  le vrai correctif reste le remplacement par une source vérifiée
+  ci-dessus, ce filet ne joue que quand cette source n'existe pas.
+
 Question pour trancher : la carte "Cote Discogs" est-elle apparue sous la
 fiche au moment des faits, et si oui, qu'affichait-elle ?
 

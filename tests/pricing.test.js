@@ -86,7 +86,16 @@ describe("Cas réel 2 — Remember Me PS3 (PAS un bug : règle du tiers verrouil
   });
 });
 
-describe("Cas réel 3 — Bande originale Top Gun (sur-évaluation, mécanisme différent)", () => {
+describe("Cas réel 3 — Bande originale Top Gun (TRANCHÉ 23/08/2026 : pas un défaut du moteur, filet de sécurité ajouté)", () => {
+  // Retesté par l'utilisateur avec un jeton Discogs configuré : la carte
+  // "Cote Discogs" s'affiche, cote à 9 € — le mécanisme de remplacement de
+  // `marche` par une source vérifiée fonctionne comme prévu (voir
+  // discGreffe dans src/ui/fiche.js). Le 20 € d'origine venait très
+  // probablement d'un jeton non configuré au moment des faits, pas d'un
+  // bug de calcul. Deux correctifs quand même écrits : le badge "Cote
+  // partielle" → "Estimation confiante" (ambiguïté IA/Discogs, voir
+  // src/ui/fiche.js) et le filet de sécurité "circulation" ci-dessous, pour
+  // le cas où aucune source vérifiée n'est disponible.
   it("le moteur ne peut PAS, par construction, amplifier un marché correct en 20 € — la cause n'est donc pas ici", () => {
     // Preuve par le calcul : même avec le meilleur état possible (neuf/
     // scellé, coefficient ×1.8) et rien de manquant, un marché correctement
@@ -99,14 +108,16 @@ describe("Cas réel 3 — Bande originale Top Gun (sur-évaluation, mécanisme d
     expect(c.plafond).toBeLessThan(5);
   });
 
-  it("le moteur ignore complètement 'circulation' — un pressage massif n'est pas tempéré, même quand le modèle le signale lui-même", () => {
-    // C'est le vrai défaut testable ici : le modèle a la donnée qualitative
-    // ("circulation": "massif") au même moment qu'il donne son estimation
-    // chiffrée, mais ficheCalc n'y touche jamais. Deux fiches identiques sauf
-    // sur "circulation" devraient produire des plafonds différents — un
-    // pressage massif devrait peser moins qu'un pressage rare, à marché
-    // affiché égal. Échoue aujourd'hui : les deux valent exactement le même
-    // plafond (6), quelle que soit "circulation".
+  it("filet de sécurité : un pressage 'massif' est tempéré (×0.6 sur l'estimation IA non vérifiée), un pressage 'rare' ne l'est pas", () => {
+    // Ajouté le 23/08/2026 (CIRCULATION_COEF, src/pricing/engine.js) : le
+    // modèle a la donnée qualitative ("circulation": "massif") au même
+    // moment qu'il donne son estimation chiffrée, le prompt lui dit que ça
+    // doit peser sur le prix, mais ficheCalc ne s'en servait jamais avant ce
+    // correctif. Filet SECONDAIRE seulement — le vrai correctif est le
+    // remplacement par une source vérifiée (test précédent) ; ce filet ne
+    // joue que quand aucune source vérifiée n'existe. Seul "massif" est
+    // tempéré (les autres niveaux restent neutres pour ne pas toucher les
+    // cas 1 et 2, sans rapport avec ce défaut).
     const massif = ficheCalc(ficheNorm(topGunOST("massif")));
     const rare   = ficheCalc(ficheNorm(topGunOST("rare")));
     expect(massif.plafond).toBeLessThan(rare.plafond);

@@ -34,6 +34,22 @@ export const PORT_COUT = {pochette:1, petit:2, moyen:3, gros:6, encombrant:10};
    un lot vendable 15 € en « ne dépasse pas 1 € ». */
 export const PORT_PART_MAX = 0.25;
 
+/* Cas réel (Top Gun, 22-23/08/2026) : le modèle renvoie "circulation" au
+   même moment que son estimation chiffrée ("marche"), et le prompt lui dit
+   explicitement qu'un titre pressé en masse ne vaut presque rien — mais
+   avant ce correctif, rien dans ficheCalc ne s'en servait jamais. Le vrai
+   correctif reste le remplacement de "marche" par une cote vérifiée
+   (Discogs/Rebrickable/Brickset/vente réelle, cf. Cas 3 dans
+   docs/diagnostic-cotation.md — retest confirmé : le mécanisme fonctionne).
+   Ce coefficient n'est qu'un FILET DE SÉCURITÉ SECONDAIRE pour le cas où
+   aucune source vérifiée n'existe (pas de jeton, pas de match) : seul
+   "massif" est tempéré, volontairement — les autres niveaux ("courant",
+   "peu courant", "rare") restent neutres pour ne pas rouvrir le cas 1
+   (Skylanders, "courant", plafond verrouillé à 3 €) ni le cas 2 (Remember
+   Me, "peu courant", verrouillé à 6 €), qui n'ont aucun rapport avec ce
+   défaut précis. */
+export const CIRCULATION_COEF = {rare: 1, "peu courant": 1, courant: 1, massif: 0.6};
+
 
 /* Les éléments attendus arrivent maintenant constatés : vu = oui / non / ?.
    On accepte encore l'ancien format (simple texte) pour ne rien casser. */
@@ -134,8 +150,14 @@ export function ficheNorm(j){
 
 
 export function ficheCalc(f){
-  /* Ordre de confiance : ce que tu as vu > une source de données > le modèle. */
-  const base = f.marcheVu || f.marcheReel || f.marche || 0;
+  /* Ordre de confiance : ce que tu as vu > une source de données > le modèle.
+     Le filet "circulation" ne tempère QUE l'estimation brute de l'IA : un
+     prix vérifié (toi ou une source externe) décrit déjà CET exemplaire
+     précis, la donnée qualitative n'ajoute rien dessus — voir
+     CIRCULATION_COEF. */
+  const verifie = f.marcheVu || f.marcheReel || 0;
+  const circCoef = verifie ? 1 : (CIRCULATION_COEF[f.circulation] !== undefined ? CIRCULATION_COEF[f.circulation] : 1);
+  const base = verifie || (f.marche || 0) * circCoef;
   const port = Math.min(PORT_COUT[f.gabarit] || 0, Math.round(base * PORT_PART_MAX));
   const ce = ETAT_COEF[f.etat] !== undefined ? ETAT_COEF[f.etat] : 0.9;
   /* Somme des pertes des seuls éléments constatés absents. Un lot en vrac n'a
