@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-mask-192.png">
+<title>Insert Coin - Pixel Papa</title>
+</head>
+<body>
+
+<header>
+  <img src="/pixel-papa-logo.png" alt="Pixel Papa" class="avatar" onerror="this.src='/icon-mask-192.png'">
+  <div class="brand">
+    <h1>Insert Coin</h1>
+    <span>Argus de terrain</span>
+  </div>
+</header>
+
+<!-- VIEW: LIVE SEARCH (Main) -->
+<svg id="sprite" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-scan" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="3" y="0" width="5" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="4" y="8" width="3" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="3" y="10" width="7" height="1"/><rect x="8" y="11" width="3" height="1"/><rect x="9" y="12" width="3" height="1"/><rect x="10" y="13" width="3" height="1"/><rect x="11" y="14" width="2" height="1"/></symbol><symbol id="i-crate" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="14" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="14" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="2" height="1" opacity=".45"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="2" height="1" opacity=".45"/><rect x="12" y="3" width="1" height="1" opacity=".45"/><rect x="14" y="3" width="1" height="1"/><rect x="1" y="4" width="14" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1" opacity=".45"/><rect x="5" y="5" width="2" height="1" opacity=".45"/><rect x="8" y="5" width="2" height="1" opacity=".45"/><rect x="11" y="5" width="2" height="1" opacity=".45"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="14" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="3" y="8" width="2" height="1" opacity=".45"/><rect x="6" y="8" width="2" height="1" opacity=".45"/><rect x="9" y="8" width="2" height="1" opacity=".45"/><rect x="12" y="8" width="1" height="1" opacity=".45"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="14" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="5" y="11" width="2" height="1" opacity=".45"/><rect x="8" y="11" width="2" height="1" opacity=".45"/><rect x="11" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol><symbol id="i-target" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="2" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="11" y="7" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="7" y="9" width="2" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="6" y="11" width="4" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="13" y="12" width="1" height="1"/><rect x="3" y="13" width="2" height="1"/><rect x="11" y="13" width="2" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-cash" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="8" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="6" y="4" width="2" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="3" y="8" width="8" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="0" y="10" width="14" height="1"/><rect x="2" y="11" width="1" height="1"/><rect x="15" y="11" width="1" height="1"/><rect x="2" y="12" width="14" height="1"/><rect x="2" y="13" width="1" height="1"/><rect x="15" y="13" width="1" height="1"/><rect x="2" y="14" width="14" height="1"/></symbol><symbol id="i-pad" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="2" width="12" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="14" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="15" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="3" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/><rect x="15" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="9" y="6" width="2" height="1"/><rect x="15" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="10" y="7" width="2" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="15" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="10" y="9" width="2" height="1"/><rect x="15" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/></symbol><symbol id="i-queue" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="1" y="1" width="12" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="6" y="3" width="2" height="1" opacity=".45"/><rect x="11" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="5" y="4" width="4" height="1" opacity=".45"/><rect x="10" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="6" y="5" width="2" height="1" opacity=".45"/><rect x="9" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="6" y="7" width="2" height="1"/><rect x="6" y="8" width="2" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="6" y="10" width="2" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="4" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="2" y="12" width="1" height="1"/><rect x="4" y="12" width="6" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="1" y="13" width="1" height="1"/><rect x="3" y="13" width="8" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="1" y="14" width="12" height="1"/></symbol><symbol id="i-tag" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="4" y="1" width="10" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="3" y="4" width="4" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="8" y="12" width="1" height="1"/><rect x="5" y="13" width="1" height="1"/><rect x="7" y="13" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/></symbol><symbol id="i-disk" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="0" y="1" width="14" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="3" y="2" width="8" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="10" y="3" width="1" height="1"/><rect x="13" y="3" width="2" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="13" y="4" width="2" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="3" y="6" width="8" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="0" y="9" width="1" height="1"/><rect x="3" y="9" width="10" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="5" y="10" width="6" height="1" opacity=".45"/><rect x="12" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="0" y="11" width="1" height="1"/><rect x="3" y="11" width="1" height="1"/><rect x="5" y="11" width="6" height="1" opacity=".45"/><rect x="12" y="11" width="1" height="1"/><rect x="14" y="11" width="1" height="1"/><rect x="0" y="12" width="1" height="1"/><rect x="3" y="12" width="1" height="1"/><rect x="5" y="12" width="6" height="1" opacity=".45"/><rect x="12" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="0" y="13" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="5" y="13" width="6" height="1" opacity=".45"/><rect x="12" y="13" width="1" height="1"/><rect x="14" y="13" width="1" height="1"/><rect x="0" y="14" width="15" height="1"/></symbol><symbol id="i-cal" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="2" y="1" width="2" height="1"/><rect x="12" y="1" width="2" height="1"/><rect x="2" y="2" width="2" height="1"/><rect x="12" y="2" width="2" height="1"/><rect x="1" y="3" width="14" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="2" height="1" opacity=".45"/><rect x="6" y="7" width="2" height="1" opacity=".45"/><rect x="9" y="7" width="2" height="1" opacity=".45"/><rect x="14" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="3" y="9" width="2" height="1" opacity=".45"/><rect x="6" y="9" width="2" height="1" opacity=".45"/><rect x="9" y="9" width="2" height="1" opacity=".45"/><rect x="14" y="9" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="14" y="10" width="1" height="1"/><rect x="1" y="11" width="1" height="1"/><rect x="3" y="11" width="2" height="1" opacity=".45"/><rect x="6" y="11" width="2" height="1" opacity=".45"/><rect x="14" y="11" width="1" height="1"/><rect x="1" y="12" width="1" height="1"/><rect x="14" y="12" width="1" height="1"/><rect x="1" y="13" width="14" height="1"/></symbol><symbol id="i-pin" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="6" height="1"/><rect x="3" y="2" width="2" height="1"/><rect x="11" y="2" width="2" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="14" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="6" y="7" width="4" height="1"/><rect x="14" y="7" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="3" y="9" width="1" height="1"/><rect x="12" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="11" y="10" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="10" y="11" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/></symbol><symbol id="i-sun" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="12" y="2" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="5" y="4" width="6" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="10" y="5" width="2" height="1"/><rect x="2" y="6" width="3" height="1"/><rect x="11" y="6" width="3" height="1"/><rect x="0" y="7" width="2" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="12" y="7" width="1" height="1"/><rect x="14" y="7" width="2" height="1"/><rect x="0" y="8" width="2" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/><rect x="14" y="8" width="2" height="1"/><rect x="2" y="9" width="3" height="1"/><rect x="11" y="9" width="3" height="1"/><rect x="4" y="10" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/><rect x="5" y="11" width="6" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="7" y="12" width="2" height="1"/><rect x="11" y="12" width="1" height="1"/><rect x="3" y="13" width="1" height="1"/><rect x="7" y="13" width="2" height="1"/><rect x="12" y="13" width="1" height="1"/><rect x="7" y="14" width="2" height="1"/></symbol><symbol id="i-moon" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="5" y="1" width="4" height="1"/><rect x="4" y="2" width="4" height="1"/><rect x="3" y="3" width="4" height="1"/><rect x="2" y="4" width="4" height="1"/><rect x="1" y="5" width="5" height="1"/><rect x="1" y="6" width="5" height="1"/><rect x="1" y="7" width="5" height="1"/><rect x="1" y="8" width="5" height="1"/><rect x="1" y="9" width="5" height="1"/><rect x="1" y="10" width="6" height="1"/><rect x="2" y="11" width="5" height="1"/><rect x="3" y="12" width="6" height="1"/><rect x="4" y="13" width="8" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-flame" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="6" y="2" width="4" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="2" height="1" opacity=".45"/><rect x="9" y="3" width="1" height="1"/><rect x="5" y="4" width="2" height="1"/><rect x="7" y="4" width="2" height="1" opacity=".45"/><rect x="9" y="4" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="6" y="5" width="4" height="1" opacity=".45"/><rect x="10" y="5" width="2" height="1"/><rect x="3" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1" opacity=".45"/><rect x="9" y="6" width="2" height="1" opacity=".45"/><rect x="11" y="6" width="2" height="1"/><rect x="2" y="7" width="2" height="1"/><rect x="4" y="7" width="2" height="1" opacity=".45"/><rect x="10" y="7" width="2" height="1" opacity=".45"/><rect x="12" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="4" y="8" width="1" height="1" opacity=".45"/><rect x="11" y="8" width="1" height="1" opacity=".45"/><rect x="12" y="8" width="2" height="1"/><rect x="1" y="9" width="2" height="1"/><rect x="3" y="9" width="1" height="1" opacity=".45"/><rect x="7" y="9" width="2" height="1"/><rect x="12" y="9" width="1" height="1" opacity=".45"/><rect x="13" y="9" width="2" height="1"/><rect x="1" y="10" width="2" height="1"/><rect x="3" y="10" width="1" height="1" opacity=".45"/><rect x="6" y="10" width="4" height="1"/><rect x="12" y="10" width="1" height="1" opacity=".45"/><rect x="13" y="10" width="2" height="1"/><rect x="1" y="11" width="2" height="1"/><rect x="3" y="11" width="1" height="1" opacity=".45"/><rect x="6" y="11" width="4" height="1"/><rect x="12" y="11" width="1" height="1" opacity=".45"/><rect x="13" y="11" width="2" height="1"/><rect x="2" y="12" width="2" height="1"/><rect x="4" y="12" width="1" height="1" opacity=".45"/><rect x="6" y="12" width="4" height="1"/><rect x="11" y="12" width="1" height="1" opacity=".45"/><rect x="12" y="12" width="2" height="1"/><rect x="3" y="13" width="10" height="1"/><rect x="5" y="14" width="6" height="1"/></symbol><symbol id="i-star" viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges"><rect x="7" y="1" width="2" height="1"/><rect x="7" y="2" width="2" height="1"/><rect x="6" y="3" width="4" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="0" y="5" width="16" height="1"/><rect x="1" y="6" width="14" height="1"/><rect x="2" y="7" width="12" height="1"/><rect x="3" y="8" width="10" height="1"/><rect x="4" y="9" width="8" height="1"/><rect x="3" y="10" width="10" height="1"/><rect x="2" y="11" width="4" height="1"/><rect x="10" y="11" width="4" height="1"/><rect x="1" y="12" width="4" height="1"/><rect x="11" y="12" width="4" height="1"/><rect x="1" y="13" width="3" height="1"/><rect x="12" y="13" width="3" height="1"/><rect x="2" y="14" width="1" height="1"/><rect x="13" y="14" width="1" height="1"/></symbol></svg>
+<div class="bc-overlay" id="bc-overlay">
+  <video id="bc-video" playsinline muted></video>
+  <div class="bc-cadre"></div>
+  <div class="bc-msg" id="bc-msg">Cadre le code-barres</div>
+  <button class="bc-close" onclick="bcFermer()">Annuler</button>
+</div>
+
+<div class="scoreov" id="score-screen"></div>
+<div class="imminent" id="imminent"></div>
+<div class="hud" id="hud">
+  <div class="hud-cell" onclick="switchView('log')">
+    <span class="hl">Score</span><b id="hud-score">—</b></div>
+  <div class="hud-cell">
+    <span class="hl">Crédits</span><b id="hud-cred">0</b></div>
+  <div class="hud-cell" id="hud-q-cell" onclick="queueRun(true)">
+    <span class="hl">En file</span><b id="hud-queue">0</b></div>
+</div>
+
+<div id="view-live" class="view active">
+
+  <!-- Le mode d'abord : il décide de ce qu'on demande à l'IA, pas de la façon
+       de prendre la photo. Trois situations réelles sur un stand. -->
+  <div class="modes" id="modes">
+    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b>Un objet</b></button>
+    <button class="md" data-m="bac" onclick="modeSet('bac')"><b>Un lot</b></button>
+    <button class="md" data-m="stand" onclick="modeSet('stand')"><b>Un stand</b></button>
+  </div>
+  <div class="mode-dit" id="mode-dit"></div>
+
+  <!-- Les deux gestes empilent dans la même pile : plusieurs vues du même objet
+       se prennent aussi bien à l'appareil qu'en piochant dans la galerie. -->
+  <div class="shoot">
+    <button class="shoot-b cam" onclick="triggerCamera(cameraMode(), 'cam')">
+      <svg class="ico-cam"><use href="#i-scan"/></svg>
+      <b>Photographier</b>
+      <span id="shoot-cam-s">l'appareil s'ouvre</span>
+    </button>
+    <button class="shoot-b gal" onclick="triggerCamera(cameraMode(), 'ask')">
+      <svg class="ico-cam"><use href="#i-crate"/></svg>
+      <b>Galerie</b>
+      <span>plusieurs à la fois</span>
+    </button>
+  </div>
+
+  <div id="photo-queue" class="photo-queue">
+    <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
+    <button class="analyze-multi-btn" onclick="askAIGo()">Analyser</button>
+  </div>
+
+  <button class="bc-btn" onclick="bcOuvrir()">
+    <svg class="ico16"><use href="#i-scan"/></svg>
+    <b>Scanner le code-barres</b>
+    <span>identification exacte, instantanée</span>
+  </button>
+
+  <div class="askprix">
+    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé">
+  </div>
+
+  <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
+  <input type="file" id="file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleFileSelect(event)">
+
+  <div id="photo-queue" class="photo-queue">
+    <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
+    <button class="analyze-multi-btn" onclick="askAIMulti()">Analyser ces photos 🚀</button>
+  </div>
+
+  <div id="ai-results"></div>
+
+  <!-- Replié : sur un stand, on ne descend jamais jusqu'ici. -->
+  <details class="autres">
+    <summary>Autres façons de chercher</summary>
+    <div class="autres-in">
+      <div class="search-input-wrap">
+        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required>
+        <div class="clear" onclick="clearSearch()">✕</div>
+      </div>
+      <button id="ask" class="btn-save" disabled>Demander à l'IA</button>
+
+      <div class="quick-macros">
+        <button class="macro-btn" onclick="setMacro('Est-ce une contrefaçon ou un original ? Détaille les signes.')">Vrai ou faux ?</button>
+        <button class="macro-btn" onclick="setMacro('Que manque-t-il pour que cet objet soit considéré complet (CIB) ?')">Complet ?</button>
+      </div>
+    </div>
+  </details>
+</div>
+
+<div id="view-cal" class="view">
+  <h2 class="view-title">Calendrier</h2>
+  <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
+
+  <div class="cal-actions">
+    <button class="btn-save" onclick="calFetch()">
+      <svg class="ico16"><use href="#i-cal"/></svg> Chercher les prochaines dates</button>
+    <button class="btn-save alt" onclick="calAddManual()">＋ Ajouter à la main</button>
+  </div>
+  <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-bottom:16px"
+    onclick="calICS(-1)">Exporter toutes mes dates marquées (.ics)</button>
+
+  <div class="seg" id="cal-filter" style="margin-bottom:16px">
+    <button data-f="all" aria-pressed="true">Toutes</button>
+    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg>J'y vais</button>
+    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg>Les grosses</button>
+  </div>
+
+  <div id="cal-list"></div>
+</div>
+
+<div id="view-log" class="view">
+  <h2 class="view-title">Journal de chasse</h2>
+  <div id="log-sum" class="logsum"></div>
+  <div id="log-charts"></div>
+  <div id="log-stats"></div>
+  <h3 class="sect">Tes achats</h3>
+  <div id="log-list"></div>
+  <button class="btn-save" style="margin-top:18px" onclick="sortieFin()">
+    <svg class="ico16"><use href="#i-star"/></svg> Terminer la sortie</button>
+  <button class="btn-save alt2" onclick="logExport()">Envoyer le journal dans mon Drive</button>
+
+  <h3 class="sect">Sorties archivées</h3>
+  <div id="hist-list"></div>
+  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
+</div>
+
+<div id="view-guide" class="view">
+  <h2 class="view-title">Menu Guide 🧔🏼‍♂️</h2>
+  
+  <div class="guide-section">
+    <h3>⚙️ Configuration IA</h3>
+    <p>Clé API Gemini (stockée localement) :</p>
+    <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici">
+    <p style="margin-top: 10px;">Modèle IA (Puissance vs Vitesse) :</p>
+    <select id="api-model" class="model-select"></select>
+    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)">Vérifier les modèles disponibles</button>
+    <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
+      <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
+      <span>Chercher les prix sur le web<br>
+      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
+    </label>
+    <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
+
+    <h3 class="sect">Cotes Discogs (musique)</h3>
+    <div id="disc-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token.
+      Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA
+      par le prix réellement pratiqué et le nombre d'exemplaires en vente.
+    </p>
+    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false">
+    <button class="btn-save" onclick="discSave()">Enregistrer le jeton</button>
+    <button class="btn-save alt2" onclick="discTest()">Tester la connexion Discogs</button>
+
+    <h3 class="sect">Sets LEGO (Rebrickable)</h3>
+    <div id="lego-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Clé gratuite et immédiate : rebrickable.com &rarr; ton profil &rarr; Settings &rarr; API &rarr; Generate.
+      Rebrickable ne publie pas de prix — il donne le nombre de pièces et de figurines,
+      les deux chiffres qui font vraiment la valeur d'un set d'occasion.
+    </p>
+    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false">
+    <div class="lego-tarif">
+      <label>€ la pièce<input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
+      <label>€ la figurine<input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+      Barème de revendeur, à corriger avec tes propres ventes.
+    </p>
+    <button class="btn-save" onclick="legoSave()">Enregistrer</button>
+    <button class="btn-save alt2" onclick="legoTest()">Tester la connexion Rebrickable</button>
+
+    <h3 class="sect">Sets LEGO (Brickset)</h3>
+    <div id="brick-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Clé gratuite sur demande : brickset.com &rarr; ton compte &rarr; API &rarr; Request a key.
+      Brickset donne les mêmes pièces et figurines que Rebrickable, plus le prix de vente neuf
+      officiel LEGO. Sert de second avis quand tu n'as pas de clé Rebrickable — les deux ne
+      s'affichent jamais en double sur une même fiche.
+    </p>
+    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false">
+    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6">
+      <b style="color:var(--mid)">Brickset bloque les appels directs depuis un navigateur</b> — contrairement à
+      Discogs et Rebrickable. La clé seule ne suffit donc pas : il faut un relais gratuit qui
+      transmet la requête à ta place. Deux minutes, une fois :<br>
+      1. <b>dash.cloudflare.com</b> (compte gratuit) &rarr; Workers &amp; Pages &rarr; Create &rarr; « Hello World ».<br>
+      2. Colle le code ci-dessous à la place de l'exemple, dans l'éditeur du navigateur, puis Deploy.<br>
+      3. Colle l'adresse en <b>*.workers.dev</b> qu'il te donne dans le champ juste en dessous, et reteste.
+    </p>
+    <button class="btn-save alt2" onclick="brickRelayCopier()">Copier le code du relais</button>
+    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px">
+    <button class="btn-save" style="margin-top:9px" onclick="brickSave()">Enregistrer</button>
+    <button class="btn-save alt2" onclick="brickTest()">Tester la connexion Brickset</button>
+
+    <h3 class="sect">Sauvegarde</h3>
+    <div id="backup-state" class="diagbox"></div>
+    <div id="mem-state" class="diagbox" style="margin-top:9px"></div>
+    <button class="btn-save alt2" onclick="memFree()">Libérer de la place</button>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+      Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur.
+      Un nettoyage de cache Android l'effacerait sans prévenir.
+    </p>
+    <button class="btn-save" onclick="backupDrive()">
+      <svg class="ico16"><use href="#i-disk"/></svg> Sauvegarder dans mon Drive</button>
+    <button class="btn-save alt2" onclick="backupDownload()">Télécharger la sauvegarde</button>
+    <input type="file" id="restore-file" accept=".json" style="display:none" onchange="backupRestore(event)">
+    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()">Restaurer une sauvegarde</button>
+
+    <h3 class="sect">Apparence</h3>
+    <div class="seg" id="theme-seg">
+      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg>Clair</button>
+      <button data-t="auto" onclick="themeSet('auto')">Auto</button>
+      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg>Sombre</button>
+    </div>
+
+    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px">Mes bases Google Drive</h3>
+    <div id="coll-state" class="diagbox"></div>
+
+    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px">
+      Identifiant client OAuth (Google Cloud Console). À coller une seule fois.
+    </p>
+    <input id="drive-cid" type="text" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"
+      style="width:100%;height:46px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:0 12px;font-family:var(--mono);font-size:12px">
+
+    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()">Connecter mon Drive</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()">Choisir mes fichiers</button>
+    <div id="drive-files"></div>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)">Synchroniser maintenant</button>
+    <button class="btn-save" style="background:transparent;color:var(--stop);border:1px solid var(--stop);margin-top:9px"
+      onclick="collClear()">Oublier mes bases</button>
+
+    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6">
+      La synchronisation se relance toute seule à l'ouverture de l'app quand tu as du réseau.
+      Sur le terrain, la comparaison se fait en local : elle marche sans connexion.
+    </p>
+    <div id="keyState" class="diag" style="display:none;"></div>
+  </div>
+
+  <div class="guide-section">
+    <h3>💬 Négociation (La mécanique)</h3>
+    <div class="rule"><i>1</i><span>Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.</span></div>
+    <div class="rule"><i>2</i><span>Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.</span></div>
+    <div class="rule"><i>3</i><span>Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.</span></div>
+    <div class="rule"><i>4</i><span>Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.</span></div>
+    <div class="rule"><i>5</i><span>Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.</span></div>
+  </div>
+
+  <div class="guide-section">
+    <h3>⚠️ Pièges Fréquents</h3>
+    <div class="warn-rule"><b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.</div>
+    <div class="warn-rule"><b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.</div>
+    <div class="warn-rule"><b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.</div>
+    <div class="warn-rule"><b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.</div>
+  </div>
+
+  <div class="guide-section">
+    <h3>🎒 Le Sac Idéal</h3>
+    <div id="sac-ticks"></div>
+  </div>
+  
+  <p style="text-align:center; color: var(--text-muted); font-size: 11px; margin-top: 20px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 1px;">
+    Développé par Joachim J. (Pixel Papa)<br>Version Terrain 5.4 « Terrain »
+  </p>
+</div>
+
+<nav>
+  <div class="nav-item active" data-v="live" onclick="switchView('live')">
+    <svg class="ico"><use href="#i-scan"/></svg><span>Scan</span>
+  </div>
+  <div class="nav-item" data-v="cal" onclick="switchView('cal')">
+    <svg class="ico"><use href="#i-cal"/></svg><span>Dates</span>
+  </div>
+  <div class="nav-item" data-v="log" onclick="switchView('log')">
+    <svg class="ico"><use href="#i-cash"/></svg><span>Journal</span>
+  </div>
+  <div class="nav-item" data-v="guide" onclick="switchView('guide')">
+    <svg class="ico"><use href="#i-pad"/></svg><span>Réglages</span>
+  </div>
+</nav>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
