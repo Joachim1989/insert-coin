@@ -993,7 +993,17 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       s'affichent jamais en double sur une même fiche.
     </p>
     <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false">
-    <button class="btn-save" onclick="brickSave()">Enregistrer</button>
+    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6">
+      <b style="color:var(--mid)">Brickset bloque les appels directs depuis un navigateur</b> — contrairement à
+      Discogs et Rebrickable. La clé seule ne suffit donc pas : il faut un relais gratuit qui
+      transmet la requête à ta place. Deux minutes, une fois :<br>
+      1. <b>dash.cloudflare.com</b> (compte gratuit) &rarr; Workers &amp; Pages &rarr; Create &rarr; « Hello World ».<br>
+      2. Colle le code ci-dessous à la place de l'exemple, dans l'éditeur du navigateur, puis Deploy.<br>
+      3. Colle l'adresse en <b>*.workers.dev</b> qu'il te donne dans le champ juste en dessous, et reteste.
+    </p>
+    <button class="btn-save alt2" onclick="brickRelayCopier()">Copier le code du relais</button>
+    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px">
+    <button class="btn-save" style="margin-top:9px" onclick="brickSave()">Enregistrer</button>
     <button class="btn-save alt2" onclick="brickTest()">Tester la connexion Brickset</button>
 
     <h3 class="sect">Sauvegarde</h3>
@@ -4105,8 +4115,40 @@ async function legoTest(){
    les mêmes pièces/figurines sur la même fiche n'aideraient personne. */
 const BRICK_STORE = "insertcoin.brickset.key";
 const BRICK_CACHE = "insertcoin.brickset.cache";
+const BRICK_RELAY_STORE = "insertcoin.brickset.relay";
 const BRICK_API   = "https://brickset.com/api/v3.asmx";
 function brickKey(){ try { return localStorage.getItem(BRICK_STORE) || ""; } catch(e){ return ""; } }
+/* Brickset ne renvoie aucun en-tête CORS : testé côté navigateur, l'appel
+   direct échoue en "Failed to fetch" alors que Discogs et Rebrickable
+   répondent normalement à la même requête. Sans relais, Brickset ne
+   fonctionnera jamais depuis cette app — ce n'est pas un bug d'ici. */
+function brickRelay(){ try { return (localStorage.getItem(BRICK_RELAY_STORE) || "").trim().replace(/\/+$/, ""); } catch(e){ return ""; } }
+
+/* Le relais : un Cloudflare Worker gratuit qui rejoue la requête vers
+   Brickset et ajoute l'en-tête CORS qui manque. Il ne fait rien d'autre —
+   pas de stockage, pas de journalisation, il ne voit passer que ce que cette
+   app lui envoie déjà. Collé tel quel dans l'éditeur du dashboard Cloudflare. */
+const BRICK_RELAY_CODE = `export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    const target = "https://brickset.com/api/v3.asmx" + url.pathname + url.search;
+    const upstream = await fetch(target, { headers: { "Accept": "application/json" } });
+    const body = await upstream.text();
+    return new Response(body, {
+      status: upstream.status,
+      headers: {
+        "Content-Type": upstream.headers.get("Content-Type") || "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+  }
+};`;
+function brickRelayCopier(){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(BRICK_RELAY_CODE)
+      .then(() => { vib(); alert("Code du relais copié.\n\nColle-le dans l'éditeur Cloudflare Worker, à la place de l'exemple « Hello World », puis Deploy."); });
+  } else prompt("Copie le code du relais :", BRICK_RELAY_CODE);
+}
 
 let BRICK_LAST = 0;
 async function brickGet(method, params){
@@ -4116,8 +4158,9 @@ async function brickGet(method, params){
   const attente = 900 - (Date.now() - BRICK_LAST);
   if(attente > 0) await new Promise(r => setTimeout(r, attente));
   BRICK_LAST = Date.now();
+  const base = brickRelay() || BRICK_API;
   const q = new URLSearchParams({apiKey: k, ...(params || {})});
-  const r = await fetch(BRICK_API + "/" + method + "?" + q.toString());
+  const r = await fetch(base + "/" + method + "?" + q.toString());
   if(!r.ok) throw new Error("HTTP " + r.status);
   const d = await r.json();
   /* Toutes les réponses Brickset portent un statut : "success" ou "error"
@@ -4229,17 +4272,21 @@ async function brickGreffe(f, cibleId){
 function brickSave(){
   const v = ($('brick-key').value || "").trim();
   try{ v ? localStorage.setItem(BRICK_STORE, v) : localStorage.removeItem(BRICK_STORE); }catch(e){}
+  const rl = ($('brick-relay').value || "").trim().replace(/\/+$/, "");
+  try{ rl ? localStorage.setItem(BRICK_RELAY_STORE, rl) : localStorage.removeItem(BRICK_RELAY_STORE); }catch(e){}
   vib(); brickPaint();
 }
 
 function brickPaint(){
   const el = $('brick-state'); if(!el) return;
-  const k = brickKey();
+  const k = brickKey(), rl = brickRelay();
   if($('brick-key') && !$('brick-key').value) $('brick-key').value = k;
+  if($('brick-relay') && !$('brick-relay').value) $('brick-relay').value = rl;
   el.style.borderLeft = "3px solid " + (k ? "var(--go)" : "var(--border)");
-  el.innerHTML = k
-    ? "Clé enregistrée." + (legoKey() ? " Rebrickable est configuré : Brickset ne sert que si Rebrickable ne répond pas." : " Sert de source pour les sets LEGO.")
-    : "Aucune clé. Optionnelle : Rebrickable suffit pour les pièces et figurines.";
+  if(!k){ el.innerHTML = "Aucune clé. Optionnelle : Rebrickable suffit pour les pièces et figurines."; return; }
+  el.innerHTML = (legoKey() ? "Clé enregistrée. Rebrickable est configuré : Brickset ne sert que si Rebrickable ne répond pas."
+                            : "Clé enregistrée. Sert de source pour les sets LEGO.")
+    + (rl ? " Relais configuré." : " <b style=\"color:var(--mid)\">Sans le relais des 3 étapes ci-dessus, Brickset ne répondra jamais</b> — il bloque tout appel direct depuis un navigateur.");
 }
 
 async function brickTest(){
@@ -4257,7 +4304,9 @@ async function brickTest(){
     el.innerHTML = String(err.message) === "CLE"
       ? `<b style="color:var(--stop)">Clé refusée.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne.`
       : /Failed to fetch|NetworkError/i.test(String(err.message))
-        ? `<b style="color:var(--stop)">Brickset bloque l'appel depuis le navigateur.</b><br>Dis-le-moi, on passera par un relais.`
+        ? (brickRelay()
+            ? `<b style="color:var(--stop)">Le relais ne répond pas.</b><br>Vérifie l'adresse *.workers.dev collée ci-dessus (pas d'espace, pas de slash final) et que le Worker est bien déployé sur Cloudflare.`
+            : `<b style="color:var(--stop)">Brickset bloque l'appel direct depuis un navigateur.</b><br>Suis les 3 étapes juste au-dessus (2 minutes, gratuit), colle l'adresse *.workers.dev, puis reteste.`)
         : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
   }
 }
