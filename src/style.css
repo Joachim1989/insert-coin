@@ -9,7 +9,12 @@
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
-body { background: var(--bg); color: var(--text); font-family: var(--body); font-size: 16px; line-height: 1.35; padding-bottom: 90px; }
+/* 90px suffisait sur un téléphone sans encoche, pas sur les autres : la nav
+   fixe en bas ajoute elle-même env(safe-area-inset-bottom) à sa hauteur
+   (voir nav, plus bas), mais cette marge du body ne le comptait pas — la nav
+   pouvait chevaucher les dernières lignes d'une liste longue (calendrier,
+   journal...) d'autant de pixels que la zone de sécurité de l'écran. */
+body { background: var(--bg); color: var(--text); font-family: var(--body); font-size: 16px; line-height: 1.35; padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
 /* SERVICE WORKER — bandeau de mise à jour disponible (voir src/ui/pwa.js) */
