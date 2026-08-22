@@ -55,12 +55,12 @@
   <!-- Les deux gestes empilent dans la même pile : plusieurs vues du même objet
        se prennent aussi bien à l'appareil qu'en piochant dans la galerie. -->
   <div class="shoot">
-    <button class="shoot-b cam" onclick="triggerCamera(currentCameraMode, 'cam')">
+    <button class="shoot-b cam" onclick="triggerCamera(cameraMode(), 'cam')">
       <svg class="ico-cam"><use href="#i-scan"/></svg>
       <b>Photographier</b>
       <span id="shoot-cam-s">l'appareil s'ouvre</span>
     </button>
-    <button class="shoot-b gal" onclick="triggerCamera(currentCameraMode, 'ask')">
+    <button class="shoot-b gal" onclick="triggerCamera(cameraMode(), 'ask')">
       <svg class="ico-cam"><use href="#i-crate"/></svg>
       <b>Galerie</b>
       <span>plusieurs à la fois</span>

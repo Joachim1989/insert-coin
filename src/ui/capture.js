@@ -9,6 +9,14 @@ import { hudPaint } from "./hud.js";
 // --- STATE ---
 export let currentCameraMode = null; // 'single', 'multi', 'stand'
 
+/* Dans l'index.html monolithique, les boutons "Photographier"/"Galerie"
+   lisaient directement la variable globale currentCameraMode depuis leur
+   onclick — ça marchait parce que tout vivait dans le même <script>. En
+   module ES, une variable de module n'est plus visible depuis le HTML,
+   même exportée : il faut une fonction. Ce getter est ce qui remplace la
+   lecture directe ; voir dev.html, les deux boutons .shoot-b. */
+export function cameraMode(){ return currentCameraMode; }
+
 export let photoQueue = [];
 
 export let searchTerm = "";

@@ -8,7 +8,7 @@ import "./style.css";
 import { switchView, init } from "./ui/main.js";
 import {
   triggerCamera, modeSet, handleFileSelect, removePhoto, askAIGo, askAIMulti,
-  clearSearch, setMacro, queueRun
+  clearSearch, setMacro, queueRun, cameraMode
 } from "./ui/capture.js";
 import { bcOuvrir, bcFermer } from "./ui/capture.js";
 import {
@@ -30,7 +30,7 @@ import { modelsRefresh } from "./api/gemini.js";
 
 Object.assign(window, {
   switchView, triggerCamera, modeSet, handleFileSelect, removePhoto, askAIGo, askAIMulti,
-  clearSearch, setMacro, queueRun, bcOuvrir, bcFermer,
+  clearSearch, setMacro, queueRun, cameraMode, bcOuvrir, bcFermer,
   ficheEtatSet, ficheCoche, ficheCopieCode, verifSet, bacToggle, bacBuy, bacDisc,
   collClear, driveConnect, drivePick, driveSaveSel, driveSync,
   calFetch, calAddManual, calICS, calGo, calDel, calGoogle, calVerifMark,
