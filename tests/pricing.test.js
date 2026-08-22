@@ -4,9 +4,16 @@
 // représentent ce que Gemini a plausiblement renvoyé — voir tests/fixtures/
 // pour la justification de chaque valeur.
 //
-// Ces trois tests sont volontairement ROUGES aujourd'hui. Ne pas les faire
-// passer avant d'avoir lu docs/diagnostic-cotation.md et validé la cause
-// avec l'utilisateur : voir la consigne de l'étape 3.
+// État au 22/08/2026, après tranchage avec l'utilisateur :
+//   - Cas 1 (Skylanders) : encore rouge sur l'attente. Cause confirmée
+//     (double comptage sur les lots), correction en attente du chiffrage.
+//   - Cas 2 (Remember Me) : n'était pas un bug — test verrouillé en vert,
+//     ne pas le "corriger".
+//   - Cas 3 (Top Gun) : le test de non-amplification est vert (prouve que
+//     le moteur n'est pas en cause) ; le test "circulation" reste rouge en
+//     filet de sécurité, à câbler seulement après avoir confirmé pourquoi
+//     Discogs ne remplace pas l'estimation IA sur ce cas précis.
+// Voir docs/diagnostic-cotation.md pour le détail.
 import { describe, it, expect } from "vitest";
 import { ficheNorm, ficheCalc } from "../src/pricing/engine.js";
 import { skylandersLot } from "./fixtures/skylanders-lot.js";
@@ -35,28 +42,25 @@ describe("Cas réel 1 — Lot Skylanders (sous-évaluation massive)", () => {
   });
 });
 
-describe("Cas réel 2 — Remember Me PS3 (sous-évaluation)", () => {
-  it("chiffre exact aujourd'hui : reproduit le 6 € signalé sur le terrain", () => {
+describe("Cas réel 2 — Remember Me PS3 (PAS un bug : règle du tiers verrouillée)", () => {
+  // Tranché avec l'utilisateur le 22/08/2026 : ce n'était pas une erreur.
+  // "TON MAX" est le prix que le chineur paie sur le stand, pas une
+  // estimation de la valeur de l'objet — c'est une règle personnelle
+  // explicite ("tu n'achètes jamais au-dessus du tiers"), pas un accident de
+  // calcul. Ce test verrouille ce comportement : s'il devient rouge un jour,
+  // c'est qu'on a touché la règle du tiers sans le vouloir, pas qu'on a
+  // "corrigé" un bug — ne pas le faire passer en changeant l'attente sans en
+  // reparler d'abord.
+  //
+  // Le vrai défaut identifié n'est pas dans ce module : c'est visuel. Le
+  // chiffre géant en haut de la fiche ("TON MAX") est le prix d'achat ; la
+  // revente nette (18€ ici, cohérente avec les 20€ vus sur Vinted) est
+  // affichée en petit, plus bas. Tâche séparée, pas de code ici : voir
+  // docs/diagnostic-cotation.md, section "Suivi".
+  it("marché 20€, rien de manquant, état normal → net 18€, plafond (max à payer) 6€", () => {
     const c = ficheCalc(ficheNorm(rememberMePS3));
-    // Marché correctement estimé à 20 € (cohérent avec Vinted), état
-    // standard, rien de manquant : le pipeline (× état 1, × complétude 1,
-    // − port 2€, ÷ 3) donne exactement 6. Ce n'est pas une erreur
-    // arithmétique du moteur — c'est la règle du tiers appliquée
-    // fidèlement. Test vert : il prouve que l'entrée était raisonnable.
+    expect(c.net).toBe(18);
     expect(c.plafond).toBe(6);
-    expect(c.net).toBe(18); // la "revente nette" reste, elle, fidèle au marché
-  });
-
-  it("hypothèse à valider : le plafond ne devrait pas descendre sous la moitié de la revente nette sur un objet bien identifié, sans rien de manquant", () => {
-    const c = ficheCalc(ficheNorm(rememberMePS3));
-    // Cette attente est une HYPOTHÈSE DE TRAVAIL, pas une certitude : à
-    // discuter en étape 3 avant de coder quoi que ce soit. Elle reflète que,
-    // pour un objet identifié avec confiance et rien à décoter, la règle du
-    // tiers écrase le prix affiché ("TON MAX", en gros, tout en haut de la
-    // fiche) à un niveau qui se lit comme une estimation de valeur plutôt
-    // que comme un plafond de négociation. Échoue aujourd'hui : 6 (attendu :
-    // au moins 9, la moitié de 18).
-    expect(c.plafond).toBeGreaterThanOrEqual(c.net / 2);
   });
 });
 

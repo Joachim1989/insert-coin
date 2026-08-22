@@ -87,5 +87,53 @@ cohérence croisée — ni entre "lot" et "attendu", ni entre "plafond" et
 moteur transforme fidèlement ce qu'on lui donne ; il ne vérifie jamais si ce
 qu'on lui donne se tient.
 
-Je n'ai pas touché à `ficheCalc` ni à `ficheNorm` : les trois tests restent
-rouges tant qu'on n'a pas décidé ensemble de la correction pour chacun.
+## Tranchage (22/08/2026)
+
+**Cas 2 — pas un bug.** La règle du tiers est intentionnelle. Le test est
+désormais vert et verrouille ce comportement (`ficheCalc` inchangé).
+
+**Défaut réel identifié, noté pour plus tard — pas fait :** sur la fiche, le
+chiffre géant ("TON MAX") est le prix d'achat ; la revente nette (cohérente
+avec le marché réel) est affichée en petit, plus bas. Un chineur qui ne
+retient que le gros chiffre peut légitimement lire ça comme "l'app sous-
+estime l'objet". Tâche d'interface à traiter séparément — voir
+`src/ui/fiche.js`, fonctions `renderResult` / `fichePaint` (bloc `.aihead`
+vs `.px-calc`) : rien à changer dans le moteur de cotation pour ça.
+
+**Cas 1 — en attente du chiffrage.** Cause confirmée (décote de complétude
+appliquée en double sur les lots). Autres décotes vérifiées pour le même
+risque : `ce` (état) et `port` s'appliquent une seule fois, globalement, sur
+la fiche entière — ni l'un ni l'autre ne dépend de `f.attendu` ni ne
+compose avec un autre mécanisme spécifique aux lots. Le seul point de double
+comptage trouvé est `attCoef`/`attPerte`. Proposition de règle envoyée en
+chat, pas encore écrite dans le code.
+
+**Cas 3 — investigation Discogs, avant tout câblage de `circulation`.**
+Deux hypothèses testées avec les vraies fonctions du projet (pas de
+supposition) :
+- `discMusique(...)` sur plusieurs formulations plausibles de l'objet
+  ("Bande originale Top Gun", "Vinyle Bande originale Top Gun", etc.) :
+  retourne `true` dans tous les cas. **Écarté.**
+- `discPertinent`/le seuil de correspondance (0.45) contre des titres
+  Discogs plausibles ("Top Gun (Original Motion Picture Soundtrack)", avec
+  ou sans année, avec ou sans "Various -") : score entre 0.50 et 0.80 dans
+  tous les cas testés — `collNorm` retire le contenu entre parenthèses, donc
+  le sous-titre anglais ne dilue pas la comparaison comme je le pensais au
+  départ. **Écarté** (mon hypothèse initiale était fausse).
+
+Hypothèses restantes, non tranchables sans les données réelles du cas :
+1. Aucun jeton Discogs n'était enregistré au moment du test — `discGreffe`
+   s'arrête silencieusement avant tout appel. La plus probable, la plus
+   simple à confirmer.
+2. Un jeton était présent, un match a été trouvé, mais `lowest_price` était
+   vide côté Discogs (`c.bas = 0`) — possible si aucun exemplaire n'est
+   actuellement en vente sur le marketplace pour ce pressage précis, même
+   très diffusé. Dans ce cas la carte Discogs s'affiche mais ne remplace
+   jamais `marche`.
+3. Un jeton était présent, un match a été trouvé, mais sur un pressage
+   différent du disque en main (réédition limitée collector, par exemple) —
+   la cote Discogs aurait alors bien remplacé l'IA, avec un prix réel mais
+   pour le mauvais exemplaire.
+
+Question pour trancher : la carte "Cote Discogs" est-elle apparue sous la
+fiche au moment des faits, et si oui, qu'affichait-elle ?
