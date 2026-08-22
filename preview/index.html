@@ -2019,6 +2019,9 @@ function bacBar(n) {
 }
 let LAST = null;
 let currentCameraMode = null;
+function cameraMode() {
+  return currentCameraMode;
+}
 let photoQueue = [];
 let searchTerm = "";
 function setMacro(text) {
@@ -3642,6 +3645,7 @@ Object.assign(window, {
   clearSearch,
   setMacro,
   queueRun,
+  cameraMode,
   bcOuvrir,
   bcFermer,
   ficheEtatSet,
@@ -4523,12 +4527,12 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <!-- Les deux gestes empilent dans la même pile : plusieurs vues du même objet
        se prennent aussi bien à l'appareil qu'en piochant dans la galerie. -->
   <div class="shoot">
-    <button class="shoot-b cam" onclick="triggerCamera(currentCameraMode, 'cam')">
+    <button class="shoot-b cam" onclick="triggerCamera(cameraMode(), 'cam')">
       <svg class="ico-cam"><use href="#i-scan"/></svg>
       <b>Photographier</b>
       <span id="shoot-cam-s">l'appareil s'ouvre</span>
     </button>
-    <button class="shoot-b gal" onclick="triggerCamera(currentCameraMode, 'ask')">
+    <button class="shoot-b gal" onclick="triggerCamera(cameraMode(), 'ask')">
       <svg class="ico-cam"><use href="#i-crate"/></svg>
       <b>Galerie</b>
       <span>plusieurs à la fois</span>
