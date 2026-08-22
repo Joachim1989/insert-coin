@@ -121,6 +121,38 @@ export function calRead(){ try { return JSON.parse(localStorage.getItem(CAL_STOR
 export function calWrite(a){ return storeSet(CAL_STORE, JSON.stringify(a), "ton calendrier"); }
 
 
+/* ══════════ HISTORIQUE DES RECHERCHES ══════════
+   Demande du 23/08/2026 : une fiche obtenue (photo, code-barres, recherche
+   texte) disparaissait dès qu'on quittait l'écran, sauf à l'acheter — "j'ai
+   fait des photos ce matin et reçu une fiche mais je ne la retrouve plus".
+   Chaque analyse réussie (objet seul, lot, stand) est donc enregistrée ici
+   automatiquement, qu'elle mène à un achat ou non — voir rechAjouter, appelé
+   depuis callGemini(). Flexible par nécessité : c'est TOI qui choisis quoi
+   garder (rechDel) ou vider entièrement (voir ui/log.js). On ne stocke que
+   le JSON renvoyé par le modèle (quelques Ko), jamais la photo elle-même —
+   elle n'est de toute façon jamais conservée ailleurs dans l'app non plus. */
+export const RECH_STORE = "insertcoin.recherches";
+
+/* Plafond du nombre d'entrées gardées : au-delà, les plus anciennes sont
+   silencieusement retirées (rechAjouter). Un JSON de fiche pèse environ 0.5
+   à 2 Ko ; 300 entrées restent sous le Mo, loin de menacer le quota. */
+export const RECH_MAX = 300;
+
+export function rechRead(){ try { return JSON.parse(localStorage.getItem(RECH_STORE) || "[]"); } catch(e){ return []; } }
+
+export function rechWrite(a){ return storeSet(RECH_STORE, JSON.stringify(a), "ton historique de recherches"); }
+
+/* Appelé une fois par analyse réussie, jamais sur un résultat déjà en cache
+   (voir callGemini : le cache texte du jour ne rejoue qu'un affichage, ce
+   n'est pas une nouvelle recherche). */
+export function rechAjouter(mode, j, avis){
+  const a = rechRead();
+  a.push({id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), date: new Date().toISOString(), mode, j, avis: avis || ""});
+  while(a.length > RECH_MAX) a.shift();
+  rechWrite(a);
+}
+
+
 /* ══════════ THÈME ══════════ */
 
 /* ══════════════════ COTES DISCOGS ══════════════════

@@ -1,9 +1,11 @@
 import { $, vib } from "../util/dom.js";
 import { esc } from "../util/text.js";
-import { logRead, logWrite, sortieRead, sortieWrite } from "../storage/local.js";
-import { LAST } from "./fiche.js";
+import { logRead, logWrite, sortieRead, sortieWrite, rechRead, rechWrite } from "../storage/local.js";
+import { LAST, renderResult, renderBacResult, renderStandResult } from "./fiche.js";
+import { catJoli } from "../pricing/engine.js";
 import { hudPaint } from "./hud.js";
 import { driveAuth } from "../api/googledrive.js";
+import { switchView } from "./main.js";
 
 /* Courbe de marge cumulée : la matinée d'un coup d'œil.
    Une pente qui monte = ça se passe bien. Une pente qui s'aplatit = tu dépenses
@@ -367,3 +369,62 @@ export async function logExport(){
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
+
+
+/* ══════════ HISTORIQUE DES RECHERCHES ══════════
+   Voir storage/local.js (rechAjouter, appelé depuis callGemini) pour ce qui
+   remplit cette liste — automatiquement, à chaque analyse réussie. Ici :
+   l'afficher, la rouvrir en fiche complète, et laisser le chineur décider
+   quoi garder. */
+export function renderRecherches(){
+  const el = $('rech-list'); if(!el) return;
+  const a = rechRead().slice().reverse(); // la plus récente d'abord
+  if(!a.length){
+    el.innerHTML = `<p style="font-size:13px;color:var(--text-muted);padding:8px 2px">
+      Aucune recherche pour l'instant — chaque photo, scan ou question analysée apparaîtra ici.</p>`;
+    return;
+  }
+  el.innerHTML = a.map(r => {
+    const j = r.j || {};
+    const titre = j.objet
+      || (Array.isArray(j.lot) ? j.lot.length + " objet" + (j.lot.length > 1 ? "s" : "") + " (lot)" : "")
+      || (Array.isArray(j.objetsReperes) ? "Stand · " + j.objetsReperes.filter(Boolean).length + " repère(s)" : "")
+      || "Analyse";
+    const d = new Date(r.date);
+    const quand = isNaN(d) ? "" : d.toLocaleDateString('fr-BE', {day:'numeric', month:'short'}) + " à " + d.toLocaleTimeString('fr-BE', {hour:'2-digit', minute:'2-digit'});
+    const cat = j.categorie ? catJoli(j.categorie) : "";
+    return `<div class="logitem" onclick="rechOuvrir('${r.id}')" style="cursor:pointer">
+      <div class="li-main" style="flex:1">
+        <b>${esc(titre)}</b>
+        <span>${esc(quand)}${cat ? " · " + esc(cat) : ""}</span>
+      </div>
+      <button class="li-x" onclick="event.stopPropagation();rechDel('${r.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+/* Rouvre une entrée comme une fiche à part entière, en rappelant le même
+   rendu que l'analyse d'origine — sans la photo (jamais conservée), le
+   reste (prix, décotes, pièges, actions) est identique et à jour des
+   éventuelles corrections du moteur depuis. */
+export function rechOuvrir(id){
+  const r = rechRead().find(x => x.id === id); if(!r) return;
+  switchView('live');
+  setTimeout(() => {
+    if(r.mode === 'bac') renderBacResult(r.j, [], r.avis);
+    else if(r.mode === 'stand') renderStandResult(r.j, null, r.avis);
+    else renderResult(r.j, [], r.avis);
+    $('ai-results') && $('ai-results').scrollIntoView({behavior:'smooth'});
+  }, 0);
+}
+
+export function rechDel(id){
+  rechWrite(rechRead().filter(x => x.id !== id));
+  renderRecherches();
+}
+
+export function rechClear(){
+  if(!confirm("Vider tout l'historique des recherches ?\n\nTes achats et sorties archivées ne sont pas touchés.")) return;
+  rechWrite([]);
+  renderRecherches();
+}

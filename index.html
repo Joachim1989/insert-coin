@@ -172,6 +172,24 @@ function calRead() {
 function calWrite(a) {
   return storeSet(CAL_STORE, JSON.stringify(a), "ton calendrier");
 }
+const RECH_STORE = "insertcoin.recherches";
+const RECH_MAX = 300;
+function rechRead() {
+  try {
+    return JSON.parse(localStorage.getItem(RECH_STORE) || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+function rechWrite(a) {
+  return storeSet(RECH_STORE, JSON.stringify(a), "ton historique de recherches");
+}
+function rechAjouter(mode, j, avis) {
+  const a = rechRead();
+  a.push({ id: Date.now() + "-" + Math.random().toString(36).slice(2, 7), date: (/* @__PURE__ */ new Date()).toISOString(), mode, j, avis: avis || "" });
+  while (a.length > RECH_MAX) a.shift();
+  rechWrite(a);
+}
 const DISC_STORE = "insertcoin.discogs.token";
 const DISC_CACHE = "insertcoin.discogs.cache";
 function discToken() {
@@ -1327,6 +1345,50 @@ Content-Type: text/csv\r
   link.download = nom;
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 2e3);
+}
+function renderRecherches() {
+  const el = $("rech-list");
+  if (!el) return;
+  const a = rechRead().slice().reverse();
+  if (!a.length) {
+    el.innerHTML = `<p style="font-size:13px;color:var(--text-muted);padding:8px 2px">
+      Aucune recherche pour l'instant — chaque photo, scan ou question analysée apparaîtra ici.</p>`;
+    return;
+  }
+  el.innerHTML = a.map((r) => {
+    const j = r.j || {};
+    const titre = j.objet || (Array.isArray(j.lot) ? j.lot.length + " objet" + (j.lot.length > 1 ? "s" : "") + " (lot)" : "") || (Array.isArray(j.objetsReperes) ? "Stand · " + j.objetsReperes.filter(Boolean).length + " repère(s)" : "") || "Analyse";
+    const d = new Date(r.date);
+    const quand = isNaN(d) ? "" : d.toLocaleDateString("fr-BE", { day: "numeric", month: "short" }) + " à " + d.toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" });
+    const cat = j.categorie ? catJoli(j.categorie) : "";
+    return `<div class="logitem" onclick="rechOuvrir('${r.id}')" style="cursor:pointer">
+      <div class="li-main" style="flex:1">
+        <b>${esc(titre)}</b>
+        <span>${esc(quand)}${cat ? " · " + esc(cat) : ""}</span>
+      </div>
+      <button class="li-x" onclick="event.stopPropagation();rechDel('${r.id}')">✕</button>
+    </div>`;
+  }).join("");
+}
+function rechOuvrir(id) {
+  const r = rechRead().find((x) => x.id === id);
+  if (!r) return;
+  switchView("live");
+  setTimeout(() => {
+    if (r.mode === "bac") renderBacResult(r.j, [], r.avis);
+    else if (r.mode === "stand") renderStandResult(r.j, null, r.avis);
+    else renderResult(r.j, [], r.avis);
+    $("ai-results") && $("ai-results").scrollIntoView({ behavior: "smooth" });
+  }, 0);
+}
+function rechDel(id) {
+  rechWrite(rechRead().filter((x) => x.id !== id));
+  renderRecherches();
+}
+function rechClear() {
+  if (!confirm("Vider tout l'historique des recherches ?\n\nTes achats et sorties archivées ne sont pas touchés.")) return;
+  rechWrite([]);
+  renderRecherches();
 }
 let PRIX_UTILISE = null;
 function prixNouveau() {
@@ -2613,6 +2675,7 @@ const CLES = [
   "insertcoin.log",
   "insertcoin.sorties",
   "insertcoin.cal",
+  "insertcoin.recherches",
   "insertcoin.photosrc",
   "insertcoin.collection",
   "insertcoin.cred",
@@ -3070,6 +3133,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   }
   if (ok) {
     stopChrono();
+    rechAjouter(mode, ok.j, ok.avis);
     try {
       if (mode === "bac") renderBacResult(ok.j, images, ok.avis);
       else if (mode === "stand") renderStandResult(ok.j, images[0], ok.avis);
@@ -3603,6 +3667,7 @@ function switchView(viewId, navEl) {
   if (viewId === "log") setTimeout(() => {
     renderLog();
     renderHist();
+    renderRecherches();
   }, 0);
   if (viewId === "cal") setTimeout(renderCal, 0);
   paintImminent();
@@ -3642,6 +3707,7 @@ function init() {
   renderCal();
   paintImminent();
   renderHist();
+  renderRecherches();
   backupState();
   if (queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3e3);
   if (navigator.onLine && driveFiles().length) {
@@ -3712,6 +3778,9 @@ Object.assign(window, {
   sortieExport,
   scoreClose,
   logExport,
+  rechOuvrir,
+  rechDel,
+  rechClear,
   saveSettings,
   memFree,
   discSave,
@@ -4661,6 +4730,12 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <h3 class="sect">Sorties archivées</h3>
   <div id="hist-list"></div>
   <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
+
+  <h3 class="sect">Historique des recherches</h3>
+  <p style="font-size:13px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+    Chaque photo, scan ou question analysée, achetée ou non — pour retrouver une fiche vue plus tôt.</p>
+  <div id="rech-list"></div>
+  <button class="btn-save alt2" style="margin-top:12px" onclick="rechClear()">Vider l'historique des recherches</button>
 </div>
 
 <div id="view-guide" class="view">

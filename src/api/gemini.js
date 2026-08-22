@@ -1,6 +1,6 @@
 import { $ } from "../util/dom.js";
 import { esc } from "../util/text.js";
-import { KEY_STORE, MODEL_STORE, cacheGet, cacheSet, getGround, discToken } from "../storage/local.js";
+import { KEY_STORE, MODEL_STORE, cacheGet, cacheSet, getGround, discToken, rechAjouter } from "../storage/local.js";
 import { switchView } from "../ui/main.js";
 import { credBump } from "../ui/hud.js";
 import { queuePush } from "../ui/capture.js";
@@ -412,6 +412,10 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
 
   if(ok){
     stopChrono();
+    /* Enregistré même si l'affichage plante juste après (catch ci-dessous) :
+       l'analyse a réussi, c'est ça qui compte pour l'historique — voir
+       storage/local.js et la demande du 23/08/2026. */
+    rechAjouter(mode, ok.j, ok.avis);
     try{
       if(mode === 'bac') renderBacResult(ok.j, images, ok.avis);
       else if(mode === 'stand') renderStandResult(ok.j, images[0], ok.avis);

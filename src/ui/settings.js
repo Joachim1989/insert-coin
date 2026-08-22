@@ -284,6 +284,7 @@ if(window.matchMedia){
    Un nettoyage de cache Android efface le stockage du navigateur sans
    prévenir. Ce fichier remet tout en place. */
 export const CLES = ["insertcoin.log","insertcoin.sorties","insertcoin.cal",
+              "insertcoin.recherches",
               "insertcoin.photosrc",
               "insertcoin.collection","insertcoin.cred","insertcoin.theme",
               "insertcoin.drive.files","insertcoin.drive.cid","insertcoin.gemini.model"];

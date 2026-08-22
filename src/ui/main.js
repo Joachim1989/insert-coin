@@ -5,7 +5,7 @@ import { modelsRefresh } from "../api/gemini.js";
 import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, backupState, themeApply } from "./settings.js";
 import { modeSet, srcPaint, queueRun, captureInit } from "./capture.js";
 import { hudPaint } from "./hud.js";
-import { renderLog, renderHist } from "./log.js";
+import { renderLog, renderHist, renderRecherches } from "./log.js";
 import { renderCal, paintImminent, calendarInit } from "./calendar.js";
 import { collPaint, driveSync } from "./drive.js";
 import { pwaInit } from "./pwa.js";
@@ -16,7 +16,7 @@ import { pwaInit } from "./pwa.js";
 export function switchView(viewId, navEl) {
   const vue = document.getElementById('view-' + viewId);
   if(!vue) return;
-  if(viewId === 'log') setTimeout(() => { renderLog(); renderHist(); }, 0);
+  if(viewId === 'log') setTimeout(() => { renderLog(); renderHist(); renderRecherches(); }, 0);
   if(viewId === 'cal') setTimeout(renderCal, 0);
   paintImminent();
   vib();
@@ -47,7 +47,7 @@ export function init() {
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
   themeApply(themeGet());
   modeSet('objet');
-  legoPaint(); brickPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); backupState();
+  legoPaint(); brickPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); renderRecherches(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);

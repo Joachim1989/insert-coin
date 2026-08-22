@@ -19,7 +19,8 @@ import { collClear, driveConnect, drivePick, driveSaveSel, driveSync } from "./u
 import { calFetch, calAddManual, calICS, calGo, calDel, calGoogle, calVerifMark } from "./ui/calendar.js";
 import {
   logFind, logDel, logClear, logVendre, sortieFin, sortieDel, sortieRevoir,
-  sortieVendre, sortieExport, scoreClose, logExport
+  sortieVendre, sortieExport, scoreClose, logExport,
+  rechOuvrir, rechDel, rechClear
 } from "./ui/log.js";
 import {
   saveSettings, memFree, discSave, discTest, legoSave, legoTest,
@@ -36,6 +37,7 @@ Object.assign(window, {
   calFetch, calAddManual, calICS, calGo, calDel, calGoogle, calVerifMark,
   logFind, logDel, logClear, logVendre, sortieFin, sortieDel, sortieRevoir,
   sortieVendre, sortieExport, scoreClose, logExport,
+  rechOuvrir, rechDel, rechClear,
   saveSettings, memFree, discSave, discTest, legoSave, legoTest,
   brickSave, brickTest, brickRelayCopier, themeSet,
   backupDownload, backupDrive, backupRestore, modelsRefresh
