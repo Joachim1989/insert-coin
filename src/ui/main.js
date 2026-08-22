@@ -8,6 +8,7 @@ import { hudPaint } from "./hud.js";
 import { renderLog, renderHist } from "./log.js";
 import { renderCal, paintImminent, calendarInit } from "./calendar.js";
 import { collPaint, driveSync } from "./drive.js";
+import { pwaInit } from "./pwa.js";
 
 // --- UI LOGIC ---
 /* L'onglet se retrouve par son nom : avant, il était désigné par son rang dans
@@ -76,6 +77,10 @@ window.addEventListener('error', e => {
 });
 
 window.onload = function(){
+  /* Indépendant du try/catch ci-dessous : une erreur dans init() (données,
+     rendu) ne doit pas empêcher le mode hors ligne de s'activer, et
+     inversement. */
+  pwaInit();
   try{ init(); }
   catch(err){
     console.error(err);

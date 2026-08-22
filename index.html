@@ -3570,6 +3570,33 @@ function collPaint() {
   const nj = c.filter((x) => x.k === "jeux").length;
   el.innerHTML = `<b style="color:var(--gold)">${c.length} entrées en mémoire.</b><br>` + (nv ? `${nv} vinyles` : "") + (nv && nj ? " · " : "") + (nj ? `${nj} jeux` : "") + `<br><span style="opacity:.7">${quand}</span>`;
 }
+function pwaInit() {
+  if (!("serviceWorker" in navigator)) return;
+  navigator.serviceWorker.register("./sw.js").then((reg) => {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") reg.update().catch(() => {
+      });
+    });
+  }).catch(() => {
+  });
+  let dejaControle = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!dejaControle) {
+      dejaControle = true;
+      return;
+    }
+    swBanniereAfficher();
+  });
+}
+function swBanniereAfficher() {
+  if (document.getElementById("sw-banniere")) return;
+  const b = document.createElement("div");
+  b.id = "sw-banniere";
+  b.className = "sw-banniere";
+  b.innerHTML = 'Nouvelle version disponible <button id="sw-recharger">Recharger</button>';
+  document.body.appendChild(b);
+  document.getElementById("sw-recharger").onclick = () => location.reload();
+}
 function switchView(viewId, navEl) {
   const vue = document.getElementById("view-" + viewId);
   if (!vue) return;
@@ -3633,6 +3660,7 @@ window.addEventListener("error", (e) => {
   }
 });
 window.onload = function() {
+  pwaInit();
   try {
     init();
   } catch (err) {
@@ -3712,6 +3740,16 @@ Object.assign(window, {
 html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
 body { background: var(--bg); color: var(--text); font-family: var(--body); font-size: 16px; line-height: 1.35; padding-bottom: 90px; }
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* SERVICE WORKER — bandeau de mise à jour disponible (voir src/ui/pwa.js) */
+.sw-banniere{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--gold);color:#14110f;
+  padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  font-family:var(--cond);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;
+  box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.sw-banniere button{background:#14110f;color:var(--gold);border:0;border-radius:7px;
+  padding:7px 12px;font-family:var(--cond);font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.3px;cursor:pointer}
 
 /* HEADER */
 header { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 15px 12px 10px; padding-top: calc(15px + env(safe-area-inset-top)); background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 40; }

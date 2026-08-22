@@ -288,7 +288,16 @@ Aucun code touché ici, comme demandé — j'attends ton retest avec le jeton
 configuré avant de proposer quoi que ce soit (correctif du badge et/ou
 garde-fou circulation).
 
-### Service worker — proposition (pas implémenté)
+### Service worker — IMPLÉMENTÉ (23/08/2026)
+
+Ce qui suit décrivait une proposition ; c'est fait, dans `src/ui/pwa.js`
+(nouveau module) + `src/style.css` (bandeau) + un appel à `pwaInit()` dans
+`window.onload` (`src/ui/main.js`), indépendant du `try/catch` de `init()`
+pour qu'une erreur d'un côté n'empêche pas l'autre. Comportement identique
+à ce qui est décrit ci-dessous, y compris le garde-fou "pas de bandeau à la
+toute première installation" (`controllerchange` se déclenche aussi lors de
+la transition initiale "aucun contrôleur" → "contrôleur", qui n'est pas une
+mise à jour — seuls les déclenchements suivants comptent).
 
 Découverte en préparant cette section, qui change la portée de la tâche :
 **`sw.js` n'est actuellement enregistré nulle part.** J'ai cherché

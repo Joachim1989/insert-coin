@@ -7,7 +7,7 @@ const FILES = [
   "src/api/googledrive.js", "src/api/gemini.js",
   "src/ui/main.js", "src/ui/hud.js", "src/ui/capture.js",
   "src/ui/fiche.js", "src/ui/dedup.js", "src/ui/drive.js",
-  "src/ui/calendar.js", "src/ui/log.js", "src/ui/settings.js",
+  "src/ui/calendar.js", "src/ui/log.js", "src/ui/settings.js", "src/ui/pwa.js",
 ];
 
 const exportsOf = {};
