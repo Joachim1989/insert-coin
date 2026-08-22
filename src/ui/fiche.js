@@ -309,9 +309,16 @@ export function renderResult(j, images, avis) {
   const conf = (f.confiance || "").toLowerCase();
   /* « Cote vérifiée » se mérite : sans source extérieure (Discogs, Rebrickable,
      Brickset ou une vente que tu as réellement conclue), c'est l'avis du
-     modèle sur lui-même — quelle que soit la confiance qu'il s'accorde. */
+     modèle sur lui-même — quelle que soit la confiance qu'il s'accorde.
+     Cas 3 (23/08/2026, Top Gun) : le badge du milieu s'appelait "Cote
+     partielle", un nom qui laisse croire à une vérification externe
+     partielle alors que c'est purement l'auto-évaluation de l'IA — la même
+     apparence, qu'un jeton Discogs soit configuré ou pas, que Discogs ait
+     trouvé un match ou pas. Renommé "Estimation confiante" : ça reste une
+     estimation IA, juste une dans laquelle le modèle dit avoir confiance —
+     aucune ambiguïté possible avec une source vérifiée. */
   let cKey = f.marcheReel ? "h" : (conf.startsWith("haut") ? "m" : conf.startsWith("moy") ? "m" : "f");
-  const cTxt = {h:"Cote vérifiée", m:"Cote partielle", f:"Estimation"}[cKey];
+  const cTxt = {h:"Cote vérifiée", m:"Estimation confiante", f:"Estimation"}[cKey];
 
   const imgHtml = (images && images.length)
     ? `<div class="aithumb-container">` + images.map(im => `<img src="${im.url}" class="aithumb">`).join('') + `</div>`
