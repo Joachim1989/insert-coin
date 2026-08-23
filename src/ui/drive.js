@@ -2,6 +2,7 @@ import { $ } from "../util/dom.js";
 import { esc, collNorm } from "../util/text.js";
 import { driveAuth, csvToAOA, rowsFromAOA } from "../api/googledrive.js";
 import { driveFiles, FILES_STORE, SYNC_STORE, driveCid, collRead, collWrite } from "../storage/local.js";
+import { fetchAvecDelai, avecDelai } from "../util/fetchTimeout.js";
 
 export async function driveConnect(){
   const t = await driveAuth(true);
@@ -22,9 +23,11 @@ export async function drivePick(){
           + "mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or "
           + "mimeType='text/csv') and trashed=false";
   try{
-    const r = await fetch("https://www.googleapis.com/drive/v3/files?pageSize=100&orderBy=modifiedTime desc"
+    /* Budget de temps : 15s (correctif du 23/08/2026, voir
+       src/util/fetchTimeout.js). */
+    const r = await fetchAvecDelai("https://www.googleapis.com/drive/v3/files?pageSize=100&orderBy=modifiedTime desc"
       + "&fields=files(id,name,mimeType,modifiedTime)&q=" + encodeURIComponent(q),
-      {headers:{Authorization:"Bearer " + tok}});
+      {headers:{Authorization:"Bearer " + tok}}, 15000);
     if(!r.ok) throw new Error("HTTP " + r.status);
     const list = (await r.json()).files || [];
     if(!list.length){ el.innerHTML = '<div class="diagbox" style="margin-top:10px">Aucun tableur trouvé.</div>'; return; }
@@ -68,27 +71,31 @@ export async function driveSync(manuel){
   const all = [];
   for(const f of files){
     try{
+      /* Budget de temps sur chaque appel : 20s (fichier potentiellement
+         volumineux) — correctif du 23/08/2026, voir
+         src/util/fetchTimeout.js. Un dépassement tombe dans le catch de ce
+         fichier, comme n'importe quelle autre erreur ici. */
       let aoa = [];
       if(f.mime === "application/vnd.google-apps.spreadsheet"){
-        const r = await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=text/csv`,
-          {headers:{Authorization:"Bearer " + tok}});
+        const r = await fetchAvecDelai(`https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=text/csv`,
+          {headers:{Authorization:"Bearer " + tok}}, 20000);
         if(!r.ok) throw new Error("HTTP " + r.status);
         aoa = csvToAOA(await r.text());
       }else if(f.mime === "text/csv"){
-        const r = await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
-          {headers:{Authorization:"Bearer " + tok}});
+        const r = await fetchAvecDelai(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
+          {headers:{Authorization:"Bearer " + tok}}, 20000);
         if(!r.ok) throw new Error("HTTP " + r.status);
         aoa = csvToAOA(await r.text());
       }else{
         if(!window.XLSX){
-          await new Promise((ok, ko) => {
+          await avecDelai(new Promise((ok, ko) => {
             const sc = document.createElement("script");
             sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
             sc.onload = ok; sc.onerror = ko; document.head.appendChild(sc);
-          });
+          }), 10000, "Chargement de la librairie tableur impossible (délai dépassé)");
         }
-        const r = await fetch(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
-          {headers:{Authorization:"Bearer " + tok}});
+        const r = await fetchAvecDelai(`https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
+          {headers:{Authorization:"Bearer " + tok}}, 20000);
         if(!r.ok) throw new Error("HTTP " + r.status);
         const wb = XLSX.read(await r.arrayBuffer(), {type:"array"});
         wb.SheetNames.forEach(sn => {
