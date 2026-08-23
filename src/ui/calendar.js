@@ -1,5 +1,6 @@
 import { $, vib } from "../util/dom.js";
 import { norm, esc } from "../util/text.js";
+import { fetchAvecDelai } from "../util/fetchTimeout.js";
 import { KEY_STORE, MODEL_STORE, calRead, calWrite } from "../storage/local.js";
 import { MODELS, extractJSON } from "../api/gemini.js";
 import { credBump } from "./hud.js";
@@ -33,7 +34,10 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
 
   for(const m of chain){
     try{
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
+      /* Budget de temps : recherche web + génération, pas d'image — 20s
+         par tentative (voir src/util/fetchTimeout.js, correctif du
+         23/08/2026 : aucun appel n'avait de timeout avant). */
+      const res = await fetchAvecDelai(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
         {method:"POST", headers:{"Content-Type":"application/json","x-goog-api-key":key},
          body: JSON.stringify({
            contents:[{role:"user", parts:[{text:brief}]}],
@@ -41,7 +45,7 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
            generationConfig: /^gemini-3/.test(m)
              ? {maxOutputTokens:2600, thinkingConfig:{thinkingLevel:"low"}}
              : {temperature:0.1, maxOutputTokens:2600, thinkingConfig:{thinkingBudget:0}}
-         })});
+         })}, 20000);
       if(!res.ok){
         let d=""; try{ d=(await res.json()).error?.message||""; }catch(e){}
         lastErr = "HTTP " + res.status + (d?" — "+d:"");
