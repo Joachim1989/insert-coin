@@ -365,13 +365,17 @@ export const qImgSlim = img => ({data: img.data, media: img.media});
 export const qImgFull = img => ({...img, url: img.url || ("data:" + (img.media||"image/jpeg") + ";base64," + img.data)});
 
 
-export function queuePush(promptText, images, mode, cacheKey){
+export function queuePush(promptText, images, mode, cacheKey, tentatives = 0){
   const a = queueRead();
   if(a.length >= 4){ alert("File pleine (4 objets). Relance-la dès que tu captes."); return false; }
   /* Au-delà de deux vues, le gain d'identification ne compense pas le risque
      de saturer la mémoire du téléphone. */
   const slim = (images || []).slice(0, 2).map(qImgSlim);
-  a.push({d: Date.now(), promptText, images: slim, mode, cacheKey});
+  /* tentatives : combien de fois ce job est déjà repassé par la file — voir
+     devraitReenfiler()/TENTATIVES_MAX dans src/api/gemini.js, correctif du
+     23/08/2026. Sans ce compteur, un job requeue-able à l'infini bouclerait
+     pour toujours sur un réseau mort. */
+  a.push({d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives});
   if(!queueWrite(a)){ alert("Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place."); return false; }
   hudPaint();
   $('ai-results').innerHTML = `<div class="queued">
@@ -393,7 +397,7 @@ export async function queueRun(manuel){
   qBusy = true;
   const job = a.shift();
   queueWrite(a); hudPaint();
-  try{ await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || 'single', true, job.cacheKey); }
+  try{ await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || 'single', true, job.cacheKey, job.tentatives || 0); }
   finally{ qBusy = false; }
   if(queueRead().length) setTimeout(() => queueRun(false), 1200);
 }

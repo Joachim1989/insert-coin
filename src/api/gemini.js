@@ -303,7 +303,23 @@ export function extractJSON(data){
 }
 
 
-export async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey) {
+/* Correctif du 23/08/2026 (voir docs/diagnostic-cotation.md, "objet en
+   file qui disparaît") : avant, un job déjà venu de la file
+   (fromQueue===true) ne pouvait plus JAMAIS y retourner, quelle que soit
+   l'erreur — un réseau qui flanche (revient un instant, retombe en pleine
+   requête) faisait perdre l'objet en silence. La décision ne dépend
+   maintenant que du nombre de tentatives déjà faites, pas de la provenance
+   du job — mais plafonnée, pour ne pas boucler indéfiniment sur un réseau
+   mort. Extraite pure (aucun accès réseau/DOM) pour être testable sans
+   mock lourd — voir tests/reenfilage.test.js. */
+export const TENTATIVES_MAX = 2; // 1 essai initial + jusqu'à 2 remises en file = 3 essais au total
+
+export function devraitReenfiler(erreurMessage, tentatives){
+  return /Failed to fetch|NetworkError|network/i.test(String(erreurMessage)) && (tentatives || 0) < TENTATIVES_MAX;
+}
+
+
+export async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey, tentatives = 0) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
 
@@ -442,8 +458,8 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
     return;
   }
 
-  if(/Failed to fetch|NetworkError|network/i.test(lastErr) && !fromQueue){
-    if(queuePush(promptText, images, mode, cacheKey)) return;
+  if(devraitReenfiler(lastErr, tentatives)){
+    if(queuePush(promptText, images, mode, cacheKey, tentatives + 1)) return;
   }
 
   stopChrono();
