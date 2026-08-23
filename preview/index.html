@@ -403,6 +403,18 @@ function collScore(qt, et) {
   });
   return 2 * inter / (qt.length + et.length);
 }
+function fetchAvecDelai(url, options, ms) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(t));
+}
+function avecDelai(promesse, ms, message) {
+  let t;
+  const delai = new Promise((_, reject) => {
+    t = setTimeout(() => reject(new Error(message || `Délai dépassé (${ms} ms)`)), ms);
+  });
+  return Promise.race([promesse, delai]).finally(() => clearTimeout(t));
+}
 function hudPaint() {
   const log = logRead();
   const marge = log.reduce((s, x) => s + ((x.r || 0) - (x.p || 0)), 0);
@@ -601,7 +613,7 @@ async function discGet(chemin, params) {
   if (!navigator.onLine) throw new Error("Hors réseau");
   await discThrottle();
   const q = new URLSearchParams({ ...params || {}, token: t });
-  const r = await fetch(DISC_API + chemin + "?" + q.toString());
+  const r = await fetchAvecDelai(DISC_API + chemin + "?" + q.toString(), {}, 1e4);
   if (r.status === 401 || r.status === 403) throw new Error("JETON");
   if (r.status === 429) throw new Error("Trop de requêtes — attends une minute");
   if (!r.ok) throw new Error("HTTP " + r.status);
@@ -695,7 +707,7 @@ async function legoGet(chemin, params) {
   if (attente > 0) await new Promise((r2) => setTimeout(r2, attente));
   LEGO_LAST = Date.now();
   const q = new URLSearchParams({ ...params || {}, key: k });
-  const r = await fetch(LEGO_API + chemin + "?" + q.toString());
+  const r = await fetchAvecDelai(LEGO_API + chemin + "?" + q.toString(), {}, 1e4);
   if (r.status === 401 || r.status === 403) throw new Error("CLE");
   if (r.status === 404) return null;
   if (r.status === 429) throw new Error("Trop de requêtes — attends une minute");
@@ -894,7 +906,7 @@ function collBanner(query) {
 }
 let tokenClient = null;
 function loadGIS() {
-  return new Promise((ok, ko) => {
+  const chargement = new Promise((ok, ko) => {
     if (window.google && google.accounts && google.accounts.oauth2) return ok();
     const sc = document.createElement("script");
     sc.src = "https://accounts.google.com/gsi/client";
@@ -902,6 +914,7 @@ function loadGIS() {
     sc.onerror = () => ko(new Error("Chargement Google impossible"));
     document.head.appendChild(sc);
   });
+  return avecDelai(chargement, 1e4, "Chargement Google impossible (délai dépassé)");
 }
 async function driveAuth(interactive) {
   const cid = ($("drive-cid") ? $("drive-cid").value.trim() : "") || driveCid();
@@ -915,7 +928,12 @@ async function driveAuth(interactive) {
   }
   const cached = driveToken();
   if (cached && !interactive) return cached;
-  await loadGIS();
+  try {
+    await loadGIS();
+  } catch (err) {
+    alert("Connexion à Google impossible (" + (err.message || err) + "). Réessaie avec du réseau.");
+    return null;
+  }
   return new Promise((resolve) => {
     tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: cid,
@@ -1668,8 +1686,8 @@ function renderResult(j, images, avis) {
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
       <div class="act-grid deux">
-        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €" value="${dem || ""}"
-          title="Ce qu'il demandait avant négociation — modifiable si tu ne le savais pas encore en lançant l'analyse.">
+        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €"
+          title="Ce qu'il demandait avant négociation, à taper toi-même — jamais pré-rempli : un oubli doit rester une absence de donnée (exclue des stats), jamais un ancien chiffre resté affiché par erreur (inclus à tort).">
         <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
         <button class="act act-buy" onclick="logFind()">
           <svg class="ico16"><use href="#i-cash"/></svg>Je l'achète</button>
@@ -1690,21 +1708,20 @@ function renderResult(j, images, avis) {
   legoGreffe(f, "lego-slot");
   brickGreffe(f, "brick-slot");
 }
+function standItemsHtml(reperes) {
+  if (!reperes || !reperes.length) return "<li>Rien de très évident à première vue.</li>";
+  return reperes.map((obj) => `
+    <li style="margin-bottom:10px;">
+      <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b><br>
+      ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
+      ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ""}
+    </li>`).join("");
+}
 function renderStandResult(j, image, avis) {
   const vg = String(j.verdictGlobal || "");
   const v = vg.toLowerCase().includes("fouill") ? "S" : "L";
   const reperes = Array.isArray(j.objetsReperes) ? j.objetsReperes.filter(Boolean) : [];
-  let itemsHtml = "";
-  if (reperes.length > 0) {
-    itemsHtml = reperes.map((obj) => `
-      <li style="margin-bottom:10px;">
-        <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b>${obj.reventeEstimee ? ` (Revente ≈ ${Number(obj.reventeEstimee) || 0}€)` : ""}<br>
-        ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
-        ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ""}
-      </li>`).join("");
-  } else {
-    itemsHtml = "<li>Rien de très évident à première vue.</li>";
-  }
+  const itemsHtml = standItemsHtml(reperes);
   $("ai-results").innerHTML = `
     <div class="aicard">
       ${image && image.url ? `<img src="${image.url}" style="width:100%; max-height:220px; object-fit:cover;">` : ""}
@@ -2113,15 +2130,6 @@ function cameraMode() {
 }
 let photoQueue = [];
 let searchTerm = "";
-function setMacro(text) {
-  vib();
-  $("q").value = text;
-  searchTerm = text;
-  syncAskButton();
-  $("q").focus();
-  $("q").style.borderColor = "var(--go)";
-  setTimeout(() => $("q").style.borderColor = "var(--gold-dim)", 800);
-}
 function syncAskButton() {
   const hasInput = searchTerm.trim().length > 1;
   $("ask").disabled = !hasInput;
@@ -2863,9 +2871,10 @@ async function modelsRefresh(manuel) {
     return;
   }
   try {
-    const r = await fetch(
+    const r = await fetchAvecDelai(
       "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
-      { headers: { "x-goog-api-key": key } }
+      { headers: { "x-goog-api-key": key } },
+      1e4
     );
     if (!r.ok) throw new Error("HTTP " + r.status);
     const d = await r.json();
@@ -3116,13 +3125,14 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
         const e = $("load-step");
         if (e) e.textContent = "Réponse incomplète, nouvelle tentative…";
       }
-      const res = await fetch(
+      const res = await fetchAvecDelai(
         `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-goog-api-key": key },
           body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))
-        }
+        },
+        25e3
       );
       if (!res.ok) {
         let d = "";
@@ -3223,7 +3233,7 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
   let lastErr = "";
   for (const m of chain) {
     try {
-      const res = await fetch(
+      const res = await fetchAvecDelai(
         `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
         {
           method: "POST",
@@ -3233,7 +3243,8 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
             tools: [{ google_search: {} }],
             generationConfig: /^gemini-3/.test(m) ? { maxOutputTokens: 2600, thinkingConfig: { thinkingLevel: "low" } } : { temperature: 0.1, maxOutputTokens: 2600, thinkingConfig: { thinkingBudget: 0 } }
           })
-        }
+        },
+        2e4
       );
       if (!res.ok) {
         let d = "";
@@ -3513,9 +3524,10 @@ async function drivePick() {
   el.innerHTML = '<div class="diagbox" style="margin-top:10px">Recherche dans ton Drive…</div>';
   const q = "(mimeType='application/vnd.google-apps.spreadsheet' or mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or mimeType='text/csv') and trashed=false";
   try {
-    const r = await fetch(
+    const r = await fetchAvecDelai(
       "https://www.googleapis.com/drive/v3/files?pageSize=100&orderBy=modifiedTime desc&fields=files(id,name,mimeType,modifiedTime)&q=" + encodeURIComponent(q),
-      { headers: { Authorization: "Bearer " + tok } }
+      { headers: { Authorization: "Bearer " + tok } },
+      15e3
     );
     if (!r.ok) throw new Error("HTTP " + r.status);
     const list = (await r.json()).files || [];
@@ -3572,32 +3584,35 @@ async function driveSync(manuel) {
     try {
       let aoa = [];
       if (f.mime === "application/vnd.google-apps.spreadsheet") {
-        const r = await fetch(
+        const r = await fetchAvecDelai(
           `https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=text/csv`,
-          { headers: { Authorization: "Bearer " + tok } }
+          { headers: { Authorization: "Bearer " + tok } },
+          2e4
         );
         if (!r.ok) throw new Error("HTTP " + r.status);
         aoa = csvToAOA(await r.text());
       } else if (f.mime === "text/csv") {
-        const r = await fetch(
+        const r = await fetchAvecDelai(
           `https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
-          { headers: { Authorization: "Bearer " + tok } }
+          { headers: { Authorization: "Bearer " + tok } },
+          2e4
         );
         if (!r.ok) throw new Error("HTTP " + r.status);
         aoa = csvToAOA(await r.text());
       } else {
         if (!window.XLSX) {
-          await new Promise((ok, ko) => {
+          await avecDelai(new Promise((ok, ko) => {
             const sc = document.createElement("script");
             sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
             sc.onload = ok;
             sc.onerror = ko;
             document.head.appendChild(sc);
-          });
+          }), 1e4, "Chargement de la librairie tableur impossible (délai dépassé)");
         }
-        const r = await fetch(
+        const r = await fetchAvecDelai(
           `https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
-          { headers: { Authorization: "Bearer " + tok } }
+          { headers: { Authorization: "Bearer " + tok } },
+          2e4
         );
         if (!r.ok) throw new Error("HTTP " + r.status);
         const wb = XLSX.read(await r.arrayBuffer(), { type: "array" });
@@ -3764,7 +3779,6 @@ Object.assign(window, {
   askAIGo,
   askAIMulti,
   clearSearch,
-  setMacro,
   queueRun,
   cameraMode,
   bcOuvrir,
@@ -4712,11 +4726,6 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
       <button id="ask" class="btn-save" disabled>Demander à l'IA</button>
-
-      <div class="quick-macros">
-        <button class="macro-btn" onclick="setMacro('Est-ce une contrefaçon ou un original ? Détaille les signes.')">Vrai ou faux ?</button>
-        <button class="macro-btn" onclick="setMacro('Que manque-t-il pour que cet objet soit considéré complet (CIB) ?')">Complet ?</button>
-      </div>
     </div>
   </details>
 </div>

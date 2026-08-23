@@ -22,18 +22,6 @@ export let photoQueue = [];
 export let searchTerm = "";
 
 
-export function setMacro(text) {
-  vib();
-  $('q').value = text;
-  searchTerm = text;
-  syncAskButton();
-  $('q').focus();
-  // Animation de mise en évidence du champ
-  $('q').style.borderColor = "var(--go)";
-  setTimeout(() => $('q').style.borderColor = "var(--gold-dim)", 800);
-}
-
-
 export function syncAskButton() {
   const hasInput = searchTerm.trim().length > 1;
   $('ask').disabled = !hasInput;
