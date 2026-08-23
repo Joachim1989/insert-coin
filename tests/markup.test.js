@@ -29,3 +29,25 @@ describe("Boutons macro « Vrai ou faux ? » / « Complet ? » (correctif du 23/
     expect(devHtml).toContain('id="ask"');
   });
 });
+
+describe("id=\"photo-queue\" en double (correctif du 23/08/2026)", () => {
+  // getElementById() résout toujours le PREMIER élément d'un id dupliqué :
+  // le second bloc (bouton "Analyser ces photos 🚀" → askAIMulti()) était
+  // mort — updatePhotoQueueUI() (src/ui/capture.js) ne pouvait jamais le
+  // cibler, et askAIGo() (le bouton du premier bloc, "Analyser") redirige
+  // déjà lui-même vers askAIMulti() en interne selon le nombre de photos.
+  it("id=\"photo-queue\" n'apparaît qu'une seule fois", () => {
+    const occurrences = devHtml.match(/id="photo-queue"/g) || [];
+    expect(occurrences.length).toBe(1);
+  });
+
+  it("id=\"photo-queue-imgs\" n'apparaît qu'une seule fois", () => {
+    const occurrences = devHtml.match(/id="photo-queue-imgs"/g) || [];
+    expect(occurrences.length).toBe(1);
+  });
+
+  it("le bloc restant est bien le premier (askAIGo, qui gère déjà single/multi)", () => {
+    expect(devHtml).toContain('onclick="askAIGo()"');
+    expect(devHtml).not.toContain('onclick="askAIMulti()"');
+  });
+});
