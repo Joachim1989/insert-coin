@@ -69,6 +69,7 @@ export async function driveSync(manuel){
   if(el) el.innerHTML = "Synchronisation en cours…";
 
   const all = [];
+  const echecs = [];
   for(const f of files){
     try{
       /* Budget de temps sur chaque appel : 20s (fichier potentiellement
@@ -104,7 +105,7 @@ export async function driveSync(manuel){
         });
       }
       all.push(...rowsFromAOA(aoa, f.kind));
-    }catch(err){ console.warn("Synchro échouée :", f.name, err); }
+    }catch(err){ console.warn("Synchro échouée :", f.name, err); echecs.push(f.name); }
   }
 
   // dédoublonnage
@@ -114,12 +115,27 @@ export async function driveSync(manuel){
     if(k && k.length > 2 && !seen.has(k)){ seen.add(k); net.push(r); }
   });
 
-  if(net.length){
-    collWrite(net);
+  if(net.length) collWrite(net);
+  /* Correctif du 23/08/2026 : SYNC_STORE (date de "dernière synchro") ne
+     doit avancer QUE si tous les fichiers ont réussi — sinon la prochaine
+     synchro (auto, au démarrage) considère à tort que tout est à jour et
+     ne retente jamais le fichier en échec. Avant, `if(net.length)`
+     suffisait à avancer la date dès qu'UN fichier réussissait, même si
+     les autres avaient échoué en silence (juste un console.warn). */
+  if(net.length && !echecs.length){
     try{ localStorage.setItem(SYNC_STORE, String(Date.now())); }catch(e){}
   }
   collPaint();
-  if(manuel) alert(net.length + " entrées synchronisées depuis Drive.");
+  if(echecs.length){
+    /* Message affiché même en synchro AUTOMATIQUE (manuel=false) — c'est
+       le cas le plus fréquent (au démarrage) et c'était justement celui
+       où rien n'était affiché avant, laissant l'échec totalement
+       invisible sur le terrain. collPaint() vient d'écrire son propre
+       message juste au-dessus ; on l'ajoute au lieu de l'écraser. */
+    const el = $('coll-state');
+    if(el) el.innerHTML += `<br><span style="color:var(--rouge,#c0392b)">Synchro incomplète : ${esc(echecs.join(", "))} n'${echecs.length > 1 ? "ont" : "a"} pas pu être lu${echecs.length > 1 ? "s" : ""}.</span>`;
+  }
+  if(manuel) alert(net.length + " entrées synchronisées depuis Drive." + (echecs.length ? "\n" + echecs.length + " fichier(s) en échec : " + echecs.join(", ") : ""));
 }
 
 

@@ -3590,6 +3590,7 @@ async function driveSync(manuel) {
   const el = $("coll-state");
   if (el) el.innerHTML = "Synchronisation en cours…";
   const all = [];
+  const echecs = [];
   for (const f of files) {
     try {
       let aoa = [];
@@ -3634,6 +3635,7 @@ async function driveSync(manuel) {
       all.push(...rowsFromAOA(aoa, f.kind));
     } catch (err) {
       console.warn("Synchro échouée :", f.name, err);
+      echecs.push(f.name);
     }
   }
   const seen = /* @__PURE__ */ new Set(), net = [];
@@ -3644,15 +3646,19 @@ async function driveSync(manuel) {
       net.push(r);
     }
   });
-  if (net.length) {
-    collWrite(net);
+  if (net.length) collWrite(net);
+  if (net.length && !echecs.length) {
     try {
       localStorage.setItem(SYNC_STORE, String(Date.now()));
     } catch (e) {
     }
   }
   collPaint();
-  if (manuel) alert(net.length + " entrées synchronisées depuis Drive.");
+  if (echecs.length) {
+    const el2 = $("coll-state");
+    if (el2) el2.innerHTML += `<br><span style="color:var(--rouge,#c0392b)">Synchro incomplète : ${esc(echecs.join(", "))} n'${echecs.length > 1 ? "ont" : "a"} pas pu être lu${echecs.length > 1 ? "s" : ""}.</span>`;
+  }
+  if (manuel) alert(net.length + " entrées synchronisées depuis Drive." + (echecs.length ? "\n" + echecs.length + " fichier(s) en échec : " + echecs.join(", ") : ""));
 }
 function collClear() {
   if (confirm("Effacer toute la collection enregistrée ?")) {
