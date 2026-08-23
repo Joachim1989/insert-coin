@@ -351,8 +351,8 @@ export function renderResult(j, images, avis) {
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div class="act-grid deux">
-        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €" value="${dem || ""}"
-          title="Ce qu'il demandait avant négociation — modifiable si tu ne le savais pas encore en lançant l'analyse.">
+        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €"
+          title="Ce qu'il demandait avant négociation, à taper toi-même — jamais pré-rempli : un oubli doit rester une absence de donnée (exclue des stats), jamais un ancien chiffre resté affiché par erreur (inclus à tort).">
         <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
         <button class="act act-buy" onclick="logFind()">
           <svg class="ico16"><use href="#i-cash"/></svg>Je l'achète</button>
