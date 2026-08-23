@@ -1,5 +1,6 @@
 import { $ } from "../util/dom.js";
 import { esc } from "../util/text.js";
+import { fetchAvecDelai } from "../util/fetchTimeout.js";
 import { KEY_STORE, MODEL_STORE, cacheGet, cacheSet, getGround, discToken, rechAjouter } from "../storage/local.js";
 import { switchView } from "../ui/main.js";
 import { credBump } from "../ui/hud.js";
@@ -117,8 +118,11 @@ export async function modelsRefresh(manuel){
   const key = localStorage.getItem(KEY_STORE);
   if(!key || !navigator.onLine){ if(manuel) alert("Il faut une clé enregistrée et du réseau."); return; }
   try{
-    const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
-      {headers:{"x-goog-api-key": key}});
+    /* Budget de temps : liste de modèles = requête légère, sans image ni
+       génération — 10 s est déjà généreux (correctif du 23/08/2026, voir
+       docs/diagnostic-cotation.md, aucun appel n'avait de timeout avant). */
+    const r = await fetchAvecDelai("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
+      {headers:{"x-goog-api-key": key}}, 10000);
     if(!r.ok) throw new Error("HTTP " + r.status);
     const d = await r.json();
     const dispo = (d.models || [])
@@ -380,11 +384,17 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
         const e = $('load-step');
         if(e) e.textContent = "Réponse incomplète, nouvelle tentative…";
       }
-      const res = await fetch(
+      /* Budget de temps par tentative : upload de photos + recherche web +
+         génération, ça prend du temps même sur un bon réseau — 25 s laisse
+         de la marge tout en évitant qu'UNE tentative bloque indéfiniment
+         sur un réseau qui traîne sans jamais couper franchement. Un budget
+         dépassé se comporte comme n'importe quel autre échec : la boucle
+         passe à la tentative suivante (voir le catch plus bas). */
+      const res = await fetchAvecDelai(
         `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
         {method:"POST",
          headers:{"Content-Type":"application/json","x-goog-api-key":key},
-         body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))});
+         body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))}, 25000);
 
       if(!res.ok){
         let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
