@@ -1,4 +1,5 @@
 import { legoKey, legoCacheGet, legoCacheSet, legoTarifs } from "../storage/local.js";
+import { fetchAvecDelai } from "../util/fetchTimeout.js";
 
 export const LEGO_API   = "https://rebrickable.com/api/v3/lego";
 
@@ -13,7 +14,9 @@ export async function legoGet(chemin, params){
   if(attente > 0) await new Promise(r => setTimeout(r, attente));
   LEGO_LAST = Date.now();
   const q = new URLSearchParams({...(params || {}), key: k});
-  const r = await fetch(LEGO_API + chemin + "?" + q.toString());
+  /* Budget de temps : simple lecture, pas d'upload — 10s (correctif du
+     23/08/2026, voir src/util/fetchTimeout.js). */
+  const r = await fetchAvecDelai(LEGO_API + chemin + "?" + q.toString(), {}, 10000);
   if(r.status === 401 || r.status === 403) throw new Error("CLE");
   if(r.status === 404) return null;
   if(r.status === 429) throw new Error("Trop de requêtes — attends une minute");
