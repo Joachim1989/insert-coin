@@ -374,6 +374,24 @@ export function renderResult(j, images, avis) {
 }
 
 
+/* Correctif du 23/08/2026 (voir docs/diagnostic-cotation.md, "Un stand
+   est un cul-de-sac") : c'était le seul écran de l'app à afficher un
+   montant en euros hors du pipeline ficheCalc — une revente brute, jamais
+   décotée (état, complétude, port, circulation), jamais croisée avec le
+   journal ou la collection. Tranché : on garde le repérage rapide, on
+   retire les montants. Extraite pure (aucun accès DOM) pour être testable
+   sans navigateur — testée dans tests/fiche-stand.test.js. */
+export function standItemsHtml(reperes){
+  if(!reperes || !reperes.length) return "<li>Rien de très évident à première vue.</li>";
+  return reperes.map(obj => `
+    <li style="margin-bottom:10px;">
+      <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b><br>
+      ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
+      ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ''}
+    </li>`).join('');
+}
+
+
 export function renderStandResult(j, image, avis) {
   /* Le mode Stand est celui où le JSON revient le plus souvent amputé :
      aucune clé n'est supposée présente. */
@@ -381,17 +399,7 @@ export function renderStandResult(j, image, avis) {
   const v = vg.toLowerCase().includes('fouill') ? 'S' : 'L';
   
   const reperes = Array.isArray(j.objetsReperes) ? j.objetsReperes.filter(Boolean) : [];
-  let itemsHtml = "";
-  if(reperes.length > 0) {
-    itemsHtml = reperes.map(obj => `
-      <li style="margin-bottom:10px;">
-        <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b>${obj.reventeEstimee ? ` (Revente ≈ ${Number(obj.reventeEstimee)||0}€)` : ""}<br>
-        ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
-        ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ''}
-      </li>`).join('');
-  } else {
-    itemsHtml = "<li>Rien de très évident à première vue.</li>";
-  }
+  const itemsHtml = standItemsHtml(reperes);
 
   $('ai-results').innerHTML = `
     <div class="aicard">
