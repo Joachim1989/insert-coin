@@ -1931,8 +1931,8 @@ async function discGreffe(query, cibleId) {
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "JETON" ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
-           <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>` : `<div class="disc-err">${esc(err.message)}</div>`;
+    cur.innerHTML = String(err.message) === "JETON" ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>` : /AbortError|aborted/i.test(String(err.name || err.message)) ? `<div class="disc-err">Discogs n'a pas répondu à temps (réseau lent). Réessaie.</div>` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
+             <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function verifQuery(f, pref) {
@@ -2059,14 +2059,14 @@ async function legoGreffe(f, cibleId) {
       const v = legoValeur(c);
       if (v.total > 0 && !FICHE.marcheVu) {
         FICHE.marcheReel = v.total;
-        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + c.figs + " figurines";
+        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + (v.figsConnu ? c.figs + " figurines" : "figurines non comptées");
         fichePaint();
       }
     }
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>` : "";
+    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">Rebrickable injoignable (réseau).</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function brickCarte(c) {
@@ -2112,7 +2112,7 @@ async function brickGreffe(f, cibleId) {
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>` : "";
+    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">Brickset injoignable (réseau).</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function bacBar(n) {

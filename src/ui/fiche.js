@@ -648,12 +648,18 @@ export async function discGreffe(query, cibleId){
     }
   }catch(err){
     const cur = $(cibleId); if(!cur) return;
+    /* Le budget de temps de discGet() (10s, voir src/util/fetchTimeout.js)
+       produit une AbortError distincte d'une vraie panne CORS — les
+       confondre sous le même message CORS aurait été trompeur (correctif
+       du 23/08/2026, voir docs/diagnostic-cotation.md). */
     cur.innerHTML = String(err.message) === "JETON"
       ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>`
-      : /Failed to fetch|NetworkError/i.test(String(err.message))
-        ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
-           <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>`
-        : `<div class="disc-err">${esc(err.message)}</div>`;
+      : /AbortError|aborted/i.test(String(err.name || err.message))
+        ? `<div class="disc-err">Discogs n'a pas répondu à temps (réseau lent). Réessaie.</div>`
+        : /Failed to fetch|NetworkError/i.test(String(err.message))
+          ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
+             <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>`
+          : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 
@@ -786,14 +792,24 @@ export async function legoGreffe(f, cibleId){
       const v = legoValeur(c);
       if(v.total > 0 && !FICHE.marcheVu){
         FICHE.marcheReel = v.total;
-        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + c.figs + " figurines";
+        /* Même correctif que legoCarte() : ne pas afficher "0 figurine"
+           comme si c'était confirmé quand c'est en fait inconnu. */
+        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, "
+          + (v.figsConnu ? c.figs + " figurines" : "figurines non comptées");
         fichePaint();
       }
     }
   }catch(err){
     const cur = $(cibleId); if(!cur) return;
+    /* Alignée sur discGreffe() (correctif du 23/08/2026, voir
+       docs/diagnostic-cotation.md) : "CLE" gardait déjà son message, mais
+       toute autre cause (panne réseau, timeout, HTTP 500...) retombait sur
+       une carte vide — le même écran qu'un "rien trouvé" légitime. */
     cur.innerHTML = String(err.message) === "CLE"
-      ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>` : "";
+      ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>`
+      : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message))
+        ? `<div class="disc-err">Rebrickable injoignable (réseau).</div>`
+        : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 
@@ -839,8 +855,12 @@ export async function brickGreffe(f, cibleId){
     }
   }catch(err){
     const cur = $(cibleId); if(!cur) return;
+    /* Alignée sur discGreffe() (correctif du 23/08/2026). */
     cur.innerHTML = String(err.message) === "CLE"
-      ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>` : "";
+      ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>`
+      : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message))
+        ? `<div class="disc-err">Brickset injoignable (réseau).</div>`
+        : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 
