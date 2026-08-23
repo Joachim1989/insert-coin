@@ -1,5 +1,6 @@
 import { $, vib } from "../util/dom.js";
 import { esc, collTokens, collScore } from "../util/text.js";
+import { repartirProrata } from "../util/repartition.js";
 import { logRead, logWrite, sortieRead, discToken, legoKey, brickKey, legoTarifs } from "../storage/local.js";
 import {
   ETAT_LBL, PORT_LBL, ficheNorm, ficheCalc, ficheVerdict, attManquants, attResume
@@ -350,6 +351,8 @@ export function renderResult(j, images, avis) {
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div class="act-grid deux">
+        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €" value="${dem || ""}"
+          title="Ce qu'il demandait avant négociation — modifiable si tu ne le savais pas encore en lançant l'analyse.">
         <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
         <button class="act act-buy" onclick="logFind()">
           <svg class="ico16"><use href="#i-cash"/></svg>Je l'achète</button>
@@ -553,22 +556,28 @@ export function bacBuy(){
     "Combien as-tu payé pour ces " + sel.length + " pièce(s) au total ?", "") || "");
   if(isNaN(tot) || tot < 0) return;
 
+  /* Correctif du 23/08/2026 (voir docs/diagnostic-cotation.md) : avant, rien
+     ne demandait le prix annoncé par le vendeur avant négociation sur un
+     achat de lot — dem valait toujours 0, donc negoStats() (src/ui/log.js)
+     excluait silencieusement TOUS les achats de lot de tes statistiques de
+     négociation, y compris la négociation groupée que l'app recommande
+     elle-même en premier conseil. Facultatif, comme sur un achat simple :
+     laisse vide si tu ne sais plus ce qui était demandé. */
+  const totDem = parseFloat(prompt(
+    "Il en demandait combien pour ces " + sel.length + " pièce(s), avant négociation ? (facultatif)", "") || "");
+
   /* Répartition au prorata de la revente estimée : dans un lot négocié en bloc,
      la pièce qui vaut le plus doit porter la plus grosse part du prix, sinon
-     la marge par objet ne veut plus rien dire. */
+     la marge par objet ne veut plus rien dire. Même règle appliquée à "payé"
+     et à "demandé" — voir src/util/repartition.js. */
   const vals = sel.map(r => Number(r.o.revente) || 0);
-  const somme = vals.reduce((a,b) => a+b, 0);
-  let parts = somme > 0 ? vals.map(v => tot * v / somme) : sel.map(() => tot / sel.length);
-  parts = parts.map(x => Math.round(x * 100) / 100);
-  /* L'arrondi ne doit pas faire mentir le total payé : l'écart va sur la pièce
-     la plus chère. */
-  const ecart = Math.round((tot - parts.reduce((a,b)=>a+b, 0)) * 100) / 100;
-  if(ecart && parts.length) parts[vals.indexOf(Math.max.apply(null, vals))] += ecart;
+  const parts = repartirProrata(vals, tot);
+  const demParts = (!isNaN(totDem) && totDem >= 0) ? repartirProrata(vals, totDem) : sel.map(() => 0);
 
   const lg = logRead();
   sel.forEach((r, i) => {
     lg.unshift({d: Date.now() + i, o: bacNom(r), p: parts[i],
-                r: Number(r.o.revente) || 0, dem: 0, mx: Number(r.o.prixMax) || 0});
+                r: Number(r.o.revente) || 0, dem: demParts[i], mx: Number(r.o.prixMax) || 0});
   });
   logWrite(lg);
 

@@ -71,9 +71,18 @@ export function topChart(){
 export function logFind(){
   if(!LAST) return;
   const paye = parseFloat(($('log-price') || {}).value || "0") || 0;
+  /* Correctif du 23/08/2026 (jumeau du bug bacBuy(), voir
+     docs/diagnostic-cotation.md) : LAST.demande est figé au moment de
+     l'analyse — souvent avant même d'avoir demandé le prix au vendeur, qui
+     répond fréquemment APRÈS avoir vu la fiche. Le champ #log-dem est
+     modifiable jusqu'au clic sur "Je l'achète" ; s'il n'a jamais été touché,
+     il garde la valeur de LAST.demande (même comportement qu'avant pour qui
+     remplissait déjà le prix demandé avant l'analyse). */
+  const demEl = $('log-dem');
+  const dem = demEl ? (parseFloat(demEl.value || "0") || 0) : (LAST.demande || 0);
   const a = logRead();
   a.unshift({d: Date.now(), o: LAST.objet, p: paye, r: LAST.revente,
-             dem: LAST.demande || 0, mx: LAST.prixMax || 0});
+             dem, mx: LAST.prixMax || 0});
   logWrite(a); vib();
   const btn = document.querySelector('.act-buy');
   if(btn){ btn.innerHTML = "✓ Enregistré"; btn.classList.add("done"); }
