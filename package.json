@@ -6,6 +6,7 @@
     "dev": "vite",
     "lint": "eslint src public/sw.js scripts && node scripts/checkhandlers.mjs",
     "build": "npm run lint && vite build && node scripts/publish.mjs",
+    "build:preview": "npm run lint && vite build && node scripts/publish-preview.mjs",
     "test": "npm run lint && vitest run",
     "test:watch": "vitest",
     "check:imports": "node scripts/checkimports.mjs"
