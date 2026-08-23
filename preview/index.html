@@ -727,11 +727,12 @@ async function legoSet(num) {
     legoCacheSet(cle, false);
     return false;
   }
-  let figs = 0;
+  let figs = 0, figsConnu = true;
   try {
     const m = await legoGet("/sets/" + legoNum(num) + "/minifigs/", { page_size: 100 });
     if (m && Array.isArray(m.results)) figs = m.results.reduce((t, x) => t + (Number(x.quantity) || 1), 0);
   } catch (e) {
+    figsConnu = false;
   }
   const cote = {
     num: s.set_num,
@@ -739,6 +740,7 @@ async function legoSet(num) {
     annee: s.year || "",
     pieces: Number(s.num_parts) || 0,
     figs,
+    figsConnu,
     img: s.set_img_url || ""
   };
   legoCacheSet(cle, cote);
@@ -747,8 +749,9 @@ async function legoSet(num) {
 function legoValeur(c) {
   const t = legoTarifs();
   const parts = c.pieces * t.piece;
-  const figs = c.figs * t.fig;
-  return { parts, figs, total: Math.round(parts + figs), t };
+  const figsConnu = c.figsConnu !== false;
+  const figs = figsConnu ? c.figs * t.fig : 0;
+  return { parts, figs, total: Math.round(parts + figs), t, figsConnu };
 }
 function legoNumTrouve(f) {
   const txt = (f.objet || "") + " " + (f.categorie || "") + " " + (f.identification || "");
@@ -2018,16 +2021,19 @@ function compBloc(comp) {
 }
 function legoCarte(c) {
   const v = legoValeur(c);
+  const figsTxt = v.figsConnu ? String(c.figs) : "inconnu";
+  const totalTxt = v.figsConnu ? `${v.total}€` : `au moins ${v.total}€`;
+  const ligneDetail = v.figsConnu ? `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€` : `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + figurines non comptées (réseau)`;
   return `<div class="disc lego">
     <div class="disc-h"><span class="disc-b">Rebrickable</span>
       <b>${esc(c.nom)}</b>
       <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
     <div class="disc-n">
       <div><b>${c.pieces}</b><span>pièces</span></div>
-      <div><b>${c.figs}</b><span>figurines</span></div>
-      <div><b>${v.total}€</b><span>complet, sans boîte</span></div>
+      <div><b>${figsTxt}</b><span>figurines</span></div>
+      <div><b>${totalTxt}</b><span>complet, sans boîte</span></div>
     </div>
-    <div class="disc-l">${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€</div>
+    <div class="disc-l">${ligneDetail}</div>
     <div class="disc-d">Barème de revendeur, pas une cote : Rebrickable ne publie pas de prix.
       Ajuste-le dans Réglages avec ce que tu encaisses réellement.</div>
     <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">Voir le set</a>

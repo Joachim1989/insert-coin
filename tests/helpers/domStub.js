@@ -7,14 +7,18 @@ export function poserDomMinimal(){
   globalThis.window = globalThis.window || {};
   if(!globalThis.window.addEventListener) globalThis.window.addEventListener = () => {};
   globalThis.document = globalThis.document || { getElementById: () => null };
-  if(!globalThis.localStorage){
-    const store = {};
-    globalThis.localStorage = {
-      getItem: k => (k in store ? store[k] : null),
-      setItem: (k, v) => { store[k] = String(v); },
-      removeItem: k => { delete store[k]; }
-    };
-  }
+  /* TOUJOURS une nouvelle instance, jamais réutilisée : sinon un test qui
+     écrit dans le storage (ex. un cache legoCacheSet) contamine le test
+     suivant sans qu'aucun des deux ne l'appelle exprès — bug réel trouvé
+     en écrivant tests/rebrickable-figs.test.js le 23/08/2026 (un test
+     lisait le cache laissé par le test précédent au lieu d'appeler
+     fetch). */
+  const store = {};
+  globalThis.localStorage = {
+    getItem: k => (k in store ? store[k] : null),
+    setItem: (k, v) => { store[k] = String(v); },
+    removeItem: k => { delete store[k]; }
+  };
   // Node (21+) fournit déjà un `navigator` global en lecture seule
   // (getter sans setter) : une simple affectation lève une TypeError.
   // defineProperty avec configurable:true force le remplacement quel que

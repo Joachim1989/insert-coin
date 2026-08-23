@@ -744,16 +744,24 @@ export function compBloc(comp){
 
 export function legoCarte(c){
   const v = legoValeur(c);
+  /* Correctif du 23/08/2026 : figsConnu:false (coupure réseau sur le
+     comptage des minifigs) ne doit jamais ressembler à "0 figurine
+     confirmée" — voir legoSet()/legoValeur() (src/api/rebrickable.js). */
+  const figsTxt = v.figsConnu ? String(c.figs) : "inconnu";
+  const totalTxt = v.figsConnu ? `${v.total}€` : `au moins ${v.total}€`;
+  const ligneDetail = v.figsConnu
+    ? `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€`
+    : `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + figurines non comptées (réseau)`;
   return `<div class="disc lego">
     <div class="disc-h"><span class="disc-b">Rebrickable</span>
       <b>${esc(c.nom)}</b>
       <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
     <div class="disc-n">
       <div><b>${c.pieces}</b><span>pièces</span></div>
-      <div><b>${c.figs}</b><span>figurines</span></div>
-      <div><b>${v.total}€</b><span>complet, sans boîte</span></div>
+      <div><b>${figsTxt}</b><span>figurines</span></div>
+      <div><b>${totalTxt}</b><span>complet, sans boîte</span></div>
     </div>
-    <div class="disc-l">${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€</div>
+    <div class="disc-l">${ligneDetail}</div>
     <div class="disc-d">Barème de revendeur, pas une cote : Rebrickable ne publie pas de prix.
       Ajuste-le dans Réglages avec ce que tu encaisses réellement.</div>
     <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">Voir le set</a>

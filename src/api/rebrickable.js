@@ -41,16 +41,23 @@ export async function legoSet(num){
   if(!s || !s.set_num){ legoCacheSet(cle, false); return false; }
 
   /* Les figurines pèsent lourd dans le prix d'un set d'occasion : on va les
-     compter plutôt que de les deviner. */
-  let figs = 0;
+     compter plutôt que de les deviner. Correctif du 23/08/2026 (voir
+     docs/diagnostic-cotation.md, "Rebrickable 0 figurine") : une coupure
+     réseau ICI (entre l'appel du set et celui des minifigs) laissait
+     figsConnu absent et figs à 0 — un lot à plusieurs figurines (~3€
+     pièce) voyait sa cote sous-évaluée sans qu'aucun signal ne le montre.
+     figsConnu distingue "vraiment aucune figurine" (constaté) de
+     "impossible à savoir" (échec) — à charge pour legoValeur()/legoCarte()
+     de ne jamais présenter le second cas avec l'assurance du premier. */
+  let figs = 0, figsConnu = true;
   try{
     const m = await legoGet("/sets/" + legoNum(num) + "/minifigs/", {page_size: 100});
     if(m && Array.isArray(m.results)) figs = m.results.reduce((t, x) => t + (Number(x.quantity) || 1), 0);
-  }catch(e){}
+  }catch(e){ figsConnu = false; }
 
   const cote = {
     num: s.set_num, nom: s.name || "", annee: s.year || "",
-    pieces: Number(s.num_parts) || 0, figs,
+    pieces: Number(s.num_parts) || 0, figs, figsConnu,
     img: s.set_img_url || ""
   };
   legoCacheSet(cle, cote);
@@ -63,8 +70,11 @@ export async function legoSet(num){
 export function legoValeur(c){
   const t = legoTarifs();
   const parts = c.pieces * t.piece;
-  const figs = c.figs * t.fig;
-  return {parts, figs, total: Math.round(parts + figs), t};
+  const figsConnu = c.figsConnu !== false;
+  /* Ne compte jamais un nombre de figurines non confirmé : mieux vaut un
+     total qui se sait incomplet qu'un total faux affiché avec assurance. */
+  const figs = figsConnu ? c.figs * t.fig : 0;
+  return {parts, figs, total: Math.round(parts + figs), t, figsConnu};
 }
 
 
