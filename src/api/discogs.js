@@ -1,5 +1,6 @@
 import { norm, collTokens, collScore } from "../util/text.js";
 import { discToken, discCacheGet, discCacheSet } from "../storage/local.js";
+import { fetchAvecDelai } from "../util/fetchTimeout.js";
 
 export const DISC_API   = "https://api.discogs.com";
 
@@ -21,7 +22,9 @@ export async function discGet(chemin, params){
   if(!navigator.onLine) throw new Error("Hors réseau");
   await discThrottle();
   const q = new URLSearchParams({...(params||{}), token: t});
-  const r = await fetch(DISC_API + chemin + "?" + q.toString());
+  /* Budget de temps : simple lecture, pas d'upload — 10s (correctif du
+     23/08/2026, voir src/util/fetchTimeout.js). */
+  const r = await fetchAvecDelai(DISC_API + chemin + "?" + q.toString(), {}, 10000);
   if(r.status === 401 || r.status === 403) throw new Error("JETON");
   if(r.status === 429) throw new Error("Trop de requêtes — attends une minute");
   if(!r.ok) throw new Error("HTTP " + r.status);
