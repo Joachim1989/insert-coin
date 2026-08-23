@@ -841,48 +841,6 @@ export async function brickGreffe(f, cibleId){
    Tout est en SVG écrit à la main : rien à télécharger, rien à initialiser,
    ça s'affiche instantanément et fonctionne sans réseau. */
 
-/* Jauge de prix — l'élément le plus utile de l'app.
-   Une seule réglette : où tombe le prix demandé par rapport à ton plafond
-   et à la revente. Zone verte = tu gagnes, rouge = tu perds. */
-export function priceGauge(demande, prixMax, revente, lo, hi){
-  const mx = Number(prixMax)||0, rv = Number(revente)||0, d = Number(demande)||0;
-  if(!mx && !rv) return "";
-  const haut = Math.max(rv, d, mx) * 1.15 || 10;
-  const pc = v => Math.max(0, Math.min(100, (v / haut) * 100));
-
-  const pMax = pc(mx), pRev = pc(rv), pD = pc(d);
-  /* L'étiquette se recentre pour ne jamais sortir de l'écran,
-     alors que le trait reste à sa position exacte. */
-  const lab = x => Math.max(16, Math.min(84, x));
-
-  const bande = (lo && hi && hi > lo)
-    ? `<i class="g-band" style="left:${pc(lo)}%;width:${Math.max(1.5, pc(hi)-pc(lo))}%"></i>` : "";
-
-  return `<div class="gauge">
-    <div class="g-top">
-      <span class="g-gold" style="left:${lab(pMax)}%">Ton max ${mx}€</span>
-      ${rv ? `<span class="g-right">Revente ${rv}€</span>` : ""}
-    </div>
-    <div class="g-bar">
-      <i class="g-z go" style="width:${pMax}%"></i>
-      <i class="g-z mid" style="width:${Math.max(0,pRev-pMax)}%"></i>
-      <i class="g-z stop" style="width:${Math.max(0,100-pRev)}%"></i>
-      ${bande}
-      <i class="g-max" style="left:${pMax}%"></i>
-      ${d ? `<i class="g-cur" style="left:${pD}%"></i>` : ""}
-    </div>
-    <div class="g-bot">
-      ${d ? `<span class="g-strong" style="left:${lab(pD)}%">Il demande ${d}€</span>` : ""}
-    </div>
-    <div class="g-key">
-      <span><i class="go"></i>Tu gagnes</span>
-      <span><i class="mid"></i>Marge faible</span>
-      <span><i class="stop"></i>Tu perds</span>
-    </div>
-  </div>`;
-}
-
-
 /* Barre de répartition d'un bac : proportions lisibles sans compter. */
 export function bacBar(n){
   const tot = n.R + n.N + n.D + n.L;
@@ -900,32 +858,5 @@ export function bacBar(n){
   </div>`;
 }
 
-
-/* ══════════ CONTRE-OFFRE ══════════ */
-/* Trois chiffres seulement : ce que tu annonces, ton plafond, quand tu poses. */
-export function negoPad(demande, prixMax){
-  const d = Number(demande) || 0, mx = Number(prixMax) || 0;
-  if(!d && !mx) return "";
-  const plaf = mx || Math.round(d * 0.7);
-  /* L'ouverture ne dépasse jamais le plafond : annoncer plus haut que son
-     propre maximum n'a aucun sens, même quand le vendeur demande beaucoup. */
-  const ouvre = Math.max(1, Math.min(Math.round(d * 0.55) || plaf, Math.round(plaf * 0.8)));
-
-  let etat = "", cls = "";
-  if(d && plaf){
-    if(d <= plaf){ etat = `Déjà sous ton plafond. Tente ${ouvre}€, paye jusqu'à ${d}€.`; cls = "ok"; }
-    else if(d <= plaf * 1.6){ etat = `${d - plaf}€ de trop. Négociable.`; cls = "warn"; }
-    else { etat = `${d - plaf}€ de trop. Trop loin — repère-le et reviens au remballage.`; cls = "ko"; }
-  }
-  return `<div class="nego">
-    <div class="nego-h"><svg class="ico16"><use href="#i-tag"/></svg>Contre-offre</div>
-    <div class="nego-g">
-      <div class="ng"><b>${ouvre}€</b><span>Tu annonces</span></div>
-      <div class="ng"><b>${plaf}€</b><span>Tu ne dépasses pas</span></div>
-      ${d ? `<div class="ng ${cls === "ok" ? "good" : "stop"}"><b>${d}€</b><span>Il demande</span></div>` : ""}
-    </div>
-    ${etat ? `<div class="nego-v"><span class="${cls}">${etat}</span></div>` : ""}
-  </div>`;
-}
 
 export let LAST = null;
