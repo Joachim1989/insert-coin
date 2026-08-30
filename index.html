@@ -403,6 +403,18 @@ function collScore(qt, et) {
   });
   return 2 * inter / (qt.length + et.length);
 }
+function fetchAvecDelai(url, options, ms) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(t));
+}
+function avecDelai(promesse, ms, message) {
+  let t;
+  const delai = new Promise((_, reject) => {
+    t = setTimeout(() => reject(new Error(message || `Délai dépassé (${ms} ms)`)), ms);
+  });
+  return Promise.race([promesse, delai]).finally(() => clearTimeout(t));
+}
 function hudPaint() {
   const log = logRead();
   const marge = log.reduce((s, x) => s + ((x.r || 0) - (x.p || 0)), 0);
@@ -427,6 +439,22 @@ function credBump() {
   } catch (e) {
   }
   hudPaint();
+}
+function repartirProrata(poids, total) {
+  if (!Array.isArray(poids) || !poids.length) return [];
+  const t = Number(total) || 0;
+  const somme = poids.reduce((a, b) => a + (Number(b) || 0), 0);
+  let parts = somme > 0 ? poids.map((v) => t * (Number(v) || 0) / somme) : poids.map(() => t / poids.length);
+  parts = parts.map((x) => Math.round(x * 100) / 100);
+  const ecart = Math.round((t - parts.reduce((a, b) => a + b, 0)) * 100) / 100;
+  if (ecart && parts.length) {
+    let iMax = 0;
+    for (let i = 1; i < poids.length; i++) {
+      if ((Number(poids[i]) || 0) > (Number(poids[iMax]) || 0)) iMax = i;
+    }
+    parts[iMax] = Math.round((parts[iMax] + ecart) * 100) / 100;
+  }
+  return parts;
 }
 const ETAT_LBL = { 5: "Neuf / scellé", 4: "Excellent", 3: "Bon", 2: "Moyen", 1: "Abîmé", 0: "Non évalué" };
 const ETAT_COEF = { 5: 1.8, 4: 1.25, 3: 1, 2: 0.6, 1: 0.3, 0: 0.9 };
@@ -585,7 +613,7 @@ async function discGet(chemin, params) {
   if (!navigator.onLine) throw new Error("Hors réseau");
   await discThrottle();
   const q = new URLSearchParams({ ...params || {}, token: t });
-  const r = await fetch(DISC_API + chemin + "?" + q.toString());
+  const r = await fetchAvecDelai(DISC_API + chemin + "?" + q.toString(), {}, 1e4);
   if (r.status === 401 || r.status === 403) throw new Error("JETON");
   if (r.status === 429) throw new Error("Trop de requêtes — attends une minute");
   if (!r.ok) throw new Error("HTTP " + r.status);
@@ -679,7 +707,7 @@ async function legoGet(chemin, params) {
   if (attente > 0) await new Promise((r2) => setTimeout(r2, attente));
   LEGO_LAST = Date.now();
   const q = new URLSearchParams({ ...params || {}, key: k });
-  const r = await fetch(LEGO_API + chemin + "?" + q.toString());
+  const r = await fetchAvecDelai(LEGO_API + chemin + "?" + q.toString(), {}, 1e4);
   if (r.status === 401 || r.status === 403) throw new Error("CLE");
   if (r.status === 404) return null;
   if (r.status === 429) throw new Error("Trop de requêtes — attends une minute");
@@ -699,11 +727,12 @@ async function legoSet(num) {
     legoCacheSet(cle, false);
     return false;
   }
-  let figs = 0;
+  let figs = 0, figsConnu = true;
   try {
     const m = await legoGet("/sets/" + legoNum(num) + "/minifigs/", { page_size: 100 });
     if (m && Array.isArray(m.results)) figs = m.results.reduce((t, x) => t + (Number(x.quantity) || 1), 0);
   } catch (e) {
+    figsConnu = false;
   }
   const cote = {
     num: s.set_num,
@@ -711,6 +740,7 @@ async function legoSet(num) {
     annee: s.year || "",
     pieces: Number(s.num_parts) || 0,
     figs,
+    figsConnu,
     img: s.set_img_url || ""
   };
   legoCacheSet(cle, cote);
@@ -719,8 +749,9 @@ async function legoSet(num) {
 function legoValeur(c) {
   const t = legoTarifs();
   const parts = c.pieces * t.piece;
-  const figs = c.figs * t.fig;
-  return { parts, figs, total: Math.round(parts + figs), t };
+  const figsConnu = c.figsConnu !== false;
+  const figs = figsConnu ? c.figs * t.fig : 0;
+  return { parts, figs, total: Math.round(parts + figs), t, figsConnu };
 }
 function legoNumTrouve(f) {
   const txt = (f.objet || "") + " " + (f.categorie || "") + " " + (f.identification || "");
@@ -878,7 +909,7 @@ function collBanner(query) {
 }
 let tokenClient = null;
 function loadGIS() {
-  return new Promise((ok, ko) => {
+  const chargement = new Promise((ok, ko) => {
     if (window.google && google.accounts && google.accounts.oauth2) return ok();
     const sc = document.createElement("script");
     sc.src = "https://accounts.google.com/gsi/client";
@@ -886,6 +917,7 @@ function loadGIS() {
     sc.onerror = () => ko(new Error("Chargement Google impossible"));
     document.head.appendChild(sc);
   });
+  return avecDelai(chargement, 1e4, "Chargement Google impossible (délai dépassé)");
 }
 async function driveAuth(interactive) {
   const cid = ($("drive-cid") ? $("drive-cid").value.trim() : "") || driveCid();
@@ -899,7 +931,12 @@ async function driveAuth(interactive) {
   }
   const cached = driveToken();
   if (cached && !interactive) return cached;
-  await loadGIS();
+  try {
+    await loadGIS();
+  } catch (err) {
+    alert("Connexion à Google impossible (" + (err.message || err) + "). Réessaie avec du réseau.");
+    return null;
+  }
   return new Promise((resolve) => {
     tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: cid,
@@ -1028,13 +1065,15 @@ function topChart() {
 function logFind() {
   if (!LAST) return;
   const paye = parseFloat(($("log-price") || {}).value || "0") || 0;
+  const demEl = $("log-dem");
+  const dem = demEl ? parseFloat(demEl.value || "0") || 0 : LAST.demande || 0;
   const a = logRead();
   a.unshift({
     d: Date.now(),
     o: LAST.objet,
     p: paye,
     r: LAST.revente,
-    dem: LAST.demande || 0,
+    dem,
     mx: LAST.prixMax || 0
   });
   logWrite(a);
@@ -1650,6 +1689,8 @@ function renderResult(j, images, avis) {
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
       <div class="act-grid deux">
+        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €"
+          title="Ce qu'il demandait avant négociation, à taper toi-même — jamais pré-rempli : un oubli doit rester une absence de donnée (exclue des stats), jamais un ancien chiffre resté affiché par erreur (inclus à tort).">
         <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
         <button class="act act-buy" onclick="logFind()">
           <svg class="ico16"><use href="#i-cash"/></svg>Je l'achète</button>
@@ -1670,21 +1711,20 @@ function renderResult(j, images, avis) {
   legoGreffe(f, "lego-slot");
   brickGreffe(f, "brick-slot");
 }
+function standItemsHtml(reperes) {
+  if (!reperes || !reperes.length) return "<li>Rien de très évident à première vue.</li>";
+  return reperes.map((obj) => `
+    <li style="margin-bottom:10px;">
+      <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b><br>
+      ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
+      ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ""}
+    </li>`).join("");
+}
 function renderStandResult(j, image, avis) {
   const vg = String(j.verdictGlobal || "");
   const v = vg.toLowerCase().includes("fouill") ? "S" : "L";
   const reperes = Array.isArray(j.objetsReperes) ? j.objetsReperes.filter(Boolean) : [];
-  let itemsHtml = "";
-  if (reperes.length > 0) {
-    itemsHtml = reperes.map((obj) => `
-      <li style="margin-bottom:10px;">
-        <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b>${obj.reventeEstimee ? ` (Revente ≈ ${Number(obj.reventeEstimee) || 0}€)` : ""}<br>
-        ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
-        ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ""}
-      </li>`).join("");
-  } else {
-    itemsHtml = "<li>Rien de très évident à première vue.</li>";
-  }
+  const itemsHtml = standItemsHtml(reperes);
   $("ai-results").innerHTML = `
     <div class="aicard">
       ${image && image.url ? `<img src="${image.url}" style="width:100%; max-height:220px; object-fit:cover;">` : ""}
@@ -1822,12 +1862,13 @@ function bacBuy() {
     ""
   ) || "");
   if (isNaN(tot) || tot < 0) return;
+  const totDem = parseFloat(prompt(
+    "Il en demandait combien pour ces " + sel.length + " pièce(s), avant négociation ? (facultatif)",
+    ""
+  ) || "");
   const vals = sel.map((r) => Number(r.o.revente) || 0);
-  const somme = vals.reduce((a, b) => a + b, 0);
-  let parts = somme > 0 ? vals.map((v) => tot * v / somme) : sel.map(() => tot / sel.length);
-  parts = parts.map((x) => Math.round(x * 100) / 100);
-  const ecart = Math.round((tot - parts.reduce((a, b) => a + b, 0)) * 100) / 100;
-  if (ecart && parts.length) parts[vals.indexOf(Math.max.apply(null, vals))] += ecart;
+  const parts = repartirProrata(vals, tot);
+  const demParts = !isNaN(totDem) && totDem >= 0 ? repartirProrata(vals, totDem) : sel.map(() => 0);
   const lg = logRead();
   sel.forEach((r, i) => {
     lg.unshift({
@@ -1835,7 +1876,7 @@ function bacBuy() {
       o: bacNom(r),
       p: parts[i],
       r: Number(r.o.revente) || 0,
-      dem: 0,
+      dem: demParts[i],
       mx: Number(r.o.prixMax) || 0
     });
   });
@@ -1890,8 +1931,8 @@ async function discGreffe(query, cibleId) {
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "JETON" ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
-           <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>` : `<div class="disc-err">${esc(err.message)}</div>`;
+    cur.innerHTML = String(err.message) === "JETON" ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>` : /AbortError|aborted/i.test(String(err.name || err.message)) ? `<div class="disc-err">Discogs n'a pas répondu à temps (réseau lent). Réessaie.</div>` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
+             <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function verifQuery(f, pref) {
@@ -1980,16 +2021,19 @@ function compBloc(comp) {
 }
 function legoCarte(c) {
   const v = legoValeur(c);
+  const figsTxt = v.figsConnu ? String(c.figs) : "inconnu";
+  const totalTxt = v.figsConnu ? `${v.total}€` : `au moins ${v.total}€`;
+  const ligneDetail = v.figsConnu ? `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€` : `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + figurines non comptées (réseau)`;
   return `<div class="disc lego">
     <div class="disc-h"><span class="disc-b">Rebrickable</span>
       <b>${esc(c.nom)}</b>
       <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
     <div class="disc-n">
       <div><b>${c.pieces}</b><span>pièces</span></div>
-      <div><b>${c.figs}</b><span>figurines</span></div>
-      <div><b>${v.total}€</b><span>complet, sans boîte</span></div>
+      <div><b>${figsTxt}</b><span>figurines</span></div>
+      <div><b>${totalTxt}</b><span>complet, sans boîte</span></div>
     </div>
-    <div class="disc-l">${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€</div>
+    <div class="disc-l">${ligneDetail}</div>
     <div class="disc-d">Barème de revendeur, pas une cote : Rebrickable ne publie pas de prix.
       Ajuste-le dans Réglages avec ce que tu encaisses réellement.</div>
     <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">Voir le set</a>
@@ -2015,14 +2059,14 @@ async function legoGreffe(f, cibleId) {
       const v = legoValeur(c);
       if (v.total > 0 && !FICHE.marcheVu) {
         FICHE.marcheReel = v.total;
-        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + c.figs + " figurines";
+        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + (v.figsConnu ? c.figs + " figurines" : "figurines non comptées");
         fichePaint();
       }
     }
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>` : "";
+    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">Rebrickable injoignable (réseau).</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function brickCarte(c) {
@@ -2068,7 +2112,7 @@ async function brickGreffe(f, cibleId) {
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>` : "";
+    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">Brickset injoignable (réseau).</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function bacBar(n) {
@@ -2092,15 +2136,6 @@ function cameraMode() {
 }
 let photoQueue = [];
 let searchTerm = "";
-function setMacro(text) {
-  vib();
-  $("q").value = text;
-  searchTerm = text;
-  syncAskButton();
-  $("q").focus();
-  $("q").style.borderColor = "var(--go)";
-  setTimeout(() => $("q").style.borderColor = "var(--gold-dim)", 800);
-}
 function syncAskButton() {
   const hasInput = searchTerm.trim().length > 1;
   $("ask").disabled = !hasInput;
@@ -2261,11 +2296,11 @@ function askAIBac() {
   const indice = artistes.length ? `
 Indice de lecture : le chineur possède déjà des articles de ${artistes.join(", ")}. Ces noms t'aident à déchiffrer une tranche floue, mais ne suppose jamais qu'un article est présent s'il ne l'est pas visiblement.` : "";
   const prompt2 = BRIEF_BASE + `
-BAC / LOT HOMOGÈNE. Les photos montrent un bac, un carton ou une pile d'articles du même type (pochettes de vinyles serrées, boîtes de jeux, cartouches, BD...).
-Identifie CHAQUE article LISIBLE, un par un. Ne devine pas ce qui est illisible ou masqué : ne liste que ce que tu lis vraiment.
-Pour chacun : nom (titre exact), artiste (ou console/éditeur), annee si visible, revente estimée en euros, prixMax à payer aujourd'hui, verdict "R" (prends), "N" (seulement sous prixMax) ou "L" (laisse), et une note très courte s'il y a une raison particulière (pressage recherché, tirage massif, état visible).
+BAC / LOT. Les photos montrent un bac, un carton ou une pile d'articles à trier un par un : pochettes de vinyles, boîtes de jeux, cartouches, BD, mais aussi jouets en vrac, figurines, pièces LEGO, peluches — tout ce qui se vend à l'unité dans ce genre de tas.
+Identifie CHAQUE article RECONNAISSABLE, un par un. "Reconnaissable" veut dire soit un texte ou code lisible (titre, référence, code-barres), soit une identification VISUELLE dont tu es sûr (un personnage, une gamme ou une marque que tu reconnais avec certitude à l'œil, même sans aucun texte dessus — une tête de figurine LEGO Marvel, une pièce d'un thème LEGO connu). Ne devine pas ce qui reste flou, générique ou ambigu : liste seulement ce dont tu es sûr, par le texte ou par la reconnaissance visuelle.
+Pour chacun : nom (le titre exact si tu l'as lu, sinon une description reconnaissable si l'identification est visuelle — "Figurine LEGO Spider-Man", "Roue LEGO Technic"), artiste (ou console/éditeur/gamme), annee si visible, revente estimée en euros, prixMax à payer aujourd'hui, verdict "R" (prends), "N" (seulement sous prixMax) ou "L" (laisse), et une note très courte s'il y a une raison particulière (pressage recherché, tirage massif, état visible, identification visuelle sans texte pour la confirmer).
 Trie du plus intéressant au moins intéressant.
-typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non.${indice}
+typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non — remplis-la même si le lot est vide, pour dire pourquoi (rien de net, trop en vrac, hors sujet...).${indice}
 Réponds UNIQUEMENT en JSON : {"typeBac":"","resume":"","lot":[{"nom":"","artiste":"","annee":"","revente":0,"prixMax":0,"verdict":"","note":""}]}`;
   callGemini(prompt2, photoQueue, "bac");
   photoVider();
@@ -2369,14 +2404,14 @@ Prix vendeur : ${$("price").value.trim()} EUR.` : "");
 }
 const qImgSlim = (img) => ({ data: img.data, media: img.media });
 const qImgFull = (img) => ({ ...img, url: img.url || "data:" + (img.media || "image/jpeg") + ";base64," + img.data });
-function queuePush(promptText, images, mode, cacheKey) {
+function queuePush(promptText, images, mode, cacheKey, tentatives = 0) {
   const a = queueRead();
   if (a.length >= 4) {
     alert("File pleine (4 objets). Relance-la dès que tu captes.");
     return false;
   }
   const slim = (images || []).slice(0, 2).map(qImgSlim);
-  a.push({ d: Date.now(), promptText, images: slim, mode, cacheKey });
+  a.push({ d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives });
   if (!queueWrite(a)) {
     alert("Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.");
     return false;
@@ -2406,7 +2441,7 @@ async function queueRun(manuel) {
   queueWrite(a);
   hudPaint();
   try {
-    await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || "single", true, job.cacheKey);
+    await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || "single", true, job.cacheKey, job.tentatives || 0);
   } finally {
     qBusy = false;
   }
@@ -2842,9 +2877,10 @@ async function modelsRefresh(manuel) {
     return;
   }
   try {
-    const r = await fetch(
+    const r = await fetchAvecDelai(
       "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
-      { headers: { "x-goog-api-key": key } }
+      { headers: { "x-goog-api-key": key } },
+      1e4
     );
     if (!r.ok) throw new Error("HTTP " + r.status);
     const d = await r.json();
@@ -3021,7 +3057,14 @@ function extractJSON(data) {
   if (cand.finishReason === "MAX_TOKENS") throw new Error("Réponse tronquée (budget de jetons dépassé)");
   throw new Error("Réponse illisible");
 }
-async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey) {
+const TENTATIVES_MAX = 2;
+function devraitReenfiler(erreurMessage, tentatives) {
+  return /Failed to fetch|NetworkError|network/i.test(String(erreurMessage)) && (tentatives || 0) < TENTATIVES_MAX;
+}
+function lotVide(mode, j) {
+  return mode === "bac" && (!j || !Array.isArray(j.lot) || !j.lot.length);
+}
+async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0) {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $("ai-results");
@@ -3088,20 +3131,21 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     attempts.push({ model: m, ground: false });
   }
   let lastErr = "";
-  let ok = null;
+  let ok = null, lotVideSecours = null;
   for (const at of attempts) {
     try {
       if (at.bis) {
         const e = $("load-step");
         if (e) e.textContent = "Réponse incomplète, nouvelle tentative…";
       }
-      const res = await fetch(
+      const res = await fetchAvecDelai(
         `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-goog-api-key": key },
           body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))
-        }
+        },
+        25e3
       );
       if (!res.ok) {
         let d = "";
@@ -3121,6 +3165,11 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
         avis = "Sans recherche web : prix estimés de mémoire, à confirmer." + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "") + (lastErr ? " (cause : " + lastErr + ")" : "");
         if (mode !== "stand" && mode !== "bac") j.confiance = "faible";
       }
+      if (lotVide(mode, j)) {
+        if (!lotVideSecours) lotVideSecours = { j, avis, model: at.model };
+        lastErr = "Lot vide sur cette tentative, nouvel essai";
+        continue;
+      }
       if (at.model !== chosen) try {
         localStorage.setItem(MODEL_STORE, at.model);
       } catch (e) {
@@ -3130,6 +3179,13 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     } catch (err) {
       lastErr = String(err.message || err);
     }
+  }
+  if (!ok && lotVideSecours) {
+    if (lotVideSecours.model !== chosen) try {
+      localStorage.setItem(MODEL_STORE, lotVideSecours.model);
+    } catch (e) {
+    }
+    ok = lotVideSecours;
   }
   if (ok) {
     stopChrono();
@@ -3150,8 +3206,8 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     }
     return;
   }
-  if (/Failed to fetch|NetworkError|network/i.test(lastErr) && !fromQueue) {
-    if (queuePush(promptText, images, mode, cacheKey)) return;
+  if (devraitReenfiler(lastErr, tentatives)) {
+    if (queuePush(promptText, images, mode, cacheKey, tentatives + 1)) return;
   }
   stopChrono();
   let titre = "Échec de l'analyse.", aide = "Vérifie ta connexion et réessaie.";
@@ -3202,7 +3258,7 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
   let lastErr = "";
   for (const m of chain) {
     try {
-      const res = await fetch(
+      const res = await fetchAvecDelai(
         `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
         {
           method: "POST",
@@ -3212,7 +3268,8 @@ Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays
             tools: [{ google_search: {} }],
             generationConfig: /^gemini-3/.test(m) ? { maxOutputTokens: 2600, thinkingConfig: { thinkingLevel: "low" } } : { temperature: 0.1, maxOutputTokens: 2600, thinkingConfig: { thinkingBudget: 0 } }
           })
-        }
+        },
+        2e4
       );
       if (!res.ok) {
         let d = "";
@@ -3492,9 +3549,10 @@ async function drivePick() {
   el.innerHTML = '<div class="diagbox" style="margin-top:10px">Recherche dans ton Drive…</div>';
   const q = "(mimeType='application/vnd.google-apps.spreadsheet' or mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or mimeType='text/csv') and trashed=false";
   try {
-    const r = await fetch(
+    const r = await fetchAvecDelai(
       "https://www.googleapis.com/drive/v3/files?pageSize=100&orderBy=modifiedTime desc&fields=files(id,name,mimeType,modifiedTime)&q=" + encodeURIComponent(q),
-      { headers: { Authorization: "Bearer " + tok } }
+      { headers: { Authorization: "Bearer " + tok } },
+      15e3
     );
     if (!r.ok) throw new Error("HTTP " + r.status);
     const list = (await r.json()).files || [];
@@ -3547,36 +3605,40 @@ async function driveSync(manuel) {
   const el = $("coll-state");
   if (el) el.innerHTML = "Synchronisation en cours…";
   const all = [];
+  const echecs = [];
   for (const f of files) {
     try {
       let aoa = [];
       if (f.mime === "application/vnd.google-apps.spreadsheet") {
-        const r = await fetch(
+        const r = await fetchAvecDelai(
           `https://www.googleapis.com/drive/v3/files/${f.id}/export?mimeType=text/csv`,
-          { headers: { Authorization: "Bearer " + tok } }
+          { headers: { Authorization: "Bearer " + tok } },
+          2e4
         );
         if (!r.ok) throw new Error("HTTP " + r.status);
         aoa = csvToAOA(await r.text());
       } else if (f.mime === "text/csv") {
-        const r = await fetch(
+        const r = await fetchAvecDelai(
           `https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
-          { headers: { Authorization: "Bearer " + tok } }
+          { headers: { Authorization: "Bearer " + tok } },
+          2e4
         );
         if (!r.ok) throw new Error("HTTP " + r.status);
         aoa = csvToAOA(await r.text());
       } else {
         if (!window.XLSX) {
-          await new Promise((ok, ko) => {
+          await avecDelai(new Promise((ok, ko) => {
             const sc = document.createElement("script");
             sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
             sc.onload = ok;
             sc.onerror = ko;
             document.head.appendChild(sc);
-          });
+          }), 1e4, "Chargement de la librairie tableur impossible (délai dépassé)");
         }
-        const r = await fetch(
+        const r = await fetchAvecDelai(
           `https://www.googleapis.com/drive/v3/files/${f.id}?alt=media`,
-          { headers: { Authorization: "Bearer " + tok } }
+          { headers: { Authorization: "Bearer " + tok } },
+          2e4
         );
         if (!r.ok) throw new Error("HTTP " + r.status);
         const wb = XLSX.read(await r.arrayBuffer(), { type: "array" });
@@ -3588,6 +3650,7 @@ async function driveSync(manuel) {
       all.push(...rowsFromAOA(aoa, f.kind));
     } catch (err) {
       console.warn("Synchro échouée :", f.name, err);
+      echecs.push(f.name);
     }
   }
   const seen = /* @__PURE__ */ new Set(), net = [];
@@ -3598,15 +3661,19 @@ async function driveSync(manuel) {
       net.push(r);
     }
   });
-  if (net.length) {
-    collWrite(net);
+  if (net.length) collWrite(net);
+  if (net.length && !echecs.length) {
     try {
       localStorage.setItem(SYNC_STORE, String(Date.now()));
     } catch (e) {
     }
   }
   collPaint();
-  if (manuel) alert(net.length + " entrées synchronisées depuis Drive.");
+  if (echecs.length) {
+    const el2 = $("coll-state");
+    if (el2) el2.innerHTML += `<br><span style="color:var(--rouge,#c0392b)">Synchro incomplète : ${esc(echecs.join(", "))} n'${echecs.length > 1 ? "ont" : "a"} pas pu être lu${echecs.length > 1 ? "s" : ""}.</span>`;
+  }
+  if (manuel) alert(net.length + " entrées synchronisées depuis Drive." + (echecs.length ? "\n" + echecs.length + " fichier(s) en échec : " + echecs.join(", ") : ""));
 }
 function collClear() {
   if (confirm("Effacer toute la collection enregistrée ?")) {
@@ -3743,7 +3810,6 @@ Object.assign(window, {
   askAIGo,
   askAIMulti,
   clearSearch,
-  setMacro,
   queueRun,
   cameraMode,
   bcOuvrir,
@@ -4675,11 +4741,6 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
   <input type="file" id="file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleFileSelect(event)">
 
-  <div id="photo-queue" class="photo-queue">
-    <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
-    <button class="analyze-multi-btn" onclick="askAIMulti()">Analyser ces photos 🚀</button>
-  </div>
-
   <div id="ai-results"></div>
 
   <!-- Replié : sur un stand, on ne descend jamais jusqu'ici. -->
@@ -4691,11 +4752,6 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
       <button id="ask" class="btn-save" disabled>Demander à l'IA</button>
-
-      <div class="quick-macros">
-        <button class="macro-btn" onclick="setMacro('Est-ce une contrefaçon ou un original ? Détaille les signes.')">Vrai ou faux ?</button>
-        <button class="macro-btn" onclick="setMacro('Que manque-t-il pour que cet objet soit considéré complet (CIB) ?')">Complet ?</button>
-      </div>
     </div>
   </details>
 </div>
