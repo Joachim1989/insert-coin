@@ -319,6 +319,23 @@ export function devraitReenfiler(erreurMessage, tentatives){
 }
 
 
+/* Correctif du 30/08/2026 (retour de terrain : mode Bac systématiquement
+   « Rien de lisible » malgré des photos nettes et des codes-barres visibles).
+   Avec la recherche web activée (réglage par défaut, voir getGround()),
+   Gemini répond SANS schéma imposé (buildBody : tools et responseSchema
+   sont incompatibles) — lister PLUSIEURS objets en JSON libre est la tâche
+   la plus fragile qu'on lui demande, bien plus que d'identifier un seul
+   objet (mode single/multi). Avant ce correctif, la boucle d'essais
+   ci-dessous acceptait la PREMIÈRE réponse qui parsait, même avec un lot
+   vide — la dernière tentative de la chaîne, SANS recherche web mais avec
+   un schéma JSON strict (donc structurellement plus fiable pour une liste),
+   n'était alors jamais atteinte. Extraite pure pour être testable sans
+   réseau ni DOM. */
+export function lotVide(mode, j){
+  return mode === 'bac' && (!j || !Array.isArray(j.lot) || !j.lot.length);
+}
+
+
 export async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey, tentatives = 0) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
@@ -393,7 +410,7 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
      manquante dans le JSON faisait planter l'affichage, l'erreur tombait dans
      le catch, et l'app relançait toute la requête sur le modèle suivant —
      quota brûlé et « Échec de l'analyse » alors que Gemini avait répondu. */
-  let ok = null;
+  let ok = null, lotVideSecours = null;
   for(const at of attempts){
     try{
       if(at.bis){
@@ -428,12 +445,33 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
              + (lastErr ? " (cause : " + lastErr + ")" : "");
         if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
       }
+
+      if(lotVide(mode, j)){
+        /* Réponse techniquement valide mais lot vide : on la garde en
+           dernier recours plutôt que de la jeter, mais on continue la
+           boucle — une tentative suivante (modèle suivant, ou la dernière
+           tentative sans recherche web/avec schéma strict) peut encore
+           trouver le lot. */
+        if(!lotVideSecours) lotVideSecours = {j, avis, model: at.model};
+        lastErr = "Lot vide sur cette tentative, nouvel essai";
+        continue;
+      }
+
       if(at.model !== chosen) try{ localStorage.setItem(MODEL_STORE, at.model); }catch(e){}
 
       ok = {j, avis};
       break;
 
     }catch(err){ lastErr = String(err.message || err); }
+  }
+
+  /* Aucune tentative n'a trouvé de lot non vide : on retombe sur la
+     meilleure réponse techniquement valide qu'on ait eue, plutôt que sur
+     un échec pur — c'est encore ce qui ressemble le plus à la vérité si
+     le bac est vraiment illisible sur toutes les photos fournies. */
+  if(!ok && lotVideSecours){
+    if(lotVideSecours.model !== chosen) try{ localStorage.setItem(MODEL_STORE, lotVideSecours.model); }catch(e){}
+    ok = lotVideSecours;
   }
 
   if(ok){

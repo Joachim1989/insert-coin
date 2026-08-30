@@ -3061,6 +3061,9 @@ const TENTATIVES_MAX = 2;
 function devraitReenfiler(erreurMessage, tentatives) {
   return /Failed to fetch|NetworkError|network/i.test(String(erreurMessage)) && (tentatives || 0) < TENTATIVES_MAX;
 }
+function lotVide(mode, j) {
+  return mode === "bac" && (!j || !Array.isArray(j.lot) || !j.lot.length);
+}
 async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0) {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
@@ -3128,7 +3131,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     attempts.push({ model: m, ground: false });
   }
   let lastErr = "";
-  let ok = null;
+  let ok = null, lotVideSecours = null;
   for (const at of attempts) {
     try {
       if (at.bis) {
@@ -3162,6 +3165,11 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
         avis = "Sans recherche web : prix estimés de mémoire, à confirmer." + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "") + (lastErr ? " (cause : " + lastErr + ")" : "");
         if (mode !== "stand" && mode !== "bac") j.confiance = "faible";
       }
+      if (lotVide(mode, j)) {
+        if (!lotVideSecours) lotVideSecours = { j, avis, model: at.model };
+        lastErr = "Lot vide sur cette tentative, nouvel essai";
+        continue;
+      }
       if (at.model !== chosen) try {
         localStorage.setItem(MODEL_STORE, at.model);
       } catch (e) {
@@ -3171,6 +3179,13 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     } catch (err) {
       lastErr = String(err.message || err);
     }
+  }
+  if (!ok && lotVideSecours) {
+    if (lotVideSecours.model !== chosen) try {
+      localStorage.setItem(MODEL_STORE, lotVideSecours.model);
+    } catch (e) {
+    }
+    ok = lotVideSecours;
   }
   if (ok) {
     stopChrono();
