@@ -385,12 +385,12 @@ export function renderResult(j, images, avis) {
    retire les montants. Extraite pure (aucun accès DOM) pour être testable
    sans navigateur — testée dans tests/fiche-stand.test.js. */
 export function standItemsHtml(reperes){
-  if(!reperes || !reperes.length) return "<li>Rien de très évident à première vue.</li>";
+  if(!reperes || !reperes.length) return `<li>${t("stand.rien_evident")}</li>`;
   return reperes.map(obj => `
     <li style="margin-bottom:10px;">
-      <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b><br>
+      <b style="color:var(--gold)">${esc(obj.nom || t("stand.objet_non_nomme"))}</b><br>
       ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
-      ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ''}
+      ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">${esc(t("stand.verif", {texte: obj.verifsStand}))}</i>` : ''}
     </li>`).join('');
 }
 
@@ -410,15 +410,15 @@ export function renderStandResult(j, image, avis) {
       <div class="aihead ${v}">
         <div class="p" style="flex: 0 0 80px;"><div class="num" style="font-size:38px;">🎯</div></div>
         <div class="t">
-          <div class="v">ANALYSE DE STAND</div>
-          <div class="o" style="font-size:16px;">${esc(vg || (v === 'S' ? "Stand à fouiller" : "Rien de flagrant"))}</div>
+          <div class="v">${t("stand.titre")}</div>
+          <div class="o" style="font-size:16px;">${esc(vg) || (v === 'S' ? t("stand.a_fouiller") : t("stand.rien_flagrant"))}</div>
         </div>
       </div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div class="aibody">
-        <h4>Cibles Potentielles Repérées</h4>
+        <h4>${t("stand.cibles")}</h4>
         <ul style="list-style-type:none; padding-left:0;">${itemsHtml}</ul>
-        ${j.conseil ? `<h4>Conseil Stratégique</h4><p style="font-size:14px; margin-top:5px; font-style:italic;">${esc(j.conseil)}</p>` : ''}
+        ${j.conseil ? `<h4>${t("stand.conseil")}</h4><p style="font-size:14px; margin-top:5px; font-style:italic;">${esc(j.conseil)}</p>` : ''}
       </div>
       <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">${t("analyse.fermer")}</button>
     </div>`;
@@ -614,15 +614,15 @@ export function discCarte(c){
       <b>${esc(c.artiste ? c.artiste + " — " : "")}${esc(c.titre)}</b>
       <i>${[c.annee, c.label, c.format].filter(Boolean).map(esc).join(" · ")}</i></div>
     <div class="disc-n">
-      <div><b>${c.bas ? c.bas + "€" : "—"}</b><span>moins cher en vente</span></div>
-      <div><b>${c.envente}</b><span>exemplaires dispo</span></div>
-      <div><b>${c.ont}/${c.veulent}</b><span>l'ont / le veulent</span></div>
+      <div><b>${c.bas ? c.bas + "€" : "—"}</b><span>${t("carte.disc.moins_cher")}</span></div>
+      <div><b>${c.envente}</b><span>${t("carte.disc.exemplaires_dispo")}</span></div>
+      <div><b>${c.ont}/${c.veulent}</b><span>${t("carte.disc.ont_veulent")}</span></div>
     </div>
-    ${l.revente ? `<div class="disc-v"><b>${l.prixMax}€ maximum</b>
-      <span>pour revendre autour de ${l.revente}€ — un cran sous le moins cher en ligne</span></div>` : ""}
+    ${l.revente ? `<div class="disc-v"><b>${esc(t("carte.disc.prix_max", {n: l.prixMax}))}</b>
+      <span>${esc(t("carte.disc.pour_revendre", {n: l.revente}))}</span></div>` : ""}
     <div class="disc-l ${l.rcls}">${esc(l.rarete)}</div>
     ${l.demande ? `<div class="disc-d">${esc(l.demande)}</div>` : ""}
-    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">Ouvrir la fiche Discogs</a>
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">${t("carte.disc.ouvrir")}</a>
   </div>`;
 }
 
@@ -632,7 +632,7 @@ export function discCarte(c){
 export async function discGreffe(query, cibleId){
   if(!discToken()) return;
   const el = $(cibleId); if(!el) return;
-  el.innerHTML = `<div class="disc-load">Vérification de la cote Discogs…</div>`;
+  el.innerHTML = `<div class="disc-load">${t("carte.disc.verification")}</div>`;
   try{
     const c = await discCote(query);
     const cur = $(cibleId); if(!cur) return;
@@ -643,7 +643,7 @@ export async function discGreffe(query, cibleId){
       const l = discLire(c);
       if(l.revente && !FICHE.marcheVu){
         FICHE.marcheReel = l.revente;
-        FICHE.marcheSrc = "Discogs · " + c.envente + " en vente";
+        FICHE.marcheSrc = t("carte.disc.marche_src", {n: c.envente});
         FICHE.circulation = c.envente > 150 ? "massif" : c.envente > 40 ? "courant"
                           : c.envente > 8 ? "peu courant" : "rare";
         fichePaint();
@@ -656,12 +656,12 @@ export async function discGreffe(query, cibleId){
        confondre sous le même message CORS aurait été trompeur (correctif
        du 23/08/2026, voir docs/diagnostic-cotation.md). */
     cur.innerHTML = String(err.message) === "JETON"
-      ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>`
+      ? `<div class="disc-err">${t("carte.disc.jeton_refuse")}</div>`
       : /AbortError|aborted/i.test(String(err.name || err.message))
-        ? `<div class="disc-err">Discogs n'a pas répondu à temps (réseau lent). Réessaie.</div>`
+        ? `<div class="disc-err">${t("carte.disc.timeout")}</div>`
         : /Failed to fetch|NetworkError/i.test(String(err.message))
-          ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
-             <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>`
+          ? `<div class="disc-err">${t("carte.disc.injoignable")}<br>
+             <i>${t("carte.disc.cors_note")}</i></div>`
           : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
@@ -711,17 +711,17 @@ export function verifBloc(f){
   }).join("");
 
   const base = ficheCalc(f).base;
-  return `<div class="vf-h">La requête est déjà écrite : un doigt, tu vois les vrais prix.</div>
+  return `<div class="vf-h">${t("verif.requete_ecrite")}</div>
     <div class="vf-g">${liens}</div>
     <div class="vf-in">
-      <label>Prix constaté <i>ce que tu viens de voir, pour un exemplaire en bon état</i></label>
+      <label>${t("verif.prix_constate")} <i>${t("verif.prix_constate_aide")}</i></label>
       <div class="vf-row">
         <input id="vf-prix" type="number" inputmode="decimal" placeholder="${base || "—"}"
           value="${f.marcheVu || ""}" onchange="verifSet(this.value)">
-        <button onclick="verifSet(document.getElementById('vf-prix').value)">Recalculer</button>
+        <button onclick="verifSet(document.getElementById('vf-prix').value)">${t("fiche.recalculer")}</button>
       </div>
-      ${f.marcheVu ? `<div class="vf-ok">Prix vérifié par toi : tout le calcul repose dessus.
-        <button class="vf-x" onclick="verifSet('')">Revenir à l'estimation</button></div>` : ""}
+      ${f.marcheVu ? `<div class="vf-ok">${t("verif.prix_verifie_toi")}
+        <button class="vf-x" onclick="verifSet('')">${t("verif.revenir_estimation")}</button></div>` : ""}
     </div>`;
 }
 
@@ -731,7 +731,7 @@ export function verifSet(v){
   if(!FICHE) return;
   const n = parseFloat(String(v).replace(",", ".")) || 0;
   FICHE.marcheVu = n > 0 ? n : 0;
-  if(FICHE.marcheVu) FICHE.marcheSrc = "vérifié par toi";
+  if(FICHE.marcheVu) FICHE.marcheSrc = t("verif.marche_src");
   vib();
   fichePaint();
   const bl = $('vf-slot');
@@ -744,10 +744,10 @@ export function compBloc(comp){
   return `<div class="cmp">${comp.map(c => {
     const dedans = `${c.prix ? `<b>${c.prix}€</b>` : ""}<span>${esc(c.t)}</span>`;
     return c.url
-      ? `<a class="cmp-l" href="${c.url}" target="_blank" rel="noopener">${dedans}<i>voir</i></a>`
+      ? `<a class="cmp-l" href="${c.url}" target="_blank" rel="noopener">${dedans}<i>${t("comp.voir")}</i></a>`
       : `<div class="cmp-l muet">${dedans}</div>`;
   }).join("")}</div>
-  <div class="cmp-n">Rapporté par l'IA. Ce qui n'a pas de lien n'a pas été vérifié.</div>`;
+  <div class="cmp-n">${t("comp.rapporte_ia")}</div>`;
 }
 
 
@@ -756,24 +756,23 @@ export function legoCarte(c){
   /* Correctif du 23/08/2026 : figsConnu:false (coupure réseau sur le
      comptage des minifigs) ne doit jamais ressembler à "0 figurine
      confirmée" — voir legoSet()/legoValeur() (src/api/rebrickable.js). */
-  const figsTxt = v.figsConnu ? String(c.figs) : "inconnu";
-  const totalTxt = v.figsConnu ? `${v.total}€` : `au moins ${v.total}€`;
+  const figsTxt = v.figsConnu ? String(c.figs) : t("carte.lego.inconnu");
+  const totalTxt = v.figsConnu ? `${v.total}€` : t("carte.lego.au_moins", {n: v.total});
   const ligneDetail = v.figsConnu
     ? `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€`
-    : `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + figurines non comptées (réseau)`;
+    : `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${t("carte.lego.figs_non_comptees")}`;
   return `<div class="disc lego">
     <div class="disc-h"><span class="disc-b">Rebrickable</span>
       <b>${esc(c.nom)}</b>
       <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
     <div class="disc-n">
-      <div><b>${c.pieces}</b><span>pièces</span></div>
-      <div><b>${figsTxt}</b><span>figurines</span></div>
-      <div><b>${totalTxt}</b><span>complet, sans boîte</span></div>
+      <div><b>${c.pieces}</b><span>${t("carte.pieces")}</span></div>
+      <div><b>${esc(figsTxt)}</b><span>${t("carte.figurines")}</span></div>
+      <div><b>${esc(totalTxt)}</b><span>${t("carte.lego.complet_sans_boite")}</span></div>
     </div>
-    <div class="disc-l">${ligneDetail}</div>
-    <div class="disc-d">Barème de revendeur, pas une cote : Rebrickable ne publie pas de prix.
-      Ajuste-le dans Réglages avec ce que tu encaisses réellement.</div>
-    <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">Voir le set</a>
+    <div class="disc-l">${esc(ligneDetail)}</div>
+    <div class="disc-d">${t("carte.lego.bareme")}</div>
+    <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">${t("carte.voir_set")}</a>
   </div>`;
 }
 
@@ -783,7 +782,7 @@ export async function legoGreffe(f, cibleId){
   const num = legoNumTrouve(f);
   if(!num) return;
   const el = $(cibleId); if(!el) return;
-  el.innerHTML = `<div class="disc-load">Recherche du set ${esc(num)} sur Rebrickable…</div>`;
+  el.innerHTML = `<div class="disc-load">${esc(t("carte.lego.recherche", {num}))}</div>`;
   try{
     const c = await legoSet(num);
     const cur = $(cibleId); if(!cur) return;
@@ -797,8 +796,9 @@ export async function legoGreffe(f, cibleId){
         FICHE.marcheReel = v.total;
         /* Même correctif que legoCarte() : ne pas afficher "0 figurine"
            comme si c'était confirmé quand c'est en fait inconnu. */
-        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, "
-          + (v.figsConnu ? c.figs + " figurines" : "figurines non comptées");
+        FICHE.marcheSrc = v.figsConnu
+          ? t("carte.lego.marche_src_figs", {pieces: c.pieces, figs: c.figs})
+          : t("carte.lego.marche_src_nofigs", {pieces: c.pieces});
         fichePaint();
       }
     }
@@ -809,9 +809,9 @@ export async function legoGreffe(f, cibleId){
        toute autre cause (panne réseau, timeout, HTTP 500...) retombait sur
        une carte vide — le même écran qu'un "rien trouvé" légitime. */
     cur.innerHTML = String(err.message) === "CLE"
-      ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>`
+      ? `<div class="disc-err">${t("carte.lego.cle_refusee")}</div>`
       : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message))
-        ? `<div class="disc-err">Rebrickable injoignable (réseau).</div>`
+        ? `<div class="disc-err">${t("carte.lego.injoignable")}</div>`
         : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
@@ -823,13 +823,12 @@ export function brickCarte(c){
       <b>${esc(c.nom)}</b>
       <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
     <div class="disc-n">
-      <div><b>${c.pieces}</b><span>pièces</span></div>
-      <div><b>${c.figs}</b><span>figurines</span></div>
-      <div><b>${c.prixNeuf ? c.prixNeuf + "€" : "—"}</b><span>${c.prixNeuf ? "neuf (" + c.prixDev + ")" : "prix neuf"}</span></div>
+      <div><b>${c.pieces}</b><span>${t("carte.pieces")}</span></div>
+      <div><b>${c.figs}</b><span>${t("carte.figurines")}</span></div>
+      <div><b>${c.prixNeuf ? c.prixNeuf + "€" : "—"}</b><span>${c.prixNeuf ? esc(t("carte.brick.neuf_dev", {dev: c.prixDev})) : t("carte.brick.prix_neuf")}</span></div>
     </div>
-    <div class="disc-d">Prix neuf officiel LEGO à la sortie du set, pas une cote d'occasion :
-      sert de plafond de référence, pas de prix de revente.</div>
-    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">Voir le set</a>
+    <div class="disc-d">${t("carte.brick.explain")}</div>
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">${t("carte.voir_set")}</a>
   </div>`;
 }
 
@@ -841,18 +840,18 @@ export async function brickGreffe(f, cibleId){
   const num = legoNumTrouve(f);
   if(!num) return;
   const el = $(cibleId); if(!el) return;
-  el.innerHTML = `<div class="disc-load">Recherche du set ${esc(num)} sur Brickset…</div>`;
+  el.innerHTML = `<div class="disc-load">${esc(t("carte.brick.recherche", {num}))}</div>`;
   try{
     const c = await brickSet(num);
     const cur = $(cibleId); if(!cur) return;
     if(!c){ cur.innerHTML = ""; return; }
     cur.innerHTML = brickCarte(c);
     if(FICHE && (c.pieces || c.figs) && !FICHE.marcheVu && !FICHE.marcheReel){
-      const t = legoTarifs();
-      const total = Math.round(c.pieces * t.piece + c.figs * t.fig);
+      const tarifs = legoTarifs();
+      const total = Math.round(c.pieces * tarifs.piece + c.figs * tarifs.fig);
       if(total > 0){
         FICHE.marcheReel = total;
-        FICHE.marcheSrc = "Brickset · " + c.pieces + " pièces, " + c.figs + " figurines";
+        FICHE.marcheSrc = t("carte.brick.marche_src", {pieces: c.pieces, figs: c.figs});
         fichePaint();
       }
     }
@@ -860,9 +859,9 @@ export async function brickGreffe(f, cibleId){
     const cur = $(cibleId); if(!cur) return;
     /* Alignée sur discGreffe() (correctif du 23/08/2026). */
     cur.innerHTML = String(err.message) === "CLE"
-      ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>`
+      ? `<div class="disc-err">${t("carte.brick.cle_refusee")}</div>`
       : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message))
-        ? `<div class="disc-err">Brickset injoignable (réseau).</div>`
+        ? `<div class="disc-err">${t("carte.brick.injoignable")}</div>`
         : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }

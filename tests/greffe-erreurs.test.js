@@ -7,6 +7,7 @@
 // que Rebrickable/Brickset fassent moins bien.
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { poserDomMinimal } from "./helpers/domStub.js";
+import { localeSet } from "../src/i18n/index.js";
 
 function elementFactice(){
   return { innerHTML: "" };
@@ -72,5 +73,21 @@ describe("brickGreffe() — mêmes garanties que legoGreffe()", () => {
 
     expect(el.innerHTML).not.toBe("");
     expect(el.innerHTML.toLowerCase()).toMatch(/réseau|injoignable/);
+  });
+});
+
+describe("legoGreffe()/brickGreffe() — messages d'erreur traduits (chantier néerlandais, 30/08/2026)", () => {
+  it("clé refusée, en néerlandais : le message néerlandais s'affiche, pas le français figé", async () => {
+    localeSet("nl");
+    const el = elementFactice();
+    globalThis.document.getElementById = id => (id === "lego-slot" ? el : null);
+    vi.stubGlobal("fetch", vi.fn(() => Promise.resolve({ ok: false, status: 401, json: () => Promise.resolve({}) })));
+
+    const { legoGreffe } = await import("../src/ui/fiche.js");
+    await legoGreffe({ objet: "LEGO 75192", categorie: "jouets", code: "75192" }, "lego-slot");
+
+    expect(el.innerHTML).toContain("geweigerd");
+    expect(el.innerHTML).not.toContain("refusée");
+    localeSet("fr");
   });
 });
