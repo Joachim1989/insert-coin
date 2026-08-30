@@ -58,7 +58,7 @@ export function fichePaint(){
     const num = hd.querySelector('.num'), lab = hd.querySelector('.v'), r = hd.querySelector('.r');
     if(num) num.textContent = c.plafond ? c.plafond + "€" : "—";
     if(lab) lab.textContent = vd.t;
-    if(r) r.textContent = c.net ? "Revente nette ≈ " + c.net + "€" : "Marché inconnu";
+    if(r) r.textContent = c.net ? t("fiche.revente_nette", {n: c.net}) : t("fiche.marche_inconnu");
   }
   /* Ce qui part au journal et aux objets repérés doit suivre tes réglages. */
   LAST = {objet: FICHE.objet, revente: c.net, prixMax: c.plafond, demande: dem};
@@ -73,39 +73,38 @@ export function ficheAction(f, c, dem){
      vendeur. L'objet est identifié : on enchaîne directement sur la
      vérification, requête déjà écrite, et sur le champ où poser le chiffre. */
   if(!c.base) return `<div class="acte-plat">
-    <b>Prix à vérifier</b>
-    <span>L'objet est identifié, mais aucune vente n'a pu être confirmée.
-      Ouvre eBay ci-dessous — la recherche est déjà prête — et note ce que tu vois.</span>
+    <b>${t("fiche.prix_verifier.titre")}</b>
+    <span>${t("fiche.prix_verifier.texte")}</span>
     <div class="vf-g vf-court">${VERIF_SITES.slice(0, 3).map(x => {
       const q = verifQuery(f, x.pref);
       return `<a class="vf" href="${x.url(q)}" target="_blank" rel="noopener"><b>${x.nom}</b><i>${x.note}</i></a>`;
     }).join("")}</div>
     <div class="vf-row">
-      <input id="vf-prix-h" type="number" inputmode="decimal" placeholder="Prix constaté €"
+      <input id="vf-prix-h" type="number" inputmode="decimal" placeholder="${t("fiche.prix_constate_placeholder")}"
         onchange="verifSet(this.value)">
-      <button onclick="verifSet(document.getElementById('vf-prix-h').value)">Recalculer</button>
+      <button onclick="verifSet(document.getElementById('vf-prix-h').value)">${t("fiche.recalculer")}</button>
     </div>
   </div>`;
-  if(!c.plafond) return `<div class="acte-plat"><b>Passe ton chemin</b>
-    <span>Ce que tu en tirerais ne couvrirait même pas l'emballage.</span></div>`;
+  if(!c.plafond) return `<div class="acte-plat"><b>${t("fiche.passe_ton_chemin.titre")}</b>
+    <span>${t("fiche.passe_ton_chemin.texte")}</span></div>`;
 
   const incertain = f.attendu.filter(x => x.vu === "?");
   const absent = attManquants(f.attendu);
   let alerte = "";
-  if(incertain.length) alerte = "Vérifie d'abord : " + incertain.slice(0,2).map(x => x.n).join(", ") + ".";
+  if(incertain.length) alerte = t("fiche.verifie_dabord", {items: incertain.slice(0,2).map(x => x.n).join(", ")});
 
   /* Sur un lot, un chiffre nu est ambigu : 1 € la figurine ou 1 € le tas ?
      On le dit, et on donne le prix unitaire pour pouvoir négocier au détail. */
-  const pour = f.lot ? " pour le lot" + (f.lotNb ? " de " + f.lotNb + " pièces" : "") : "";
+  const pour = f.lot ? (f.lotNb ? t("fiche.pour_lot_n", {n: f.lotNb}) : t("fiche.pour_lot")) : "";
   const unite = (f.lot && f.lotNb > 1)
-    ? "Soit " + (c.plafond / f.lotNb).toFixed(2).replace(".", ",") + " € la pièce — utile s'il veut vendre au détail."
+    ? t("fiche.soit_prix_piece", {prix: (c.plafond / f.lotNb).toFixed(2).replace(".", ",")})
     : "";
 
   let phrase, cls = "oui";
-  if(dem && dem <= c.ouverture){ phrase = "Il en demande " + dem + " € : ne négocie pas, prends."; }
-  else if(dem && dem > c.plafond){ phrase = "Il en demande " + dem + " €. Repose-le."; cls = "non"; }
-  else if(dem){ phrase = "Propose " + c.ouverture + " €. Tu peux monter jusqu'à " + c.plafond + " €" + pour + "."; }
-  else { phrase = "Propose " + c.ouverture + " €. Ne dépasse pas " + c.plafond + " €" + pour + "."; }
+  if(dem && dem <= c.ouverture){ phrase = t("fiche.demande_ne_negocie", {dem}); }
+  else if(dem && dem > c.plafond){ phrase = t("fiche.demande_repose", {dem}); cls = "non"; }
+  else if(dem){ phrase = t("fiche.propose_monter", {ouv: c.ouverture, plaf: c.plafond, pour}); }
+  else { phrase = t("fiche.propose_ne_depasse", {ouv: c.ouverture, plaf: c.plafond, pour}); }
 
   return `<div class="acte ${cls}">
     <div class="acte-t"><b>${phrase}</b>
@@ -120,14 +119,14 @@ export function ficheAction(f, c, dem){
    phrases, à l'endroit exact où tu décides — et pas en petit caractères plus bas. */
 export function ficheParce(f, c, absent){
   const l = [];
-  l.push(`<b>${c.base}€</b> — ${f.marcheVu ? "le prix que TU as constaté" : "ce que ça se vend en bon état"}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? ", le lot entier" : ""}`);
-  if(c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — meilleur que l'état courant (${ETAT_LBL[f.etat].toLowerCase()})`);
-  else if(c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — état ${ETAT_LBL[f.etat].toLowerCase()}`);
-  absent.forEach(x => l.push(`<b>−${x.perte}%</b> — ${esc(x.n)} manque`));
-  if(c.port) l.push(`<b>−${c.port}€</b> — ce que le volume te coûte à l'envoi`);
-  l.push(`= <b>${c.net}€</b> dans ta poche à la revente`);
-  l.push(`<b>÷3</b> — ta règle : tu n'achètes jamais au-dessus du tiers`);
-  return `<details class="pq"><summary>Pourquoi ${c.plafond}€ ?</summary>
+  l.push(`<b>${c.base}€</b> — ${f.marcheVu ? t("fiche.prix_tu_as_constate") : t("fiche.ce_qui_se_vend_bon_etat")}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? t("fiche.lot_entier_suffix") : ""}`);
+  if(c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — ${esc(t("fiche.meilleur_etat_courant", {etat: ETAT_LBL[f.etat].toLowerCase()}))}`);
+  else if(c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — ${esc(t("fiche.etat_x", {etat: ETAT_LBL[f.etat].toLowerCase()}))}`);
+  absent.forEach(x => l.push(`<b>−${x.perte}%</b> — ${esc(t("fiche.manque", {nom: x.n}))}`));
+  if(c.port) l.push(`<b>−${c.port}€</b> — ${t("fiche.cout_envoi")}`);
+  l.push(`= <b>${c.net}€</b> ${t("fiche.dans_poche_revente")}`);
+  l.push(`<b>÷3</b> — ${t("fiche.regle_tiers")}`);
+  return `<details class="pq"><summary>${esc(t("fiche.pourquoi_plafond", {plafond: c.plafond}))}</summary>
     <ol>${l.map(x => `<li>${x}</li>`).join("")}</ol></details>`;
 }
 
@@ -137,48 +136,51 @@ export function ficheReglages(f, c){
     <b>${n}</b><span>${ETAT_LBL[n]}</span></button>`;
   return `
     <div class="reg" id="fiche-reglages">
-      <div class="reg-t">État réel <i>${f.echelle ? esc(f.echelle) : "que TU constates"} · la note 3 est la référence du marché</i></div>
+      <div class="reg-t">${t("fiche.etat_reel.titre")} <i>${f.echelle ? esc(f.echelle) : t("fiche.etat_reel.que_tu_constates")} ${t("fiche.etat_reel.note3")}</i></div>
       <div class="reg-et">${[5,4,3,2,1].map(b).join("")}</div>
-      ${f.etatDit ? `<div class="reg-dit">Vu sur la photo : ${esc(f.etatDit)}</div>` : ""}
+      ${f.etatDit ? `<div class="reg-dit">${esc(t("fiche.vu_photo", {texte: f.etatDit}))}</div>` : ""}
     </div>`;
 }
 
 
 export function fichePrix(f, c, dem){
-  if(!c.base) return `<div class="px-vide">Aucun prix de marché fiable trouvé.
-    Les réglages ci-dessus restent utiles : note l'objet, puis vérifie toi-même sur Vinted ou eBay.</div>`;
+  if(!c.base) return `<div class="px-vide">${t("fiche.px.aucun_marche")}</div>`;
   const ligne = (cls, lbl, val, aide) =>
     `<div class="px ${cls}"><div class="px-l">${lbl}</div><div class="px-v">${val}€</div><div class="px-a">${aide}</div></div>`;
   const grille = c.echelonne
     ? `<div class="px-grid">
-        ${ligne("o","Tu annonces", c.ouverture,"le premier chiffre")}
-        ${ligne("c","Tu vises", c.cible,"l'accord normal")}
-        ${ligne("p","Tu te lèves", c.plafond,"au-delà, tu perds")}
+        ${ligne("o", t("fiche.px.tu_annonces"), c.ouverture, t("fiche.px.premier_chiffre"))}
+        ${ligne("c", t("fiche.px.tu_vises"), c.cible, t("fiche.px.accord_normal"))}
+        ${ligne("p", t("fiche.px.tu_te_leves"), c.plafond, t("fiche.px.au_dela_tu_perds"))}
       </div>`
     : `<div class="px-petit">
-        <b>${c.plafond ? c.plafond + "€ maximum" : "Seulement si c'est donné"}</b>
+        <b>${c.plafond ? esc(t("fiche.px.plafond_max", {plafond: c.plafond})) : t("fiche.px.seulement_donne")}</b>
         <span>${c.plafond
-          ? "À ce prix-là il n'y a rien à négocier : propose " + c.ouverture + "€, et n'insiste pas au-delà de " + c.plafond + "€. Ça n'a d'intérêt que glissé dans un lot."
-          : "La marge ne couvre même pas l'envoi. À prendre uniquement pour compléter un lot que tu vends déjà."}</span>
+          ? esc(t("fiche.px.rien_a_negocier", {ouv: c.ouverture, plaf: c.plafond}))
+          : t("fiche.px.marge_insuffisante")}</span>
       </div>`;
   return `
     ${grille}
     <div class="px-calc">
-      <b>${c.base}€</b> le marché${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}
-      · <b>×${c.ce}</b> état · <b>×${c.cc}</b> complétude
-      ${c.port ? ` · <b>−${c.port}€</b> de volume` : ""}
-      → <b>${c.net}€</b> nets pour toi${f.lot && f.lotNb > 1 ? ` (le lot de ${f.lotNb})` : ""}
+      <b>${c.base}€</b> ${t("fiche.px.le_marche")}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}
+      · <b>×${c.ce}</b> ${t("fiche.px.etat_court")} · <b>×${c.cc}</b> ${t("fiche.px.completude")}
+      ${c.port ? ` · <b>−${c.port}€</b> ${t("fiche.px.de_volume")}` : ""}
+      → <b>${c.net}€</b> ${t("fiche.px.nets_pour_toi")}${f.lot && f.lotNb > 1 ? esc(t("fiche.px.le_lot_de", {n: f.lotNb})) : ""}
     </div>
-    ${dem ? `<div class="px-dem">${dem <= c.cible
-      ? "Il en demande " + dem + "€ : c'est déjà sous ta cible. Prends sans discuter."
+    ${dem ? `<div class="px-dem">${esc(dem <= c.cible
+      ? t("fiche.px.dem_sous_cible", {dem})
       : dem <= c.plafond
-        ? "Il en demande " + dem + "€ : négociable, mais ne dépasse pas " + c.plafond + "€."
-        : "Il en demande " + dem + "€, ton plafond est à " + c.plafond + "€. Repose-le."}</div>` : ""}`;
+        ? t("fiche.px.dem_negociable", {dem, plaf: c.plafond})
+        : t("fiche.px.dem_repose", {dem, plaf: c.plafond}))}</div>` : ""}`;
 }
 
 
-export const CIRC_MOT = {rare:["Rare","r"], "peu courant":["Peu courant","r"],
-                  courant:["Courant","c"], massif:["Pressage massif","c"]};
+/* Cles i18n, pas le texte lui-meme : comme MODE_DIT/MODE_BTN
+   (capture.js), un objet litteral evalue une seule fois a l'import
+   aurait fige la langue active au chargement du module. t() est appele
+   au moment de l'usage, dans ficheCorps(). */
+export const CIRC_MOT = {rare:["fiche.circ.rare","r"], "peu courant":["fiche.circ.peu_courant","r"],
+                  courant:["fiche.circ.courant","c"], massif:["fiche.circ.massif","c"]};
 
 
 export function ficheCorps(f){
@@ -189,36 +191,36 @@ export function ficheCorps(f){
     ? `<details class="bl"${ouvert ? " open" : ""}><summary>${titre}</summary><div class="bl-in">${corps}</div></details>`
     : "";
 
-  const listes = (t) => t.length ? `<ul>${t.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const listes = (arr) => arr.length ? `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
 
   return `
-    ${bloc("ck", "Ce qui doit être là" + (f.attendu.length ? ` <i>${f.attendu.length}</i>` : ""),
+    ${bloc("ck", t("fiche.corps.doit_etre_la") + (f.attendu.length ? ` <i>${f.attendu.length}</i>` : ""),
       f.attendu.length
         ? `<div class="fi-ck">${f.attendu.map((x,i) =>
             `<label class="v-${x.vu === "oui" ? "o" : x.vu === "non" ? "n" : "q"}">
               <input type="checkbox"${x.vu === "oui" ? " checked" : ""} onchange="ficheCoche(${i}, this.checked)">
               <span>${esc(x.n)}
-                ${x.vu === "non" ? `<i>absent — ${x.perte}% de valeur en moins</i>`
-                : x.vu === "?" ? `<i>non visible — à vérifier (vaudrait ${x.perte}%)</i>`
-                : `<i>présent</i>`}</span></label>`).join("")}</div>
+                ${x.vu === "non" ? `<i>${esc(t("fiche.absent_valeur", {perte: x.perte}))}</i>`
+                : x.vu === "?" ? `<i>${esc(t("fiche.non_visible", {perte: x.perte}))}</i>`
+                : `<i>${t("fiche.present")}</i>`}</span></label>`).join("")}</div>
            <div class="fi-ck-n" id="fiche-ck-n">${attResume(f.attendu)}</div>
            ${f.impactComplet ? `<div class="fi-imp">${esc(f.impactComplet)}</div>` : ""}`
         : "", true)}
 
-    ${bloc("vf", "Vérifier le prix pour de vrai",
+    ${bloc("vf", t("fiche.corps.verifier_prix"),
       `<div id="vf-slot">${verifBloc(f)}</div>${compBloc(f.comparables)}`, !ficheCalc(f).base)}
 
-    ${bloc("dg", "Ce qui peut te coûter cher" + (f.pieges.length ? ` <i>${f.pieges.length}</i>` : ""),
+    ${bloc("dg", t("fiche.corps.couter_cher") + (f.pieges.length ? ` <i>${f.pieges.length}</i>` : ""),
       listes(f.pieges) + listes(f.verifs), f.pieges.length > 0)}
 
-    ${bloc("et", "L'état, si la photo t'a menti", ficheReglages(f, ficheCalc(f)), false)}
+    ${bloc("et", t("fiche.corps.etat_photo_menti"), ficheReglages(f, ficheCalc(f)), false)}
 
-    ${bloc("id", "L'identification",
+    ${bloc("id", t("fiche.corps.identification"),
       (f.code ? `<div class="fi-code">${esc(f.code)}</div>
-                 <button class="fi-cp" onclick="ficheCopieCode()">Copier la référence</button>`
-              : `<div class="fi-vide">${f.codeOu ? esc(f.codeOu) : "Aucune référence visible."}</div>`)
+                 <button class="fi-cp" onclick="ficheCopieCode()">${t("fiche.corps.copier_reference")}</button>`
+              : `<div class="fi-vide">${f.codeOu ? esc(f.codeOu) : t("fiche.corps.aucune_reference")}</div>`)
       + (f.identification ? `<div class="ident">${esc(f.identification)}</div>` : "")
-      + (ci ? `<div class="fi-circ ${ci[1]}">${ci[0]}</div>` : "")
+      + (ci ? `<div class="fi-circ ${ci[1]}">${t(ci[0])}</div>` : "")
       + (f.note ? `<div class="aimeta">${esc(f.note)}</div>` : ""), false)}`;
 }
 
@@ -240,9 +242,9 @@ export function ficheDire(f){
              .map(x => x.trim()).filter(Boolean)
              .join(", ");
   }
-  if(!arg) arg = "C'est un titre très courant";
+  if(!arg) arg = t("fiche.titre_tres_courant");
   if(!/[.!?]$/.test(arg)) arg += ".";
-  return c.plafond ? arg + " Je t'en donne " + c.ouverture + " €." : arg;
+  return c.plafond ? arg + t("fiche.je_ten_donne", {ouv: c.ouverture}) : arg;
 }
 
 
@@ -255,7 +257,7 @@ export function ficheCoche(i, coche){
   if(lb){
     lb.className = "v-" + (coche ? "o" : "n");
     const it = lb.querySelector('i');
-    if(it) it.textContent = coche ? "présent" : "absent — " + FICHE.attendu[i].perte + "% de valeur en moins";
+    if(it) it.textContent = coche ? t("fiche.present") : t("fiche.absent_valeur", {perte: FICHE.attendu[i].perte});
   }
   const el = $('fiche-ck-n');
   if(el) el.textContent = attResume(FICHE.attendu);
@@ -265,10 +267,10 @@ export function ficheCoche(i, coche){
 
 export function ficheCopieCode(){
   if(!FICHE || !FICHE.code) return;
-  const t = FICHE.code;
+  const code = FICHE.code;
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t).then(() => { vib(); alert("Référence copiée : " + t); });
-  } else prompt("Copie la référence :", t);
+    navigator.clipboard.writeText(code).then(() => { vib(); alert(t("fiche.reference_copiee", {code})); });
+  } else prompt(t("fiche.copie_reference_prompt"), code);
 }
 
 
@@ -302,7 +304,7 @@ export function renderResult(j, images, avis) {
   const cote = coteReelle((f.objet || "") + " " + (f.identification || ""));
   if(cote){
     f.marcheReel = cote.prix;
-    f.marcheSrc = "ta vente réelle" + (cote.d ? " · " + new Date(cote.d).toLocaleDateString('fr-BE') : "");
+    f.marcheSrc = t("fiche.ta_vente_reelle") + (cote.d ? " · " + new Date(cote.d).toLocaleDateString('fr-BE') : "");
   }
   const c = ficheCalc(f);
   const dem = parseFloat($('price').value || "0") || 0;
@@ -320,7 +322,7 @@ export function renderResult(j, images, avis) {
      estimation IA, juste une dans laquelle le modèle dit avoir confiance —
      aucune ambiguïté possible avec une source vérifiée. */
   let cKey = f.marcheReel ? "h" : (conf.startsWith("haut") ? "m" : conf.startsWith("moy") ? "m" : "f");
-  const cTxt = {h:"Cote vérifiée", m:"Estimation confiante", f:"Estimation"}[cKey];
+  const cTxt = t({h:"fiche.cote.verifiee", m:"fiche.cote.confiante", f:"fiche.cote.estimation"}[cKey]);
 
   const imgHtml = (images && images.length)
     ? `<div class="aithumb-container">` + images.map(im => `<img src="${im.url}" class="aithumb">`).join('') + `</div>`
@@ -333,15 +335,15 @@ export function renderResult(j, images, avis) {
     <div class="aicard">
       ${imgHtml}
       <div class="aihead ${vd.v}" id="fiche-head">
-        <div class="p"><div class="num">${c.plafond ? c.plafond + "€" : "—"}</div><div class="cap">TON MAX</div></div>
+        <div class="p"><div class="num">${c.plafond ? c.plafond + "€" : "—"}</div><div class="cap">${t("fiche.ton_max")}</div></div>
         <div class="t">
           <div class="v">${vd.t}</div>
           <div class="o">${esc(f.objet)}</div>
-          <div class="r">${c.net ? "Revente nette ≈ " + c.net + "€" : "Marché inconnu"}</div>
+          <div class="r">${c.net ? esc(t("fiche.revente_nette", {n: c.net})) : t("fiche.marche_inconnu")}</div>
         </div>
       </div>
       ${f.pieges.length ? `<div class="piege-top">⚠ <b>${esc(f.pieges[0])}</b>${f.pieges.length > 1
-        ? `<span>+ ${f.pieges.length - 1} autre${f.pieges.length > 2 ? "s" : ""} piège${f.pieges.length > 2 ? "s" : ""} détaillé${f.pieges.length > 2 ? "s" : ""} plus bas</span>` : ""}</div>` : ""}
+        ? `<span>${f.pieges.length > 2 ? esc(t("fiche.pieges_plus_plusieurs", {n: f.pieges.length - 1})) : t("fiche.pieges_plus_un")}</span>` : ""}</div>` : ""}
       <div id="fiche-acte">${ficheAction(f, c, dem)}</div>
       ${f.nego ? `<div class="say" id="fiche-say">« ${esc(ficheDire(f))} »</div>` : ""}
       <div id="disc-slot"></div>
@@ -352,13 +354,13 @@ export function renderResult(j, images, avis) {
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div class="act-grid deux">
-        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €"
-          title="Ce qu'il demandait avant négociation, à taper toi-même — jamais pré-rempli : un oubli doit rester une absence de donnée (exclue des stats), jamais un ancien chiffre resté affiché par erreur (inclus à tort).">
-        <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
+        <input id="log-dem" type="number" inputmode="decimal" placeholder="${t("fiche.demande_placeholder")}"
+          title="${t("fiche.demande_title")}">
+        <input id="log-price" type="number" inputmode="decimal" placeholder="${t("fiche.paye_placeholder")}">
         <button class="act act-buy" onclick="logFind()">
-          <svg class="ico16"><use href="#i-cash"/></svg>Je l'achète</button>
+          <svg class="ico16"><use href="#i-cash"/></svg>${t("fiche.je_lachete")}</button>
       </div>
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer</button>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">${t("fiche.fermer")}</button>
     </div>`;
 
   LAST = {objet: f.objet, revente: c.net, prixMax: c.plafond, demande: dem};
