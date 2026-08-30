@@ -238,12 +238,26 @@ export function askAIBac() {
     ? `\nIndice de lecture : le chineur possède déjà des articles de ${artistes.join(", ")}. Ces noms t'aident à déchiffrer une tranche floue, mais ne suppose jamais qu'un article est présent s'il ne l'est pas visiblement.`
     : "";
 
+  /* Correctif du 30/08/2026 (retour de terrain : bacs de jouets/LEGO en
+     vrac systématiquement "Rien de lisible", y compris sur des pièces
+     reconnaissables comme une tête de figurine Spider-Man). L'ancienne
+     version ("article LISIBLE", "ne liste que ce que tu LIS vraiment")
+     ne parlait que de texte imprimé — un vinyle ou une boîte de jeu en a,
+     une pièce LEGO ou une figurine en vrac n'en a presque jamais, alors
+     que BRIEF_BASE couvre explicitement les jouets/figurines/LEGO. Le mot
+     "lisible" excluait donc par construction tout ce qui s'identifie à
+     l'œil plutôt qu'au texte. Élargi à "reconnaissable" (texte OU
+     identification visuelle sûre), en gardant le même garde-fou contre
+     l'invention : on ne baisse pas l'exigence de certitude, on élargit
+     seulement le moyen d'y arriver. Non testable par un test automatisé
+     (comportement réel du modèle) — à confirmer sur le terrain, voir
+     NON TESTÉ. */
   const prompt = BRIEF_BASE + `
-BAC / LOT HOMOGÈNE. Les photos montrent un bac, un carton ou une pile d'articles du même type (pochettes de vinyles serrées, boîtes de jeux, cartouches, BD...).
-Identifie CHAQUE article LISIBLE, un par un. Ne devine pas ce qui est illisible ou masqué : ne liste que ce que tu lis vraiment.
-Pour chacun : nom (titre exact), artiste (ou console/éditeur), annee si visible, revente estimée en euros, prixMax à payer aujourd'hui, verdict "R" (prends), "N" (seulement sous prixMax) ou "L" (laisse), et une note très courte s'il y a une raison particulière (pressage recherché, tirage massif, état visible).
+BAC / LOT. Les photos montrent un bac, un carton ou une pile d'articles à trier un par un : pochettes de vinyles, boîtes de jeux, cartouches, BD, mais aussi jouets en vrac, figurines, pièces LEGO, peluches — tout ce qui se vend à l'unité dans ce genre de tas.
+Identifie CHAQUE article RECONNAISSABLE, un par un. "Reconnaissable" veut dire soit un texte ou code lisible (titre, référence, code-barres), soit une identification VISUELLE dont tu es sûr (un personnage, une gamme ou une marque que tu reconnais avec certitude à l'œil, même sans aucun texte dessus — une tête de figurine LEGO Marvel, une pièce d'un thème LEGO connu). Ne devine pas ce qui reste flou, générique ou ambigu : liste seulement ce dont tu es sûr, par le texte ou par la reconnaissance visuelle.
+Pour chacun : nom (le titre exact si tu l'as lu, sinon une description reconnaissable si l'identification est visuelle — "Figurine LEGO Spider-Man", "Roue LEGO Technic"), artiste (ou console/éditeur/gamme), annee si visible, revente estimée en euros, prixMax à payer aujourd'hui, verdict "R" (prends), "N" (seulement sous prixMax) ou "L" (laisse), et une note très courte s'il y a une raison particulière (pressage recherché, tirage massif, état visible, identification visuelle sans texte pour la confirmer).
 Trie du plus intéressant au moins intéressant.
-typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non.${indice}
+typeBac = ce que contient le bac en trois mots. resume = une phrase : vaut-il le coup de fouiller ce bac ou non — remplis-la même si le lot est vide, pour dire pourquoi (rien de net, trop en vrac, hors sujet...).${indice}
 Réponds UNIQUEMENT en JSON : {"typeBac":"","resume":"","lot":[{"nom":"","artiste":"","annee":"","revente":0,"prixMax":0,"verdict":"","note":""}]}`;
   callGemini(prompt, photoQueue, 'bac');
   photoVider();
