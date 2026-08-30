@@ -2,7 +2,8 @@ import { $, vib } from "../util/dom.js";
 import { TICKS } from "../data/localBase.js";
 import { KEY_STORE, SYNC_STORE, getGround, queueRead, driveFiles, themeGet } from "../storage/local.js";
 import { modelsRefresh } from "../api/gemini.js";
-import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, backupState, themeApply } from "./settings.js";
+import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, backupState, themeApply, langueApply } from "./settings.js";
+import { locale } from "../i18n/index.js";
 import { modeSet, srcPaint, queueRun, captureInit } from "./capture.js";
 import { hudPaint } from "./hud.js";
 import { renderLog, renderHist, renderRecherches } from "./log.js";
@@ -46,6 +47,7 @@ export function init() {
   }
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
   themeApply(themeGet());
+  langueApply(locale());
   modeSet('objet');
   legoPaint(); brickPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); renderRecherches(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);

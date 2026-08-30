@@ -17,7 +17,7 @@
   <img src="/pixel-papa-logo.png" alt="Pixel Papa" class="avatar" onerror="this.src='/icon-mask-192.png'">
   <div class="brand">
     <h1>Insert Coin</h1>
-    <span>Argus de terrain</span>
+    <span data-i18n="app.tagline">Argus de terrain</span>
   </div>
 </header>
 
@@ -26,19 +26,19 @@
 <div class="bc-overlay" id="bc-overlay">
   <video id="bc-video" playsinline muted></video>
   <div class="bc-cadre"></div>
-  <div class="bc-msg" id="bc-msg">Cadre le code-barres</div>
-  <button class="bc-close" onclick="bcFermer()">Annuler</button>
+  <div class="bc-msg" id="bc-msg" data-i18n="bc.cadre">Cadre le code-barres</div>
+  <button class="bc-close" onclick="bcFermer()" data-i18n="bc.annuler">Annuler</button>
 </div>
 
 <div class="scoreov" id="score-screen"></div>
 <div class="imminent" id="imminent"></div>
 <div class="hud" id="hud">
   <div class="hud-cell" onclick="switchView('log')">
-    <span class="hl">Score</span><b id="hud-score">—</b></div>
+    <span class="hl" data-i18n="hud.score">Score</span><b id="hud-score">—</b></div>
   <div class="hud-cell">
-    <span class="hl">Crédits</span><b id="hud-cred">0</b></div>
+    <span class="hl" data-i18n="hud.credits">Crédits</span><b id="hud-cred">0</b></div>
   <div class="hud-cell" id="hud-q-cell" onclick="queueRun(true)">
-    <span class="hl">En file</span><b id="hud-queue">0</b></div>
+    <span class="hl" data-i18n="hud.file">En file</span><b id="hud-queue">0</b></div>
 </div>
 
 <div id="view-live" class="view active">
@@ -46,9 +46,9 @@
   <!-- Le mode d'abord : il décide de ce qu'on demande à l'IA, pas de la façon
        de prendre la photo. Trois situations réelles sur un stand. -->
   <div class="modes" id="modes">
-    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b>Un objet</b></button>
-    <button class="md" data-m="bac" onclick="modeSet('bac')"><b>Un lot</b></button>
-    <button class="md" data-m="stand" onclick="modeSet('stand')"><b>Un stand</b></button>
+    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b data-i18n="mode.objet">Un objet</b></button>
+    <button class="md" data-m="bac" onclick="modeSet('bac')"><b data-i18n="mode.bac">Un lot</b></button>
+    <button class="md" data-m="stand" onclick="modeSet('stand')"><b data-i18n="mode.stand">Un stand</b></button>
   </div>
   <div class="mode-dit" id="mode-dit"></div>
 
@@ -57,29 +57,29 @@
   <div class="shoot">
     <button class="shoot-b cam" onclick="triggerCamera(cameraMode(), 'cam')">
       <svg class="ico-cam"><use href="#i-scan"/></svg>
-      <b>Photographier</b>
-      <span id="shoot-cam-s">l'appareil s'ouvre</span>
+      <b data-i18n="shoot.photo.titre">Photographier</b>
+      <span id="shoot-cam-s" data-i18n="shoot.photo.sub">l'appareil s'ouvre</span>
     </button>
     <button class="shoot-b gal" onclick="triggerCamera(cameraMode(), 'ask')">
       <svg class="ico-cam"><use href="#i-crate"/></svg>
-      <b>Galerie</b>
-      <span>plusieurs à la fois</span>
+      <b data-i18n="shoot.galerie.titre">Galerie</b>
+      <span data-i18n="shoot.galerie.sub">plusieurs à la fois</span>
     </button>
   </div>
 
   <div id="photo-queue" class="photo-queue">
     <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
-    <button class="analyze-multi-btn" onclick="askAIGo()">Analyser</button>
+    <button class="analyze-multi-btn" onclick="askAIGo()" data-i18n="shoot.analyser">Analyser</button>
   </div>
 
   <button class="bc-btn" onclick="bcOuvrir()">
     <svg class="ico16"><use href="#i-scan"/></svg>
-    <b>Scanner le code-barres</b>
-    <span>identification exacte, instantanée</span>
+    <b data-i18n="scan.bc.titre">Scanner le code-barres</b>
+    <span data-i18n="scan.bc.sub">identification exacte, instantanée</span>
   </button>
 
   <div class="askprix">
-    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé">
+    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé" data-i18n-placeholder="prix.placeholder" data-i18n-label="prix.label">
   </div>
 
   <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
@@ -89,116 +89,116 @@
 
   <!-- Replié : sur un stand, on ne descend jamais jusqu'ici. -->
   <details class="autres">
-    <summary>Autres façons de chercher</summary>
+    <summary data-i18n="autres.summary">Autres façons de chercher</summary>
     <div class="autres-in">
       <div class="search-input-wrap">
-        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required>
+        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required data-i18n-placeholder="recherche.placeholder">
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
-      <button id="ask" class="btn-save" disabled>Demander à l'IA</button>
+      <button id="ask" class="btn-save" disabled data-i18n="recherche.demander">Demander à l'IA</button>
     </div>
   </details>
 </div>
 
 <div id="view-cal" class="view">
-  <h2 class="view-title">Calendrier</h2>
-  <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
+  <h2 class="view-title" data-i18n="cal.titre">Calendrier</h2>
+  <p class="view-sub" data-i18n="cal.sous_titre">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
 
   <div class="cal-actions">
     <button class="btn-save" onclick="calFetch()">
-      <svg class="ico16"><use href="#i-cal"/></svg> Chercher les prochaines dates</button>
-    <button class="btn-save alt" onclick="calAddManual()">＋ Ajouter à la main</button>
+      <svg class="ico16"><use href="#i-cal"/></svg> <span data-i18n="cal.chercher">Chercher les prochaines dates</span></button>
+    <button class="btn-save alt" onclick="calAddManual()" data-i18n="cal.ajouter_manuel">＋ Ajouter à la main</button>
   </div>
   <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-bottom:16px"
-    onclick="calICS(-1)">Exporter toutes mes dates marquées (.ics)</button>
+    onclick="calICS(-1)" data-i18n="cal.exporter">Exporter toutes mes dates marquées (.ics)</button>
 
   <div class="seg" id="cal-filter" style="margin-bottom:16px">
-    <button data-f="all" aria-pressed="true">Toutes</button>
-    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg>J'y vais</button>
-    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg>Les grosses</button>
+    <button data-f="all" aria-pressed="true" data-i18n="cal.filtre.toutes">Toutes</button>
+    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg><span data-i18n="cal.filtre.jyvais">J'y vais</span></button>
+    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg><span data-i18n="cal.filtre.grosses">Les grosses</span></button>
   </div>
 
   <div id="cal-list"></div>
 </div>
 
 <div id="view-log" class="view">
-  <h2 class="view-title">Journal de chasse</h2>
+  <h2 class="view-title" data-i18n="log.titre">Journal de chasse</h2>
   <div id="log-sum" class="logsum"></div>
   <div id="log-charts"></div>
   <div id="log-stats"></div>
-  <h3 class="sect">Tes achats</h3>
+  <h3 class="sect" data-i18n="log.tes_achats">Tes achats</h3>
   <div id="log-list"></div>
   <button class="btn-save" style="margin-top:18px" onclick="sortieFin()">
-    <svg class="ico16"><use href="#i-star"/></svg> Terminer la sortie</button>
-  <button class="btn-save alt2" onclick="logExport()">Envoyer le journal dans mon Drive</button>
+    <svg class="ico16"><use href="#i-star"/></svg> <span data-i18n="log.terminer_sortie">Terminer la sortie</span></button>
+  <button class="btn-save alt2" onclick="logExport()" data-i18n="log.envoyer_drive">Envoyer le journal dans mon Drive</button>
 
-  <h3 class="sect">Sorties archivées</h3>
+  <h3 class="sect" data-i18n="log.sorties_archivees">Sorties archivées</h3>
   <div id="hist-list"></div>
-  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
+  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()" data-i18n="log.vider_journal">Vider le journal</button>
 
-  <h3 class="sect">Historique des recherches</h3>
-  <p style="font-size:13px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+  <h3 class="sect" data-i18n="log.historique_recherches">Historique des recherches</h3>
+  <p style="font-size:13px;color:var(--text-muted);margin:0 0 10px;line-height:1.5" data-i18n="log.historique_sub">
     Chaque photo, scan ou question analysée, achetée ou non — pour retrouver une fiche vue plus tôt.</p>
   <div id="rech-list"></div>
-  <button class="btn-save alt2" style="margin-top:12px" onclick="rechClear()">Vider l'historique des recherches</button>
+  <button class="btn-save alt2" style="margin-top:12px" onclick="rechClear()" data-i18n="log.vider_recherches">Vider l'historique des recherches</button>
 </div>
 
 <div id="view-guide" class="view">
-  <h2 class="view-title">Menu Guide 🧔🏼‍♂️</h2>
-  
+  <h2 class="view-title" data-i18n="guide.titre">Menu Guide 🧔🏼‍♂️</h2>
+
   <div class="guide-section">
-    <h3>⚙️ Configuration IA</h3>
-    <p>Clé API Gemini (stockée localement) :</p>
-    <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici">
-    <p style="margin-top: 10px;">Modèle IA (Puissance vs Vitesse) :</p>
+    <h3 data-i18n="guide.ia.titre">⚙️ Configuration IA</h3>
+    <p data-i18n="guide.ia.cle_label">Clé API Gemini (stockée localement) :</p>
+    <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici" data-i18n-placeholder="guide.ia.cle_placeholder">
+    <p style="margin-top: 10px;" data-i18n="guide.ia.modele_label">Modèle IA (Puissance vs Vitesse) :</p>
     <select id="api-model" class="model-select"></select>
-    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)">Vérifier les modèles disponibles</button>
+    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)" data-i18n="guide.ia.verifier_modeles">Vérifier les modèles disponibles</button>
     <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
       <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
-      <span>Chercher les prix sur le web<br>
-      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
+      <span><span data-i18n="guide.ia.ground_label">Chercher les prix sur le web</span><br>
+      <i style="font-size:12px;color:var(--text-muted);font-style:normal" data-i18n="guide.ia.ground_note">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
-    <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
+    <button class="btn-save" onclick="saveSettings()" data-i18n="guide.ia.enregistrer">Enregistrer les réglages</button>
 
-    <h3 class="sect">Cotes Discogs (musique)</h3>
+    <h3 class="sect" data-i18n="guide.discogs.titre">Cotes Discogs (musique)</h3>
     <div id="disc-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.discogs.explain">
       Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token.
       Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA
       par le prix réellement pratiqué et le nombre d'exemplaires en vente.
     </p>
-    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false">
-    <button class="btn-save" onclick="discSave()">Enregistrer le jeton</button>
-    <button class="btn-save alt2" onclick="discTest()">Tester la connexion Discogs</button>
+    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.discogs.placeholder">
+    <button class="btn-save" onclick="discSave()" data-i18n="guide.discogs.enregistrer">Enregistrer le jeton</button>
+    <button class="btn-save alt2" onclick="discTest()" data-i18n="guide.discogs.tester">Tester la connexion Discogs</button>
 
-    <h3 class="sect">Sets LEGO (Rebrickable)</h3>
+    <h3 class="sect" data-i18n="guide.rebrickable.titre">Sets LEGO (Rebrickable)</h3>
     <div id="lego-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.rebrickable.explain">
       Clé gratuite et immédiate : rebrickable.com &rarr; ton profil &rarr; Settings &rarr; API &rarr; Generate.
       Rebrickable ne publie pas de prix — il donne le nombre de pièces et de figurines,
       les deux chiffres qui font vraiment la valeur d'un set d'occasion.
     </p>
-    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false">
+    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.rebrickable.placeholder">
     <div class="lego-tarif">
-      <label>€ la pièce<input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
-      <label>€ la figurine<input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
+      <label><span data-i18n="guide.rebrickable.piece">€ la pièce</span><input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
+      <label><span data-i18n="guide.rebrickable.figurine">€ la figurine</span><input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
     </div>
-    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5" data-i18n="guide.rebrickable.bareme">
       Barème de revendeur, à corriger avec tes propres ventes.
     </p>
-    <button class="btn-save" onclick="legoSave()">Enregistrer</button>
-    <button class="btn-save alt2" onclick="legoTest()">Tester la connexion Rebrickable</button>
+    <button class="btn-save" onclick="legoSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="legoTest()" data-i18n="guide.rebrickable.tester">Tester la connexion Rebrickable</button>
 
-    <h3 class="sect">Sets LEGO (Brickset)</h3>
+    <h3 class="sect" data-i18n="guide.brickset.titre">Sets LEGO (Brickset)</h3>
     <div id="brick-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.brickset.explain">
       Clé gratuite sur demande : brickset.com &rarr; ton compte &rarr; API &rarr; Request a key.
       Brickset donne les mêmes pièces et figurines que Rebrickable, plus le prix de vente neuf
       officiel LEGO. Sert de second avis quand tu n'as pas de clé Rebrickable — les deux ne
       s'affichent jamais en double sur une même fiche.
     </p>
-    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false">
-    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6">
+    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.brickset.placeholder">
+    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6" data-i18n-html="guide.brickset.relais_html">
       <b style="color:var(--mid)">Brickset bloque les appels directs depuis un navigateur</b> — contrairement à
       Discogs et Rebrickable. La clé seule ne suffit donc pas : il faut un relais gratuit qui
       transmet la requête à ta place. Deux minutes, une fois :<br>
@@ -206,49 +206,55 @@
       2. Colle le code ci-dessous à la place de l'exemple, dans l'éditeur du navigateur, puis Deploy.<br>
       3. Colle l'adresse en <b>*.workers.dev</b> qu'il te donne dans le champ juste en dessous, et reteste.
     </p>
-    <button class="btn-save alt2" onclick="brickRelayCopier()">Copier le code du relais</button>
-    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px">
-    <button class="btn-save" style="margin-top:9px" onclick="brickSave()">Enregistrer</button>
-    <button class="btn-save alt2" onclick="brickTest()">Tester la connexion Brickset</button>
+    <button class="btn-save alt2" onclick="brickRelayCopier()" data-i18n="guide.brickset.copier_relais">Copier le code du relais</button>
+    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px" data-i18n-placeholder="guide.brickset.relais_placeholder">
+    <button class="btn-save" style="margin-top:9px" onclick="brickSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="brickTest()" data-i18n="guide.brickset.tester">Tester la connexion Brickset</button>
 
-    <h3 class="sect">Sauvegarde</h3>
+    <h3 class="sect" data-i18n="guide.sauvegarde.titre">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
     <div id="mem-state" class="diagbox" style="margin-top:9px"></div>
-    <button class="btn-save alt2" onclick="memFree()">Libérer de la place</button>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <button class="btn-save alt2" onclick="memFree()" data-i18n="guide.sauvegarde.liberer">Libérer de la place</button>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n="guide.sauvegarde.explain">
       Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur.
       Un nettoyage de cache Android l'effacerait sans prévenir.
     </p>
     <button class="btn-save" onclick="backupDrive()">
-      <svg class="ico16"><use href="#i-disk"/></svg> Sauvegarder dans mon Drive</button>
-    <button class="btn-save alt2" onclick="backupDownload()">Télécharger la sauvegarde</button>
+      <svg class="ico16"><use href="#i-disk"/></svg> <span data-i18n="guide.sauvegarde.drive">Sauvegarder dans mon Drive</span></button>
+    <button class="btn-save alt2" onclick="backupDownload()" data-i18n="guide.sauvegarde.telecharger">Télécharger la sauvegarde</button>
     <input type="file" id="restore-file" accept=".json" style="display:none" onchange="backupRestore(event)">
-    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()">Restaurer une sauvegarde</button>
+    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()" data-i18n="guide.sauvegarde.restaurer">Restaurer une sauvegarde</button>
 
-    <h3 class="sect">Apparence</h3>
+    <h3 class="sect" data-i18n="guide.apparence.titre">Apparence</h3>
     <div class="seg" id="theme-seg">
-      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg>Clair</button>
-      <button data-t="auto" onclick="themeSet('auto')">Auto</button>
-      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg>Sombre</button>
+      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg><span data-i18n="guide.apparence.clair">Clair</span></button>
+      <button data-t="auto" onclick="themeSet('auto')" data-i18n="guide.apparence.auto">Auto</button>
+      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg><span data-i18n="guide.apparence.sombre">Sombre</span></button>
     </div>
 
-    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px">Mes bases Google Drive</h3>
+    <h3 class="sect" data-i18n="guide.langue.titre">Langue</h3>
+    <div class="seg" id="langue-seg">
+      <button data-l="fr" onclick="langueSet('fr')">Français</button>
+      <button data-l="nl" onclick="langueSet('nl')">Nederlands</button>
+    </div>
+
+    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px" data-i18n="guide.drive.titre">Mes bases Google Drive</h3>
     <div id="coll-state" class="diagbox"></div>
 
-    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px">
+    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px" data-i18n="guide.drive.cid_explain">
       Identifiant client OAuth (Google Cloud Console). À coller une seule fois.
     </p>
     <input id="drive-cid" type="text" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"
       style="width:100%;height:46px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:0 12px;font-family:var(--mono);font-size:12px">
 
-    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()">Connecter mon Drive</button>
-    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()">Choisir mes fichiers</button>
+    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()" data-i18n="guide.drive.connecter">Connecter mon Drive</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()" data-i18n="guide.drive.choisir_fichiers">Choisir mes fichiers</button>
     <div id="drive-files"></div>
-    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)">Synchroniser maintenant</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)" data-i18n="guide.drive.synchroniser">Synchroniser maintenant</button>
     <button class="btn-save" style="background:transparent;color:var(--stop);border:1px solid var(--stop);margin-top:9px"
-      onclick="collClear()">Oublier mes bases</button>
+      onclick="collClear()" data-i18n="guide.drive.oublier">Oublier mes bases</button>
 
-    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6">
+    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6" data-i18n="guide.drive.sync_explain">
       La synchronisation se relance toute seule à l'ouverture de l'app quand tu as du réseau.
       Sur le terrain, la comparaison se fait en local : elle marche sans connexion.
     </p>
@@ -256,24 +262,24 @@
   </div>
 
   <div class="guide-section">
-    <h3>💬 Négociation (La mécanique)</h3>
-    <div class="rule"><i>1</i><span>Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.</span></div>
-    <div class="rule"><i>2</i><span>Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.</span></div>
-    <div class="rule"><i>3</i><span>Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.</span></div>
-    <div class="rule"><i>4</i><span>Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.</span></div>
-    <div class="rule"><i>5</i><span>Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.</span></div>
+    <h3 data-i18n="guide.nego.titre">💬 Négociation (La mécanique)</h3>
+    <div class="rule"><i>1</i><span data-i18n="guide.nego.regle1">Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.</span></div>
+    <div class="rule"><i>2</i><span data-i18n="guide.nego.regle2">Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.</span></div>
+    <div class="rule"><i>3</i><span data-i18n="guide.nego.regle3">Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.</span></div>
+    <div class="rule"><i>4</i><span data-i18n="guide.nego.regle4">Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.</span></div>
+    <div class="rule"><i>5</i><span data-i18n="guide.nego.regle5">Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.</span></div>
   </div>
 
   <div class="guide-section">
-    <h3>⚠️ Pièges Fréquents</h3>
-    <div class="warn-rule"><b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.</div>
-    <div class="warn-rule"><b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.</div>
-    <div class="warn-rule"><b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.</div>
-    <div class="warn-rule"><b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.</div>
+    <h3 data-i18n="guide.pieges.titre">⚠️ Pièges Fréquents</h3>
+    <div class="warn-rule" data-i18n-html="guide.pieges.repro_html"><b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.piles_html"><b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.boite_html"><b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.lot_html"><b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.</div>
   </div>
 
   <div class="guide-section">
-    <h3>🎒 Le Sac Idéal</h3>
+    <h3 data-i18n="guide.sac.titre">🎒 Le Sac Idéal</h3>
     <div id="sac-ticks"></div>
   </div>
   
@@ -284,16 +290,16 @@
 
 <nav>
   <div class="nav-item active" data-v="live" onclick="switchView('live')">
-    <svg class="ico"><use href="#i-scan"/></svg><span>Scan</span>
+    <svg class="ico"><use href="#i-scan"/></svg><span data-i18n="nav.scan">Scan</span>
   </div>
   <div class="nav-item" data-v="cal" onclick="switchView('cal')">
-    <svg class="ico"><use href="#i-cal"/></svg><span>Dates</span>
+    <svg class="ico"><use href="#i-cal"/></svg><span data-i18n="nav.dates">Dates</span>
   </div>
   <div class="nav-item" data-v="log" onclick="switchView('log')">
-    <svg class="ico"><use href="#i-cash"/></svg><span>Journal</span>
+    <svg class="ico"><use href="#i-cash"/></svg><span data-i18n="nav.journal">Journal</span>
   </div>
   <div class="nav-item" data-v="guide" onclick="switchView('guide')">
-    <svg class="ico"><use href="#i-pad"/></svg><span>Réglages</span>
+    <svg class="ico"><use href="#i-pad"/></svg><span data-i18n="nav.reglages">Réglages</span>
   </div>
 </nav>
 

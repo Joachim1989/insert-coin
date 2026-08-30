@@ -155,8 +155,8 @@ function driveFiles() {
 }
 function driveToken() {
   try {
-    const t = JSON.parse(localStorage.getItem(TOK_STORE) || "null");
-    if (t && t.exp > Date.now() + 3e4) return t.t;
+    const t2 = JSON.parse(localStorage.getItem(TOK_STORE) || "null");
+    if (t2 && t2.exp > Date.now() + 3e4) return t2.t;
   } catch (e) {
   }
   return null;
@@ -405,15 +405,15 @@ function collScore(qt, et) {
 }
 function fetchAvecDelai(url, options, ms) {
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(t));
+  const t2 = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(t2));
 }
 function avecDelai(promesse, ms, message) {
-  let t;
+  let t2;
   const delai = new Promise((_, reject) => {
-    t = setTimeout(() => reject(new Error(message || `Délai dépassé (${ms} ms)`)), ms);
+    t2 = setTimeout(() => reject(new Error(message || `Délai dépassé (${ms} ms)`)), ms);
   });
-  return Promise.race([promesse, delai]).finally(() => clearTimeout(t));
+  return Promise.race([promesse, delai]).finally(() => clearTimeout(t2));
 }
 function hudPaint() {
   const log = logRead();
@@ -442,11 +442,11 @@ function credBump() {
 }
 function repartirProrata(poids, total) {
   if (!Array.isArray(poids) || !poids.length) return [];
-  const t = Number(total) || 0;
+  const t2 = Number(total) || 0;
   const somme = poids.reduce((a, b) => a + (Number(b) || 0), 0);
-  let parts = somme > 0 ? poids.map((v) => t * (Number(v) || 0) / somme) : poids.map(() => t / poids.length);
+  let parts = somme > 0 ? poids.map((v) => t2 * (Number(v) || 0) / somme) : poids.map(() => t2 / poids.length);
   parts = parts.map((x) => Math.round(x * 100) / 100);
-  const ecart = Math.round((t - parts.reduce((a, b) => a + b, 0)) * 100) / 100;
+  const ecart = Math.round((t2 - parts.reduce((a, b) => a + b, 0)) * 100) / 100;
   if (ecart && parts.length) {
     let iMax = 0;
     for (let i = 1; i < poids.length; i++) {
@@ -466,15 +466,15 @@ const PORT_PART_MAX = 0.25;
 const CIRCULATION_COEF = { rare: 1, "peu courant": 1, courant: 1, massif: 0.6 };
 function nombre(v) {
   if (typeof v === "number") return isFinite(v) ? v : 0;
-  const t = String(v || "").replace(/\s/g, "").replace(/,(\d)/g, ".$1");
-  const nb = (t.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(isFinite);
+  const t2 = String(v || "").replace(/\s/g, "").replace(/,(\d)/g, ".$1");
+  const nb = (t2.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(isFinite);
   if (!nb.length) return 0;
   if (nb.length >= 2 && /\d\s*(?:-|–|à|a|et)\s*\d/.test(String(v))) return (nb[0] + nb[1]) / 2;
   return nb[0];
 }
 function catJoli(c) {
-  const t = String(c || "").replace(/[_-]+/g, " ").trim().toLowerCase();
-  return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+  const t2 = String(c || "").replace(/[_-]+/g, " ").trim().toLowerCase();
+  return t2 ? t2.charAt(0).toUpperCase() + t2.slice(1) : "";
 }
 function attNorm(a) {
   if (!Array.isArray(a)) return [];
@@ -493,7 +493,7 @@ function attNorm(a) {
   }).filter((x) => x && x.n);
 }
 function attPerte(att) {
-  return att.filter((x) => x.vu === "non").reduce((t, x) => t + x.perte, 0);
+  return att.filter((x) => x.vu === "non").reduce((t2, x) => t2 + x.perte, 0);
 }
 function attManquants(att) {
   return att.filter((x) => x.vu === "non");
@@ -584,9 +584,9 @@ function ficheVerdict(f, c, demande) {
 function attResume(att) {
   const perte = attPerte(att);
   const q = att.filter((x) => x.vu === "?").length;
-  let t = perte ? "Manque constaté : −" + perte + "% appliqués" : "Rien ne manque : aucune décote";
-  if (q) t += " · " + q + " élément" + (q > 1 ? "s" : "") + " à vérifier sur place";
-  return t;
+  let t2 = perte ? "Manque constaté : −" + perte + "% appliqués" : "Rien ne manque : aucune décote";
+  if (q) t2 += " · " + q + " élément" + (q > 1 ? "s" : "") + " à vérifier sur place";
+  return t2;
 }
 function compNorm(a) {
   if (!Array.isArray(a)) return [];
@@ -608,11 +608,11 @@ async function discThrottle() {
   DISC_LAST = Date.now();
 }
 async function discGet(chemin, params) {
-  const t = discToken();
-  if (!t) throw new Error("Aucun jeton Discogs");
+  const t2 = discToken();
+  if (!t2) throw new Error("Aucun jeton Discogs");
   if (!navigator.onLine) throw new Error("Hors réseau");
   await discThrottle();
-  const q = new URLSearchParams({ ...params || {}, token: t });
+  const q = new URLSearchParams({ ...params || {}, token: t2 });
   const r = await fetchAvecDelai(DISC_API + chemin + "?" + q.toString(), {}, 1e4);
   if (r.status === 401 || r.status === 403) throw new Error("JETON");
   if (r.status === 429) throw new Error("Trop de requêtes — attends une minute");
@@ -627,10 +627,10 @@ function discPertinent(query, hit) {
 const DISC_NON = /(wii|switch|playstation|ps[1-5]\b|xbox|nintendo|gamecube|dreamcast|megadrive|game ?boy|nes\b|snes\b|psp\b|ds\b|cartouche|manette|console|lego|playmobil|funko|figurine|puzzle|pokemon|magic the gathering|yu-?gi-?oh)/i;
 const DISC_OUI = /(vinyle?|vinyl|33 ?tours?|45 ?tours?|lp\b|ep\b|maxi|album|cd\b|pressage|discogs)/i;
 function discMusique(txt) {
-  const t = String(txt || "");
-  if (t.trim().length < 3) return false;
-  if (DISC_OUI.test(t)) return true;
-  return !DISC_NON.test(t);
+  const t2 = String(txt || "");
+  if (t2.trim().length < 3) return false;
+  if (DISC_OUI.test(t2)) return true;
+  return !DISC_NON.test(t2);
 }
 async function discCote(query) {
   const cle = "d:" + norm(query).slice(0, 80);
@@ -715,8 +715,8 @@ async function legoGet(chemin, params) {
   return r.json();
 }
 function legoNum(n) {
-  const t = String(n || "").trim();
-  return /-\d+$/.test(t) ? t : t + "-1";
+  const t2 = String(n || "").trim();
+  return /-\d+$/.test(t2) ? t2 : t2 + "-1";
 }
 async function legoSet(num) {
   const cle = "l:" + legoNum(num);
@@ -730,7 +730,7 @@ async function legoSet(num) {
   let figs = 0, figsConnu = true;
   try {
     const m = await legoGet("/sets/" + legoNum(num) + "/minifigs/", { page_size: 100 });
-    if (m && Array.isArray(m.results)) figs = m.results.reduce((t, x) => t + (Number(x.quantity) || 1), 0);
+    if (m && Array.isArray(m.results)) figs = m.results.reduce((t2, x) => t2 + (Number(x.quantity) || 1), 0);
   } catch (e) {
     figsConnu = false;
   }
@@ -747,11 +747,11 @@ async function legoSet(num) {
   return cote;
 }
 function legoValeur(c) {
-  const t = legoTarifs();
-  const parts = c.pieces * t.piece;
+  const t2 = legoTarifs();
+  const parts = c.pieces * t2.piece;
   const figsConnu = c.figsConnu !== false;
-  const figs = figsConnu ? c.figs * t.fig : 0;
-  return { parts, figs, total: Math.round(parts + figs), t, figsConnu };
+  const figs = figsConnu ? c.figs * t2.fig : 0;
+  return { parts, figs, total: Math.round(parts + figs), t: t2, figsConnu };
 }
 function legoNumTrouve(f) {
   const txt = (f.objet || "") + " " + (f.categorie || "") + " " + (f.identification || "");
@@ -896,7 +896,7 @@ function collBanner(query) {
   if (g) {
     const n = g.titres.length;
     const mot = g.kind === "jeux" ? n > 1 ? "jeux sur cette console" : "jeu sur cette console" : n > 1 ? "disques de cet artiste" : "disque de cet artiste";
-    const liste = g.titres.slice(0, 8).map((t) => `<li>${esc(t)}</li>`).join("");
+    const liste = g.titres.slice(0, 8).map((t2) => `<li>${esc(t2)}</li>`).join("");
     const reste = n > 8 ? `<li class="plus">et ${n - 8} autre${n - 8 > 1 ? "s" : ""}…</li>` : "";
     return `<div class="dupbox dup-artist">
       <div class="dt">${n} ${mot}</div>
@@ -967,17 +967,17 @@ function rowsFromAOA(aoa, kind) {
   const out = [];
   for (let r = start; r < aoa.length; r++) {
     const row = (aoa[r] || []).map((x) => String(x || "").trim());
-    let a = "", t = "";
+    let a = "", t2 = "";
     if (ia >= 0 || it >= 0) {
       a = row[ia] || "";
-      t = row[it] || "";
+      t2 = row[it] || "";
     }
-    if (!a && !t) {
+    if (!a && !t2) {
       const nz = row.filter(Boolean);
       a = nz[0] || "";
-      t = nz[1] || "";
+      t2 = nz[1] || "";
     }
-    if (a || t) out.push({ a, t, k: kind });
+    if (a || t2) out.push({ a, t: t2, k: kind });
   }
   return out;
 }
@@ -1560,7 +1560,7 @@ const CIRC_MOT = {
 function ficheCorps(f) {
   const ci = CIRC_MOT[f.circulation];
   const bloc = (id, titre, corps, ouvert) => corps ? `<details class="bl"${ouvert ? " open" : ""}><summary>${titre}</summary><div class="bl-in">${corps}</div></details>` : "";
-  const listes = (t) => t.length ? `<ul>${t.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const listes = (t2) => t2.length ? `<ul>${t2.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
   return `
     ${bloc(
     "ck",
@@ -1624,13 +1624,13 @@ function ficheCoche(i, coche) {
 }
 function ficheCopieCode() {
   if (!FICHE || !FICHE.code) return;
-  const t = FICHE.code;
+  const t2 = FICHE.code;
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(t).then(() => {
+    navigator.clipboard.writeText(t2).then(() => {
       vib();
-      alert("Référence copiée : " + t);
+      alert("Référence copiée : " + t2);
     });
-  } else prompt("Copie la référence :", t);
+  } else prompt("Copie la référence :", t2);
 }
 function coteReelle(query) {
   const qt = collTokens(query);
@@ -2101,8 +2101,8 @@ async function brickGreffe(f, cibleId) {
     }
     cur.innerHTML = brickCarte(c);
     if (FICHE && (c.pieces || c.figs) && !FICHE.marcheVu && !FICHE.marcheReel) {
-      const t = legoTarifs();
-      const total = Math.round(c.pieces * t.piece + c.figs * t.fig);
+      const t2 = legoTarifs();
+      const total = Math.round(c.pieces * t2.piece + c.figs * t2.fig);
       if (total > 0) {
         FICHE.marcheReel = total;
         FICHE.marcheSrc = "Brickset · " + c.pieces + " pièces, " + c.figs + " figurines";
@@ -2325,8 +2325,8 @@ function bcDispo() {
 async function bcOuvrir() {
   vib();
   if (!bcDispo()) {
-    const t = prompt("Ton navigateur ne sait pas lire les codes-barres.\n\nTape le code à la main (les chiffres sous les barres) :");
-    if (t && t.trim()) bcTrouve(t.trim());
+    const t2 = prompt("Ton navigateur ne sait pas lire les codes-barres.\n\nTape le code à la main (les chiffres sous les barres) :");
+    if (t2 && t2.trim()) bcTrouve(t2.trim());
     return;
   }
   const ov = $("bc-overlay");
@@ -2377,7 +2377,7 @@ function bcFermer() {
     BC_BOUCLE = null;
   }
   if (BC_FLUX) {
-    BC_FLUX.getTracks().forEach((t) => t.stop());
+    BC_FLUX.getTracks().forEach((t2) => t2.stop());
     BC_FLUX = null;
   }
   const v = $("bc-video");
@@ -2464,6 +2464,254 @@ function captureInit() {
     askAIText();
   });
 }
+const DICT = {
+  fr: {
+    "app.tagline": "Argus de terrain",
+    "bc.cadre": "Cadre le code-barres",
+    "bc.annuler": "Annuler",
+    "hud.score": "Score",
+    "hud.credits": "Crédits",
+    "hud.file": "En file",
+    "mode.objet": "Un objet",
+    "mode.bac": "Un lot",
+    "mode.stand": "Un stand",
+    "shoot.photo.titre": "Photographier",
+    "shoot.photo.sub": "l'appareil s'ouvre",
+    "shoot.galerie.titre": "Galerie",
+    "shoot.galerie.sub": "plusieurs à la fois",
+    "shoot.analyser": "Analyser",
+    "scan.bc.titre": "Scanner le code-barres",
+    "scan.bc.sub": "identification exacte, instantanée",
+    "prix.placeholder": "Il en demande combien ? (facultatif)",
+    "prix.label": "Prix demandé",
+    "autres.summary": "Autres façons de chercher",
+    "recherche.placeholder": "Chercher par nom, ou poser une question",
+    "recherche.demander": "Demander à l'IA",
+    "cal.titre": "Calendrier",
+    "cal.sous_titre": "Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
+    "cal.chercher": "Chercher les prochaines dates",
+    "cal.ajouter_manuel": "＋ Ajouter à la main",
+    "cal.exporter": "Exporter toutes mes dates marquées (.ics)",
+    "cal.filtre.toutes": "Toutes",
+    "cal.filtre.jyvais": "J'y vais",
+    "cal.filtre.grosses": "Les grosses",
+    "log.titre": "Journal de chasse",
+    "log.tes_achats": "Tes achats",
+    "log.terminer_sortie": "Terminer la sortie",
+    "log.envoyer_drive": "Envoyer le journal dans mon Drive",
+    "log.sorties_archivees": "Sorties archivées",
+    "log.vider_journal": "Vider le journal",
+    "log.historique_recherches": "Historique des recherches",
+    "log.historique_sub": "Chaque photo, scan ou question analysée, achetée ou non — pour retrouver une fiche vue plus tôt.",
+    "log.vider_recherches": "Vider l'historique des recherches",
+    "guide.titre": "Menu Guide 🧔🏼‍♂️",
+    "guide.ia.titre": "⚙️ Configuration IA",
+    "guide.ia.cle_label": "Clé API Gemini (stockée localement) :",
+    "guide.ia.cle_placeholder": "Collez votre clé API Google ici",
+    "guide.ia.modele_label": "Modèle IA (Puissance vs Vitesse) :",
+    "guide.ia.verifier_modeles": "Vérifier les modèles disponibles",
+    "guide.ia.ground_label": "Chercher les prix sur le web",
+    "guide.ia.ground_note": "Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.",
+    "guide.ia.enregistrer": "Enregistrer les réglages",
+    "guide.discogs.titre": "Cotes Discogs (musique)",
+    "guide.discogs.explain": "Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA par le prix réellement pratiqué et le nombre d'exemplaires en vente.",
+    "guide.discogs.placeholder": "Colle ton jeton Discogs ici",
+    "guide.discogs.enregistrer": "Enregistrer le jeton",
+    "guide.discogs.tester": "Tester la connexion Discogs",
+    "guide.rebrickable.titre": "Sets LEGO (Rebrickable)",
+    "guide.rebrickable.explain": "Clé gratuite et immédiate : rebrickable.com &rarr; ton profil &rarr; Settings &rarr; API &rarr; Generate. Rebrickable ne publie pas de prix — il donne le nombre de pièces et de figurines, les deux chiffres qui font vraiment la valeur d'un set d'occasion.",
+    "guide.rebrickable.placeholder": "Colle ta clé Rebrickable",
+    "guide.rebrickable.piece": "€ la pièce",
+    "guide.rebrickable.figurine": "€ la figurine",
+    "guide.rebrickable.bareme": "Barème de revendeur, à corriger avec tes propres ventes.",
+    "guide.rebrickable.tester": "Tester la connexion Rebrickable",
+    "guide.brickset.titre": "Sets LEGO (Brickset)",
+    "guide.brickset.explain": "Clé gratuite sur demande : brickset.com &rarr; ton compte &rarr; API &rarr; Request a key. Brickset donne les mêmes pièces et figurines que Rebrickable, plus le prix de vente neuf officiel LEGO. Sert de second avis quand tu n'as pas de clé Rebrickable — les deux ne s'affichent jamais en double sur une même fiche.",
+    "guide.brickset.placeholder": "Colle ta clé Brickset",
+    "guide.brickset.relais_html": `<b style="color:var(--mid)">Brickset bloque les appels directs depuis un navigateur</b> — contrairement à Discogs et Rebrickable. La clé seule ne suffit donc pas : il faut un relais gratuit qui transmet la requête à ta place. Deux minutes, une fois :<br>1. <b>dash.cloudflare.com</b> (compte gratuit) &rarr; Workers &amp; Pages &rarr; Create &rarr; « Hello World ».<br>2. Colle le code ci-dessous à la place de l'exemple, dans l'éditeur du navigateur, puis Deploy.<br>3. Colle l'adresse en <b>*.workers.dev</b> qu'il te donne dans le champ juste en dessous, et reteste.`,
+    "guide.brickset.copier_relais": "Copier le code du relais",
+    "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)",
+    "guide.brickset.tester": "Tester la connexion Brickset",
+    "guide.sauvegarde.titre": "Sauvegarde",
+    "guide.sauvegarde.liberer": "Libérer de la place",
+    "guide.sauvegarde.explain": "Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur. Un nettoyage de cache Android l'effacerait sans prévenir.",
+    "guide.sauvegarde.drive": "Sauvegarder dans mon Drive",
+    "guide.sauvegarde.telecharger": "Télécharger la sauvegarde",
+    "guide.sauvegarde.restaurer": "Restaurer une sauvegarde",
+    "guide.apparence.titre": "Apparence",
+    "guide.apparence.clair": "Clair",
+    "guide.apparence.auto": "Auto",
+    "guide.apparence.sombre": "Sombre",
+    "guide.langue.titre": "Langue",
+    "guide.drive.titre": "Mes bases Google Drive",
+    "guide.drive.cid_explain": "Identifiant client OAuth (Google Cloud Console). À coller une seule fois.",
+    "guide.drive.connecter": "Connecter mon Drive",
+    "guide.drive.choisir_fichiers": "Choisir mes fichiers",
+    "guide.drive.synchroniser": "Synchroniser maintenant",
+    "guide.drive.oublier": "Oublier mes bases",
+    "guide.drive.sync_explain": "La synchronisation se relance toute seule à l'ouverture de l'app quand tu as du réseau. Sur le terrain, la comparaison se fait en local : elle marche sans connexion.",
+    "action.enregistrer": "Enregistrer",
+    "guide.nego.titre": "💬 Négociation (La mécanique)",
+    "guide.nego.regle1": "Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.",
+    "guide.nego.regle2": "Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.",
+    "guide.nego.regle3": "Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.",
+    "guide.nego.regle4": "Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.",
+    "guide.nego.regle5": "Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.",
+    "guide.pieges.titre": "⚠️ Pièges Fréquents",
+    "guide.pieges.repro_html": "<b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.",
+    "guide.pieges.piles_html": "<b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.",
+    "guide.pieges.boite_html": "<b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.",
+    "guide.pieges.lot_html": "<b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.",
+    "guide.sac.titre": "🎒 Le Sac Idéal",
+    "nav.scan": "Scan",
+    "nav.dates": "Dates",
+    "nav.journal": "Journal",
+    "nav.reglages": "Réglages"
+  },
+  nl: {
+    "app.tagline": "Prijsgids voor op de rommelmarkt",
+    "bc.cadre": "Richt de barcode in het kader",
+    "bc.annuler": "Annuleren",
+    "hud.score": "Score",
+    "hud.credits": "Credits",
+    "hud.file": "In wachtrij",
+    "mode.objet": "Eén object",
+    "mode.bac": "Een lot",
+    "mode.stand": "Een kraam",
+    "shoot.photo.titre": "Fotograferen",
+    "shoot.photo.sub": "camera gaat open",
+    "shoot.galerie.titre": "Galerij",
+    "shoot.galerie.sub": "meerdere tegelijk",
+    "shoot.analyser": "Analyseren",
+    "scan.bc.titre": "Streepjescode scannen",
+    "scan.bc.sub": "exacte identificatie, direct",
+    "prix.placeholder": "Hoeveel vraagt hij ervoor? (optioneel)",
+    "prix.label": "Gevraagde prijs",
+    "autres.summary": "Andere manieren om te zoeken",
+    "recherche.placeholder": "Zoek op naam, of stel een vraag",
+    "recherche.demander": "Vraag het aan de AI",
+    "cal.titre": "Kalender",
+    "cal.sous_titre": "Rommelmarkten binnen 50 km van Binche, België en Frankrijk. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
+    "cal.chercher": "Eerstvolgende data zoeken",
+    "cal.ajouter_manuel": "＋ Handmatig toevoegen",
+    "cal.exporter": "Al mijn gemarkeerde data exporteren (.ics)",
+    "cal.filtre.toutes": "Alle",
+    "cal.filtre.jyvais": "Ik ga erheen",
+    "cal.filtre.grosses": "De grote",
+    "log.titre": "Jachtjournaal",
+    "log.tes_achats": "Jouw aankopen",
+    "log.terminer_sortie": "Uitstap afsluiten",
+    "log.envoyer_drive": "Journaal naar mijn Drive sturen",
+    "log.sorties_archivees": "Gearchiveerde uitstappen",
+    "log.vider_journal": "Journaal leegmaken",
+    "log.historique_recherches": "Zoekgeschiedenis",
+    "log.historique_sub": "Elke geanalyseerde foto, scan of vraag, gekocht of niet — om een eerder bekeken fiche terug te vinden.",
+    "log.vider_recherches": "Zoekgeschiedenis wissen",
+    "guide.titre": "Gidsmenu 🧔🏼‍♂️",
+    "guide.ia.titre": "⚙️ AI-configuratie",
+    "guide.ia.cle_label": "Gemini API-sleutel (lokaal opgeslagen):",
+    "guide.ia.cle_placeholder": "Plak hier je Google API-sleutel",
+    "guide.ia.modele_label": "AI-model (Kracht vs Snelheid):",
+    "guide.ia.verifier_modeles": "Beschikbare modellen controleren",
+    "guide.ia.ground_label": "Prijzen op het web zoeken",
+    "guide.ia.ground_note": "Onmisbaar voor echte prijzen. Vink alleen uit bij herhaalde 429-fouten.",
+    "guide.ia.enregistrer": "Instellingen opslaan",
+    "guide.discogs.titre": "Discogs-prijzen (muziek)",
+    "guide.discogs.explain": "Persoonlijk token, aan te maken op discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Het blijft op deze telefoon. Voor alles wat platen betreft, vervangt Discogs de schatting van de AI door de werkelijk gehanteerde prijs en het aantal exemplaren te koop.",
+    "guide.discogs.placeholder": "Plak hier je Discogs-token",
+    "guide.discogs.enregistrer": "Token opslaan",
+    "guide.discogs.tester": "Discogs-verbinding testen",
+    "guide.rebrickable.titre": "LEGO-sets (Rebrickable)",
+    "guide.rebrickable.explain": "Gratis en direct beschikbare sleutel: rebrickable.com &rarr; jouw profiel &rarr; Settings &rarr; API &rarr; Generate. Rebrickable publiceert geen prijzen — het geeft het aantal onderdelen en poppetjes, de twee cijfers die echt de waarde van een tweedehands set bepalen.",
+    "guide.rebrickable.placeholder": "Plak je Rebrickable-sleutel",
+    "guide.rebrickable.piece": "€ per onderdeel",
+    "guide.rebrickable.figurine": "€ per poppetje",
+    "guide.rebrickable.bareme": "Wederverkoperstarief, aan te passen aan je eigen verkopen.",
+    "guide.rebrickable.tester": "Rebrickable-verbinding testen",
+    "guide.brickset.titre": "LEGO-sets (Brickset)",
+    "guide.brickset.explain": "Gratis sleutel op aanvraag: brickset.com &rarr; jouw account &rarr; API &rarr; Request a key. Brickset geeft dezelfde onderdelen en poppetjes als Rebrickable, plus de officiële LEGO-nieuwprijs. Dient als tweede mening wanneer je geen Rebrickable-sleutel hebt — de twee worden nooit dubbel getoond op dezelfde fiche.",
+    "guide.brickset.placeholder": "Plak je Brickset-sleutel",
+    "guide.brickset.relais_html": '<b style="color:var(--mid)">Brickset blokkeert directe aanroepen vanuit een browser</b> — in tegenstelling tot Discogs en Rebrickable. De sleutel alleen volstaat dus niet: je hebt een gratis relais nodig die het verzoek voor jou doorstuurt. Twee minuten, eenmalig:<br>1. <b>dash.cloudflare.com</b> (gratis account) &rarr; Workers &amp; Pages &rarr; Create &rarr; « Hello World ».<br>2. Plak de code hieronder in plaats van het voorbeeld, in de browsereditor, en klik dan op Deploy.<br>3. Plak het <b>*.workers.dev</b>-adres dat je krijgt in het veld hieronder, en test opnieuw.',
+    "guide.brickset.copier_relais": "Relaiscode kopiëren",
+    "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relais, optioneel maar nodig om Brickset te laten werken)",
+    "guide.brickset.tester": "Brickset-verbinding testen",
+    "guide.sauvegarde.titre": "Back-up",
+    "guide.sauvegarde.liberer": "Ruimte vrijmaken",
+    "guide.sauvegarde.explain": "Journaal, gearchiveerde uitstappen, kalender en databases: alles wordt opgeslagen in deze browser. Een Android-cache-opruiming zou dit zonder waarschuwing wissen.",
+    "guide.sauvegarde.drive": "Opslaan naar mijn Drive",
+    "guide.sauvegarde.telecharger": "Back-up downloaden",
+    "guide.sauvegarde.restaurer": "Back-up herstellen",
+    "guide.apparence.titre": "Weergave",
+    "guide.apparence.clair": "Licht",
+    "guide.apparence.auto": "Auto",
+    "guide.apparence.sombre": "Donker",
+    "guide.langue.titre": "Taal",
+    "guide.drive.titre": "Mijn Google Drive-bestanden",
+    "guide.drive.cid_explain": "OAuth-client-ID (Google Cloud Console). Eenmalig te plakken.",
+    "guide.drive.connecter": "Mijn Drive verbinden",
+    "guide.drive.choisir_fichiers": "Mijn bestanden kiezen",
+    "guide.drive.synchroniser": "Nu synchroniseren",
+    "guide.drive.oublier": "Mijn bestanden vergeten",
+    "guide.drive.sync_explain": "De synchronisatie start vanzelf opnieuw bij het openen van de app zodra je internet hebt. Op de markt zelf gebeurt de vergelijking lokaal: dat werkt zonder verbinding.",
+    "action.enregistrer": "Opslaan",
+    "guide.nego.titre": "💬 Onderhandelen (De mechaniek)",
+    "guide.nego.regle1": "Bied 50 tot 60% van de gevraagde prijs. Sluit af op 70%. Daarboven betaal je de wederverkoopprijs.",
+    "guide.nego.regle2": "Bundel altijd: « ik neem die vier, 20 € en we zijn klaar » werkt beter dan vier keer apart afdingen.",
+    "guide.nego.regle3": "Contant geld, kleine coupures, het juiste bedrag al klaar. Een uitgestoken briefje beslecht een aarzeling.",
+    "guide.nego.regle4": "Neutraal gezicht, zelfs bij een parel. Zodra je opklaart, ligt de prijs vast.",
+    "guide.nego.regle5": "Eén cijfer, en dan zwijg je. De stilte doet het werk voor jou.",
+    "guide.pieges.titre": "⚠️ Veelvoorkomende valkuilen",
+    "guide.pieges.repro_html": "<b>Namaakcartridges:</b> Label te scherp gedrukt, kruiskopschroef. Nintendo gebruikt 3,8 mm tri-wing. Het originele plastic is mat.",
+    "guide.pieges.piles_html": "<b>Batterijcorrosie:</b> Open altijd het klepje. Het groene beslag vreet de contacten aan en kost meer dan het object waard is.",
+    "guide.pieges.boite_html": "<b>Volle doos, spel afwezig:</b> Open alles. De PS2-doos met een karaoke-cd erin is een klassieker.",
+    "guide.pieges.lot_html": "<b>De valstrik-lot:</b> Drie goede stukken bovenop, opvulling eronder. Draai de doos om voor je een prijs noemt.",
+    "guide.sac.titre": "🎒 De ideale tas",
+    "nav.scan": "Scan",
+    "nav.dates": "Data",
+    "nav.journal": "Journaal",
+    "nav.reglages": "Instellingen"
+  }
+};
+const LOCALE_STORE = "insertcoin.locale";
+const LOCALES = ["fr", "nl"];
+const DEFAULT_LOCALE = "fr";
+function locale() {
+  try {
+    const l = localStorage.getItem(LOCALE_STORE);
+    return LOCALES.includes(l) ? l : DEFAULT_LOCALE;
+  } catch (e) {
+    return DEFAULT_LOCALE;
+  }
+}
+function localeSet(l) {
+  if (!LOCALES.includes(l)) return;
+  try {
+    localStorage.setItem(LOCALE_STORE, l);
+  } catch (e) {
+  }
+}
+function t(key) {
+  const l = locale();
+  const parLangue = DICT[l] && DICT[l][key];
+  if (parLangue !== void 0) return parLangue;
+  const parDefaut = DICT[DEFAULT_LOCALE] && DICT[DEFAULT_LOCALE][key];
+  return parDefaut !== void 0 ? parDefaut : key;
+}
+function i18nAppliquer(doc) {
+  const d = document;
+  d.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  d.querySelectorAll("[data-i18n-html]").forEach((el) => {
+    el.innerHTML = t(el.dataset.i18nHtml);
+  });
+  d.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  d.querySelectorAll("[data-i18n-label]").forEach((el) => {
+    el.setAttribute("aria-label", t(el.dataset.i18nLabel));
+  });
+}
 function saveSettings() {
   vib();
   const keyVal = $("api-key").value.trim();
@@ -2484,16 +2732,16 @@ function saveSettings() {
 function backupState() {
   const el = $("backup-state");
   if (!el) return;
-  let t = 0;
+  let t2 = 0;
   try {
-    t = parseInt(localStorage.getItem("insertcoin.lastbackup") || "0", 10);
+    t2 = parseInt(localStorage.getItem("insertcoin.lastbackup") || "0", 10);
   } catch (e) {
   }
   const n = sortieRead().length, j = logRead().length;
-  const jours = t ? Math.floor((Date.now() - t) / 864e5) : null;
+  const jours = t2 ? Math.floor((Date.now() - t2) / 864e5) : null;
   const alerte = jours === null || jours > 14;
   el.style.borderLeft = "3px solid " + (alerte ? "var(--stop)" : "var(--go)");
-  el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours<br>` + (t ? `Dernière sauvegarde : il y a ${jours} jour(s)` : "<b>Jamais sauvegardé</b>");
+  el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours<br>` + (t2 ? `Dernière sauvegarde : il y a ${jours} jour(s)` : "<b>Jamais sauvegardé</b>");
   memPaint();
 }
 const MEM_MAX = 5 * 1024 * 1024;
@@ -2573,11 +2821,11 @@ function discSave() {
 function discPaint() {
   const el = $("disc-state");
   if (!el) return;
-  const t = discToken();
+  const t2 = discToken();
   const inp = $("disc-token");
-  if (inp && !inp.value) inp.value = t;
-  el.style.borderLeft = "3px solid " + (t ? "var(--go)" : "var(--border)");
-  el.innerHTML = t ? "Jeton enregistré. Les cotes Discogs s'affichent sous chaque analyse de disque." : "Aucun jeton. Les vinyles restent estimés par l'IA, sans vérification du marché réel.";
+  if (inp && !inp.value) inp.value = t2;
+  el.style.borderLeft = "3px solid " + (t2 ? "var(--go)" : "var(--border)");
+  el.innerHTML = t2 ? "Jeton enregistré. Les cotes Discogs s'affichent sous chaque analyse de disque." : "Aucun jeton. Les vinyles restent estimés par l'IA, sans vérification du marché réel.";
 }
 async function discTest() {
   const el = $("disc-state");
@@ -2613,12 +2861,12 @@ function legoSave() {
 function legoPaint() {
   const el = $("lego-state");
   if (!el) return;
-  const k = legoKey(), t = legoTarifs();
+  const k = legoKey(), t2 = legoTarifs();
   if ($("lego-key") && !$("lego-key").value) $("lego-key").value = k;
-  if ($("lego-piece") && !$("lego-piece").value) $("lego-piece").value = t.piece;
-  if ($("lego-fig") && !$("lego-fig").value) $("lego-fig").value = t.fig;
+  if ($("lego-piece") && !$("lego-piece").value) $("lego-piece").value = t2.piece;
+  if ($("lego-fig") && !$("lego-fig").value) $("lego-fig").value = t2.fig;
   el.style.borderLeft = "3px solid " + (k ? "var(--go)" : "var(--border)");
-  el.innerHTML = k ? `Clé enregistrée. Barème actuel : ${t.piece.toFixed(2).replace(".", ",")}€ la pièce, ${t.fig}€ la figurine.` : "Aucune clé. Les sets LEGO restent estimés par l'IA, sans comptage de pièces.";
+  el.innerHTML = k ? `Clé enregistrée. Barème actuel : ${t2.piece.toFixed(2).replace(".", ",")}€ la pièce, ${t2.fig}€ la figurine.` : "Aucune clé. Les sets LEGO restent estimés par l'IA, sans comptage de pièces.";
 }
 async function legoTest() {
   const el = $("lego-state");
@@ -2705,6 +2953,14 @@ if (window.matchMedia) {
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     if (themeGet() === "auto") themeApply("auto");
   });
+}
+function langueApply(l) {
+  i18nAppliquer();
+  document.querySelectorAll("#langue-seg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.l === l));
+}
+function langueSet(l) {
+  localeSet(l);
+  langueApply(locale());
 }
 const CLES = [
   "insertcoin.log",
@@ -2988,13 +3244,13 @@ function buildBody(parts, mode, ground, model) {
   return b;
 }
 function jsonRepare(raw) {
-  let t = String(raw || "").replace(/```json|```/g, "");
-  t = t.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "");
-  const dep = t.indexOf("{");
+  let t2 = String(raw || "").replace(/```json|```/g, "");
+  t2 = t2.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "");
+  const dep = t2.indexOf("{");
   if (dep < 0) return null;
   let out = "", pile = [], ins = false, ech = false, fini = false;
-  for (let i = dep; i < t.length && !fini; i++) {
-    const c = t[i];
+  for (let i = dep; i < t2.length && !fini; i++) {
+    const c = t2[i];
     if (ech) {
       out += c;
       ech = false;
@@ -3035,10 +3291,10 @@ function jsonRepare(raw) {
     return JSON.parse(out);
   } catch (e) {
   }
-  const b = t.lastIndexOf("}");
+  const b = t2.lastIndexOf("}");
   if (b > dep) {
     try {
-      return JSON.parse(t.slice(dep, b + 1));
+      return JSON.parse(t2.slice(dep, b + 1));
     } catch (e) {
     }
   }
@@ -3534,8 +3790,8 @@ function calendarInit() {
   }));
 }
 async function driveConnect() {
-  const t = await driveAuth(true);
-  if (!t) {
+  const t2 = await driveAuth(true);
+  if (!t2) {
     alert("Connexion refusée ou annulée.");
     return;
   }
@@ -3689,8 +3945,8 @@ function collPaint() {
   if (ci && !ci.value) ci.value = driveCid();
   let quand = "";
   try {
-    const t = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
-    if (t) quand = "Dernière synchro : " + new Date(t).toLocaleString("fr-BE", { dateStyle: "short", timeStyle: "short" });
+    const t2 = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
+    if (t2) quand = "Dernière synchro : " + new Date(t2).toLocaleString("fr-BE", { dateStyle: "short", timeStyle: "short" });
   } catch (e) {
   }
   if (!c.length) {
@@ -3764,6 +4020,7 @@ function init() {
   const gb = $("groundBox");
   if (gb) gb.checked = getGround();
   themeApply(themeGet());
+  langueApply(locale());
   modeSet("objet");
   legoPaint();
   brickPaint();
@@ -3784,7 +4041,7 @@ function init() {
   paintKeyState();
   captureInit();
   calendarInit();
-  $("sac-ticks").innerHTML = TICKS.map((t) => `<label class="tick"><input type="checkbox"><span>${t}</span></label>`).join("");
+  $("sac-ticks").innerHTML = TICKS.map((t2) => `<label class="tick"><input type="checkbox"><span>${t2}</span></label>`).join("");
 }
 window.addEventListener("error", (e) => {
   const el = document.getElementById("ai-results");
@@ -3857,6 +4114,7 @@ Object.assign(window, {
   brickTest,
   brickRelayCopier,
   themeSet,
+  langueSet,
   backupDownload,
   backupDrive,
   backupRestore,
@@ -4673,7 +4931,7 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <img src="./pixel-papa-logo.png" alt="Pixel Papa" class="avatar" onerror="this.src='/icon-mask-192.png'">
   <div class="brand">
     <h1>Insert Coin</h1>
-    <span>Argus de terrain</span>
+    <span data-i18n="app.tagline">Argus de terrain</span>
   </div>
 </header>
 
@@ -4682,19 +4940,19 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 <div class="bc-overlay" id="bc-overlay">
   <video id="bc-video" playsinline muted></video>
   <div class="bc-cadre"></div>
-  <div class="bc-msg" id="bc-msg">Cadre le code-barres</div>
-  <button class="bc-close" onclick="bcFermer()">Annuler</button>
+  <div class="bc-msg" id="bc-msg" data-i18n="bc.cadre">Cadre le code-barres</div>
+  <button class="bc-close" onclick="bcFermer()" data-i18n="bc.annuler">Annuler</button>
 </div>
 
 <div class="scoreov" id="score-screen"></div>
 <div class="imminent" id="imminent"></div>
 <div class="hud" id="hud">
   <div class="hud-cell" onclick="switchView('log')">
-    <span class="hl">Score</span><b id="hud-score">—</b></div>
+    <span class="hl" data-i18n="hud.score">Score</span><b id="hud-score">—</b></div>
   <div class="hud-cell">
-    <span class="hl">Crédits</span><b id="hud-cred">0</b></div>
+    <span class="hl" data-i18n="hud.credits">Crédits</span><b id="hud-cred">0</b></div>
   <div class="hud-cell" id="hud-q-cell" onclick="queueRun(true)">
-    <span class="hl">En file</span><b id="hud-queue">0</b></div>
+    <span class="hl" data-i18n="hud.file">En file</span><b id="hud-queue">0</b></div>
 </div>
 
 <div id="view-live" class="view active">
@@ -4702,9 +4960,9 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <!-- Le mode d'abord : il décide de ce qu'on demande à l'IA, pas de la façon
        de prendre la photo. Trois situations réelles sur un stand. -->
   <div class="modes" id="modes">
-    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b>Un objet</b></button>
-    <button class="md" data-m="bac" onclick="modeSet('bac')"><b>Un lot</b></button>
-    <button class="md" data-m="stand" onclick="modeSet('stand')"><b>Un stand</b></button>
+    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b data-i18n="mode.objet">Un objet</b></button>
+    <button class="md" data-m="bac" onclick="modeSet('bac')"><b data-i18n="mode.bac">Un lot</b></button>
+    <button class="md" data-m="stand" onclick="modeSet('stand')"><b data-i18n="mode.stand">Un stand</b></button>
   </div>
   <div class="mode-dit" id="mode-dit"></div>
 
@@ -4713,29 +4971,29 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <div class="shoot">
     <button class="shoot-b cam" onclick="triggerCamera(cameraMode(), 'cam')">
       <svg class="ico-cam"><use href="#i-scan"/></svg>
-      <b>Photographier</b>
-      <span id="shoot-cam-s">l'appareil s'ouvre</span>
+      <b data-i18n="shoot.photo.titre">Photographier</b>
+      <span id="shoot-cam-s" data-i18n="shoot.photo.sub">l'appareil s'ouvre</span>
     </button>
     <button class="shoot-b gal" onclick="triggerCamera(cameraMode(), 'ask')">
       <svg class="ico-cam"><use href="#i-crate"/></svg>
-      <b>Galerie</b>
-      <span>plusieurs à la fois</span>
+      <b data-i18n="shoot.galerie.titre">Galerie</b>
+      <span data-i18n="shoot.galerie.sub">plusieurs à la fois</span>
     </button>
   </div>
 
   <div id="photo-queue" class="photo-queue">
     <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
-    <button class="analyze-multi-btn" onclick="askAIGo()">Analyser</button>
+    <button class="analyze-multi-btn" onclick="askAIGo()" data-i18n="shoot.analyser">Analyser</button>
   </div>
 
   <button class="bc-btn" onclick="bcOuvrir()">
     <svg class="ico16"><use href="#i-scan"/></svg>
-    <b>Scanner le code-barres</b>
-    <span>identification exacte, instantanée</span>
+    <b data-i18n="scan.bc.titre">Scanner le code-barres</b>
+    <span data-i18n="scan.bc.sub">identification exacte, instantanée</span>
   </button>
 
   <div class="askprix">
-    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé">
+    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé" data-i18n-placeholder="prix.placeholder" data-i18n-label="prix.label">
   </div>
 
   <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
@@ -4745,116 +5003,116 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 
   <!-- Replié : sur un stand, on ne descend jamais jusqu'ici. -->
   <details class="autres">
-    <summary>Autres façons de chercher</summary>
+    <summary data-i18n="autres.summary">Autres façons de chercher</summary>
     <div class="autres-in">
       <div class="search-input-wrap">
-        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required>
+        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required data-i18n-placeholder="recherche.placeholder">
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
-      <button id="ask" class="btn-save" disabled>Demander à l'IA</button>
+      <button id="ask" class="btn-save" disabled data-i18n="recherche.demander">Demander à l'IA</button>
     </div>
   </details>
 </div>
 
 <div id="view-cal" class="view">
-  <h2 class="view-title">Calendrier</h2>
-  <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
+  <h2 class="view-title" data-i18n="cal.titre">Calendrier</h2>
+  <p class="view-sub" data-i18n="cal.sous_titre">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
 
   <div class="cal-actions">
     <button class="btn-save" onclick="calFetch()">
-      <svg class="ico16"><use href="#i-cal"/></svg> Chercher les prochaines dates</button>
-    <button class="btn-save alt" onclick="calAddManual()">＋ Ajouter à la main</button>
+      <svg class="ico16"><use href="#i-cal"/></svg> <span data-i18n="cal.chercher">Chercher les prochaines dates</span></button>
+    <button class="btn-save alt" onclick="calAddManual()" data-i18n="cal.ajouter_manuel">＋ Ajouter à la main</button>
   </div>
   <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-bottom:16px"
-    onclick="calICS(-1)">Exporter toutes mes dates marquées (.ics)</button>
+    onclick="calICS(-1)" data-i18n="cal.exporter">Exporter toutes mes dates marquées (.ics)</button>
 
   <div class="seg" id="cal-filter" style="margin-bottom:16px">
-    <button data-f="all" aria-pressed="true">Toutes</button>
-    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg>J'y vais</button>
-    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg>Les grosses</button>
+    <button data-f="all" aria-pressed="true" data-i18n="cal.filtre.toutes">Toutes</button>
+    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg><span data-i18n="cal.filtre.jyvais">J'y vais</span></button>
+    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg><span data-i18n="cal.filtre.grosses">Les grosses</span></button>
   </div>
 
   <div id="cal-list"></div>
 </div>
 
 <div id="view-log" class="view">
-  <h2 class="view-title">Journal de chasse</h2>
+  <h2 class="view-title" data-i18n="log.titre">Journal de chasse</h2>
   <div id="log-sum" class="logsum"></div>
   <div id="log-charts"></div>
   <div id="log-stats"></div>
-  <h3 class="sect">Tes achats</h3>
+  <h3 class="sect" data-i18n="log.tes_achats">Tes achats</h3>
   <div id="log-list"></div>
   <button class="btn-save" style="margin-top:18px" onclick="sortieFin()">
-    <svg class="ico16"><use href="#i-star"/></svg> Terminer la sortie</button>
-  <button class="btn-save alt2" onclick="logExport()">Envoyer le journal dans mon Drive</button>
+    <svg class="ico16"><use href="#i-star"/></svg> <span data-i18n="log.terminer_sortie">Terminer la sortie</span></button>
+  <button class="btn-save alt2" onclick="logExport()" data-i18n="log.envoyer_drive">Envoyer le journal dans mon Drive</button>
 
-  <h3 class="sect">Sorties archivées</h3>
+  <h3 class="sect" data-i18n="log.sorties_archivees">Sorties archivées</h3>
   <div id="hist-list"></div>
-  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
+  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()" data-i18n="log.vider_journal">Vider le journal</button>
 
-  <h3 class="sect">Historique des recherches</h3>
-  <p style="font-size:13px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+  <h3 class="sect" data-i18n="log.historique_recherches">Historique des recherches</h3>
+  <p style="font-size:13px;color:var(--text-muted);margin:0 0 10px;line-height:1.5" data-i18n="log.historique_sub">
     Chaque photo, scan ou question analysée, achetée ou non — pour retrouver une fiche vue plus tôt.</p>
   <div id="rech-list"></div>
-  <button class="btn-save alt2" style="margin-top:12px" onclick="rechClear()">Vider l'historique des recherches</button>
+  <button class="btn-save alt2" style="margin-top:12px" onclick="rechClear()" data-i18n="log.vider_recherches">Vider l'historique des recherches</button>
 </div>
 
 <div id="view-guide" class="view">
-  <h2 class="view-title">Menu Guide 🧔🏼‍♂️</h2>
-  
+  <h2 class="view-title" data-i18n="guide.titre">Menu Guide 🧔🏼‍♂️</h2>
+
   <div class="guide-section">
-    <h3>⚙️ Configuration IA</h3>
-    <p>Clé API Gemini (stockée localement) :</p>
-    <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici">
-    <p style="margin-top: 10px;">Modèle IA (Puissance vs Vitesse) :</p>
+    <h3 data-i18n="guide.ia.titre">⚙️ Configuration IA</h3>
+    <p data-i18n="guide.ia.cle_label">Clé API Gemini (stockée localement) :</p>
+    <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici" data-i18n-placeholder="guide.ia.cle_placeholder">
+    <p style="margin-top: 10px;" data-i18n="guide.ia.modele_label">Modèle IA (Puissance vs Vitesse) :</p>
     <select id="api-model" class="model-select"></select>
-    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)">Vérifier les modèles disponibles</button>
+    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)" data-i18n="guide.ia.verifier_modeles">Vérifier les modèles disponibles</button>
     <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
       <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
-      <span>Chercher les prix sur le web<br>
-      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
+      <span><span data-i18n="guide.ia.ground_label">Chercher les prix sur le web</span><br>
+      <i style="font-size:12px;color:var(--text-muted);font-style:normal" data-i18n="guide.ia.ground_note">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
-    <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
+    <button class="btn-save" onclick="saveSettings()" data-i18n="guide.ia.enregistrer">Enregistrer les réglages</button>
 
-    <h3 class="sect">Cotes Discogs (musique)</h3>
+    <h3 class="sect" data-i18n="guide.discogs.titre">Cotes Discogs (musique)</h3>
     <div id="disc-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.discogs.explain">
       Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token.
       Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA
       par le prix réellement pratiqué et le nombre d'exemplaires en vente.
     </p>
-    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false">
-    <button class="btn-save" onclick="discSave()">Enregistrer le jeton</button>
-    <button class="btn-save alt2" onclick="discTest()">Tester la connexion Discogs</button>
+    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.discogs.placeholder">
+    <button class="btn-save" onclick="discSave()" data-i18n="guide.discogs.enregistrer">Enregistrer le jeton</button>
+    <button class="btn-save alt2" onclick="discTest()" data-i18n="guide.discogs.tester">Tester la connexion Discogs</button>
 
-    <h3 class="sect">Sets LEGO (Rebrickable)</h3>
+    <h3 class="sect" data-i18n="guide.rebrickable.titre">Sets LEGO (Rebrickable)</h3>
     <div id="lego-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.rebrickable.explain">
       Clé gratuite et immédiate : rebrickable.com &rarr; ton profil &rarr; Settings &rarr; API &rarr; Generate.
       Rebrickable ne publie pas de prix — il donne le nombre de pièces et de figurines,
       les deux chiffres qui font vraiment la valeur d'un set d'occasion.
     </p>
-    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false">
+    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.rebrickable.placeholder">
     <div class="lego-tarif">
-      <label>€ la pièce<input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
-      <label>€ la figurine<input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
+      <label><span data-i18n="guide.rebrickable.piece">€ la pièce</span><input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
+      <label><span data-i18n="guide.rebrickable.figurine">€ la figurine</span><input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
     </div>
-    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5" data-i18n="guide.rebrickable.bareme">
       Barème de revendeur, à corriger avec tes propres ventes.
     </p>
-    <button class="btn-save" onclick="legoSave()">Enregistrer</button>
-    <button class="btn-save alt2" onclick="legoTest()">Tester la connexion Rebrickable</button>
+    <button class="btn-save" onclick="legoSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="legoTest()" data-i18n="guide.rebrickable.tester">Tester la connexion Rebrickable</button>
 
-    <h3 class="sect">Sets LEGO (Brickset)</h3>
+    <h3 class="sect" data-i18n="guide.brickset.titre">Sets LEGO (Brickset)</h3>
     <div id="brick-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.brickset.explain">
       Clé gratuite sur demande : brickset.com &rarr; ton compte &rarr; API &rarr; Request a key.
       Brickset donne les mêmes pièces et figurines que Rebrickable, plus le prix de vente neuf
       officiel LEGO. Sert de second avis quand tu n'as pas de clé Rebrickable — les deux ne
       s'affichent jamais en double sur une même fiche.
     </p>
-    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false">
-    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6">
+    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.brickset.placeholder">
+    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6" data-i18n-html="guide.brickset.relais_html">
       <b style="color:var(--mid)">Brickset bloque les appels directs depuis un navigateur</b> — contrairement à
       Discogs et Rebrickable. La clé seule ne suffit donc pas : il faut un relais gratuit qui
       transmet la requête à ta place. Deux minutes, une fois :<br>
@@ -4862,49 +5120,55 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       2. Colle le code ci-dessous à la place de l'exemple, dans l'éditeur du navigateur, puis Deploy.<br>
       3. Colle l'adresse en <b>*.workers.dev</b> qu'il te donne dans le champ juste en dessous, et reteste.
     </p>
-    <button class="btn-save alt2" onclick="brickRelayCopier()">Copier le code du relais</button>
-    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px">
-    <button class="btn-save" style="margin-top:9px" onclick="brickSave()">Enregistrer</button>
-    <button class="btn-save alt2" onclick="brickTest()">Tester la connexion Brickset</button>
+    <button class="btn-save alt2" onclick="brickRelayCopier()" data-i18n="guide.brickset.copier_relais">Copier le code du relais</button>
+    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px" data-i18n-placeholder="guide.brickset.relais_placeholder">
+    <button class="btn-save" style="margin-top:9px" onclick="brickSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="brickTest()" data-i18n="guide.brickset.tester">Tester la connexion Brickset</button>
 
-    <h3 class="sect">Sauvegarde</h3>
+    <h3 class="sect" data-i18n="guide.sauvegarde.titre">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
     <div id="mem-state" class="diagbox" style="margin-top:9px"></div>
-    <button class="btn-save alt2" onclick="memFree()">Libérer de la place</button>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <button class="btn-save alt2" onclick="memFree()" data-i18n="guide.sauvegarde.liberer">Libérer de la place</button>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n="guide.sauvegarde.explain">
       Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur.
       Un nettoyage de cache Android l'effacerait sans prévenir.
     </p>
     <button class="btn-save" onclick="backupDrive()">
-      <svg class="ico16"><use href="#i-disk"/></svg> Sauvegarder dans mon Drive</button>
-    <button class="btn-save alt2" onclick="backupDownload()">Télécharger la sauvegarde</button>
+      <svg class="ico16"><use href="#i-disk"/></svg> <span data-i18n="guide.sauvegarde.drive">Sauvegarder dans mon Drive</span></button>
+    <button class="btn-save alt2" onclick="backupDownload()" data-i18n="guide.sauvegarde.telecharger">Télécharger la sauvegarde</button>
     <input type="file" id="restore-file" accept=".json" style="display:none" onchange="backupRestore(event)">
-    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()">Restaurer une sauvegarde</button>
+    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()" data-i18n="guide.sauvegarde.restaurer">Restaurer une sauvegarde</button>
 
-    <h3 class="sect">Apparence</h3>
+    <h3 class="sect" data-i18n="guide.apparence.titre">Apparence</h3>
     <div class="seg" id="theme-seg">
-      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg>Clair</button>
-      <button data-t="auto" onclick="themeSet('auto')">Auto</button>
-      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg>Sombre</button>
+      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg><span data-i18n="guide.apparence.clair">Clair</span></button>
+      <button data-t="auto" onclick="themeSet('auto')" data-i18n="guide.apparence.auto">Auto</button>
+      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg><span data-i18n="guide.apparence.sombre">Sombre</span></button>
     </div>
 
-    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px">Mes bases Google Drive</h3>
+    <h3 class="sect" data-i18n="guide.langue.titre">Langue</h3>
+    <div class="seg" id="langue-seg">
+      <button data-l="fr" onclick="langueSet('fr')">Français</button>
+      <button data-l="nl" onclick="langueSet('nl')">Nederlands</button>
+    </div>
+
+    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px" data-i18n="guide.drive.titre">Mes bases Google Drive</h3>
     <div id="coll-state" class="diagbox"></div>
 
-    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px">
+    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px" data-i18n="guide.drive.cid_explain">
       Identifiant client OAuth (Google Cloud Console). À coller une seule fois.
     </p>
     <input id="drive-cid" type="text" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"
       style="width:100%;height:46px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:0 12px;font-family:var(--mono);font-size:12px">
 
-    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()">Connecter mon Drive</button>
-    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()">Choisir mes fichiers</button>
+    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()" data-i18n="guide.drive.connecter">Connecter mon Drive</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()" data-i18n="guide.drive.choisir_fichiers">Choisir mes fichiers</button>
     <div id="drive-files"></div>
-    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)">Synchroniser maintenant</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)" data-i18n="guide.drive.synchroniser">Synchroniser maintenant</button>
     <button class="btn-save" style="background:transparent;color:var(--stop);border:1px solid var(--stop);margin-top:9px"
-      onclick="collClear()">Oublier mes bases</button>
+      onclick="collClear()" data-i18n="guide.drive.oublier">Oublier mes bases</button>
 
-    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6">
+    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6" data-i18n="guide.drive.sync_explain">
       La synchronisation se relance toute seule à l'ouverture de l'app quand tu as du réseau.
       Sur le terrain, la comparaison se fait en local : elle marche sans connexion.
     </p>
@@ -4912,24 +5176,24 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   </div>
 
   <div class="guide-section">
-    <h3>💬 Négociation (La mécanique)</h3>
-    <div class="rule"><i>1</i><span>Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.</span></div>
-    <div class="rule"><i>2</i><span>Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.</span></div>
-    <div class="rule"><i>3</i><span>Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.</span></div>
-    <div class="rule"><i>4</i><span>Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.</span></div>
-    <div class="rule"><i>5</i><span>Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.</span></div>
+    <h3 data-i18n="guide.nego.titre">💬 Négociation (La mécanique)</h3>
+    <div class="rule"><i>1</i><span data-i18n="guide.nego.regle1">Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.</span></div>
+    <div class="rule"><i>2</i><span data-i18n="guide.nego.regle2">Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.</span></div>
+    <div class="rule"><i>3</i><span data-i18n="guide.nego.regle3">Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.</span></div>
+    <div class="rule"><i>4</i><span data-i18n="guide.nego.regle4">Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.</span></div>
+    <div class="rule"><i>5</i><span data-i18n="guide.nego.regle5">Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.</span></div>
   </div>
 
   <div class="guide-section">
-    <h3>⚠️ Pièges Fréquents</h3>
-    <div class="warn-rule"><b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.</div>
-    <div class="warn-rule"><b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.</div>
-    <div class="warn-rule"><b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.</div>
-    <div class="warn-rule"><b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.</div>
+    <h3 data-i18n="guide.pieges.titre">⚠️ Pièges Fréquents</h3>
+    <div class="warn-rule" data-i18n-html="guide.pieges.repro_html"><b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.piles_html"><b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.boite_html"><b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.lot_html"><b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.</div>
   </div>
 
   <div class="guide-section">
-    <h3>🎒 Le Sac Idéal</h3>
+    <h3 data-i18n="guide.sac.titre">🎒 Le Sac Idéal</h3>
     <div id="sac-ticks"></div>
   </div>
   
@@ -4940,16 +5204,16 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 
 <nav>
   <div class="nav-item active" data-v="live" onclick="switchView('live')">
-    <svg class="ico"><use href="#i-scan"/></svg><span>Scan</span>
+    <svg class="ico"><use href="#i-scan"/></svg><span data-i18n="nav.scan">Scan</span>
   </div>
   <div class="nav-item" data-v="cal" onclick="switchView('cal')">
-    <svg class="ico"><use href="#i-cal"/></svg><span>Dates</span>
+    <svg class="ico"><use href="#i-cal"/></svg><span data-i18n="nav.dates">Dates</span>
   </div>
   <div class="nav-item" data-v="log" onclick="switchView('log')">
-    <svg class="ico"><use href="#i-cash"/></svg><span>Journal</span>
+    <svg class="ico"><use href="#i-cash"/></svg><span data-i18n="nav.journal">Journal</span>
   </div>
   <div class="nav-item" data-v="guide" onclick="switchView('guide')">
-    <svg class="ico"><use href="#i-pad"/></svg><span>Réglages</span>
+    <svg class="ico"><use href="#i-pad"/></svg><span data-i18n="nav.reglages">Réglages</span>
   </div>
 </nav>
 

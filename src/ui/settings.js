@@ -12,6 +12,7 @@ import { legoSet } from "../api/rebrickable.js";
 import { brickSet, BRICK_RELAY_CODE } from "../api/brickset.js";
 import { hudPaint } from "./hud.js";
 import { driveAuth } from "../api/googledrive.js";
+import { i18nAppliquer, locale, localeSet } from "../i18n/index.js";
 
 export function saveSettings() {
   vib();
@@ -277,6 +278,24 @@ export function themeSet(mode){
 if(window.matchMedia){
   window.matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", () => { if(themeGet() === "auto") themeApply("auto"); });
+}
+
+
+/* Meme mecanique que le choix du theme juste au-dessus : localStorage +
+   re-peinture immediate + mise en avant du bouton actif. i18nAppliquer()
+   ne touche que le texte STATIQUE de dev.html marque data-i18n* (voir
+   src/i18n/index.js) - le texte genere dynamiquement par capture.js/
+   fiche.js (ex. mode-dit) reste en francais pour l'instant, chantier
+   separe non fait dans cette passe (30/08/2026). */
+export function langueApply(l){
+  i18nAppliquer();
+  document.querySelectorAll('#langue-seg button').forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.l === l));
+}
+
+export function langueSet(l){
+  localeSet(l);
+  langueApply(locale());
 }
 
 
