@@ -63,6 +63,21 @@ describe("t()", () => {
   it("clé totalement absente (faute de frappe) : la clé elle-même, jamais un texte vide", () => {
     expect(t("cle.qui.nexiste.nulle.part")).toBe("cle.qui.nexiste.nulle.part");
   });
+
+  it("avec vars : substitue {nom} dans la chaîne trouvée", () => {
+    localeSet("fr");
+    expect(t("shoot.vues_suffix", { n: 3 })).toBe(" · 3 vues");
+  });
+
+  it("sans vars : identique à un t(key) classique, {nom} reste littéral si présent", () => {
+    localeSet("fr");
+    expect(t("shoot.vues_suffix")).toBe(" · {n} vues");
+  });
+
+  it("vars avec une clé absente de la chaîne : ignorée sans planter", () => {
+    localeSet("fr");
+    expect(t("nav.scan", { n: 3, autreClé: "x" })).toBe("Scan");
+  });
 });
 
 describe("dictionnaire — complétude fr/nl", () => {

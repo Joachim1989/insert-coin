@@ -5,6 +5,7 @@ import { prixNouveau } from "./fiche.js";
 import { collBanner } from "./dedup.js";
 import { BRIEF_BASE, BRIEF_JSON, callGemini } from "../api/gemini.js";
 import { hudPaint } from "./hud.js";
+import { t } from "../i18n/index.js";
 
 // --- STATE ---
 export let currentCameraMode = null; // 'single', 'multi', 'stand'
@@ -69,19 +70,24 @@ export function triggerCamera(mode, src) {
      stand — la table entière : qu'est-ce qui mérite qu'on s'arrête ?
    Les photos s'empilent quelle que soit leur provenance : appareil, galerie,
    ou les deux mélangés. C'est le même tas. */
+/* Cles i18n, pas le texte lui-meme : MODE_DIT/MODE_BTN etaient evalues une
+   seule fois a l'import du module, donc figes dans la langue active a ce
+   moment-la — un changement de langue ensuite ne les aurait jamais mis a
+   jour. t() est appele au moment de l'usage (modeSet(), updatePhotoQueueUI())
+   pour toujours refleter la langue courante, comme i18nAppliquer(). */
 export const MODE_DIT = {
-  objet: "Prends-en plusieurs si tu veux : le dos, le dessous, le défaut.",
-  bac:   "Une photo par pièce, ou une photo de plusieurs pièces. Chacune sera chiffrée.",
-  stand: "Une vue large de la table. L'app te dit s'il vaut la peine de fouiller."
+  objet: "mode.dit.objet",
+  bac:   "mode.dit.bac",
+  stand: "mode.dit.stand"
 };
 
-export const MODE_BTN = {objet: "Analyser", bac: "Trier ce lot", stand: "Lire ce stand"};
+export const MODE_BTN = {objet: "shoot.analyser", bac: "mode.btn.bac", stand: "mode.btn.stand"};
 
 
 export function modeSet(m){
   currentCameraMode = m;
   document.querySelectorAll('#modes .md').forEach(b => b.classList.toggle("on", b.dataset.m === m));
-  const dd = $('mode-dit'); if(dd) dd.textContent = MODE_DIT[m] || "";
+  const dd = $('mode-dit'); if(dd) dd.textContent = MODE_DIT[m] ? t(MODE_DIT[m]) : "";
   /* La vue d'ensemble ne traite qu'une seule image : on ne garde que la dernière. */
   if(m === 'stand' && photoQueue.length > 1) photoQueue = [photoQueue[photoQueue.length - 1]];
   vib(); updatePhotoQueueUI();
@@ -101,7 +107,7 @@ export function handleFileSelect(e) {
        un stand une analyse qui met une minute ne sert à rien. */
     if(photoQueue.length > 8){
       photoQueue = photoQueue.slice(0, 8);
-      alert("8 photos au maximum par analyse.");
+      alert(t("alert.photos_max"));
     }
     updatePhotoQueueUI();
   });
@@ -133,11 +139,11 @@ export function updatePhotoQueueUI() {
   const n = photoQueue.length;
   const btn = q.querySelector('.analyze-multi-btn');
   if(btn){
-    btn.textContent = (MODE_BTN[currentCameraMode] || "Analyser")
-      + (n > 1 ? ` · ${n} vues` : "");
+    btn.textContent = t(MODE_BTN[currentCameraMode] || "shoot.analyser")
+      + (n > 1 ? t("shoot.vues_suffix", {n}) : "");
   }
   const cs = $('shoot-cam-s');
-  if(cs) cs.textContent = n ? "ajouter une vue" : "l'appareil s'ouvre";
+  if(cs) cs.textContent = n ? t("shoot.photo.ajouter") : t("shoot.photo.sub");
   if(n > 0){
     q.classList.add('active');
     imgs.innerHTML = photoQueue.map((p, i) => `
@@ -229,7 +235,7 @@ export function askAIMulti() {
 
 
 export function askAIBac() {
-  if(!photoQueue.length){ alert("Prends d'abord une ou plusieurs photos du bac."); return; }
+  if(!photoQueue.length){ alert(t("alert.bac_vide")); return; }
   /* On envoie la liste des artistes déjà possédés, tronquée : elle aide le
      modèle à lire les pochettes floues, sans pour autant remplacer le
      contrôle de doublon qui reste fait en local, exemplaire par exemplaire. */
@@ -381,7 +387,7 @@ export const qImgFull = img => ({...img, url: img.url || ("data:" + (img.media||
 
 export function queuePush(promptText, images, mode, cacheKey, tentatives = 0){
   const a = queueRead();
-  if(a.length >= 4){ alert("File pleine (4 objets). Relance-la dès que tu captes."); return false; }
+  if(a.length >= 4){ alert(t("alert.file_pleine")); return false; }
   /* Au-delà de deux vues, le gain d'identification ne compense pas le risque
      de saturer la mémoire du téléphone. */
   const slim = (images || []).slice(0, 2).map(qImgSlim);
@@ -390,7 +396,7 @@ export function queuePush(promptText, images, mode, cacheKey, tentatives = 0){
      23/08/2026. Sans ce compteur, un job requeue-able à l'infini bouclerait
      pour toujours sur un réseau mort. */
   a.push({d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives});
-  if(!queueWrite(a)){ alert("Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place."); return false; }
+  if(!queueWrite(a)){ alert(t("alert.memoire_saturee")); return false; }
   hudPaint();
   $('ai-results').innerHTML = `<div class="queued">
     <svg class="ico-big"><use href="#i-queue"/></svg>
@@ -406,8 +412,8 @@ export let qBusy = false;
 export async function queueRun(manuel){
   if(qBusy) return;
   const a = queueRead();
-  if(!a.length){ if(manuel) alert("La file est vide."); return; }
-  if(!navigator.onLine){ if(manuel) alert("Toujours pas de réseau."); return; }
+  if(!a.length){ if(manuel) alert(t("alert.file_vide")); return; }
+  if(!navigator.onLine){ if(manuel) alert(t("alert.pas_de_reseau")); return; }
   qBusy = true;
   const job = a.shift();
   queueWrite(a); hudPaint();

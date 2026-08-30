@@ -136,7 +136,22 @@ export const DICT = {
     "nav.scan": "Scan",
     "nav.dates": "Dates",
     "nav.journal": "Journal",
-    "nav.reglages": "Réglages"
+    "nav.reglages": "Réglages",
+
+    "mode.dit.objet": "Prends-en plusieurs si tu veux : le dos, le dessous, le défaut.",
+    "mode.dit.bac": "Une photo par pièce, ou une photo de plusieurs pièces. Chacune sera chiffrée.",
+    "mode.dit.stand": "Une vue large de la table. L'app te dit s'il vaut la peine de fouiller.",
+    "mode.btn.bac": "Trier ce lot",
+    "mode.btn.stand": "Lire ce stand",
+    "shoot.photo.ajouter": "ajouter une vue",
+    "shoot.vues_suffix": " · {n} vues",
+
+    "alert.photos_max": "8 photos au maximum par analyse.",
+    "alert.bac_vide": "Prends d'abord une ou plusieurs photos du bac.",
+    "alert.file_pleine": "File pleine (4 objets). Relance-la dès que tu captes.",
+    "alert.memoire_saturee": "Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.",
+    "alert.file_vide": "La file est vide.",
+    "alert.pas_de_reseau": "Toujours pas de réseau."
   },
 
   nl: {
@@ -263,6 +278,21 @@ export const DICT = {
     "nav.scan": "Scan",
     "nav.dates": "Data",
     "nav.journal": "Journaal",
-    "nav.reglages": "Instellingen"
+    "nav.reglages": "Instellingen",
+
+    "mode.dit.objet": "Neem er meerdere als je wilt: de achterkant, de onderkant, het defect.",
+    "mode.dit.bac": "Eén foto per stuk, of één foto van meerdere stukken. Elk stuk krijgt een prijs.",
+    "mode.dit.stand": "Een brede blik op de tafel. De app zegt je of het de moeite waard is om te zoeken.",
+    "mode.btn.bac": "Dit lot sorteren",
+    "mode.btn.stand": "Deze kraam lezen",
+    "shoot.photo.ajouter": "nog een foto toevoegen",
+    "shoot.vues_suffix": " · {n} weergaven",
+
+    "alert.photos_max": "Maximaal 8 foto's per analyse.",
+    "alert.bac_vide": "Neem eerst een of meer foto's van het lot.",
+    "alert.file_pleine": "Wachtrij vol (4 objecten). Start opnieuw zodra je weer bereik hebt.",
+    "alert.memoire_saturee": "Telefoongeheugen vol: kan niet in de wachtrij zetten.\n\nGa naar Instellingen → Back-up om ruimte vrij te maken.",
+    "alert.file_vide": "De wachtrij is leeg.",
+    "alert.pas_de_reseau": "Nog steeds geen netwerk."
   }
 };
