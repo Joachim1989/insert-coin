@@ -151,7 +151,49 @@ export const DICT = {
     "alert.file_pleine": "File pleine (4 objets). Relance-la dès que tu captes.",
     "alert.memoire_saturee": "Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.",
     "alert.file_vide": "La file est vide.",
-    "alert.pas_de_reseau": "Toujours pas de réseau."
+    "alert.pas_de_reseau": "Toujours pas de réseau.",
+
+    "analyse.fermer": "Fermer l'analyse",
+
+    "bac.deja_badge": "DÉJÀ",
+    "bac.ressemble": "Ressemble à « {titre} » que tu as déjà — vérifie l'édition.",
+    "bac.cote_discogs": "Cote Discogs",
+    "bac.en_collection": "en collection",
+    "bac.lus": "LUS",
+    "bac.mode_bac": "MODE BAC",
+    "bac.n_a_prendre": "{n} à prendre",
+    "bac.deja_chez_toi": " · {n} déjà chez toi",
+    "bac.valeur_a_prendre": "valeur des « à prendre » ≈ {n}€",
+
+    "bac.section.prendre": "À prendre",
+    "bac.section.negocier": "À négocier",
+    "bac.section.negocier_sub": "Seulement sous le prix indiqué.",
+    "bac.section.deja": "Tu l'as déjà",
+    "bac.section.deja_sub": "Sauf si l'édition diffère de la tienne.",
+    "bac.section.laisse": "Laisse",
+    "bac.section.deja_court": "Déjà",
+
+    "bac.vide.titre": "Rien de lisible",
+    "bac.vide.sub": "Rapproche-toi, ou écarte les pochettes pour dégager les tranches.",
+
+    "bac.bar.a_prendre": "{n} à prendre",
+    "bac.bar.a_negocier": "{n} à négocier",
+    "bac.bar.deja": "{n} déjà",
+    "bac.bar.laisse": "{n} laisse",
+
+    "bac.cart.enregistre": "Lot enregistré",
+    "bac.cart.journal_maj": "Journal de chasse mis à jour",
+    "bac.cart.resume_un": "1 pièce · revente ≈ {val}€",
+    "bac.cart.resume_plusieurs": "{n} pièces · revente ≈ {val}€",
+    "bac.cart.ne_depasse_pas": "ne dépasse pas {max}€ pour le lot",
+    "bac.cart.coche": "coche ce que tu emportes",
+    "bac.cart.jai_achete": "J'ai acheté",
+
+    "bac.buy.coche_dabord": "Coche d'abord les pièces que tu emportes.",
+    "bac.buy.prompt_paye_un": "Combien as-tu payé pour cette pièce au total ?",
+    "bac.buy.prompt_paye_plusieurs": "Combien as-tu payé pour ces {n} pièces au total ?",
+    "bac.buy.prompt_demande_un": "Il en demandait combien pour cette pièce, avant négociation ? (facultatif)",
+    "bac.buy.prompt_demande_plusieurs": "Il en demandait combien pour ces {n} pièces, avant négociation ? (facultatif)"
   },
 
   nl: {
@@ -293,6 +335,48 @@ export const DICT = {
     "alert.file_pleine": "Wachtrij vol (4 objecten). Start opnieuw zodra je weer bereik hebt.",
     "alert.memoire_saturee": "Telefoongeheugen vol: kan niet in de wachtrij zetten.\n\nGa naar Instellingen → Back-up om ruimte vrij te maken.",
     "alert.file_vide": "De wachtrij is leeg.",
-    "alert.pas_de_reseau": "Nog steeds geen netwerk."
+    "alert.pas_de_reseau": "Nog steeds geen netwerk.",
+
+    "analyse.fermer": "Analyse sluiten",
+
+    "bac.deja_badge": "AL",
+    "bac.ressemble": "Lijkt op « {titre} », die je al hebt — controleer de editie.",
+    "bac.cote_discogs": "Discogs-prijs",
+    "bac.en_collection": "in collectie",
+    "bac.lus": "GELEZEN",
+    "bac.mode_bac": "LOT-MODUS",
+    "bac.n_a_prendre": "{n} te nemen",
+    "bac.deja_chez_toi": " · {n} al in bezit",
+    "bac.valeur_a_prendre": "waarde van de « te nemen » ≈ {n}€",
+
+    "bac.section.prendre": "Te nemen",
+    "bac.section.negocier": "Te onderhandelen",
+    "bac.section.negocier_sub": "Alleen onder de aangegeven prijs.",
+    "bac.section.deja": "Heb je al",
+    "bac.section.deja_sub": "Tenzij de editie verschilt van die van jou.",
+    "bac.section.laisse": "Laat liggen",
+    "bac.section.deja_court": "Al",
+
+    "bac.vide.titre": "Niets leesbaars",
+    "bac.vide.sub": "Kom dichterbij, of spreid de hoezen om de ruggen vrij te maken.",
+
+    "bac.bar.a_prendre": "{n} te nemen",
+    "bac.bar.a_negocier": "{n} te onderhandelen",
+    "bac.bar.deja": "{n} al",
+    "bac.bar.laisse": "{n} laat liggen",
+
+    "bac.cart.enregistre": "Lot geregistreerd",
+    "bac.cart.journal_maj": "Jachtjournaal bijgewerkt",
+    "bac.cart.resume_un": "1 stuk · doorverkoop ≈ {val}€",
+    "bac.cart.resume_plusieurs": "{n} stuks · doorverkoop ≈ {val}€",
+    "bac.cart.ne_depasse_pas": "niet meer dan {max}€ voor het lot",
+    "bac.cart.coche": "vink aan wat je meeneemt",
+    "bac.cart.jai_achete": "Ik heb gekocht",
+
+    "bac.buy.coche_dabord": "Vink eerst de stukken aan die je meeneemt.",
+    "bac.buy.prompt_paye_un": "Hoeveel heb je in totaal voor dit stuk betaald?",
+    "bac.buy.prompt_paye_plusieurs": "Hoeveel heb je in totaal voor deze {n} stukken betaald?",
+    "bac.buy.prompt_demande_un": "Hoeveel vroeg hij voor dit stuk, voor het onderhandelen? (optioneel)",
+    "bac.buy.prompt_demande_plusieurs": "Hoeveel vroeg hij voor deze {n} stukken, voor het onderhandelen? (optioneel)"
   }
 };

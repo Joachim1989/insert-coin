@@ -11,6 +11,7 @@ import { brickSet } from "../api/brickset.js";
 import { collMatch, collBanner } from "./dedup.js";
 import { hudPaint } from "./hud.js";
 import { renderLog } from "./log.js";
+import { t } from "../i18n/index.js";
 
 /* Le prix demandé appartient à l'objet qu'on vient d'analyser. S'il traîne
    d'une fiche à l'autre, l'objet suivant est jugé contre le prix du précédent —
@@ -417,7 +418,7 @@ export function renderStandResult(j, image, avis) {
         <ul style="list-style-type:none; padding-left:0;">${itemsHtml}</ul>
         ${j.conseil ? `<h4>Conseil Stratégique</h4><p style="font-size:14px; margin-top:5px; font-style:italic;">${esc(j.conseil)}</p>` : ''}
       </div>
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">${t("analyse.fermer")}</button>
     </div>`;
 }
 
@@ -453,19 +454,19 @@ export function renderBacResult(j, images, avis, garderSel){
     const idx = rows.indexOf(r);
     const coche = BAC_SEL.has(idx);
     return `<div class="bacrow ${cls}${coche ? " sel" : ""}" onclick="bacToggle(${idx})">
-      <div class="bac-v">${r.dup ? "DÉJÀ" : cls}</div>
+      <div class="bac-v">${r.dup ? t("bac.deja_badge") : cls}</div>
       <div class="bac-tick">${coche ? "☑" : "☐"}</div>
       <div class="bac-c">
         <div class="bac-n">${esc(o.nom || "—")}</div>
         <div class="bac-a">${esc(o.artiste || "")}${o.annee ? " · " + esc(o.annee) : ""}</div>
-        ${r.flou ? `<div class="bac-warn">Ressemble à « ${esc(r.flou.e.t)} » que tu as déjà — vérifie l'édition.</div>` : ""}
+        ${r.flou ? `<div class="bac-warn">${esc(t("bac.ressemble", {titre: r.flou.e.t}))}</div>` : ""}
         ${o.note ? `<div class="bac-note">${esc(o.note)}</div>` : ""}
         ${!r.dup && discToken() && discMusique((o.artiste||"") + " " + (o.nom||""))
-          ? `<button class="bac-disc" onclick="event.stopPropagation();bacDisc(${idx})">Cote Discogs</button>
+          ? `<button class="bac-disc" onclick="event.stopPropagation();bacDisc(${idx})">${t("bac.cote_discogs")}</button>
              <div id="disc-bac-${idx}"></div>` : ""}
       </div>
       <div class="bac-p">
-        ${r.dup ? `<span class="bac-dup">en collection</span>`
+        ${r.dup ? `<span class="bac-dup">${t("bac.en_collection")}</span>`
           : `<b>${Number(o.prixMax)||"?"}€</b><span>→ ${Number(o.revente)||"?"}€</span>`}
       </div>
     </div>`;
@@ -487,26 +488,26 @@ export function renderBacResult(j, images, avis, garderSel){
     <div class="aicard">
       <div class="bac-strip">${images.slice(0,4).map(im => `<img src="${im.url}">`).join("")}</div>
       <div class="aihead ${pris.length ? 'R' : doub.length && !nego.length ? 'L' : 'N'}">
-        <div class="p"><div class="num">${lot.length}</div><div class="cap">LUS</div></div>
+        <div class="p"><div class="num">${lot.length}</div><div class="cap">${t("bac.lus")}</div></div>
         <div class="t">
-          <div class="v">MODE BAC${j.typeBac ? " · " + esc(j.typeBac).toUpperCase() : ""}</div>
-          <div class="o">${pris.length} à prendre${doub.length ? ` · ${doub.length} déjà chez toi` : ""}</div>
-          ${valeur ? `<div class="r">valeur des « à prendre » ≈ ${valeur}€</div>` : ""}
+          <div class="v">${t("bac.mode_bac")}${j.typeBac ? " · " + esc(j.typeBac).toUpperCase() : ""}</div>
+          <div class="o">${esc(t("bac.n_a_prendre", {n: pris.length}))}${doub.length ? esc(t("bac.deja_chez_toi", {n: doub.length})) : ""}</div>
+          ${valeur ? `<div class="r">${esc(t("bac.valeur_a_prendre", {n: valeur}))}</div>` : ""}
         </div>
       </div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
       <div class="aibody">
         ${bacBar({R:pris.length, N:nego.length, D:doub.length, L:laisse.length})}
         ${j.resume ? `<div class="saywrap">${esc(j.resume)}</div>` : ""}
-        ${bloc("À prendre", pris)}
-        ${bloc("À négocier", nego, "Seulement sous le prix indiqué.")}
-        ${bloc("Tu l'as déjà", doub, "Sauf si l'édition diffère de la tienne.")}
-        ${bloc("Laisse", laisse)}
+        ${bloc(t("bac.section.prendre"), pris)}
+        ${bloc(t("bac.section.negocier"), nego, t("bac.section.negocier_sub"))}
+        ${bloc(t("bac.section.deja"), doub, t("bac.section.deja_sub"))}
+        ${bloc(t("bac.section.laisse"), laisse)}
         ${!lot.length ? `<div class="empty-state"><svg class="ico-big"><use href="#i-crate"/></svg>
-          <b>Rien de lisible</b><p>Rapproche-toi, ou écarte les pochettes pour dégager les tranches.</p></div>` : ""}
+          <b>${t("bac.vide.titre")}</b><p>${t("bac.vide.sub")}</p></div>` : ""}
       </div>
       ${lot.length ? bacCart() : ""}
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">${t("analyse.fermer")}</button>
     </div>`;
 }
 
@@ -516,18 +517,18 @@ export function renderBacResult(j, images, avis, garderSel){
 export function bacCart(){
   if(BAC_ACHETE){
     return `<div class="bac-cart done"><div class="bc-t">
-      <b>Lot enregistré</b>
-      <span>Journal de chasse mis à jour</span></div></div>`;
+      <b>${t("bac.cart.enregistre")}</b>
+      <span>${t("bac.cart.journal_maj")}</span></div></div>`;
   }
   const sel = [...BAC_SEL].map(i => BAC_ROWS[i]).filter(Boolean);
   const val = sel.reduce((s,r) => s + (Number(r.o.revente)||0), 0);
   const max = sel.reduce((s,r) => s + (Number(r.o.prixMax)||0), 0);
   return `<div class="bac-cart">
     <div class="bc-t">
-      <b>${sel.length} pièce${sel.length>1?"s":""} · revente ≈ ${val}€</b>
-      <span>${sel.length ? "ne dépasse pas " + max + "€ pour le lot" : "coche ce que tu emportes"}</span>
+      <b>${esc(t(sel.length > 1 ? "bac.cart.resume_plusieurs" : "bac.cart.resume_un", {n: sel.length, val}))}</b>
+      <span>${sel.length ? esc(t("bac.cart.ne_depasse_pas", {max})) : t("bac.cart.coche")}</span>
     </div>
-    <button class="${sel.length ? "" : "off"}" onclick="bacBuy()">J'ai acheté</button>
+    <button class="${sel.length ? "" : "off"}" onclick="bacBuy()">${t("bac.cart.jai_achete")}</button>
   </div>`;
 }
 
@@ -558,10 +559,10 @@ export function bacNom(r){
 export function bacBuy(){
   const idx = [...BAC_SEL].sort((a,b)=>a-b);
   const sel = idx.map(i => BAC_ROWS[i]).filter(Boolean);
-  if(!sel.length){ alert("Coche d'abord les pièces que tu emportes."); return; }
+  if(!sel.length){ alert(t("bac.buy.coche_dabord")); return; }
 
   const tot = parseFloat(prompt(
-    "Combien as-tu payé pour ces " + sel.length + " pièce(s) au total ?", "") || "");
+    t(sel.length > 1 ? "bac.buy.prompt_paye_plusieurs" : "bac.buy.prompt_paye_un", {n: sel.length}), "") || "");
   if(isNaN(tot) || tot < 0) return;
 
   /* Correctif du 23/08/2026 (voir docs/diagnostic-cotation.md) : avant, rien
@@ -572,7 +573,7 @@ export function bacBuy(){
      elle-même en premier conseil. Facultatif, comme sur un achat simple :
      laisse vide si tu ne sais plus ce qui était demandé. */
   const totDem = parseFloat(prompt(
-    "Il en demandait combien pour ces " + sel.length + " pièce(s), avant négociation ? (facultatif)", "") || "");
+    t(sel.length > 1 ? "bac.buy.prompt_demande_plusieurs" : "bac.buy.prompt_demande_un", {n: sel.length}), "") || "");
 
   /* Répartition au prorata de la revente estimée : dans un lot négocié en bloc,
      la pièce qui vaut le plus doit porter la plus grosse part du prix, sinon
@@ -876,12 +877,12 @@ export function bacBar(n){
   const seg = (v, cls, lbl) => v
     ? `<div class="bb-s ${cls}" style="flex:${v}" title="${lbl}">${v}</div>` : "";
   return `<div class="bacbar">
-    <div class="bb">${seg(n.R,"R","À prendre")}${seg(n.N,"N","À négocier")}${seg(n.D,"D","Déjà")}${seg(n.L,"L","Laisse")}</div>
+    <div class="bb">${seg(n.R,"R",t("bac.section.prendre"))}${seg(n.N,"N",t("bac.section.negocier"))}${seg(n.D,"D",t("bac.section.deja_court"))}${seg(n.L,"L",t("bac.section.laisse"))}</div>
     <div class="bb-k">
-      ${n.R?`<span><i class="R"></i>${n.R} à prendre</span>`:""}
-      ${n.N?`<span><i class="N"></i>${n.N} à négocier</span>`:""}
-      ${n.D?`<span><i class="D"></i>${n.D} déjà</span>`:""}
-      ${n.L?`<span><i class="L"></i>${n.L} laisse</span>`:""}
+      ${n.R?`<span><i class="R"></i>${esc(t("bac.bar.a_prendre", {n: n.R}))}</span>`:""}
+      ${n.N?`<span><i class="N"></i>${esc(t("bac.bar.a_negocier", {n: n.N}))}</span>`:""}
+      ${n.D?`<span><i class="D"></i>${esc(t("bac.bar.deja", {n: n.D}))}</span>`:""}
+      ${n.L?`<span><i class="L"></i>${esc(t("bac.bar.laisse", {n: n.L}))}</span>`:""}
     </div>
   </div>`;
 }
