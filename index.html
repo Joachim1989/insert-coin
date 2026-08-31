@@ -488,7 +488,8 @@ const DICT = {
     "recherche.placeholder": "Chercher par nom, ou poser une question",
     "recherche.demander": "Demander à l'IA",
     "cal.titre": "Calendrier",
-    "cal.sous_titre": "Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
+    "cal.sous_titre": "Brocantes à moins de 50 km de {lieu}{pays}. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
+    "cal.sous_titre_pays": ", Belgique et France",
     "cal.chercher": "Chercher les prochaines dates",
     "cal.ajouter_manuel": "＋ Ajouter à la main",
     "cal.exporter": "Exporter toutes mes dates marquées (.ics)",
@@ -513,8 +514,10 @@ const DICT = {
     "guide.ia.ground_label": "Chercher les prix sur le web",
     "guide.ia.ground_note": "Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.",
     "guide.ia.region_label": "Région pour la recherche (optionnel)",
-    "guide.ia.region_placeholder": "Ex. Binche, Belgique",
-    "guide.ia.region_note": "Oriente la recherche web vers les ventes de ta zone. Une orientation, pas une garantie.",
+    "guide.ia.region_aucune": "Aucune (par défaut : Binche)",
+    "guide.ia.region_autre": "Autre (saisir une ville)",
+    "guide.ia.region_placeholder": "Ex. Charleroi, Belgique",
+    "guide.ia.region_note": "Oriente la recherche web (dates de brocantes, cotes) vers ta zone. Une orientation, pas une garantie.",
     "guide.ia.enregistrer": "Enregistrer les réglages",
     "guide.discogs.titre": "Cotes Discogs (musique)",
     "guide.discogs.explain": "Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA par le prix réellement pratiqué et le nombre d'exemplaires en vente.",
@@ -799,7 +802,8 @@ const DICT = {
     "recherche.placeholder": "Zoek op naam, of stel een vraag",
     "recherche.demander": "Vraag het aan de AI",
     "cal.titre": "Kalender",
-    "cal.sous_titre": "Rommelmarkten binnen 50 km van Binche, België en Frankrijk. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
+    "cal.sous_titre": "Rommelmarkten binnen 50 km van {lieu}{pays}. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
+    "cal.sous_titre_pays": ", België en Frankrijk",
     "cal.chercher": "Eerstvolgende data zoeken",
     "cal.ajouter_manuel": "＋ Handmatig toevoegen",
     "cal.exporter": "Al mijn gemarkeerde data exporteren (.ics)",
@@ -824,8 +828,10 @@ const DICT = {
     "guide.ia.ground_label": "Prijzen op het web zoeken",
     "guide.ia.ground_note": "Onmisbaar voor echte prijzen. Vink alleen uit bij herhaalde 429-fouten.",
     "guide.ia.region_label": "Regio voor de zoekopdracht (optioneel)",
-    "guide.ia.region_placeholder": "Bijv. Binche, België",
-    "guide.ia.region_note": "Richt de webzoekopdracht op verkopen in jouw omgeving. Een richting, geen garantie.",
+    "guide.ia.region_aucune": "Geen (standaard: Binche)",
+    "guide.ia.region_autre": "Andere (stad invoeren)",
+    "guide.ia.region_placeholder": "Bijv. Charleroi, België",
+    "guide.ia.region_note": "Richt de webzoekopdracht (rommelmarktdata, prijzen) op jouw omgeving. Een richting, geen garantie.",
     "guide.ia.enregistrer": "Instellingen opslaan",
     "guide.discogs.titre": "Discogs-prijzen (muziek)",
     "guide.discogs.explain": "Persoonlijk token, aan te maken op discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Het blijft op deze telefoon. Voor alles wat platen betreft, vervangt Discogs de schatting van de AI door de werkelijk gehanteerde prijs en het aantal exemplaren te koop.",
@@ -1110,7 +1116,8 @@ const DICT = {
     "recherche.placeholder": "Search by name, or ask a question",
     "recherche.demander": "Ask the AI",
     "cal.titre": "Calendar",
-    "cal.sous_titre": "Flea markets within 50 km of Binche, Belgium and France. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",
+    "cal.sous_titre": "Flea markets within 50 km of {lieu}{pays}. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",
+    "cal.sous_titre_pays": ", Belgium and France",
     "cal.chercher": "Find upcoming dates",
     "cal.ajouter_manuel": "＋ Add manually",
     "cal.exporter": "Export all my starred dates (.ics)",
@@ -1135,8 +1142,10 @@ const DICT = {
     "guide.ia.ground_label": "Search prices on the web",
     "guide.ia.ground_note": "Essential for real prices. Only untick it if you keep getting 429 errors.",
     "guide.ia.region_label": "Region for the search (optional)",
-    "guide.ia.region_placeholder": "E.g. Binche, Belgium",
-    "guide.ia.region_note": "Steers the web search toward sales in your area. A steer, not a guarantee.",
+    "guide.ia.region_aucune": "None (default: Binche)",
+    "guide.ia.region_autre": "Other (type a city)",
+    "guide.ia.region_placeholder": "E.g. Charleroi, Belgium",
+    "guide.ia.region_note": "Steers the web search (flea market dates, prices) toward your area. A steer, not a guarantee.",
     "guide.ia.enregistrer": "Save settings",
     "guide.discogs.titre": "Discogs prices (music)",
     "guide.discogs.explain": "Personal token, generate it at discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. It stays on this phone. For anything record-related, Discogs replaces the AI's estimate with the actual going price and the number of copies for sale.",
@@ -3443,6 +3452,329 @@ function captureInit() {
     askAIText();
   });
 }
+let calFilter = "all";
+function calKey(x) {
+  return norm((x.date || "") + "|" + (x.ville || ""));
+}
+function calLieu() {
+  return regionGet() || "Binche";
+}
+function calSousTitreVars() {
+  return { lieu: calLieu(), aucuneRegion: !regionGet() };
+}
+function calSousTitrePaint() {
+  const el = $("cal-sous-titre");
+  if (!el) return;
+  const { lieu, aucuneRegion } = calSousTitreVars();
+  el.textContent = t("cal.sous_titre", { lieu, pays: aucuneRegion ? t("cal.sous_titre_pays") : "" });
+}
+function calBrief(auj) {
+  const r = regionGet();
+  const lieu = r || "Binche (7130, Belgique)";
+  const contexte = r ? "" : ", en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes)";
+  return `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de ${lieu}${contexte}.
+Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
+Cherche en priorité sur quefaire.be (le plus gros agenda de brocantes en Belgique), puis recoupe avec brocabrac.fr, vide-greniers.org, brocantes.be, Facebook (événements et groupes locaux de brocante), la presse régionale (Sudinfo, La Nouvelle Gazette, La Voix du Nord selon la zone), les sites communaux et les agendas locaux.
+Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis ${calLieu()} en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
+N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
+Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
+}
+async function calFetch() {
+  var _a;
+  const key = localStorage.getItem(KEY_STORE);
+  if (!key) {
+    alert("Configure d'abord ta clé Gemini dans Réglages.");
+    return;
+  }
+  if (!navigator.onLine) {
+    alert("Pas de réseau. Les dates déjà enregistrées restent visibles.");
+    return;
+  }
+  const el = $("cal-list");
+  el.innerHTML = `<div class="loading"><div class="dots"><span>●</span><span>●</span><span>●</span></div>
+    <p>Recherche des brocantes autour de ${esc(calLieu())}…</p></div>`;
+  const auj = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+  const brief = calBrief(auj);
+  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
+  const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
+  let lastErr = "";
+  for (const m of chain) {
+    try {
+      const res = await fetchAvecDelai(
+        `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: brief }] }],
+            tools: [{ google_search: {} }],
+            generationConfig: /^gemini-3/.test(m) ? { maxOutputTokens: 2600, thinkingConfig: { thinkingLevel: "low" } } : { temperature: 0.1, maxOutputTokens: 2600, thinkingConfig: { thinkingBudget: 0 } }
+          })
+        },
+        2e4
+      );
+      if (!res.ok) {
+        let d = "";
+        try {
+          d = ((_a = (await res.json()).error) == null ? void 0 : _a.message) || "";
+        } catch (e) {
+        }
+        lastErr = "HTTP " + res.status + (d ? " — " + d : "");
+        if ([400, 403, 404, 429, 500, 503].includes(res.status)) continue;
+        throw new Error(lastErr);
+      }
+      const j = extractJSON(await res.json());
+      const trouve = (j.brocantes || []).filter((x) => x && x.date && x.ville);
+      if (!trouve.length) {
+        lastErr = "Aucune date exploitable";
+        continue;
+      }
+      const cur = calRead();
+      const garde = cur.filter((x) => x.manuel || x.go);
+      const fusion = [...garde];
+      const vus = new Set(garde.map(calKey));
+      trouve.forEach((x) => {
+        const k = calKey(x);
+        if (vus.has(k)) {
+          const dej = fusion.find((y) => calKey(y) === k);
+          if (dej && !dej.manuel) {
+            dej.nom = x.nom || dej.nom;
+            dej.km = Number(x.km) || dej.km;
+            dej.exposants = Number(x.exposants) || dej.exposants;
+            dej.horaires = x.horaires || dej.horaires;
+            dej.note = x.note || dej.note;
+          }
+          return;
+        }
+        vus.add(k);
+        fusion.push({ ...x, km: Number(x.km) || 0, exposants: Number(x.exposants) || 0, go: false });
+      });
+      fusion.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+      calWrite(fusion);
+      credBump();
+      renderCal();
+      return;
+    } catch (err) {
+      lastErr = String(err.message || err);
+    }
+  }
+  el.innerHTML = `<div class="aifail"><b>Recherche impossible.</b><br>
+    ${/429|quota/i.test(lastErr) ? "Quota Gemini indisponible pour l'instant." : "Réessaie dans un moment."}
+    <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(lastErr)}</span></div>`;
+}
+function calAddManual() {
+  const nom = prompt("Nom de la brocante ?");
+  if (!nom) return;
+  const ville = prompt("Ville ?") || "";
+  const date = prompt("Date (AAAA-MM-JJ) ?", (/* @__PURE__ */ new Date()).toISOString().slice(0, 10)) || "";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    alert("Date attendue au format AAAA-MM-JJ.");
+    return;
+  }
+  const km = parseInt(prompt("Distance depuis " + calLieu() + " en km ?", "20") || "0", 10) || 0;
+  const a = calRead();
+  a.push({ date, nom, ville, pays: "BE", km, exposants: 0, horaires: "", note: "", manuel: true, go: true });
+  a.sort((x, y) => (x.date || "").localeCompare(y.date || ""));
+  calWrite(a);
+  renderCal();
+}
+function calDates(x) {
+  const debut = /* @__PURE__ */ new Date(x.date + "T06:30:00");
+  const fin = /* @__PURE__ */ new Date(x.date + "T13:30:00");
+  const z = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  return { debut, fin, zd: z(debut), zf: z(fin) };
+}
+function calTitre(x) {
+  return (x.nom || "Brocante") + (x.ville ? " — " + x.ville : "");
+}
+function calDesc(x) {
+  const l = [];
+  if (x.km) l.push("Distance depuis " + calLieu() + " : " + x.km + " km");
+  if (x.exposants) l.push(x.exposants + " exposants");
+  if (x.horaires) l.push("Horaires : " + x.horaires);
+  if (x.note) l.push(x.note);
+  l.push("Sac : espèces en petites coupures, piles AA/AAA, sacs, chiffon.");
+  l.push("Ajouté par Insert Coin");
+  return l.join("\n");
+}
+function calGoogle(i) {
+  const x = calRead()[i];
+  if (!x) return;
+  const d = calDates(x);
+  const u = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(calTitre(x)) + "&dates=" + d.zd + "/" + d.zf + "&details=" + encodeURIComponent(calDesc(x)) + "&location=" + encodeURIComponent((x.ville || "") + (x.pays === "FR" ? ", France" : ", Belgique"));
+  window.open(u, "_blank");
+}
+function calICS(i) {
+  const liste = i === -1 ? calRead().filter((x) => x.go && calJours(x.date) !== null) : [calRead()[i]].filter(Boolean);
+  if (!liste.length) {
+    alert("Aucune date marquée « j'y vais ».");
+    return;
+  }
+  const ev = liste.map((x, n) => {
+    const d = calDates(x);
+    const veille = new Date(d.debut);
+    veille.setDate(veille.getDate() - 1);
+    veille.setHours(19, 0, 0, 0);
+    const mins = Math.round((d.debut - veille) / 6e4);
+    return [
+      "BEGIN:VEVENT",
+      "UID:insertcoin-" + Date.now() + "-" + n + "@pixelpapa",
+      "DTSTAMP:" + d.zd,
+      "DTSTART:" + d.zd,
+      "DTEND:" + d.zf,
+      "SUMMARY:" + calTitre(x).replace(/[,;\\]/g, (m) => "\\" + m),
+      "LOCATION:" + ((x.ville || "") + (x.pays === "FR" ? "\\, France" : "\\, Belgique")),
+      "DESCRIPTION:" + calDesc(x).replace(/\n/g, "\\n").replace(/[,;]/g, (m) => "\\" + m),
+      "BEGIN:VALARM",
+      "TRIGGER:-PT" + mins + "M",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Brocante demain matin — prépare tes espèces et tes sacs",
+      "END:VALARM",
+      "END:VEVENT"
+    ].join("\r\n");
+  }).join("\r\n");
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Pixel Papa//Insert Coin//FR",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    ev,
+    "END:VCALENDAR"
+  ].join("\r\n");
+  const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = (i === -1 ? "InsertCoin_brocantes" : "brocante_" + (liste[0].date || "")) + ".ics";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2e3);
+}
+function calGo(i) {
+  const a = calRead();
+  if (!a[i]) return;
+  a[i].go = !a[i].go;
+  calWrite(a);
+  renderCal();
+  paintImminent();
+  vib();
+}
+function calDel(i) {
+  const a = calRead();
+  a.splice(i, 1);
+  calWrite(a);
+  renderCal();
+}
+function calVerifQuery(x) {
+  return ((x.ville || "") + " brocante").trim();
+}
+function calVerifMark(i) {
+  const a = calRead();
+  if (!a[i]) return;
+  a[i].verifie = true;
+  calWrite(a);
+}
+function calJours(d) {
+  const j = Math.round((/* @__PURE__ */ new Date(d + "T12:00:00") - (/* @__PURE__ */ new Date()).setHours(12, 0, 0, 0)) / 864e5);
+  if (j < 0) return null;
+  if (j === 0) return "Aujourd'hui";
+  if (j === 1) return "Demain";
+  if (j < 7) return "Dans " + j + " jours";
+  if (j < 14) return "La semaine prochaine";
+  return "Dans " + Math.round(j / 7) + " semaines";
+}
+function calImminent() {
+  const auj = /* @__PURE__ */ new Date();
+  auj.setHours(0, 0, 0, 0);
+  return calRead().filter((x) => x.go).map((x) => {
+    const j = Math.round((/* @__PURE__ */ new Date(x.date + "T12:00:00") - (/* @__PURE__ */ new Date()).setHours(12, 0, 0, 0)) / 864e5);
+    return { x, j };
+  }).filter((o) => o.j === 0 || o.j === 1).sort((a, b) => a.j - b.j)[0] || null;
+}
+function paintImminent() {
+  const el = $("imminent");
+  if (!el) return;
+  const o = calImminent();
+  if (!o) {
+    el.className = "imminent";
+    el.innerHTML = "";
+    return;
+  }
+  const dem = o.j === 1;
+  el.className = "imminent on" + (dem ? " demain" : " aujourdhui");
+  el.innerHTML = `
+    <svg class="ico16"><use href="#i-${dem ? "cal" : "flame"}"/></svg>
+    <div class="im-t"><b>${dem ? "Demain" : "Aujourd'hui"} : ${esc(o.x.nom || "brocante")}</b>
+      <span>${esc(o.x.ville || "")}${o.x.km ? " · " + o.x.km + " km" : ""}${o.x.horaires ? " · " + esc(o.x.horaires) : ""}</span></div>
+    ${dem ? `<button onclick="switchView('guide');setTimeout(()=>document.getElementById('sac-ticks')?.scrollIntoView({behavior:'smooth'}),150)">Sac</button>` : ""}`;
+}
+function renderCal() {
+  const el = $("cal-list");
+  if (!el) return;
+  let a = calRead().filter((x) => calJours(x.date) !== null);
+  if (calFilter === "go") a = a.filter((x) => x.go);
+  if (calFilter === "big") a = a.filter((x) => (x.exposants || 0) >= 150);
+  if (!a.length) {
+    el.innerHTML = `<div class="empty-state">
+      <svg class="ico-big"><use href="#i-cal"/></svg>
+      <b>Aucune date</b>
+      <p>${calFilter === "all" ? "Appuie sur « Chercher les prochaines dates » pour remplir ton agenda des trois prochains mois." : "Rien sous ce filtre. Reviens sur « Toutes »."}</p></div>`;
+    return;
+  }
+  let moisCourant = "";
+  el.innerHTML = a.map((x, i) => {
+    const idx = calRead().findIndex((y) => calKey(y) === calKey(x));
+    const dt = /* @__PURE__ */ new Date(x.date + "T12:00:00");
+    const mois = dt.toLocaleDateString("fr-BE", { month: "long", year: "numeric" });
+    const sep = mois !== moisCourant ? `<div class="cal-mois">${mois}</div>` : "";
+    moisCourant = mois;
+    const grosse = (x.exposants || 0) >= 150;
+    const proche = (x.km || 0) <= 15;
+    return sep + `
+      <div class="cal ${x.go ? "go" : ""}">
+        <div class="cal-d">
+          <b>${dt.getDate()}</b>
+          <span>${dt.toLocaleDateString("fr-BE", { weekday: "short" })}</span>
+        </div>
+        <div class="cal-c">
+          <div class="cal-n">${esc(x.nom || "Brocante")}
+            ${grosse ? `<svg class="ico16 hot"><use href="#i-flame"/></svg>` : ""}</div>
+          <div class="cal-v"><svg class="ico16"><use href="#i-pin"/></svg>${esc(x.ville)}
+            <em>${x.pays === "FR" ? "France" : "Belgique"}</em></div>
+          <div class="cal-tags">
+            <span class="${proche ? "near" : ""}">${x.km || "?"} km</span>
+            ${x.exposants ? `<span>${x.exposants} exposants</span>` : ""}
+            ${x.horaires ? `<span>${esc(x.horaires)}</span>` : ""}
+            <span class="soon">${calJours(x.date)}</span>
+          </div>
+          ${x.note ? `<div class="cal-note">${esc(x.note)}</div>` : ""}
+          ${!x.manuel ? `<div class="cal-verif${x.verifie ? " ok" : ""}">
+            <span>${x.verifie ? "✓ Vérifiée par toi" : "Non vérifiée — trouvée par l'IA"}</span>
+            <a href="https://www.quefaire.be/annonces/index.php?word=${encodeURIComponent(calVerifQuery(x))}"
+              target="_blank" rel="noopener" onclick="calVerifMark(${idx})">quefaire.be</a>
+            <a href="https://www.google.com/search?q=${encodeURIComponent(calVerifQuery(x) + " " + (x.date || ""))}"
+              target="_blank" rel="noopener" onclick="calVerifMark(${idx})">Google</a>
+          </div>` : ""}
+          <div class="cal-act">
+            <button class="cal-go" onclick="calGo(${idx})">
+              <svg class="ico16"><use href="#i-star"/></svg>${x.go ? "J'y vais" : "Marquer"}</button>
+            <button class="li-x" onclick="calDel(${idx})">✕</button>
+          </div>
+          ${x.go ? `<div class="cal-rem">
+            <button onclick="calGoogle(${idx})">＋ Google Agenda</button>
+            <button onclick="calICS(${idx})">Fichier .ics</button>
+          </div>` : ""}
+        </div>
+      </div>`;
+  }).join("");
+}
+function calendarInit() {
+  document.querySelectorAll("#cal-filter button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("#cal-filter button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true");
+    calFilter = b.dataset.f;
+    renderCal();
+  }));
+}
 function saveSettings() {
   vib();
   const keyVal = $("api-key").value.trim();
@@ -3457,11 +3789,13 @@ function saveSettings() {
     localStorage.setItem(GROUND_STORE, $("groundBox").checked ? "on" : "off");
   } catch (e) {
   }
-  const regionVal = ($("region-input").value || "").trim();
+  const selVal = $("region-select").value;
+  const regionVal = selVal === "__autre__" ? ($("region-input").value || "").trim() : selVal;
   try {
     regionVal ? localStorage.setItem(REGION_STORE, regionVal) : localStorage.removeItem(REGION_STORE);
   } catch (e) {
   }
+  calSousTitrePaint();
   paintKeyState();
   if (keyVal && navigator.onLine) modelsRefresh(false);
 }
@@ -3671,6 +4005,30 @@ async function brickTest() {
     el.innerHTML = String(err.message) === "CLE" ? `<b style="color:var(--stop)">Clé refusée.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne.` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? brickRelay() ? `<b style="color:var(--stop)">Le relais ne répond pas.</b><br>Vérifie l'adresse *.workers.dev collée ci-dessus (pas d'espace, pas de slash final) et que le Worker est bien déployé sur Cloudflare.` : `<b style="color:var(--stop)">Brickset bloque l'appel direct depuis un navigateur.</b><br>Suis les 3 étapes juste au-dessus (2 minutes, gratuit), colle l'adresse *.workers.dev, puis reteste.` : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
   }
 }
+function regionSelectChange() {
+  const sel = $("region-select");
+  const inp = $("region-input");
+  if (!sel || !inp) return;
+  inp.style.display = sel.value === "__autre__" ? "block" : "none";
+}
+function regionPaint() {
+  const sel = $("region-select");
+  const inp = $("region-input");
+  if (!sel || !inp) return;
+  const stocke = regionGet();
+  const correspond = stocke && [...sel.options].some((o) => o.value === stocke);
+  if (!stocke) {
+    sel.value = "";
+    inp.value = "";
+  } else if (correspond) {
+    sel.value = stocke;
+    inp.value = "";
+  } else {
+    sel.value = "__autre__";
+    inp.value = stocke;
+  }
+  regionSelectChange();
+}
 function themeApply(mode) {
   const sombre = mode === "dark" || mode === "auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   document.documentElement.setAttribute("data-theme", sombre ? "dark" : "light");
@@ -3692,6 +4050,7 @@ if (window.matchMedia) {
 }
 function langueApply(l) {
   i18nAppliquer();
+  calSousTitrePaint();
   document.querySelectorAll("#langue-seg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.l === l));
 }
 function langueSet(l) {
@@ -4235,311 +4594,6 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Masquer</button>`;
   if (discToken() && discMusique(secours)) discGreffe(secours, "disc-slot");
 }
-let calFilter = "all";
-function calKey(x) {
-  return norm((x.date || "") + "|" + (x.ville || ""));
-}
-async function calFetch() {
-  var _a;
-  const key = localStorage.getItem(KEY_STORE);
-  if (!key) {
-    alert("Configure d'abord ta clé Gemini dans Réglages.");
-    return;
-  }
-  if (!navigator.onLine) {
-    alert("Pas de réseau. Les dates déjà enregistrées restent visibles.");
-    return;
-  }
-  const el = $("cal-list");
-  el.innerHTML = `<div class="loading"><div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p>Recherche des brocantes autour de Binche…</p></div>`;
-  const auj = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
-  const brief = `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de Binche (7130, Belgique), en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes).
-Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
-Cherche en priorité sur quefaire.be (le plus gros agenda de brocantes en Belgique), puis recoupe avec brocabrac.fr, vide-greniers.org, brocantes.be, les sites communaux et les agendas locaux.
-Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis Binche en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
-N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
-Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
-  const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
-  const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
-  let lastErr = "";
-  for (const m of chain) {
-    try {
-      const res = await fetchAvecDelai(
-        `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts: [{ text: brief }] }],
-            tools: [{ google_search: {} }],
-            generationConfig: /^gemini-3/.test(m) ? { maxOutputTokens: 2600, thinkingConfig: { thinkingLevel: "low" } } : { temperature: 0.1, maxOutputTokens: 2600, thinkingConfig: { thinkingBudget: 0 } }
-          })
-        },
-        2e4
-      );
-      if (!res.ok) {
-        let d = "";
-        try {
-          d = ((_a = (await res.json()).error) == null ? void 0 : _a.message) || "";
-        } catch (e) {
-        }
-        lastErr = "HTTP " + res.status + (d ? " — " + d : "");
-        if ([400, 403, 404, 429, 500, 503].includes(res.status)) continue;
-        throw new Error(lastErr);
-      }
-      const j = extractJSON(await res.json());
-      const trouve = (j.brocantes || []).filter((x) => x && x.date && x.ville);
-      if (!trouve.length) {
-        lastErr = "Aucune date exploitable";
-        continue;
-      }
-      const cur = calRead();
-      const garde = cur.filter((x) => x.manuel || x.go);
-      const fusion = [...garde];
-      const vus = new Set(garde.map(calKey));
-      trouve.forEach((x) => {
-        const k = calKey(x);
-        if (vus.has(k)) {
-          const dej = fusion.find((y) => calKey(y) === k);
-          if (dej && !dej.manuel) {
-            dej.nom = x.nom || dej.nom;
-            dej.km = Number(x.km) || dej.km;
-            dej.exposants = Number(x.exposants) || dej.exposants;
-            dej.horaires = x.horaires || dej.horaires;
-            dej.note = x.note || dej.note;
-          }
-          return;
-        }
-        vus.add(k);
-        fusion.push({ ...x, km: Number(x.km) || 0, exposants: Number(x.exposants) || 0, go: false });
-      });
-      fusion.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
-      calWrite(fusion);
-      credBump();
-      renderCal();
-      return;
-    } catch (err) {
-      lastErr = String(err.message || err);
-    }
-  }
-  el.innerHTML = `<div class="aifail"><b>Recherche impossible.</b><br>
-    ${/429|quota/i.test(lastErr) ? "Quota Gemini indisponible pour l'instant." : "Réessaie dans un moment."}
-    <br><br><span style="font-family:var(--mono);font-size:11px;opacity:.7">${esc(lastErr)}</span></div>`;
-}
-function calAddManual() {
-  const nom = prompt("Nom de la brocante ?");
-  if (!nom) return;
-  const ville = prompt("Ville ?") || "";
-  const date = prompt("Date (AAAA-MM-JJ) ?", (/* @__PURE__ */ new Date()).toISOString().slice(0, 10)) || "";
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    alert("Date attendue au format AAAA-MM-JJ.");
-    return;
-  }
-  const km = parseInt(prompt("Distance depuis Binche en km ?", "20") || "0", 10) || 0;
-  const a = calRead();
-  a.push({ date, nom, ville, pays: "BE", km, exposants: 0, horaires: "", note: "", manuel: true, go: true });
-  a.sort((x, y) => (x.date || "").localeCompare(y.date || ""));
-  calWrite(a);
-  renderCal();
-}
-function calDates(x) {
-  const debut = /* @__PURE__ */ new Date(x.date + "T06:30:00");
-  const fin = /* @__PURE__ */ new Date(x.date + "T13:30:00");
-  const z = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  return { debut, fin, zd: z(debut), zf: z(fin) };
-}
-function calTitre(x) {
-  return (x.nom || "Brocante") + (x.ville ? " — " + x.ville : "");
-}
-function calDesc(x) {
-  const l = [];
-  if (x.km) l.push("Distance depuis Binche : " + x.km + " km");
-  if (x.exposants) l.push(x.exposants + " exposants");
-  if (x.horaires) l.push("Horaires : " + x.horaires);
-  if (x.note) l.push(x.note);
-  l.push("Sac : espèces en petites coupures, piles AA/AAA, sacs, chiffon.");
-  l.push("Ajouté par Insert Coin");
-  return l.join("\n");
-}
-function calGoogle(i) {
-  const x = calRead()[i];
-  if (!x) return;
-  const d = calDates(x);
-  const u = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(calTitre(x)) + "&dates=" + d.zd + "/" + d.zf + "&details=" + encodeURIComponent(calDesc(x)) + "&location=" + encodeURIComponent((x.ville || "") + (x.pays === "FR" ? ", France" : ", Belgique"));
-  window.open(u, "_blank");
-}
-function calICS(i) {
-  const liste = i === -1 ? calRead().filter((x) => x.go && calJours(x.date) !== null) : [calRead()[i]].filter(Boolean);
-  if (!liste.length) {
-    alert("Aucune date marquée « j'y vais ».");
-    return;
-  }
-  const ev = liste.map((x, n) => {
-    const d = calDates(x);
-    const veille = new Date(d.debut);
-    veille.setDate(veille.getDate() - 1);
-    veille.setHours(19, 0, 0, 0);
-    const mins = Math.round((d.debut - veille) / 6e4);
-    return [
-      "BEGIN:VEVENT",
-      "UID:insertcoin-" + Date.now() + "-" + n + "@pixelpapa",
-      "DTSTAMP:" + d.zd,
-      "DTSTART:" + d.zd,
-      "DTEND:" + d.zf,
-      "SUMMARY:" + calTitre(x).replace(/[,;\\]/g, (m) => "\\" + m),
-      "LOCATION:" + ((x.ville || "") + (x.pays === "FR" ? "\\, France" : "\\, Belgique")),
-      "DESCRIPTION:" + calDesc(x).replace(/\n/g, "\\n").replace(/[,;]/g, (m) => "\\" + m),
-      "BEGIN:VALARM",
-      "TRIGGER:-PT" + mins + "M",
-      "ACTION:DISPLAY",
-      "DESCRIPTION:Brocante demain matin — prépare tes espèces et tes sacs",
-      "END:VALARM",
-      "END:VEVENT"
-    ].join("\r\n");
-  }).join("\r\n");
-  const ics = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Pixel Papa//Insert Coin//FR",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    ev,
-    "END:VCALENDAR"
-  ].join("\r\n");
-  const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = (i === -1 ? "InsertCoin_brocantes" : "brocante_" + (liste[0].date || "")) + ".ics";
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 2e3);
-}
-function calGo(i) {
-  const a = calRead();
-  if (!a[i]) return;
-  a[i].go = !a[i].go;
-  calWrite(a);
-  renderCal();
-  paintImminent();
-  vib();
-}
-function calDel(i) {
-  const a = calRead();
-  a.splice(i, 1);
-  calWrite(a);
-  renderCal();
-}
-function calVerifQuery(x) {
-  return ((x.ville || "") + " brocante").trim();
-}
-function calVerifMark(i) {
-  const a = calRead();
-  if (!a[i]) return;
-  a[i].verifie = true;
-  calWrite(a);
-}
-function calJours(d) {
-  const j = Math.round((/* @__PURE__ */ new Date(d + "T12:00:00") - (/* @__PURE__ */ new Date()).setHours(12, 0, 0, 0)) / 864e5);
-  if (j < 0) return null;
-  if (j === 0) return "Aujourd'hui";
-  if (j === 1) return "Demain";
-  if (j < 7) return "Dans " + j + " jours";
-  if (j < 14) return "La semaine prochaine";
-  return "Dans " + Math.round(j / 7) + " semaines";
-}
-function calImminent() {
-  const auj = /* @__PURE__ */ new Date();
-  auj.setHours(0, 0, 0, 0);
-  return calRead().filter((x) => x.go).map((x) => {
-    const j = Math.round((/* @__PURE__ */ new Date(x.date + "T12:00:00") - (/* @__PURE__ */ new Date()).setHours(12, 0, 0, 0)) / 864e5);
-    return { x, j };
-  }).filter((o) => o.j === 0 || o.j === 1).sort((a, b) => a.j - b.j)[0] || null;
-}
-function paintImminent() {
-  const el = $("imminent");
-  if (!el) return;
-  const o = calImminent();
-  if (!o) {
-    el.className = "imminent";
-    el.innerHTML = "";
-    return;
-  }
-  const dem = o.j === 1;
-  el.className = "imminent on" + (dem ? " demain" : " aujourdhui");
-  el.innerHTML = `
-    <svg class="ico16"><use href="#i-${dem ? "cal" : "flame"}"/></svg>
-    <div class="im-t"><b>${dem ? "Demain" : "Aujourd'hui"} : ${esc(o.x.nom || "brocante")}</b>
-      <span>${esc(o.x.ville || "")}${o.x.km ? " · " + o.x.km + " km" : ""}${o.x.horaires ? " · " + esc(o.x.horaires) : ""}</span></div>
-    ${dem ? `<button onclick="switchView('guide');setTimeout(()=>document.getElementById('sac-ticks')?.scrollIntoView({behavior:'smooth'}),150)">Sac</button>` : ""}`;
-}
-function renderCal() {
-  const el = $("cal-list");
-  if (!el) return;
-  let a = calRead().filter((x) => calJours(x.date) !== null);
-  if (calFilter === "go") a = a.filter((x) => x.go);
-  if (calFilter === "big") a = a.filter((x) => (x.exposants || 0) >= 150);
-  if (!a.length) {
-    el.innerHTML = `<div class="empty-state">
-      <svg class="ico-big"><use href="#i-cal"/></svg>
-      <b>Aucune date</b>
-      <p>${calFilter === "all" ? "Appuie sur « Chercher les prochaines dates » pour remplir ton agenda des trois prochains mois." : "Rien sous ce filtre. Reviens sur « Toutes »."}</p></div>`;
-    return;
-  }
-  let moisCourant = "";
-  el.innerHTML = a.map((x, i) => {
-    const idx = calRead().findIndex((y) => calKey(y) === calKey(x));
-    const dt = /* @__PURE__ */ new Date(x.date + "T12:00:00");
-    const mois = dt.toLocaleDateString("fr-BE", { month: "long", year: "numeric" });
-    const sep = mois !== moisCourant ? `<div class="cal-mois">${mois}</div>` : "";
-    moisCourant = mois;
-    const grosse = (x.exposants || 0) >= 150;
-    const proche = (x.km || 0) <= 15;
-    return sep + `
-      <div class="cal ${x.go ? "go" : ""}">
-        <div class="cal-d">
-          <b>${dt.getDate()}</b>
-          <span>${dt.toLocaleDateString("fr-BE", { weekday: "short" })}</span>
-        </div>
-        <div class="cal-c">
-          <div class="cal-n">${esc(x.nom || "Brocante")}
-            ${grosse ? `<svg class="ico16 hot"><use href="#i-flame"/></svg>` : ""}</div>
-          <div class="cal-v"><svg class="ico16"><use href="#i-pin"/></svg>${esc(x.ville)}
-            <em>${x.pays === "FR" ? "France" : "Belgique"}</em></div>
-          <div class="cal-tags">
-            <span class="${proche ? "near" : ""}">${x.km || "?"} km</span>
-            ${x.exposants ? `<span>${x.exposants} exposants</span>` : ""}
-            ${x.horaires ? `<span>${esc(x.horaires)}</span>` : ""}
-            <span class="soon">${calJours(x.date)}</span>
-          </div>
-          ${x.note ? `<div class="cal-note">${esc(x.note)}</div>` : ""}
-          ${!x.manuel ? `<div class="cal-verif${x.verifie ? " ok" : ""}">
-            <span>${x.verifie ? "✓ Vérifiée par toi" : "Non vérifiée — trouvée par l'IA"}</span>
-            <a href="https://www.quefaire.be/annonces/index.php?word=${encodeURIComponent(calVerifQuery(x))}"
-              target="_blank" rel="noopener" onclick="calVerifMark(${idx})">quefaire.be</a>
-            <a href="https://www.google.com/search?q=${encodeURIComponent(calVerifQuery(x) + " " + (x.date || ""))}"
-              target="_blank" rel="noopener" onclick="calVerifMark(${idx})">Google</a>
-          </div>` : ""}
-          <div class="cal-act">
-            <button class="cal-go" onclick="calGo(${idx})">
-              <svg class="ico16"><use href="#i-star"/></svg>${x.go ? "J'y vais" : "Marquer"}</button>
-            <button class="li-x" onclick="calDel(${idx})">✕</button>
-          </div>
-          ${x.go ? `<div class="cal-rem">
-            <button onclick="calGoogle(${idx})">＋ Google Agenda</button>
-            <button onclick="calICS(${idx})">Fichier .ics</button>
-          </div>` : ""}
-        </div>
-      </div>`;
-  }).join("");
-}
-function calendarInit() {
-  document.querySelectorAll("#cal-filter button").forEach((b) => b.addEventListener("click", () => {
-    document.querySelectorAll("#cal-filter button").forEach((x) => x.setAttribute("aria-pressed", "false"));
-    b.setAttribute("aria-pressed", "true");
-    calFilter = b.dataset.f;
-    renderCal();
-  }));
-}
 async function driveConnect() {
   const t2 = await driveAuth(true);
   if (!t2) {
@@ -4770,10 +4824,10 @@ function init() {
   }
   const gb = $("groundBox");
   if (gb) gb.checked = getGround();
-  const ri = $("region-input");
-  if (ri) ri.value = regionGet();
+  regionPaint();
   themeApply(themeGet());
   langueApply(locale());
+  calSousTitrePaint();
   modeSet("objet");
   legoPaint();
   brickPaint();
@@ -4871,7 +4925,8 @@ Object.assign(window, {
   backupDownload,
   backupDrive,
   backupRestore,
-  modelsRefresh
+  modelsRefresh,
+  regionSelectChange
 });</script>
   <style rel="stylesheet" crossorigin>:root{
   --bg: #0a0a0c; --surface: #1a1a24; --surface-light: #2a2a36; 
@@ -5769,7 +5824,7 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 
 <div id="view-cal" class="view">
   <h2 class="view-title" data-i18n="cal.titre">Calendrier</h2>
-  <p class="view-sub" data-i18n="cal.sous_titre">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
+  <p class="view-sub" id="cal-sous-titre">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
 
   <div class="cal-actions">
     <button class="btn-save" onclick="calFetch()">
@@ -5826,8 +5881,37 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <i style="font-size:12px;color:var(--text-muted);font-style:normal" data-i18n="guide.ia.ground_note">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
     <p style="margin-top:10px" data-i18n="guide.ia.region_label">Région pour la recherche (optionnel)</p>
-    <input type="text" id="region-input" class="api-input" placeholder="Ex. Binche, Belgique" data-i18n-placeholder="guide.ia.region_placeholder">
-    <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0;line-height:1.5" data-i18n="guide.ia.region_note">Oriente la recherche web vers les ventes de ta zone. Une orientation, pas une garantie.</p>
+    <select id="region-select" class="api-input" onchange="regionSelectChange()">
+      <option value="" data-i18n="guide.ia.region_aucune">Aucune (par défaut : Binche)</option>
+      <optgroup label="Belgique" id="region-grp-be">
+        <option value="Binche, Belgique">Binche</option>
+        <option value="Bruxelles, Belgique">Bruxelles</option>
+        <option value="Anvers, Belgique">Anvers</option>
+        <option value="Gand, Belgique">Gand</option>
+        <option value="Charleroi, Belgique">Charleroi</option>
+        <option value="Liège, Belgique">Liège</option>
+        <option value="Bruges, Belgique">Bruges</option>
+        <option value="Namur, Belgique">Namur</option>
+        <option value="Mons, Belgique">Mons</option>
+        <option value="Louvain, Belgique">Louvain</option>
+        <option value="Tournai, Belgique">Tournai</option>
+        <option value="La Louvière, Belgique">La Louvière</option>
+      </optgroup>
+      <optgroup label="France" id="region-grp-fr">
+        <option value="Lille, France">Lille</option>
+        <option value="Valenciennes, France">Valenciennes</option>
+        <option value="Douai, France">Douai</option>
+        <option value="Arras, France">Arras</option>
+        <option value="Amiens, France">Amiens</option>
+        <option value="Maubeuge, France">Maubeuge</option>
+        <option value="Charleville-Mézières, France">Charleville-Mézières</option>
+        <option value="Reims, France">Reims</option>
+        <option value="Paris, France">Paris</option>
+      </optgroup>
+      <option value="__autre__" data-i18n="guide.ia.region_autre">Autre (saisir une ville)</option>
+    </select>
+    <input type="text" id="region-input" class="api-input" style="display:none;margin-top:8px" placeholder="Ex. Charleroi, Belgique" data-i18n-placeholder="guide.ia.region_placeholder">
+    <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0;line-height:1.5" data-i18n="guide.ia.region_note">Oriente la recherche web (dates de brocantes, cotes) vers ta zone. Une orientation, pas une garantie.</p>
     <button class="btn-save" onclick="saveSettings()" data-i18n="guide.ia.enregistrer">Enregistrer les réglages</button>
 
     <h3 class="sect" data-i18n="guide.discogs.titre">Cotes Discogs (musique)</h3>
