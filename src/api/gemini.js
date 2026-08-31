@@ -9,6 +9,7 @@ import { collMatch } from "../ui/dedup.js";
 import { renderResult, renderBacResult, renderStandResult, discGreffe } from "../ui/fiche.js";
 import { discMusique } from "./discogs.js";
 import { modelsPaint } from "../ui/settings.js";
+import { locale, DEFAULT_LOCALE } from "../i18n/index.js";
 
 // --- AI API CALLS ---
 /* ══════════════════ LE MOTEUR EXPERT ══════════════════
@@ -336,6 +337,25 @@ export function lotVide(mode, j){
 }
 
 
+/* Correctif du 31/08/2026 (retour de terrain) : le contenu que GEMINI
+   ecrit lui-meme (titre, explications, notes, argument de nego...)
+   restait toujours en francais, meme interface basculee en neerlandais
+   - aucune consigne de langue n'etait jamais envoyee au modele, seul le
+   texte de l'app (boutons, libelles) avait ete traduit.
+   N'ajoute qu'UNE ligne, et seulement quand la langue active n'est PAS
+   le francais : le prompt francais (le cas par defaut, calibre tout au
+   long de cette session - mode Bac, timeouts, etc.) reste inchange au
+   caractere pres, zero risque sur le comportement deja valide. */
+const LANGUE_NOM = { nl: "néerlandais" };
+
+export function directiveLangue(){
+  const l = locale();
+  if(l === DEFAULT_LOCALE) return "";
+  const nom = LANGUE_NOM[l];
+  return nom ? `\nRéponds dans tous les champs texte en ${nom}.` : "";
+}
+
+
 export async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey, tentatives = 0) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
@@ -391,7 +411,7 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
 
   const parts = [];
   images.forEach(img => parts.push({inlineData:{mimeType: img.media, data: img.data}}));
-  parts.push({text: promptText + ctx});
+  parts.push({text: promptText + ctx + directiveLangue()});
 
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter(m => m !== chosen)];

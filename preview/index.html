@@ -3668,6 +3668,14 @@ function devraitReenfiler(erreurMessage, tentatives) {
 function lotVide(mode, j) {
   return mode === "bac" && (!j || !Array.isArray(j.lot) || !j.lot.length);
 }
+const LANGUE_NOM = { nl: "néerlandais" };
+function directiveLangue() {
+  const l = locale();
+  if (l === DEFAULT_LOCALE) return "";
+  const nom = LANGUE_NOM[l];
+  return nom ? `
+Réponds dans tous les champs texte en ${nom}.` : "";
+}
 async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0) {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
@@ -3723,7 +3731,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   }
   const parts = [];
   images.forEach((img) => parts.push({ inlineData: { mimeType: img.media, data: img.data } }));
-  parts.push({ text: promptText + ctx });
+  parts.push({ text: promptText + ctx + directiveLangue() });
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
   const attempts = [];
