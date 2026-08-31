@@ -155,8 +155,8 @@ function driveFiles() {
 }
 function driveToken() {
   try {
-    const t = JSON.parse(localStorage.getItem(TOK_STORE) || "null");
-    if (t && t.exp > Date.now() + 3e4) return t.t;
+    const t2 = JSON.parse(localStorage.getItem(TOK_STORE) || "null");
+    if (t2 && t2.exp > Date.now() + 3e4) return t2.t;
   } catch (e) {
   }
   return null;
@@ -405,15 +405,15 @@ function collScore(qt, et) {
 }
 function fetchAvecDelai(url, options, ms) {
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(t));
+  const t2 = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(t2));
 }
 function avecDelai(promesse, ms, message) {
-  let t;
+  let t2;
   const delai = new Promise((_, reject) => {
-    t = setTimeout(() => reject(new Error(message || `Délai dépassé (${ms} ms)`)), ms);
+    t2 = setTimeout(() => reject(new Error(message || `Délai dépassé (${ms} ms)`)), ms);
   });
-  return Promise.race([promesse, delai]).finally(() => clearTimeout(t));
+  return Promise.race([promesse, delai]).finally(() => clearTimeout(t2));
 }
 function hudPaint() {
   const log = logRead();
@@ -442,11 +442,11 @@ function credBump() {
 }
 function repartirProrata(poids, total) {
   if (!Array.isArray(poids) || !poids.length) return [];
-  const t = Number(total) || 0;
+  const t2 = Number(total) || 0;
   const somme = poids.reduce((a, b) => a + (Number(b) || 0), 0);
-  let parts = somme > 0 ? poids.map((v) => t * (Number(v) || 0) / somme) : poids.map(() => t / poids.length);
+  let parts = somme > 0 ? poids.map((v) => t2 * (Number(v) || 0) / somme) : poids.map(() => t2 / poids.length);
   parts = parts.map((x) => Math.round(x * 100) / 100);
-  const ecart = Math.round((t - parts.reduce((a, b) => a + b, 0)) * 100) / 100;
+  const ecart = Math.round((t2 - parts.reduce((a, b) => a + b, 0)) * 100) / 100;
   if (ecart && parts.length) {
     let iMax = 0;
     for (let i = 1; i < poids.length; i++) {
@@ -456,25 +456,991 @@ function repartirProrata(poids, total) {
   }
   return parts;
 }
-const ETAT_LBL = { 5: "Neuf / scellé", 4: "Excellent", 3: "Bon", 2: "Moyen", 1: "Abîmé", 0: "Non évalué" };
+const DICT = {
+  fr: {
+    "app.tagline": "Argus de terrain",
+    "bc.cadre": "Cadre le code-barres",
+    "bc.annuler": "Annuler",
+    "hud.score": "Score",
+    "hud.credits": "Crédits",
+    "hud.file": "En file",
+    "mode.objet": "Un objet",
+    "mode.bac": "Un lot",
+    "mode.stand": "Un stand",
+    "shoot.photo.titre": "Photographier",
+    "shoot.photo.sub": "l'appareil s'ouvre",
+    "shoot.galerie.titre": "Galerie",
+    "shoot.galerie.sub": "plusieurs à la fois",
+    "shoot.analyser": "Analyser",
+    "scan.bc.titre": "Scanner le code-barres",
+    "scan.bc.sub": "identification exacte, instantanée",
+    "prix.placeholder": "Il en demande combien ? (facultatif)",
+    "prix.label": "Prix demandé",
+    "autres.summary": "Autres façons de chercher",
+    "recherche.placeholder": "Chercher par nom, ou poser une question",
+    "recherche.demander": "Demander à l'IA",
+    "cal.titre": "Calendrier",
+    "cal.sous_titre": "Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
+    "cal.chercher": "Chercher les prochaines dates",
+    "cal.ajouter_manuel": "＋ Ajouter à la main",
+    "cal.exporter": "Exporter toutes mes dates marquées (.ics)",
+    "cal.filtre.toutes": "Toutes",
+    "cal.filtre.jyvais": "J'y vais",
+    "cal.filtre.grosses": "Les grosses",
+    "log.titre": "Journal de chasse",
+    "log.tes_achats": "Tes achats",
+    "log.terminer_sortie": "Terminer la sortie",
+    "log.envoyer_drive": "Envoyer le journal dans mon Drive",
+    "log.sorties_archivees": "Sorties archivées",
+    "log.vider_journal": "Vider le journal",
+    "log.historique_recherches": "Historique des recherches",
+    "log.historique_sub": "Chaque photo, scan ou question analysée, achetée ou non — pour retrouver une fiche vue plus tôt.",
+    "log.vider_recherches": "Vider l'historique des recherches",
+    "guide.titre": "Menu Guide 🧔🏼‍♂️",
+    "guide.ia.titre": "⚙️ Configuration IA",
+    "guide.ia.cle_label": "Clé API Gemini (stockée localement) :",
+    "guide.ia.cle_placeholder": "Collez votre clé API Google ici",
+    "guide.ia.modele_label": "Modèle IA (Puissance vs Vitesse) :",
+    "guide.ia.verifier_modeles": "Vérifier les modèles disponibles",
+    "guide.ia.ground_label": "Chercher les prix sur le web",
+    "guide.ia.ground_note": "Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.",
+    "guide.ia.enregistrer": "Enregistrer les réglages",
+    "guide.discogs.titre": "Cotes Discogs (musique)",
+    "guide.discogs.explain": "Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA par le prix réellement pratiqué et le nombre d'exemplaires en vente.",
+    "guide.discogs.placeholder": "Colle ton jeton Discogs ici",
+    "guide.discogs.enregistrer": "Enregistrer le jeton",
+    "guide.discogs.tester": "Tester la connexion Discogs",
+    "guide.rebrickable.titre": "Sets LEGO (Rebrickable)",
+    "guide.rebrickable.explain": "Clé gratuite et immédiate : rebrickable.com &rarr; ton profil &rarr; Settings &rarr; API &rarr; Generate. Rebrickable ne publie pas de prix — il donne le nombre de pièces et de figurines, les deux chiffres qui font vraiment la valeur d'un set d'occasion.",
+    "guide.rebrickable.placeholder": "Colle ta clé Rebrickable",
+    "guide.rebrickable.piece": "€ la pièce",
+    "guide.rebrickable.figurine": "€ la figurine",
+    "guide.rebrickable.bareme": "Barème de revendeur, à corriger avec tes propres ventes.",
+    "guide.rebrickable.tester": "Tester la connexion Rebrickable",
+    "guide.brickset.titre": "Sets LEGO (Brickset)",
+    "guide.brickset.explain": "Clé gratuite sur demande : brickset.com &rarr; ton compte &rarr; API &rarr; Request a key. Brickset donne les mêmes pièces et figurines que Rebrickable, plus le prix de vente neuf officiel LEGO. Sert de second avis quand tu n'as pas de clé Rebrickable — les deux ne s'affichent jamais en double sur une même fiche.",
+    "guide.brickset.placeholder": "Colle ta clé Brickset",
+    "guide.brickset.relais_html": `<b style="color:var(--mid)">Brickset bloque les appels directs depuis un navigateur</b> — contrairement à Discogs et Rebrickable. La clé seule ne suffit donc pas : il faut un relais gratuit qui transmet la requête à ta place. Deux minutes, une fois :<br>1. <b>dash.cloudflare.com</b> (compte gratuit) &rarr; Workers &amp; Pages &rarr; Create &rarr; « Hello World ».<br>2. Colle le code ci-dessous à la place de l'exemple, dans l'éditeur du navigateur, puis Deploy.<br>3. Colle l'adresse en <b>*.workers.dev</b> qu'il te donne dans le champ juste en dessous, et reteste.`,
+    "guide.brickset.copier_relais": "Copier le code du relais",
+    "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)",
+    "guide.brickset.tester": "Tester la connexion Brickset",
+    "guide.sauvegarde.titre": "Sauvegarde",
+    "guide.sauvegarde.liberer": "Libérer de la place",
+    "guide.sauvegarde.explain": "Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur. Un nettoyage de cache Android l'effacerait sans prévenir.",
+    "guide.sauvegarde.drive": "Sauvegarder dans mon Drive",
+    "guide.sauvegarde.telecharger": "Télécharger la sauvegarde",
+    "guide.sauvegarde.restaurer": "Restaurer une sauvegarde",
+    "guide.apparence.titre": "Apparence",
+    "guide.apparence.clair": "Clair",
+    "guide.apparence.auto": "Auto",
+    "guide.apparence.sombre": "Sombre",
+    "guide.langue.titre": "Langue",
+    "guide.drive.titre": "Mes bases Google Drive",
+    "guide.drive.cid_explain": "Identifiant client OAuth (Google Cloud Console). À coller une seule fois.",
+    "guide.drive.connecter": "Connecter mon Drive",
+    "guide.drive.choisir_fichiers": "Choisir mes fichiers",
+    "guide.drive.synchroniser": "Synchroniser maintenant",
+    "guide.drive.oublier": "Oublier mes bases",
+    "guide.drive.sync_explain": "La synchronisation se relance toute seule à l'ouverture de l'app quand tu as du réseau. Sur le terrain, la comparaison se fait en local : elle marche sans connexion.",
+    "action.enregistrer": "Enregistrer",
+    "guide.nego.titre": "💬 Négociation (La mécanique)",
+    "guide.nego.regle1": "Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.",
+    "guide.nego.regle2": "Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.",
+    "guide.nego.regle3": "Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.",
+    "guide.nego.regle4": "Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.",
+    "guide.nego.regle5": "Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.",
+    "guide.pieges.titre": "⚠️ Pièges Fréquents",
+    "guide.pieges.repro_html": "<b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.",
+    "guide.pieges.piles_html": "<b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.",
+    "guide.pieges.boite_html": "<b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.",
+    "guide.pieges.lot_html": "<b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.",
+    "guide.sac.titre": "🎒 Le Sac Idéal",
+    "nav.scan": "Scan",
+    "nav.dates": "Dates",
+    "nav.journal": "Journal",
+    "nav.reglages": "Réglages",
+    "mode.dit.objet": "Prends-en plusieurs si tu veux : le dos, le dessous, le défaut.",
+    "mode.dit.bac": "Une photo par pièce, ou une photo de plusieurs pièces. Chacune sera chiffrée.",
+    "mode.dit.stand": "Une vue large de la table. L'app te dit s'il vaut la peine de fouiller.",
+    "mode.btn.bac": "Trier ce lot",
+    "mode.btn.stand": "Lire ce stand",
+    "shoot.photo.ajouter": "ajouter une vue",
+    "shoot.vues_suffix": " · {n} vues",
+    "alert.photos_max": "8 photos au maximum par analyse.",
+    "alert.bac_vide": "Prends d'abord une ou plusieurs photos du bac.",
+    "alert.file_pleine": "File pleine (4 objets). Relance-la dès que tu captes.",
+    "alert.memoire_saturee": "Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.",
+    "alert.file_vide": "La file est vide.",
+    "alert.pas_de_reseau": "Toujours pas de réseau.",
+    "analyse.fermer": "Fermer l'analyse",
+    "bac.deja_badge": "DÉJÀ",
+    "bac.ressemble": "Ressemble à « {titre} » que tu as déjà — vérifie l'édition.",
+    "bac.cote_discogs": "Cote Discogs",
+    "bac.en_collection": "en collection",
+    "bac.lus": "LUS",
+    "bac.mode_bac": "MODE BAC",
+    "bac.n_a_prendre": "{n} à prendre",
+    "bac.deja_chez_toi": " · {n} déjà chez toi",
+    "bac.valeur_a_prendre": "valeur des « à prendre » ≈ {n}€",
+    "bac.section.prendre": "À prendre",
+    "bac.section.negocier": "À négocier",
+    "bac.section.negocier_sub": "Seulement sous le prix indiqué.",
+    "bac.section.deja": "Tu l'as déjà",
+    "bac.section.deja_sub": "Sauf si l'édition diffère de la tienne.",
+    "bac.section.laisse": "Laisse",
+    "bac.section.deja_court": "Déjà",
+    "bac.vide.titre": "Rien de lisible",
+    "bac.vide.sub": "Rapproche-toi, ou écarte les pochettes pour dégager les tranches.",
+    "bac.bar.a_prendre": "{n} à prendre",
+    "bac.bar.a_negocier": "{n} à négocier",
+    "bac.bar.deja": "{n} déjà",
+    "bac.bar.laisse": "{n} laisse",
+    "bac.cart.enregistre": "Lot enregistré",
+    "bac.cart.journal_maj": "Journal de chasse mis à jour",
+    "bac.cart.resume_un": "1 pièce · revente ≈ {val}€",
+    "bac.cart.resume_plusieurs": "{n} pièces · revente ≈ {val}€",
+    "bac.cart.ne_depasse_pas": "ne dépasse pas {max}€ pour le lot",
+    "bac.cart.coche": "coche ce que tu emportes",
+    "bac.cart.jai_achete": "J'ai acheté",
+    "bac.buy.coche_dabord": "Coche d'abord les pièces que tu emportes.",
+    "bac.buy.prompt_paye_un": "Combien as-tu payé pour cette pièce au total ?",
+    "bac.buy.prompt_paye_plusieurs": "Combien as-tu payé pour ces {n} pièces au total ?",
+    "bac.buy.prompt_demande_un": "Il en demandait combien pour cette pièce, avant négociation ? (facultatif)",
+    "bac.buy.prompt_demande_plusieurs": "Il en demandait combien pour ces {n} pièces, avant négociation ? (facultatif)",
+    "fiche.prix_verifier.titre": "Prix à vérifier",
+    "fiche.prix_verifier.texte": "L'objet est identifié, mais aucune vente n'a pu être confirmée. Ouvre eBay ci-dessous — la recherche est déjà prête — et note ce que tu vois.",
+    "fiche.prix_constate_placeholder": "Prix constaté €",
+    "fiche.recalculer": "Recalculer",
+    "fiche.passe_ton_chemin.titre": "Passe ton chemin",
+    "fiche.passe_ton_chemin.texte": "Ce que tu en tirerais ne couvrirait même pas l'emballage.",
+    "fiche.verifie_dabord": "Vérifie d'abord : {items}.",
+    "fiche.pour_lot": " pour le lot",
+    "fiche.pour_lot_n": " pour le lot de {n} pièces",
+    "fiche.soit_prix_piece": "Soit {prix} € la pièce — utile s'il veut vendre au détail.",
+    "fiche.demande_ne_negocie": "Il en demande {dem} € : ne négocie pas, prends.",
+    "fiche.demande_repose": "Il en demande {dem} €. Repose-le.",
+    "fiche.propose_monter": "Propose {ouv} €. Tu peux monter jusqu'à {plaf} €{pour}.",
+    "fiche.propose_ne_depasse": "Propose {ouv} €. Ne dépasse pas {plaf} €{pour}.",
+    "fiche.prix_tu_as_constate": "le prix que TU as constaté",
+    "fiche.ce_qui_se_vend_bon_etat": "ce que ça se vend en bon état",
+    "fiche.lot_entier_suffix": ", le lot entier",
+    "fiche.meilleur_etat_courant": "meilleur que l'état courant ({etat})",
+    "fiche.etat_x": "état {etat}",
+    "fiche.manque": "{nom} manque",
+    "fiche.cout_envoi": "ce que le volume te coûte à l'envoi",
+    "fiche.dans_poche_revente": "dans ta poche à la revente",
+    "fiche.regle_tiers": "ta règle : tu n'achètes jamais au-dessus du tiers",
+    "fiche.pourquoi_plafond": "Pourquoi {plafond}€ ?",
+    "fiche.etat_reel.titre": "État réel",
+    "fiche.etat_reel.que_tu_constates": "que TU constates",
+    "fiche.etat_reel.note3": "· la note 3 est la référence du marché",
+    "fiche.vu_photo": "Vu sur la photo : {texte}",
+    "fiche.px.aucun_marche": "Aucun prix de marché fiable trouvé. Les réglages ci-dessus restent utiles : note l'objet, puis vérifie toi-même sur Vinted ou eBay.",
+    "fiche.px.tu_annonces": "Tu annonces",
+    "fiche.px.premier_chiffre": "le premier chiffre",
+    "fiche.px.tu_vises": "Tu vises",
+    "fiche.px.accord_normal": "l'accord normal",
+    "fiche.px.tu_te_leves": "Tu te lèves",
+    "fiche.px.au_dela_tu_perds": "au-delà, tu perds",
+    "fiche.px.plafond_max": "{plafond}€ maximum",
+    "fiche.px.seulement_donne": "Seulement si c'est donné",
+    "fiche.px.rien_a_negocier": "À ce prix-là il n'y a rien à négocier : propose {ouv}€, et n'insiste pas au-delà de {plaf}€. Ça n'a d'intérêt que glissé dans un lot.",
+    "fiche.px.marge_insuffisante": "La marge ne couvre même pas l'envoi. À prendre uniquement pour compléter un lot que tu vends déjà.",
+    "fiche.px.le_marche": "le marché",
+    "fiche.px.etat_court": "état",
+    "fiche.px.completude": "complétude",
+    "fiche.px.de_volume": "de volume",
+    "fiche.px.nets_pour_toi": "nets pour toi",
+    "fiche.px.le_lot_de": " (le lot de {n})",
+    "fiche.px.dem_sous_cible": "Il en demande {dem}€ : c'est déjà sous ta cible. Prends sans discuter.",
+    "fiche.px.dem_negociable": "Il en demande {dem}€ : négociable, mais ne dépasse pas {plaf}€.",
+    "fiche.px.dem_repose": "Il en demande {dem}€, ton plafond est à {plaf}€. Repose-le.",
+    "fiche.circ.rare": "Rare",
+    "fiche.circ.peu_courant": "Peu courant",
+    "fiche.circ.courant": "Courant",
+    "fiche.circ.massif": "Pressage massif",
+    "fiche.corps.doit_etre_la": "Ce qui doit être là",
+    "fiche.absent_valeur": "absent — {perte}% de valeur en moins",
+    "fiche.non_visible": "non visible — à vérifier (vaudrait {perte}%)",
+    "fiche.present": "présent",
+    "fiche.corps.verifier_prix": "Vérifier le prix pour de vrai",
+    "fiche.corps.couter_cher": "Ce qui peut te coûter cher",
+    "fiche.corps.etat_photo_menti": "L'état, si la photo t'a menti",
+    "fiche.corps.identification": "L'identification",
+    "fiche.corps.copier_reference": "Copier la référence",
+    "fiche.corps.aucune_reference": "Aucune référence visible.",
+    "fiche.titre_tres_courant": "C'est un titre très courant",
+    "fiche.je_ten_donne": " Je t'en donne {ouv} €.",
+    "fiche.reference_copiee": "Référence copiée : {code}",
+    "fiche.copie_reference_prompt": "Copie la référence :",
+    "fiche.ta_vente_reelle": "ta vente réelle",
+    "fiche.cote.verifiee": "Cote vérifiée",
+    "fiche.cote.confiante": "Estimation confiante",
+    "fiche.cote.estimation": "Estimation",
+    "fiche.ton_max": "TON MAX",
+    "fiche.revente_nette": "Revente nette ≈ {n}€",
+    "fiche.marche_inconnu": "Marché inconnu",
+    "fiche.pieges_plus_un": "+ 1 autre piège détaillé plus bas",
+    "fiche.pieges_plus_plusieurs": "+ {n} autres pièges détaillés plus bas",
+    "fiche.demande_placeholder": "Demandé €",
+    "fiche.demande_title": "Ce qu'il demandait avant négociation, à taper toi-même — jamais pré-rempli : un oubli doit rester une absence de donnée (exclue des stats), jamais un ancien chiffre resté affiché par erreur (inclus à tort).",
+    "fiche.paye_placeholder": "Payé €",
+    "fiche.je_lachete": "Je l'achète",
+    "fiche.fermer": "Fermer",
+    "stand.rien_evident": "Rien de très évident à première vue.",
+    "stand.objet_non_nomme": "Objet non nommé",
+    "stand.verif": "Verif: {texte}",
+    "stand.titre": "ANALYSE DE STAND",
+    "stand.a_fouiller": "Stand à fouiller",
+    "stand.rien_flagrant": "Rien de flagrant",
+    "stand.cibles": "Cibles Potentielles Repérées",
+    "stand.conseil": "Conseil Stratégique",
+    "carte.disc.moins_cher": "moins cher en vente",
+    "carte.disc.exemplaires_dispo": "exemplaires dispo",
+    "carte.disc.ont_veulent": "l'ont / le veulent",
+    "carte.disc.prix_max": "{n}€ maximum",
+    "carte.disc.pour_revendre": "pour revendre autour de {n}€ — un cran sous le moins cher en ligne",
+    "carte.disc.ouvrir": "Ouvrir la fiche Discogs",
+    "carte.disc.verification": "Vérification de la cote Discogs…",
+    "carte.disc.jeton_refuse": "Jeton Discogs refusé — recolle-le dans Réglages.",
+    "carte.disc.timeout": "Discogs n'a pas répondu à temps (réseau lent). Réessaie.",
+    "carte.disc.injoignable": "Discogs injoignable depuis le navigateur.",
+    "carte.disc.cors_note": "Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.",
+    "carte.disc.marche_src": "Discogs · {n} en vente",
+    "verif.requete_ecrite": "La requête est déjà écrite : un doigt, tu vois les vrais prix.",
+    "verif.prix_constate": "Prix constaté",
+    "verif.prix_constate_aide": "ce que tu viens de voir, pour un exemplaire en bon état",
+    "verif.prix_verifie_toi": "Prix vérifié par toi : tout le calcul repose dessus.",
+    "verif.revenir_estimation": "Revenir à l'estimation",
+    "verif.marche_src": "vérifié par toi",
+    "comp.voir": "voir",
+    "comp.rapporte_ia": "Rapporté par l'IA. Ce qui n'a pas de lien n'a pas été vérifié.",
+    "carte.pieces": "pièces",
+    "carte.figurines": "figurines",
+    "carte.voir_set": "Voir le set",
+    "carte.lego.inconnu": "inconnu",
+    "carte.lego.au_moins": "au moins {n}€",
+    "carte.lego.figs_non_comptees": "figurines non comptées (réseau)",
+    "carte.lego.complet_sans_boite": "complet, sans boîte",
+    "carte.lego.bareme": "Barème de revendeur, pas une cote : Rebrickable ne publie pas de prix. Ajuste-le dans Réglages avec ce que tu encaisses réellement.",
+    "carte.lego.recherche": "Recherche du set {num} sur Rebrickable…",
+    "carte.lego.marche_src_figs": "Rebrickable · {pieces} pièces, {figs} figurines",
+    "carte.lego.marche_src_nofigs": "Rebrickable · {pieces} pièces, figurines non comptées",
+    "carte.lego.cle_refusee": "Clé Rebrickable refusée — recolle-la dans Réglages.",
+    "carte.lego.injoignable": "Rebrickable injoignable (réseau).",
+    "carte.brick.neuf_dev": "neuf ({dev})",
+    "carte.brick.prix_neuf": "prix neuf",
+    "carte.brick.explain": "Prix neuf officiel LEGO à la sortie du set, pas une cote d'occasion : sert de plafond de référence, pas de prix de revente.",
+    "carte.brick.recherche": "Recherche du set {num} sur Brickset…",
+    "carte.brick.marche_src": "Brickset · {pieces} pièces, {figs} figurines",
+    "carte.brick.cle_refusee": "Clé Brickset refusée — recolle-la dans Réglages.",
+    "carte.brick.injoignable": "Brickset injoignable (réseau).",
+    "avis.deja_obtenu": "Résultat déjà obtenu ce jour — aucun quota consommé.",
+    "pricing.etat.5": "Neuf / scellé",
+    "pricing.etat.4": "Excellent",
+    "pricing.etat.3": "Bon",
+    "pricing.etat.2": "Moyen",
+    "pricing.etat.1": "Abîmé",
+    "pricing.etat.0": "Non évalué",
+    "pricing.port.pochette": "Pochette",
+    "pricing.port.petit": "Petit colis",
+    "pricing.port.moyen": "Colis moyen",
+    "pricing.port.gros": "Gros colis",
+    "pricing.port.encombrant": "Encombrant",
+    "pricing.verdict.a_verifier": "À VÉRIFIER",
+    "pricing.verdict.laisse": "LAISSE",
+    "pricing.verdict.a_ce_prix": "À CE PRIX SEULEMENT",
+    "pricing.verdict.rafle": "RAFLE",
+    "pricing.verdict.negocie": "NÉGOCIE",
+    "pricing.resume.manque": "Manque constaté : −{perte}% appliqués",
+    "pricing.resume.rien_manque": "Rien ne manque : aucune décote",
+    "pricing.resume.element_verifier_un": " · 1 élément à vérifier sur place",
+    "pricing.resume.element_verifier_plusieurs": " · {q} éléments à vérifier sur place",
+    "disc.rarete.aucun": "Aucun exemplaire en vente",
+    "disc.rarete.massif": "Pressage massif — {n} en vente",
+    "disc.rarete.exemplaires": "{n} exemplaires en vente",
+    "disc.rarete.seulement": "Seulement {n} en vente",
+    "disc.rarete.introuvable": "Marché introuvable",
+    "disc.demande.plus_veulent": "Plus de gens le veulent que ne le possèdent (×{ratio})",
+    "disc.demande.correcte": "Demande correcte ({pct} veulent pour 100 qui l'ont)",
+    "disc.demande.peu": "Peu demandé ({pct} pour 100)"
+  },
+  nl: {
+    "app.tagline": "Prijsgids voor op de rommelmarkt",
+    "bc.cadre": "Richt de barcode in het kader",
+    "bc.annuler": "Annuleren",
+    "hud.score": "Score",
+    "hud.credits": "Credits",
+    "hud.file": "In wachtrij",
+    "mode.objet": "Eén object",
+    "mode.bac": "Een lot",
+    "mode.stand": "Een kraam",
+    "shoot.photo.titre": "Fotograferen",
+    "shoot.photo.sub": "camera gaat open",
+    "shoot.galerie.titre": "Galerij",
+    "shoot.galerie.sub": "meerdere tegelijk",
+    "shoot.analyser": "Analyseren",
+    "scan.bc.titre": "Streepjescode scannen",
+    "scan.bc.sub": "exacte identificatie, direct",
+    "prix.placeholder": "Hoeveel vraagt hij ervoor? (optioneel)",
+    "prix.label": "Gevraagde prijs",
+    "autres.summary": "Andere manieren om te zoeken",
+    "recherche.placeholder": "Zoek op naam, of stel een vraag",
+    "recherche.demander": "Vraag het aan de AI",
+    "cal.titre": "Kalender",
+    "cal.sous_titre": "Rommelmarkten binnen 50 km van Binche, België en Frankrijk. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
+    "cal.chercher": "Eerstvolgende data zoeken",
+    "cal.ajouter_manuel": "＋ Handmatig toevoegen",
+    "cal.exporter": "Al mijn gemarkeerde data exporteren (.ics)",
+    "cal.filtre.toutes": "Alle",
+    "cal.filtre.jyvais": "Ik ga erheen",
+    "cal.filtre.grosses": "De grote",
+    "log.titre": "Jachtjournaal",
+    "log.tes_achats": "Jouw aankopen",
+    "log.terminer_sortie": "Uitstap afsluiten",
+    "log.envoyer_drive": "Journaal naar mijn Drive sturen",
+    "log.sorties_archivees": "Gearchiveerde uitstappen",
+    "log.vider_journal": "Journaal leegmaken",
+    "log.historique_recherches": "Zoekgeschiedenis",
+    "log.historique_sub": "Elke geanalyseerde foto, scan of vraag, gekocht of niet — om een eerder bekeken fiche terug te vinden.",
+    "log.vider_recherches": "Zoekgeschiedenis wissen",
+    "guide.titre": "Gidsmenu 🧔🏼‍♂️",
+    "guide.ia.titre": "⚙️ AI-configuratie",
+    "guide.ia.cle_label": "Gemini API-sleutel (lokaal opgeslagen):",
+    "guide.ia.cle_placeholder": "Plak hier je Google API-sleutel",
+    "guide.ia.modele_label": "AI-model (Kracht vs Snelheid):",
+    "guide.ia.verifier_modeles": "Beschikbare modellen controleren",
+    "guide.ia.ground_label": "Prijzen op het web zoeken",
+    "guide.ia.ground_note": "Onmisbaar voor echte prijzen. Vink alleen uit bij herhaalde 429-fouten.",
+    "guide.ia.enregistrer": "Instellingen opslaan",
+    "guide.discogs.titre": "Discogs-prijzen (muziek)",
+    "guide.discogs.explain": "Persoonlijk token, aan te maken op discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Het blijft op deze telefoon. Voor alles wat platen betreft, vervangt Discogs de schatting van de AI door de werkelijk gehanteerde prijs en het aantal exemplaren te koop.",
+    "guide.discogs.placeholder": "Plak hier je Discogs-token",
+    "guide.discogs.enregistrer": "Token opslaan",
+    "guide.discogs.tester": "Discogs-verbinding testen",
+    "guide.rebrickable.titre": "LEGO-sets (Rebrickable)",
+    "guide.rebrickable.explain": "Gratis en direct beschikbare sleutel: rebrickable.com &rarr; jouw profiel &rarr; Settings &rarr; API &rarr; Generate. Rebrickable publiceert geen prijzen — het geeft het aantal onderdelen en poppetjes, de twee cijfers die echt de waarde van een tweedehands set bepalen.",
+    "guide.rebrickable.placeholder": "Plak je Rebrickable-sleutel",
+    "guide.rebrickable.piece": "€ per onderdeel",
+    "guide.rebrickable.figurine": "€ per poppetje",
+    "guide.rebrickable.bareme": "Wederverkoperstarief, aan te passen aan je eigen verkopen.",
+    "guide.rebrickable.tester": "Rebrickable-verbinding testen",
+    "guide.brickset.titre": "LEGO-sets (Brickset)",
+    "guide.brickset.explain": "Gratis sleutel op aanvraag: brickset.com &rarr; jouw account &rarr; API &rarr; Request a key. Brickset geeft dezelfde onderdelen en poppetjes als Rebrickable, plus de officiële LEGO-nieuwprijs. Dient als tweede mening wanneer je geen Rebrickable-sleutel hebt — de twee worden nooit dubbel getoond op dezelfde fiche.",
+    "guide.brickset.placeholder": "Plak je Brickset-sleutel",
+    "guide.brickset.relais_html": '<b style="color:var(--mid)">Brickset blokkeert directe aanroepen vanuit een browser</b> — in tegenstelling tot Discogs en Rebrickable. De sleutel alleen volstaat dus niet: je hebt een gratis relais nodig die het verzoek voor jou doorstuurt. Twee minuten, eenmalig:<br>1. <b>dash.cloudflare.com</b> (gratis account) &rarr; Workers &amp; Pages &rarr; Create &rarr; « Hello World ».<br>2. Plak de code hieronder in plaats van het voorbeeld, in de browsereditor, en klik dan op Deploy.<br>3. Plak het <b>*.workers.dev</b>-adres dat je krijgt in het veld hieronder, en test opnieuw.',
+    "guide.brickset.copier_relais": "Relaiscode kopiëren",
+    "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relais, optioneel maar nodig om Brickset te laten werken)",
+    "guide.brickset.tester": "Brickset-verbinding testen",
+    "guide.sauvegarde.titre": "Back-up",
+    "guide.sauvegarde.liberer": "Ruimte vrijmaken",
+    "guide.sauvegarde.explain": "Journaal, gearchiveerde uitstappen, kalender en databases: alles wordt opgeslagen in deze browser. Een Android-cache-opruiming zou dit zonder waarschuwing wissen.",
+    "guide.sauvegarde.drive": "Opslaan naar mijn Drive",
+    "guide.sauvegarde.telecharger": "Back-up downloaden",
+    "guide.sauvegarde.restaurer": "Back-up herstellen",
+    "guide.apparence.titre": "Weergave",
+    "guide.apparence.clair": "Licht",
+    "guide.apparence.auto": "Auto",
+    "guide.apparence.sombre": "Donker",
+    "guide.langue.titre": "Taal",
+    "guide.drive.titre": "Mijn Google Drive-bestanden",
+    "guide.drive.cid_explain": "OAuth-client-ID (Google Cloud Console). Eenmalig te plakken.",
+    "guide.drive.connecter": "Mijn Drive verbinden",
+    "guide.drive.choisir_fichiers": "Mijn bestanden kiezen",
+    "guide.drive.synchroniser": "Nu synchroniseren",
+    "guide.drive.oublier": "Mijn bestanden vergeten",
+    "guide.drive.sync_explain": "De synchronisatie start vanzelf opnieuw bij het openen van de app zodra je internet hebt. Op de markt zelf gebeurt de vergelijking lokaal: dat werkt zonder verbinding.",
+    "action.enregistrer": "Opslaan",
+    "guide.nego.titre": "💬 Onderhandelen (De mechaniek)",
+    "guide.nego.regle1": "Bied 50 tot 60% van de gevraagde prijs. Sluit af op 70%. Daarboven betaal je de wederverkoopprijs.",
+    "guide.nego.regle2": "Bundel altijd: « ik neem die vier, 20 € en we zijn klaar » werkt beter dan vier keer apart afdingen.",
+    "guide.nego.regle3": "Contant geld, kleine coupures, het juiste bedrag al klaar. Een uitgestoken briefje beslecht een aarzeling.",
+    "guide.nego.regle4": "Neutraal gezicht, zelfs bij een parel. Zodra je opklaart, ligt de prijs vast.",
+    "guide.nego.regle5": "Eén cijfer, en dan zwijg je. De stilte doet het werk voor jou.",
+    "guide.pieges.titre": "⚠️ Veelvoorkomende valkuilen",
+    "guide.pieges.repro_html": "<b>Namaakcartridges:</b> Label te scherp gedrukt, kruiskopschroef. Nintendo gebruikt 3,8 mm tri-wing. Het originele plastic is mat.",
+    "guide.pieges.piles_html": "<b>Batterijcorrosie:</b> Open altijd het klepje. Het groene beslag vreet de contacten aan en kost meer dan het object waard is.",
+    "guide.pieges.boite_html": "<b>Volle doos, spel afwezig:</b> Open alles. De PS2-doos met een karaoke-cd erin is een klassieker.",
+    "guide.pieges.lot_html": "<b>De valstrik-lot:</b> Drie goede stukken bovenop, opvulling eronder. Draai de doos om voor je een prijs noemt.",
+    "guide.sac.titre": "🎒 De ideale tas",
+    "nav.scan": "Scan",
+    "nav.dates": "Data",
+    "nav.journal": "Journaal",
+    "nav.reglages": "Instellingen",
+    "mode.dit.objet": "Neem er meerdere als je wilt: de achterkant, de onderkant, het defect.",
+    "mode.dit.bac": "Eén foto per stuk, of één foto van meerdere stukken. Elk stuk krijgt een prijs.",
+    "mode.dit.stand": "Een brede blik op de tafel. De app zegt je of het de moeite waard is om te zoeken.",
+    "mode.btn.bac": "Dit lot sorteren",
+    "mode.btn.stand": "Deze kraam lezen",
+    "shoot.photo.ajouter": "nog een foto toevoegen",
+    "shoot.vues_suffix": " · {n} weergaven",
+    "alert.photos_max": "Maximaal 8 foto's per analyse.",
+    "alert.bac_vide": "Neem eerst een of meer foto's van het lot.",
+    "alert.file_pleine": "Wachtrij vol (4 objecten). Start opnieuw zodra je weer bereik hebt.",
+    "alert.memoire_saturee": "Telefoongeheugen vol: kan niet in de wachtrij zetten.\n\nGa naar Instellingen → Back-up om ruimte vrij te maken.",
+    "alert.file_vide": "De wachtrij is leeg.",
+    "alert.pas_de_reseau": "Nog steeds geen netwerk.",
+    "analyse.fermer": "Analyse sluiten",
+    "bac.deja_badge": "AL",
+    "bac.ressemble": "Lijkt op « {titre} », die je al hebt — controleer de editie.",
+    "bac.cote_discogs": "Discogs-prijs",
+    "bac.en_collection": "in collectie",
+    "bac.lus": "GELEZEN",
+    "bac.mode_bac": "LOT-MODUS",
+    "bac.n_a_prendre": "{n} te nemen",
+    "bac.deja_chez_toi": " · {n} al in bezit",
+    "bac.valeur_a_prendre": "waarde van de « te nemen » ≈ {n}€",
+    "bac.section.prendre": "Te nemen",
+    "bac.section.negocier": "Te onderhandelen",
+    "bac.section.negocier_sub": "Alleen onder de aangegeven prijs.",
+    "bac.section.deja": "Heb je al",
+    "bac.section.deja_sub": "Tenzij de editie verschilt van die van jou.",
+    "bac.section.laisse": "Laat liggen",
+    "bac.section.deja_court": "Al",
+    "bac.vide.titre": "Niets leesbaars",
+    "bac.vide.sub": "Kom dichterbij, of spreid de hoezen om de ruggen vrij te maken.",
+    "bac.bar.a_prendre": "{n} te nemen",
+    "bac.bar.a_negocier": "{n} te onderhandelen",
+    "bac.bar.deja": "{n} al",
+    "bac.bar.laisse": "{n} laat liggen",
+    "bac.cart.enregistre": "Lot geregistreerd",
+    "bac.cart.journal_maj": "Jachtjournaal bijgewerkt",
+    "bac.cart.resume_un": "1 stuk · doorverkoop ≈ {val}€",
+    "bac.cart.resume_plusieurs": "{n} stuks · doorverkoop ≈ {val}€",
+    "bac.cart.ne_depasse_pas": "niet meer dan {max}€ voor het lot",
+    "bac.cart.coche": "vink aan wat je meeneemt",
+    "bac.cart.jai_achete": "Ik heb gekocht",
+    "bac.buy.coche_dabord": "Vink eerst de stukken aan die je meeneemt.",
+    "bac.buy.prompt_paye_un": "Hoeveel heb je in totaal voor dit stuk betaald?",
+    "bac.buy.prompt_paye_plusieurs": "Hoeveel heb je in totaal voor deze {n} stukken betaald?",
+    "bac.buy.prompt_demande_un": "Hoeveel vroeg hij voor dit stuk, voor het onderhandelen? (optioneel)",
+    "bac.buy.prompt_demande_plusieurs": "Hoeveel vroeg hij voor deze {n} stukken, voor het onderhandelen? (optioneel)",
+    "fiche.prix_verifier.titre": "Prijs te controleren",
+    "fiche.prix_verifier.texte": "Het object is geïdentificeerd, maar er kon geen verkoop bevestigd worden. Open eBay hieronder — de zoekopdracht staat al klaar — en noteer wat je ziet.",
+    "fiche.prix_constate_placeholder": "Vastgestelde prijs €",
+    "fiche.recalculer": "Herberekenen",
+    "fiche.passe_ton_chemin.titre": "Loop door",
+    "fiche.passe_ton_chemin.texte": "Wat je ervoor zou krijgen dekt niet eens de verpakking.",
+    "fiche.verifie_dabord": "Controleer eerst: {items}.",
+    "fiche.pour_lot": " voor het lot",
+    "fiche.pour_lot_n": " voor het lot van {n} stuks",
+    "fiche.soit_prix_piece": "Dat is {prix} € per stuk — handig als hij per stuk wil verkopen.",
+    "fiche.demande_ne_negocie": "Hij vraagt {dem} € : niet onderhandelen, nemen.",
+    "fiche.demande_repose": "Hij vraagt {dem} €. Laat het liggen.",
+    "fiche.propose_monter": "Bied {ouv} €. Je kan gaan tot {plaf} €{pour}.",
+    "fiche.propose_ne_depasse": "Bied {ouv} €. Ga niet boven {plaf} €{pour}.",
+    "fiche.prix_tu_as_constate": "de prijs die JIJ hebt vastgesteld",
+    "fiche.ce_qui_se_vend_bon_etat": "wat het in goede staat verkoopt",
+    "fiche.lot_entier_suffix": ", het volledige lot",
+    "fiche.meilleur_etat_courant": "beter dan de gangbare staat ({etat})",
+    "fiche.etat_x": "staat {etat}",
+    "fiche.manque": "{nom} ontbreekt",
+    "fiche.cout_envoi": "wat het volume je kost aan verzending",
+    "fiche.dans_poche_revente": "in je zak bij doorverkoop",
+    "fiche.regle_tiers": "jouw regel: je koopt nooit boven een derde",
+    "fiche.pourquoi_plafond": "Waarom {plafond}€?",
+    "fiche.etat_reel.titre": "Werkelijke staat",
+    "fiche.etat_reel.que_tu_constates": "die JIJ vaststelt",
+    "fiche.etat_reel.note3": "· cijfer 3 is de marktreferentie",
+    "fiche.vu_photo": "Gezien op de foto: {texte}",
+    "fiche.px.aucun_marche": "Geen betrouwbare marktprijs gevonden. De instellingen hierboven blijven nuttig: noteer het object, en controleer zelf op Vinted of eBay.",
+    "fiche.px.tu_annonces": "Je noemt",
+    "fiche.px.premier_chiffre": "het eerste cijfer",
+    "fiche.px.tu_vises": "Je mikt op",
+    "fiche.px.accord_normal": "de normale overeenkomst",
+    "fiche.px.tu_te_leves": "Je stapt op",
+    "fiche.px.au_dela_tu_perds": "daarboven verlies je",
+    "fiche.px.plafond_max": "maximaal {plafond}€",
+    "fiche.px.seulement_donne": "Alleen als het gratis is",
+    "fiche.px.rien_a_negocier": "Bij deze prijs valt er niets te onderhandelen: bied {ouv}€, en dring niet aan boven {plaf}€. Alleen interessant als het in een lot meegaat.",
+    "fiche.px.marge_insuffisante": "De marge dekt niet eens de verzending. Alleen te nemen om een lot aan te vullen dat je al verkoopt.",
+    "fiche.px.le_marche": "de markt",
+    "fiche.px.etat_court": "staat",
+    "fiche.px.completude": "volledigheid",
+    "fiche.px.de_volume": "wegens volume",
+    "fiche.px.nets_pour_toi": "netto voor jou",
+    "fiche.px.le_lot_de": " (het lot van {n})",
+    "fiche.px.dem_sous_cible": "Hij vraagt {dem}€: dat is al onder je doel. Neem zonder discussie.",
+    "fiche.px.dem_negociable": "Hij vraagt {dem}€: onderhandelbaar, maar ga niet boven {plaf}€.",
+    "fiche.px.dem_repose": "Hij vraagt {dem}€, jouw plafond is {plaf}€. Laat het liggen.",
+    "fiche.circ.rare": "Zeldzaam",
+    "fiche.circ.peu_courant": "Niet gangbaar",
+    "fiche.circ.courant": "Gangbaar",
+    "fiche.circ.massif": "Massale oplage",
+    "fiche.corps.doit_etre_la": "Wat erbij moet zitten",
+    "fiche.absent_valeur": "afwezig — {perte}% minder waarde",
+    "fiche.non_visible": "niet zichtbaar — te controleren (zou {perte}% waard zijn)",
+    "fiche.present": "aanwezig",
+    "fiche.corps.verifier_prix": "De prijs echt controleren",
+    "fiche.corps.couter_cher": "Wat je duur kan komen te staan",
+    "fiche.corps.etat_photo_menti": "De staat, als de foto je heeft misleid",
+    "fiche.corps.identification": "De identificatie",
+    "fiche.corps.copier_reference": "Referentie kopiëren",
+    "fiche.corps.aucune_reference": "Geen zichtbare referentie.",
+    "fiche.titre_tres_courant": "Dit is een heel gangbare titel",
+    "fiche.je_ten_donne": " Ik geef je er {ouv} € voor.",
+    "fiche.reference_copiee": "Referentie gekopieerd: {code}",
+    "fiche.copie_reference_prompt": "Kopieer de referentie:",
+    "fiche.ta_vente_reelle": "jouw echte verkoop",
+    "fiche.cote.verifiee": "Geverifieerde prijs",
+    "fiche.cote.confiante": "Zekere schatting",
+    "fiche.cote.estimation": "Schatting",
+    "fiche.ton_max": "JOUW MAX",
+    "fiche.revente_nette": "Netto doorverkoop ≈ {n}€",
+    "fiche.marche_inconnu": "Markt onbekend",
+    "fiche.pieges_plus_un": "+ nog 1 valkuil hieronder uitgelegd",
+    "fiche.pieges_plus_plusieurs": "+ nog {n} valkuilen hieronder uitgelegd",
+    "fiche.demande_placeholder": "Gevraagd €",
+    "fiche.demande_title": "Wat hij vroeg vóór het onderhandelen, zelf in te typen — nooit vooraf ingevuld: een vergetelheid moet een ontbrekend gegeven blijven (uitgesloten van de statistieken), nooit een oud cijfer dat per ongeluk blijft staan (ten onrechte meegeteld).",
+    "fiche.paye_placeholder": "Betaald €",
+    "fiche.je_lachete": "Ik koop het",
+    "fiche.fermer": "Sluiten",
+    "stand.rien_evident": "Niets echt opvallends op het eerste gezicht.",
+    "stand.objet_non_nomme": "Object zonder naam",
+    "stand.verif": "Check: {texte}",
+    "stand.titre": "KRAAM-ANALYSE",
+    "stand.a_fouiller": "Kraam om te doorzoeken",
+    "stand.rien_flagrant": "Niets opvallends",
+    "stand.cibles": "Mogelijke doelwitten gevonden",
+    "stand.conseil": "Strategisch advies",
+    "carte.disc.moins_cher": "goedkoopste te koop",
+    "carte.disc.exemplaires_dispo": "exemplaren beschikbaar",
+    "carte.disc.ont_veulent": "hebben / willen",
+    "carte.disc.prix_max": "maximaal {n}€",
+    "carte.disc.pour_revendre": "om door te verkopen rond {n}€ — net onder de goedkoopste online",
+    "carte.disc.ouvrir": "Discogs-fiche openen",
+    "carte.disc.verification": "Discogs-prijs controleren…",
+    "carte.disc.jeton_refuse": "Discogs-token geweigerd — plak het opnieuw in Instellingen.",
+    "carte.disc.timeout": "Discogs heeft niet op tijd geantwoord (traag netwerk). Probeer opnieuw.",
+    "carte.disc.injoignable": "Discogs niet bereikbaar vanuit de browser.",
+    "carte.disc.cors_note": "Als dit blijft gebeuren, is het de CORS-beperking: zeg het me, dan gebruiken we een relais.",
+    "carte.disc.marche_src": "Discogs · {n} te koop",
+    "verif.requete_ecrite": "De zoekopdracht staat al klaar: één tik, en je ziet de echte prijzen.",
+    "verif.prix_constate": "Vastgestelde prijs",
+    "verif.prix_constate_aide": "wat je net hebt gezien, voor een exemplaar in goede staat",
+    "verif.prix_verifie_toi": "Prijs door jou geverifieerd: de hele berekening steunt hierop.",
+    "verif.revenir_estimation": "Terug naar de schatting",
+    "verif.marche_src": "door jou geverifieerd",
+    "comp.voir": "bekijken",
+    "comp.rapporte_ia": "Gemeld door de AI. Wat geen link heeft, is niet geverifieerd.",
+    "carte.pieces": "onderdelen",
+    "carte.figurines": "poppetjes",
+    "carte.voir_set": "Set bekijken",
+    "carte.lego.inconnu": "onbekend",
+    "carte.lego.au_moins": "minstens {n}€",
+    "carte.lego.figs_non_comptees": "poppetjes niet geteld (netwerk)",
+    "carte.lego.complet_sans_boite": "compleet, zonder doos",
+    "carte.lego.bareme": "Wederverkoperstarief, geen officiële prijs: Rebrickable publiceert geen prijzen. Pas het aan in Instellingen met wat je werkelijk incasseert.",
+    "carte.lego.recherche": "Set {num} opzoeken op Rebrickable…",
+    "carte.lego.marche_src_figs": "Rebrickable · {pieces} onderdelen, {figs} poppetjes",
+    "carte.lego.marche_src_nofigs": "Rebrickable · {pieces} onderdelen, poppetjes niet geteld",
+    "carte.lego.cle_refusee": "Rebrickable-sleutel geweigerd — plak ze opnieuw in Instellingen.",
+    "carte.lego.injoignable": "Rebrickable niet bereikbaar (netwerk).",
+    "carte.brick.neuf_dev": "nieuw ({dev})",
+    "carte.brick.prix_neuf": "nieuwprijs",
+    "carte.brick.explain": "Officiële LEGO-nieuwprijs bij het uitbrengen van de set, geen tweedehandsprijs: dient als bovengrens, niet als doorverkoopprijs.",
+    "carte.brick.recherche": "Set {num} opzoeken op Brickset…",
+    "carte.brick.marche_src": "Brickset · {pieces} onderdelen, {figs} poppetjes",
+    "carte.brick.cle_refusee": "Brickset-sleutel geweigerd — plak ze opnieuw in Instellingen.",
+    "carte.brick.injoignable": "Brickset niet bereikbaar (netwerk).",
+    "avis.deja_obtenu": "Resultaat al verkregen vandaag — geen quota verbruikt.",
+    "pricing.etat.5": "Nieuw / verzegeld",
+    "pricing.etat.4": "Uitstekend",
+    "pricing.etat.3": "Goed",
+    "pricing.etat.2": "Matig",
+    "pricing.etat.1": "Beschadigd",
+    "pricing.etat.0": "Niet beoordeeld",
+    "pricing.port.pochette": "Hoes",
+    "pricing.port.petit": "Klein pakket",
+    "pricing.port.moyen": "Middelgroot pakket",
+    "pricing.port.gros": "Groot pakket",
+    "pricing.port.encombrant": "Omvangrijk",
+    "pricing.verdict.a_verifier": "TE CONTROLEREN",
+    "pricing.verdict.laisse": "LAAT LIGGEN",
+    "pricing.verdict.a_ce_prix": "ALLEEN TEGEN DEZE PRIJS",
+    "pricing.verdict.rafle": "GRIJP HET",
+    "pricing.verdict.negocie": "ONDERHANDEL",
+    "pricing.resume.manque": "Gebrek vastgesteld: −{perte}% toegepast",
+    "pricing.resume.rien_manque": "Niets ontbreekt: geen korting",
+    "pricing.resume.element_verifier_un": " · 1 element ter plaatse te controleren",
+    "pricing.resume.element_verifier_plusieurs": " · {q} elementen ter plaatse te controleren",
+    "disc.rarete.aucun": "Geen exemplaar te koop",
+    "disc.rarete.massif": "Massale oplage — {n} te koop",
+    "disc.rarete.exemplaires": "{n} exemplaren te koop",
+    "disc.rarete.seulement": "Slechts {n} te koop",
+    "disc.rarete.introuvable": "Markt niet gevonden",
+    "disc.demande.plus_veulent": "Meer mensen willen het dan het bezitten (×{ratio})",
+    "disc.demande.correcte": "Redelijke vraag ({pct} willen het per 100 die het hebben)",
+    "disc.demande.peu": "Weinig gevraagd ({pct} per 100)"
+  },
+  en: {
+    "app.tagline": "Field price guide",
+    "bc.cadre": "Frame the barcode",
+    "bc.annuler": "Cancel",
+    "hud.score": "Score",
+    "hud.credits": "Credits",
+    "hud.file": "Queued",
+    "mode.objet": "One item",
+    "mode.bac": "A lot",
+    "mode.stand": "A stall",
+    "shoot.photo.titre": "Take photo",
+    "shoot.photo.sub": "camera opens",
+    "shoot.galerie.titre": "Gallery",
+    "shoot.galerie.sub": "several at once",
+    "shoot.analyser": "Analyze",
+    "scan.bc.titre": "Scan barcode",
+    "scan.bc.sub": "exact ID, instant",
+    "prix.placeholder": "How much is he asking? (optional)",
+    "prix.label": "Asking price",
+    "autres.summary": "Other ways to search",
+    "recherche.placeholder": "Search by name, or ask a question",
+    "recherche.demander": "Ask the AI",
+    "cal.titre": "Calendar",
+    "cal.sous_titre": "Flea markets within 50 km of Binche, Belgium and France. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",
+    "cal.chercher": "Find upcoming dates",
+    "cal.ajouter_manuel": "＋ Add manually",
+    "cal.exporter": "Export all my starred dates (.ics)",
+    "cal.filtre.toutes": "All",
+    "cal.filtre.jyvais": "Going",
+    "cal.filtre.grosses": "Big ones",
+    "log.titre": "Hunt log",
+    "log.tes_achats": "Your purchases",
+    "log.terminer_sortie": "End this outing",
+    "log.envoyer_drive": "Send the log to my Drive",
+    "log.sorties_archivees": "Archived outings",
+    "log.vider_journal": "Clear the log",
+    "log.historique_recherches": "Search history",
+    "log.historique_sub": "Every photo, scan, or question analyzed, bought or not — to find a listing you saw earlier.",
+    "log.vider_recherches": "Clear search history",
+    "guide.titre": "Guide Menu 🧔🏼‍♂️",
+    "guide.ia.titre": "⚙️ AI Setup",
+    "guide.ia.cle_label": "Gemini API key (stored locally):",
+    "guide.ia.cle_placeholder": "Paste your Google API key here",
+    "guide.ia.modele_label": "AI model (Power vs Speed):",
+    "guide.ia.verifier_modeles": "Check available models",
+    "guide.ia.ground_label": "Search prices on the web",
+    "guide.ia.ground_note": "Essential for real prices. Only untick it if you keep getting 429 errors.",
+    "guide.ia.enregistrer": "Save settings",
+    "guide.discogs.titre": "Discogs prices (music)",
+    "guide.discogs.explain": "Personal token, generate it at discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. It stays on this phone. For anything record-related, Discogs replaces the AI's estimate with the actual going price and the number of copies for sale.",
+    "guide.discogs.placeholder": "Paste your Discogs token here",
+    "guide.discogs.enregistrer": "Save token",
+    "guide.discogs.tester": "Test Discogs connection",
+    "guide.rebrickable.titre": "LEGO sets (Rebrickable)",
+    "guide.rebrickable.explain": "Free key, instantly: rebrickable.com &rarr; your profile &rarr; Settings &rarr; API &rarr; Generate. Rebrickable doesn't publish prices — it gives the piece count and minifigure count, the two numbers that actually drive a used set's value.",
+    "guide.rebrickable.placeholder": "Paste your Rebrickable key",
+    "guide.rebrickable.piece": "€ per piece",
+    "guide.rebrickable.figurine": "€ per minifigure",
+    "guide.rebrickable.bareme": "Reseller rate — adjust it based on your own sales.",
+    "guide.rebrickable.tester": "Test Rebrickable connection",
+    "guide.brickset.titre": "LEGO sets (Brickset)",
+    "guide.brickset.explain": "Free key on request: brickset.com &rarr; your account &rarr; API &rarr; Request a key. Brickset gives the same piece/minifigure counts as Rebrickable, plus the official LEGO retail price when new. Acts as a second opinion when you don't have a Rebrickable key — the two never show up together on the same listing.",
+    "guide.brickset.placeholder": "Paste your Brickset key",
+    "guide.brickset.relais_html": `<b style="color:var(--mid)">Brickset blocks direct calls from a browser</b> — unlike Discogs and Rebrickable. The key alone isn't enough: you need a free relay that forwards the request on your behalf. Two minutes, once:<br>1. <b>dash.cloudflare.com</b> (free account) &rarr; Workers &amp; Pages &rarr; Create &rarr; "Hello World".<br>2. Paste the code below in place of the example, in the browser editor, then click Deploy.<br>3. Paste the <b>*.workers.dev</b> address it gives you into the field just below, and test again.`,
+    "guide.brickset.copier_relais": "Copy relay code",
+    "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relay, optional but required for Brickset to work)",
+    "guide.brickset.tester": "Test Brickset connection",
+    "guide.sauvegarde.titre": "Backup",
+    "guide.sauvegarde.liberer": "Free up space",
+    "guide.sauvegarde.explain": "Log, archived outings, calendar, and databases: everything is stored in this browser. An Android cache clear would wipe it without warning.",
+    "guide.sauvegarde.drive": "Back up to my Drive",
+    "guide.sauvegarde.telecharger": "Download backup",
+    "guide.sauvegarde.restaurer": "Restore a backup",
+    "guide.apparence.titre": "Appearance",
+    "guide.apparence.clair": "Light",
+    "guide.apparence.auto": "Auto",
+    "guide.apparence.sombre": "Dark",
+    "guide.langue.titre": "Language",
+    "guide.drive.titre": "My Google Drive files",
+    "guide.drive.cid_explain": "OAuth client ID (Google Cloud Console). Paste it once.",
+    "guide.drive.connecter": "Connect my Drive",
+    "guide.drive.choisir_fichiers": "Choose my files",
+    "guide.drive.synchroniser": "Sync now",
+    "guide.drive.oublier": "Forget my files",
+    "guide.drive.sync_explain": "Syncing restarts on its own when you open the app if you have a connection. Out in the field, comparisons happen locally — it works without a connection.",
+    "action.enregistrer": "Save",
+    "guide.nego.titre": "💬 Negotiation (The mechanics)",
+    "guide.nego.regle1": "Offer 50 to 60% of the asking price. Settle at 70%. Beyond that, you're paying resale price.",
+    "guide.nego.regle2": `Always bundle: "I'll take these four, 20 € and we're done" works better than four separate haggles.`,
+    "guide.nego.regle3": "Cash, small bills, exact amount already in hand. A held-out note settles any hesitation.",
+    "guide.nego.regle4": "Neutral face, even on a gem. The moment you light up, the price locks in.",
+    "guide.nego.regle5": "One number, then stay silent. The silence does the work for you.",
+    "guide.pieges.titre": "⚠️ Common Traps",
+    "guide.pieges.repro_html": "<b>Reproduction cartridges:</b> Label too crisp, Phillips screws. Nintendo uses 3.8mm tri-wing. Original plastic is matte.",
+    "guide.pieges.piles_html": "<b>Battery corrosion:</b> Always open the compartment. Green corrosion eats the contacts and costs more to fix than the item is worth.",
+    "guide.pieges.boite_html": "<b>Full box, game missing:</b> Open everything. A PS2 case with a karaoke disc inside is a classic trick.",
+    "guide.pieges.lot_html": "<b>The trap lot:</b> Three good items on top, filler underneath. Turn the box over before naming a price.",
+    "guide.sac.titre": "🎒 The Ideal Bag",
+    "nav.scan": "Scan",
+    "nav.dates": "Dates",
+    "nav.journal": "Log",
+    "nav.reglages": "Settings",
+    "mode.dit.objet": "Take several if you like: the back, the bottom, the flaw.",
+    "mode.dit.bac": "One photo per item, or one photo of several items. Each one gets priced.",
+    "mode.dit.stand": "A wide view of the table. The app tells you if it's worth digging through.",
+    "mode.btn.bac": "Sort this lot",
+    "mode.btn.stand": "Read this stall",
+    "shoot.photo.ajouter": "add a view",
+    "shoot.vues_suffix": " · {n} views",
+    "alert.photos_max": "8 photos maximum per analysis.",
+    "alert.bac_vide": "Take one or more photos of the lot first.",
+    "alert.file_pleine": "Queue full (4 items). Restart it as soon as you get signal.",
+    "alert.memoire_saturee": "Phone storage full: can't queue it.\n\nGo to Settings → Backup to free up space.",
+    "alert.file_vide": "The queue is empty.",
+    "alert.pas_de_reseau": "Still no network.",
+    "analyse.fermer": "Close analysis",
+    "bac.deja_badge": "OWNED",
+    "bac.ressemble": 'Looks like "{titre}", which you already have — check the edition.',
+    "bac.cote_discogs": "Discogs price",
+    "bac.en_collection": "in collection",
+    "bac.lus": "READ",
+    "bac.mode_bac": "LOT MODE",
+    "bac.n_a_prendre": "{n} to take",
+    "bac.deja_chez_toi": " · {n} already yours",
+    "bac.valeur_a_prendre": 'value of the "to take" ≈ {n}€',
+    "bac.section.prendre": "To take",
+    "bac.section.negocier": "To negotiate",
+    "bac.section.negocier_sub": "Only below the price shown.",
+    "bac.section.deja": "You already have it",
+    "bac.section.deja_sub": "Unless the edition differs from yours.",
+    "bac.section.laisse": "Skip",
+    "bac.section.deja_court": "Owned",
+    "bac.vide.titre": "Nothing readable",
+    "bac.vide.sub": "Move closer, or spread the sleeves apart to expose the spines.",
+    "bac.bar.a_prendre": "{n} to take",
+    "bac.bar.a_negocier": "{n} to negotiate",
+    "bac.bar.deja": "{n} owned",
+    "bac.bar.laisse": "{n} skip",
+    "bac.cart.enregistre": "Lot recorded",
+    "bac.cart.journal_maj": "Hunt log updated",
+    "bac.cart.resume_un": "1 item · resale ≈ {val}€",
+    "bac.cart.resume_plusieurs": "{n} items · resale ≈ {val}€",
+    "bac.cart.ne_depasse_pas": "don't go above {max}€ for the lot",
+    "bac.cart.coche": "tick what you're taking",
+    "bac.cart.jai_achete": "I bought it",
+    "bac.buy.coche_dabord": "Tick the items you're taking first.",
+    "bac.buy.prompt_paye_un": "How much did you pay for this item in total?",
+    "bac.buy.prompt_paye_plusieurs": "How much did you pay for these {n} items in total?",
+    "bac.buy.prompt_demande_un": "How much was he asking for this item, before negotiating? (optional)",
+    "bac.buy.prompt_demande_plusieurs": "How much was he asking for these {n} items, before negotiating? (optional)",
+    "fiche.prix_verifier.titre": "Price to verify",
+    "fiche.prix_verifier.texte": "The item is identified, but no sale could be confirmed. Open eBay below — the search is already set up — and note what you see.",
+    "fiche.prix_constate_placeholder": "Observed price €",
+    "fiche.recalculer": "Recalculate",
+    "fiche.passe_ton_chemin.titre": "Walk away",
+    "fiche.passe_ton_chemin.texte": "What you'd get for it wouldn't even cover the packaging.",
+    "fiche.verifie_dabord": "Check first: {items}.",
+    "fiche.pour_lot": " for the lot",
+    "fiche.pour_lot_n": " for the lot of {n} items",
+    "fiche.soit_prix_piece": "That's {prix} € per item — useful if he wants to sell individually.",
+    "fiche.demande_ne_negocie": "He's asking {dem} €: don't negotiate, just take it.",
+    "fiche.demande_repose": "He's asking {dem} €. Put it back.",
+    "fiche.propose_monter": "Offer {ouv} €. You can go up to {plaf} €{pour}.",
+    "fiche.propose_ne_depasse": "Offer {ouv} €. Don't go above {plaf} €{pour}.",
+    "fiche.prix_tu_as_constate": "the price YOU observed",
+    "fiche.ce_qui_se_vend_bon_etat": "what it sells for in good condition",
+    "fiche.lot_entier_suffix": ", the whole lot",
+    "fiche.meilleur_etat_courant": "better than the usual condition ({etat})",
+    "fiche.etat_x": "condition {etat}",
+    "fiche.manque": "{nom} missing",
+    "fiche.cout_envoi": "what the size costs you to ship",
+    "fiche.dans_poche_revente": "in your pocket on resale",
+    "fiche.regle_tiers": "your rule: never buy above a third",
+    "fiche.pourquoi_plafond": "Why {plafond}€?",
+    "fiche.etat_reel.titre": "Actual condition",
+    "fiche.etat_reel.que_tu_constates": "that YOU observe",
+    "fiche.etat_reel.note3": "· grade 3 is the market reference",
+    "fiche.vu_photo": "Seen in the photo: {texte}",
+    "fiche.px.aucun_marche": "No reliable market price found. The settings above are still useful: note the item, then check yourself on Vinted or eBay.",
+    "fiche.px.tu_annonces": "You state",
+    "fiche.px.premier_chiffre": "the opening number",
+    "fiche.px.tu_vises": "You aim for",
+    "fiche.px.accord_normal": "the normal deal",
+    "fiche.px.tu_te_leves": "You walk",
+    "fiche.px.au_dela_tu_perds": "beyond that, you lose",
+    "fiche.px.plafond_max": "{plafond}€ maximum",
+    "fiche.px.seulement_donne": "Only if it's basically free",
+    "fiche.px.rien_a_negocier": "At that price there's nothing to negotiate: offer {ouv}€, and don't push past {plaf}€. It's only worth it slipped into a lot.",
+    "fiche.px.marge_insuffisante": "The margin doesn't even cover shipping. Only take it to round out a lot you're already selling.",
+    "fiche.px.le_marche": "the market",
+    "fiche.px.etat_court": "condition",
+    "fiche.px.completude": "completeness",
+    "fiche.px.de_volume": "for size",
+    "fiche.px.nets_pour_toi": "net for you",
+    "fiche.px.le_lot_de": " (lot of {n})",
+    "fiche.px.dem_sous_cible": "He's asking {dem}€: that's already below your target. Take it, no discussion.",
+    "fiche.px.dem_negociable": "He's asking {dem}€: negotiable, but don't go above {plaf}€.",
+    "fiche.px.dem_repose": "He's asking {dem}€, your ceiling is {plaf}€. Put it back.",
+    "fiche.circ.rare": "Rare",
+    "fiche.circ.peu_courant": "Uncommon",
+    "fiche.circ.courant": "Common",
+    "fiche.circ.massif": "Mass pressing",
+    "fiche.corps.doit_etre_la": "What should be there",
+    "fiche.absent_valeur": "missing — {perte}% less value",
+    "fiche.non_visible": "not visible — to check (would cost {perte}%)",
+    "fiche.present": "present",
+    "fiche.corps.verifier_prix": "Verify the price for real",
+    "fiche.corps.couter_cher": "What could cost you",
+    "fiche.corps.etat_photo_menti": "Condition, if the photo lied to you",
+    "fiche.corps.identification": "Identification",
+    "fiche.corps.copier_reference": "Copy reference",
+    "fiche.corps.aucune_reference": "No visible reference.",
+    "fiche.titre_tres_courant": "This is a very common title",
+    "fiche.je_ten_donne": " I'll give you {ouv} € for it.",
+    "fiche.reference_copiee": "Reference copied: {code}",
+    "fiche.copie_reference_prompt": "Copy the reference:",
+    "fiche.ta_vente_reelle": "your actual sale",
+    "fiche.cote.verifiee": "Verified price",
+    "fiche.cote.confiante": "Confident estimate",
+    "fiche.cote.estimation": "Estimate",
+    "fiche.ton_max": "YOUR MAX",
+    "fiche.revente_nette": "Net resale ≈ {n}€",
+    "fiche.marche_inconnu": "Market unknown",
+    "fiche.pieges_plus_un": "+ 1 more trap detailed below",
+    "fiche.pieges_plus_plusieurs": "+ {n} more traps detailed below",
+    "fiche.demande_placeholder": "Asked €",
+    "fiche.demande_title": "What he was asking before negotiating, type it yourself — never pre-filled: a forgotten entry should stay a missing data point (excluded from stats), never an old number left showing by mistake (wrongly included).",
+    "fiche.paye_placeholder": "Paid €",
+    "fiche.je_lachete": "Buy it",
+    "fiche.fermer": "Close",
+    "stand.rien_evident": "Nothing too obvious at first glance.",
+    "stand.objet_non_nomme": "Unnamed item",
+    "stand.verif": "Check: {texte}",
+    "stand.titre": "STALL ANALYSIS",
+    "stand.a_fouiller": "Worth digging through",
+    "stand.rien_flagrant": "Nothing obvious",
+    "stand.cibles": "Potential Targets Spotted",
+    "stand.conseil": "Strategic Advice",
+    "carte.disc.moins_cher": "cheapest for sale",
+    "carte.disc.exemplaires_dispo": "copies available",
+    "carte.disc.ont_veulent": "have it / want it",
+    "carte.disc.prix_max": "{n}€ maximum",
+    "carte.disc.pour_revendre": "to resell around {n}€ — a notch below the cheapest online",
+    "carte.disc.ouvrir": "Open Discogs listing",
+    "carte.disc.verification": "Checking Discogs price…",
+    "carte.disc.jeton_refuse": "Discogs token rejected — paste it again in Settings.",
+    "carte.disc.timeout": "Discogs didn't respond in time (slow network). Try again.",
+    "carte.disc.injoignable": "Discogs unreachable from the browser.",
+    "carte.disc.cors_note": "If this keeps happening, it's the CORS restriction: let me know, we'll set up a relay.",
+    "carte.disc.marche_src": "Discogs · {n} for sale",
+    "verif.requete_ecrite": "The search is already written: one tap, and you see the real prices.",
+    "verif.prix_constate": "Observed price",
+    "verif.prix_constate_aide": "what you just saw, for a copy in good condition",
+    "verif.prix_verifie_toi": "Price verified by you: the whole calculation rests on it.",
+    "verif.revenir_estimation": "Back to the estimate",
+    "verif.marche_src": "verified by you",
+    "comp.voir": "view",
+    "comp.rapporte_ia": "Reported by the AI. Anything without a link hasn't been verified.",
+    "carte.pieces": "pieces",
+    "carte.figurines": "minifigures",
+    "carte.voir_set": "View the set",
+    "carte.lego.inconnu": "unknown",
+    "carte.lego.au_moins": "at least {n}€",
+    "carte.lego.figs_non_comptees": "minifigures not counted (network)",
+    "carte.lego.complet_sans_boite": "complete, no box",
+    "carte.lego.bareme": "Reseller rate, not a market price: Rebrickable doesn't publish prices. Adjust it in Settings with what you actually collect.",
+    "carte.lego.recherche": "Looking up set {num} on Rebrickable…",
+    "carte.lego.marche_src_figs": "Rebrickable · {pieces} pieces, {figs} minifigures",
+    "carte.lego.marche_src_nofigs": "Rebrickable · {pieces} pieces, minifigures not counted",
+    "carte.lego.cle_refusee": "Rebrickable key rejected — paste it again in Settings.",
+    "carte.lego.injoignable": "Rebrickable unreachable (network).",
+    "carte.brick.neuf_dev": "new ({dev})",
+    "carte.brick.prix_neuf": "retail price",
+    "carte.brick.explain": "Official LEGO retail price when the set launched, not a used market price: use it as a reference ceiling, not a resale price.",
+    "carte.brick.recherche": "Looking up set {num} on Brickset…",
+    "carte.brick.marche_src": "Brickset · {pieces} pieces, {figs} minifigures",
+    "carte.brick.cle_refusee": "Brickset key rejected — paste it again in Settings.",
+    "carte.brick.injoignable": "Brickset unreachable (network).",
+    "avis.deja_obtenu": "Result already obtained today — no quota used.",
+    "pricing.etat.5": "New / sealed",
+    "pricing.etat.4": "Excellent",
+    "pricing.etat.3": "Good",
+    "pricing.etat.2": "Fair",
+    "pricing.etat.1": "Damaged",
+    "pricing.etat.0": "Not assessed",
+    "pricing.port.pochette": "Sleeve",
+    "pricing.port.petit": "Small parcel",
+    "pricing.port.moyen": "Medium parcel",
+    "pricing.port.gros": "Large parcel",
+    "pricing.port.encombrant": "Bulky",
+    "pricing.verdict.a_verifier": "TO CHECK",
+    "pricing.verdict.laisse": "SKIP",
+    "pricing.verdict.a_ce_prix": "ONLY AT THIS PRICE",
+    "pricing.verdict.rafle": "GRAB IT",
+    "pricing.verdict.negocie": "NEGOTIATE",
+    "pricing.resume.manque": "Missing found: −{perte}% applied",
+    "pricing.resume.rien_manque": "Nothing missing: no discount",
+    "pricing.resume.element_verifier_un": " · 1 item to check on site",
+    "pricing.resume.element_verifier_plusieurs": " · {q} items to check on site",
+    "disc.rarete.aucun": "No copies for sale",
+    "disc.rarete.massif": "Mass pressing — {n} for sale",
+    "disc.rarete.exemplaires": "{n} copies for sale",
+    "disc.rarete.seulement": "Only {n} for sale",
+    "disc.rarete.introuvable": "Market not found",
+    "disc.demande.plus_veulent": "More people want it than own it (×{ratio})",
+    "disc.demande.correcte": "Fair demand ({pct} want it per 100 who have it)",
+    "disc.demande.peu": "Low demand ({pct} per 100)"
+  }
+};
+const LOCALE_STORE = "insertcoin.locale";
+const LOCALES = ["fr", "nl", "en"];
+const DEFAULT_LOCALE = "fr";
+function locale() {
+  try {
+    const l = localStorage.getItem(LOCALE_STORE);
+    return LOCALES.includes(l) ? l : DEFAULT_LOCALE;
+  } catch (e) {
+    return DEFAULT_LOCALE;
+  }
+}
+function localeSet(l) {
+  if (!LOCALES.includes(l)) return;
+  try {
+    localStorage.setItem(LOCALE_STORE, l);
+  } catch (e) {
+  }
+}
+function t(key, vars) {
+  const l = locale();
+  const parLangue = DICT[l] && DICT[l][key];
+  const brut = parLangue !== void 0 ? parLangue : DICT[DEFAULT_LOCALE] && DICT[DEFAULT_LOCALE][key] !== void 0 ? DICT[DEFAULT_LOCALE][key] : key;
+  if (!vars) return brut;
+  return brut.replace(/\{(\w+)\}/g, (m, k) => k in vars ? String(vars[k]) : m);
+}
+function i18nAppliquer(doc) {
+  const d = document;
+  d.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  d.querySelectorAll("[data-i18n-html]").forEach((el) => {
+    el.innerHTML = t(el.dataset.i18nHtml);
+  });
+  d.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  });
+  d.querySelectorAll("[data-i18n-label]").forEach((el) => {
+    el.setAttribute("aria-label", t(el.dataset.i18nLabel));
+  });
+}
+const ETAT_LBL = { 5: "pricing.etat.5", 4: "pricing.etat.4", 3: "pricing.etat.3", 2: "pricing.etat.2", 1: "pricing.etat.1", 0: "pricing.etat.0" };
 const ETAT_COEF = { 5: 1.8, 4: 1.25, 3: 1, 2: 0.6, 1: 0.3, 0: 0.9 };
 const PERTE_DEFAUT = { cle: 40, autre: 8 };
 const PERTE_PLANCHER = 0.15;
-const PORT_LBL = { pochette: "Pochette", petit: "Petit colis", moyen: "Colis moyen", gros: "Gros colis", encombrant: "Encombrant" };
+const PORT_LBL = { pochette: "pricing.port.pochette", petit: "pricing.port.petit", moyen: "pricing.port.moyen", gros: "pricing.port.gros", encombrant: "pricing.port.encombrant" };
 const PORT_COUT = { pochette: 1, petit: 2, moyen: 3, gros: 6, encombrant: 10 };
 const PORT_PART_MAX = 0.25;
 const CIRCULATION_COEF = { rare: 1, "peu courant": 1, courant: 1, massif: 0.6 };
 function nombre(v) {
   if (typeof v === "number") return isFinite(v) ? v : 0;
-  const t = String(v || "").replace(/\s/g, "").replace(/,(\d)/g, ".$1");
-  const nb = (t.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(isFinite);
+  const t2 = String(v || "").replace(/\s/g, "").replace(/,(\d)/g, ".$1");
+  const nb = (t2.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(isFinite);
   if (!nb.length) return 0;
   if (nb.length >= 2 && /\d\s*(?:-|–|à|a|et)\s*\d/.test(String(v))) return (nb[0] + nb[1]) / 2;
   return nb[0];
 }
 function catJoli(c) {
-  const t = String(c || "").replace(/[_-]+/g, " ").trim().toLowerCase();
-  return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+  const t2 = String(c || "").replace(/[_-]+/g, " ").trim().toLowerCase();
+  return t2 ? t2.charAt(0).toUpperCase() + t2.slice(1) : "";
 }
 function attNorm(a) {
   if (!Array.isArray(a)) return [];
@@ -493,7 +1459,7 @@ function attNorm(a) {
   }).filter((x) => x && x.n);
 }
 function attPerte(att) {
-  return att.filter((x) => x.vu === "non").reduce((t, x) => t + x.perte, 0);
+  return att.filter((x) => x.vu === "non").reduce((t2, x) => t2 + x.perte, 0);
 }
 function attManquants(att) {
   return att.filter((x) => x.vu === "non");
@@ -574,19 +1540,19 @@ function ficheCalc(f) {
   };
 }
 function ficheVerdict(f, c, demande) {
-  if (!c.base) return { v: "N", t: "À VÉRIFIER" };
-  if (c.plafond < 1) return { v: "L", t: "LAISSE" };
-  if (!demande) return { v: "N", t: "À CE PRIX SEULEMENT" };
-  if (demande <= c.cible) return { v: "R", t: "RAFLE" };
-  if (demande <= c.plafond) return { v: "N", t: "NÉGOCIE" };
-  return { v: "L", t: "LAISSE" };
+  if (!c.base) return { v: "N", t: "pricing.verdict.a_verifier" };
+  if (c.plafond < 1) return { v: "L", t: "pricing.verdict.laisse" };
+  if (!demande) return { v: "N", t: "pricing.verdict.a_ce_prix" };
+  if (demande <= c.cible) return { v: "R", t: "pricing.verdict.rafle" };
+  if (demande <= c.plafond) return { v: "N", t: "pricing.verdict.negocie" };
+  return { v: "L", t: "pricing.verdict.laisse" };
 }
 function attResume(att) {
   const perte = attPerte(att);
   const q = att.filter((x) => x.vu === "?").length;
-  let t = perte ? "Manque constaté : −" + perte + "% appliqués" : "Rien ne manque : aucune décote";
-  if (q) t += " · " + q + " élément" + (q > 1 ? "s" : "") + " à vérifier sur place";
-  return t;
+  let texte = perte ? t("pricing.resume.manque", { perte }) : t("pricing.resume.rien_manque");
+  if (q) texte += t(q > 1 ? "pricing.resume.element_verifier_plusieurs" : "pricing.resume.element_verifier_un", { q });
+  return texte;
 }
 function compNorm(a) {
   if (!Array.isArray(a)) return [];
@@ -608,11 +1574,11 @@ async function discThrottle() {
   DISC_LAST = Date.now();
 }
 async function discGet(chemin, params) {
-  const t = discToken();
-  if (!t) throw new Error("Aucun jeton Discogs");
+  const token = discToken();
+  if (!token) throw new Error("Aucun jeton Discogs");
   if (!navigator.onLine) throw new Error("Hors réseau");
   await discThrottle();
-  const q = new URLSearchParams({ ...params || {}, token: t });
+  const q = new URLSearchParams({ ...params || {}, token });
   const r = await fetchAvecDelai(DISC_API + chemin + "?" + q.toString(), {}, 1e4);
   if (r.status === 401 || r.status === 403) throw new Error("JETON");
   if (r.status === 429) throw new Error("Trop de requêtes — attends une minute");
@@ -627,10 +1593,10 @@ function discPertinent(query, hit) {
 const DISC_NON = /(wii|switch|playstation|ps[1-5]\b|xbox|nintendo|gamecube|dreamcast|megadrive|game ?boy|nes\b|snes\b|psp\b|ds\b|cartouche|manette|console|lego|playmobil|funko|figurine|puzzle|pokemon|magic the gathering|yu-?gi-?oh)/i;
 const DISC_OUI = /(vinyle?|vinyl|33 ?tours?|45 ?tours?|lp\b|ep\b|maxi|album|cd\b|pressage|discogs)/i;
 function discMusique(txt) {
-  const t = String(txt || "");
-  if (t.trim().length < 3) return false;
-  if (DISC_OUI.test(t)) return true;
-  return !DISC_NON.test(t);
+  const t2 = String(txt || "");
+  if (t2.trim().length < 3) return false;
+  if (DISC_OUI.test(t2)) return true;
+  return !DISC_NON.test(t2);
 }
 async function discCote(query) {
   const cle = "d:" + norm(query).slice(0, 80);
@@ -673,25 +1639,25 @@ function discLire(c) {
   const ratio = c.ont ? c.veulent / c.ont : 0;
   let rarete, rcls;
   if (c.envente === 0 && c.ont < 500) {
-    rarete = "Aucun exemplaire en vente";
+    rarete = t("disc.rarete.aucun");
     rcls = "r";
   } else if (c.envente > 150) {
-    rarete = "Pressage massif — " + c.envente + " en vente";
+    rarete = t("disc.rarete.massif", { n: c.envente });
     rcls = "c";
   } else if (c.envente > 40) {
-    rarete = c.envente + " exemplaires en vente";
+    rarete = t("disc.rarete.exemplaires", { n: c.envente });
     rcls = "c";
   } else if (c.envente > 0) {
-    rarete = "Seulement " + c.envente + " en vente";
+    rarete = t("disc.rarete.seulement", { n: c.envente });
     rcls = "r";
   } else {
-    rarete = "Marché introuvable";
+    rarete = t("disc.rarete.introuvable");
     rcls = "";
   }
   let demande = "";
-  if (ratio >= 1) demande = "Plus de gens le veulent que ne le possèdent (×" + ratio.toFixed(1) + ")";
-  else if (ratio >= 0.4) demande = "Demande correcte (" + Math.round(ratio * 100) + " veulent pour 100 qui l'ont)";
-  else if (c.ont > 0) demande = "Peu demandé (" + Math.round(ratio * 100) + " pour 100)";
+  if (ratio >= 1) demande = t("disc.demande.plus_veulent", { ratio: ratio.toFixed(1) });
+  else if (ratio >= 0.4) demande = t("disc.demande.correcte", { pct: Math.round(ratio * 100) });
+  else if (c.ont > 0) demande = t("disc.demande.peu", { pct: Math.round(ratio * 100) });
   let coef = c.envente > 150 ? 0.7 : c.envente > 40 ? 0.8 : 0.9;
   const revente = c.bas ? Math.round(c.bas * coef) : 0;
   const prixMax = revente ? Math.max(1, Math.round(revente / 3)) : 0;
@@ -715,8 +1681,8 @@ async function legoGet(chemin, params) {
   return r.json();
 }
 function legoNum(n) {
-  const t = String(n || "").trim();
-  return /-\d+$/.test(t) ? t : t + "-1";
+  const t2 = String(n || "").trim();
+  return /-\d+$/.test(t2) ? t2 : t2 + "-1";
 }
 async function legoSet(num) {
   const cle = "l:" + legoNum(num);
@@ -730,7 +1696,7 @@ async function legoSet(num) {
   let figs = 0, figsConnu = true;
   try {
     const m = await legoGet("/sets/" + legoNum(num) + "/minifigs/", { page_size: 100 });
-    if (m && Array.isArray(m.results)) figs = m.results.reduce((t, x) => t + (Number(x.quantity) || 1), 0);
+    if (m && Array.isArray(m.results)) figs = m.results.reduce((t2, x) => t2 + (Number(x.quantity) || 1), 0);
   } catch (e) {
     figsConnu = false;
   }
@@ -747,11 +1713,11 @@ async function legoSet(num) {
   return cote;
 }
 function legoValeur(c) {
-  const t = legoTarifs();
-  const parts = c.pieces * t.piece;
+  const t2 = legoTarifs();
+  const parts = c.pieces * t2.piece;
   const figsConnu = c.figsConnu !== false;
-  const figs = figsConnu ? c.figs * t.fig : 0;
-  return { parts, figs, total: Math.round(parts + figs), t, figsConnu };
+  const figs = figsConnu ? c.figs * t2.fig : 0;
+  return { parts, figs, total: Math.round(parts + figs), t: t2, figsConnu };
 }
 function legoNumTrouve(f) {
   const txt = (f.objet || "") + " " + (f.categorie || "") + " " + (f.identification || "");
@@ -896,7 +1862,7 @@ function collBanner(query) {
   if (g) {
     const n = g.titres.length;
     const mot = g.kind === "jeux" ? n > 1 ? "jeux sur cette console" : "jeu sur cette console" : n > 1 ? "disques de cet artiste" : "disque de cet artiste";
-    const liste = g.titres.slice(0, 8).map((t) => `<li>${esc(t)}</li>`).join("");
+    const liste = g.titres.slice(0, 8).map((t2) => `<li>${esc(t2)}</li>`).join("");
     const reste = n > 8 ? `<li class="plus">et ${n - 8} autre${n - 8 > 1 ? "s" : ""}…</li>` : "";
     return `<div class="dupbox dup-artist">
       <div class="dt">${n} ${mot}</div>
@@ -967,17 +1933,17 @@ function rowsFromAOA(aoa, kind) {
   const out = [];
   for (let r = start; r < aoa.length; r++) {
     const row = (aoa[r] || []).map((x) => String(x || "").trim());
-    let a = "", t = "";
+    let a = "", t2 = "";
     if (ia >= 0 || it >= 0) {
       a = row[ia] || "";
-      t = row[it] || "";
+      t2 = row[it] || "";
     }
-    if (!a && !t) {
+    if (!a && !t2) {
       const nz = row.filter(Boolean);
       a = nz[0] || "";
-      t = nz[1] || "";
+      t2 = nz[1] || "";
     }
-    if (a || t) out.push({ a, t, k: kind });
+    if (a || t2) out.push({ a, t: t2, k: kind });
   }
   return out;
 }
@@ -1461,44 +2427,43 @@ function fichePaint() {
     hd.className = "aihead " + vd.v;
     const num = hd.querySelector(".num"), lab = hd.querySelector(".v"), r = hd.querySelector(".r");
     if (num) num.textContent = c.plafond ? c.plafond + "€" : "—";
-    if (lab) lab.textContent = vd.t;
-    if (r) r.textContent = c.net ? "Revente nette ≈ " + c.net + "€" : "Marché inconnu";
+    if (lab) lab.textContent = t(vd.t);
+    if (r) r.textContent = c.net ? t("fiche.revente_nette", { n: c.net }) : t("fiche.marche_inconnu");
   }
   LAST = { objet: FICHE.objet, revente: c.net, prixMax: c.plafond, demande: dem };
 }
 function ficheAction(f, c, dem) {
   if (!c.base) return `<div class="acte-plat">
-    <b>Prix à vérifier</b>
-    <span>L'objet est identifié, mais aucune vente n'a pu être confirmée.
-      Ouvre eBay ci-dessous — la recherche est déjà prête — et note ce que tu vois.</span>
+    <b>${t("fiche.prix_verifier.titre")}</b>
+    <span>${t("fiche.prix_verifier.texte")}</span>
     <div class="vf-g vf-court">${VERIF_SITES.slice(0, 3).map((x) => {
     const q = verifQuery(f, x.pref);
     return `<a class="vf" href="${x.url(q)}" target="_blank" rel="noopener"><b>${x.nom}</b><i>${x.note}</i></a>`;
   }).join("")}</div>
     <div class="vf-row">
-      <input id="vf-prix-h" type="number" inputmode="decimal" placeholder="Prix constaté €"
+      <input id="vf-prix-h" type="number" inputmode="decimal" placeholder="${t("fiche.prix_constate_placeholder")}"
         onchange="verifSet(this.value)">
-      <button onclick="verifSet(document.getElementById('vf-prix-h').value)">Recalculer</button>
+      <button onclick="verifSet(document.getElementById('vf-prix-h').value)">${t("fiche.recalculer")}</button>
     </div>
   </div>`;
-  if (!c.plafond) return `<div class="acte-plat"><b>Passe ton chemin</b>
-    <span>Ce que tu en tirerais ne couvrirait même pas l'emballage.</span></div>`;
+  if (!c.plafond) return `<div class="acte-plat"><b>${t("fiche.passe_ton_chemin.titre")}</b>
+    <span>${t("fiche.passe_ton_chemin.texte")}</span></div>`;
   const incertain = f.attendu.filter((x) => x.vu === "?");
   const absent = attManquants(f.attendu);
   let alerte = "";
-  if (incertain.length) alerte = "Vérifie d'abord : " + incertain.slice(0, 2).map((x) => x.n).join(", ") + ".";
-  const pour = f.lot ? " pour le lot" + (f.lotNb ? " de " + f.lotNb + " pièces" : "") : "";
-  const unite = f.lot && f.lotNb > 1 ? "Soit " + (c.plafond / f.lotNb).toFixed(2).replace(".", ",") + " € la pièce — utile s'il veut vendre au détail." : "";
+  if (incertain.length) alerte = t("fiche.verifie_dabord", { items: incertain.slice(0, 2).map((x) => x.n).join(", ") });
+  const pour = f.lot ? f.lotNb ? t("fiche.pour_lot_n", { n: f.lotNb }) : t("fiche.pour_lot") : "";
+  const unite = f.lot && f.lotNb > 1 ? t("fiche.soit_prix_piece", { prix: (c.plafond / f.lotNb).toFixed(2).replace(".", ",") }) : "";
   let phrase, cls = "oui";
   if (dem && dem <= c.ouverture) {
-    phrase = "Il en demande " + dem + " € : ne négocie pas, prends.";
+    phrase = t("fiche.demande_ne_negocie", { dem });
   } else if (dem && dem > c.plafond) {
-    phrase = "Il en demande " + dem + " €. Repose-le.";
+    phrase = t("fiche.demande_repose", { dem });
     cls = "non";
   } else if (dem) {
-    phrase = "Propose " + c.ouverture + " €. Tu peux monter jusqu'à " + c.plafond + " €" + pour + ".";
+    phrase = t("fiche.propose_monter", { ouv: c.ouverture, plaf: c.plafond, pour });
   } else {
-    phrase = "Propose " + c.ouverture + " €. Ne dépasse pas " + c.plafond + " €" + pour + ".";
+    phrase = t("fiche.propose_ne_depasse", { ouv: c.ouverture, plaf: c.plafond, pour });
   }
   return `<div class="acte ${cls}">
     <div class="acte-t"><b>${phrase}</b>
@@ -1509,66 +2474,65 @@ function ficheAction(f, c, dem) {
 }
 function ficheParce(f, c, absent) {
   const l = [];
-  l.push(`<b>${c.base}€</b> — ${f.marcheVu ? "le prix que TU as constaté" : "ce que ça se vend en bon état"}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? ", le lot entier" : ""}`);
-  if (c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — meilleur que l'état courant (${ETAT_LBL[f.etat].toLowerCase()})`);
-  else if (c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — état ${ETAT_LBL[f.etat].toLowerCase()}`);
-  absent.forEach((x) => l.push(`<b>−${x.perte}%</b> — ${esc(x.n)} manque`));
-  if (c.port) l.push(`<b>−${c.port}€</b> — ce que le volume te coûte à l'envoi`);
-  l.push(`= <b>${c.net}€</b> dans ta poche à la revente`);
-  l.push(`<b>÷3</b> — ta règle : tu n'achètes jamais au-dessus du tiers`);
-  return `<details class="pq"><summary>Pourquoi ${c.plafond}€ ?</summary>
+  l.push(`<b>${c.base}€</b> — ${f.marcheVu ? t("fiche.prix_tu_as_constate") : t("fiche.ce_qui_se_vend_bon_etat")}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? t("fiche.lot_entier_suffix") : ""}`);
+  if (c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — ${esc(t("fiche.meilleur_etat_courant", { etat: t(ETAT_LBL[f.etat]).toLowerCase() }))}`);
+  else if (c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — ${esc(t("fiche.etat_x", { etat: t(ETAT_LBL[f.etat]).toLowerCase() }))}`);
+  absent.forEach((x) => l.push(`<b>−${x.perte}%</b> — ${esc(t("fiche.manque", { nom: x.n }))}`));
+  if (c.port) l.push(`<b>−${c.port}€</b> — ${t("fiche.cout_envoi")}`);
+  l.push(`= <b>${c.net}€</b> ${t("fiche.dans_poche_revente")}`);
+  l.push(`<b>÷3</b> — ${t("fiche.regle_tiers")}`);
+  return `<details class="pq"><summary>${esc(t("fiche.pourquoi_plafond", { plafond: c.plafond }))}</summary>
     <ol>${l.map((x) => `<li>${x}</li>`).join("")}</ol></details>`;
 }
 function ficheReglages(f, c) {
   const b = (n) => `<button class="et${f.etat === n ? " on" : ""}" onclick="ficheEtatSet(${n})">
-    <b>${n}</b><span>${ETAT_LBL[n]}</span></button>`;
+    <b>${n}</b><span>${t(ETAT_LBL[n])}</span></button>`;
   return `
     <div class="reg" id="fiche-reglages">
-      <div class="reg-t">État réel <i>${f.echelle ? esc(f.echelle) : "que TU constates"} · la note 3 est la référence du marché</i></div>
+      <div class="reg-t">${t("fiche.etat_reel.titre")} <i>${f.echelle ? esc(f.echelle) : t("fiche.etat_reel.que_tu_constates")} ${t("fiche.etat_reel.note3")}</i></div>
       <div class="reg-et">${[5, 4, 3, 2, 1].map(b).join("")}</div>
-      ${f.etatDit ? `<div class="reg-dit">Vu sur la photo : ${esc(f.etatDit)}</div>` : ""}
+      ${f.etatDit ? `<div class="reg-dit">${esc(t("fiche.vu_photo", { texte: f.etatDit }))}</div>` : ""}
     </div>`;
 }
 function fichePrix(f, c, dem) {
-  if (!c.base) return `<div class="px-vide">Aucun prix de marché fiable trouvé.
-    Les réglages ci-dessus restent utiles : note l'objet, puis vérifie toi-même sur Vinted ou eBay.</div>`;
+  if (!c.base) return `<div class="px-vide">${t("fiche.px.aucun_marche")}</div>`;
   const ligne = (cls, lbl, val, aide) => `<div class="px ${cls}"><div class="px-l">${lbl}</div><div class="px-v">${val}€</div><div class="px-a">${aide}</div></div>`;
   const grille = c.echelonne ? `<div class="px-grid">
-        ${ligne("o", "Tu annonces", c.ouverture, "le premier chiffre")}
-        ${ligne("c", "Tu vises", c.cible, "l'accord normal")}
-        ${ligne("p", "Tu te lèves", c.plafond, "au-delà, tu perds")}
+        ${ligne("o", t("fiche.px.tu_annonces"), c.ouverture, t("fiche.px.premier_chiffre"))}
+        ${ligne("c", t("fiche.px.tu_vises"), c.cible, t("fiche.px.accord_normal"))}
+        ${ligne("p", t("fiche.px.tu_te_leves"), c.plafond, t("fiche.px.au_dela_tu_perds"))}
       </div>` : `<div class="px-petit">
-        <b>${c.plafond ? c.plafond + "€ maximum" : "Seulement si c'est donné"}</b>
-        <span>${c.plafond ? "À ce prix-là il n'y a rien à négocier : propose " + c.ouverture + "€, et n'insiste pas au-delà de " + c.plafond + "€. Ça n'a d'intérêt que glissé dans un lot." : "La marge ne couvre même pas l'envoi. À prendre uniquement pour compléter un lot que tu vends déjà."}</span>
+        <b>${c.plafond ? esc(t("fiche.px.plafond_max", { plafond: c.plafond })) : t("fiche.px.seulement_donne")}</b>
+        <span>${c.plafond ? esc(t("fiche.px.rien_a_negocier", { ouv: c.ouverture, plaf: c.plafond })) : t("fiche.px.marge_insuffisante")}</span>
       </div>`;
   return `
     ${grille}
     <div class="px-calc">
-      <b>${c.base}€</b> le marché${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}
-      · <b>×${c.ce}</b> état · <b>×${c.cc}</b> complétude
-      ${c.port ? ` · <b>−${c.port}€</b> de volume` : ""}
-      → <b>${c.net}€</b> nets pour toi${f.lot && f.lotNb > 1 ? ` (le lot de ${f.lotNb})` : ""}
+      <b>${c.base}€</b> ${t("fiche.px.le_marche")}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}
+      · <b>×${c.ce}</b> ${t("fiche.px.etat_court")} · <b>×${c.cc}</b> ${t("fiche.px.completude")}
+      ${c.port ? ` · <b>−${c.port}€</b> ${t("fiche.px.de_volume")}` : ""}
+      → <b>${c.net}€</b> ${t("fiche.px.nets_pour_toi")}${f.lot && f.lotNb > 1 ? esc(t("fiche.px.le_lot_de", { n: f.lotNb })) : ""}
     </div>
-    ${dem ? `<div class="px-dem">${dem <= c.cible ? "Il en demande " + dem + "€ : c'est déjà sous ta cible. Prends sans discuter." : dem <= c.plafond ? "Il en demande " + dem + "€ : négociable, mais ne dépasse pas " + c.plafond + "€." : "Il en demande " + dem + "€, ton plafond est à " + c.plafond + "€. Repose-le."}</div>` : ""}`;
+    ${dem ? `<div class="px-dem">${esc(dem <= c.cible ? t("fiche.px.dem_sous_cible", { dem }) : dem <= c.plafond ? t("fiche.px.dem_negociable", { dem, plaf: c.plafond }) : t("fiche.px.dem_repose", { dem, plaf: c.plafond }))}</div>` : ""}`;
 }
 const CIRC_MOT = {
-  rare: ["Rare", "r"],
-  "peu courant": ["Peu courant", "r"],
-  courant: ["Courant", "c"],
-  massif: ["Pressage massif", "c"]
+  rare: ["fiche.circ.rare", "r"],
+  "peu courant": ["fiche.circ.peu_courant", "r"],
+  courant: ["fiche.circ.courant", "c"],
+  massif: ["fiche.circ.massif", "c"]
 };
 function ficheCorps(f) {
   const ci = CIRC_MOT[f.circulation];
   const bloc = (id, titre, corps, ouvert) => corps ? `<details class="bl"${ouvert ? " open" : ""}><summary>${titre}</summary><div class="bl-in">${corps}</div></details>` : "";
-  const listes = (t) => t.length ? `<ul>${t.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  const listes = (arr) => arr.length ? `<ul>${arr.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
   return `
     ${bloc(
     "ck",
-    "Ce qui doit être là" + (f.attendu.length ? ` <i>${f.attendu.length}</i>` : ""),
+    t("fiche.corps.doit_etre_la") + (f.attendu.length ? ` <i>${f.attendu.length}</i>` : ""),
     f.attendu.length ? `<div class="fi-ck">${f.attendu.map((x, i) => `<label class="v-${x.vu === "oui" ? "o" : x.vu === "non" ? "n" : "q"}">
               <input type="checkbox"${x.vu === "oui" ? " checked" : ""} onchange="ficheCoche(${i}, this.checked)">
               <span>${esc(x.n)}
-                ${x.vu === "non" ? `<i>absent — ${x.perte}% de valeur en moins</i>` : x.vu === "?" ? `<i>non visible — à vérifier (vaudrait ${x.perte}%)</i>` : `<i>présent</i>`}</span></label>`).join("")}</div>
+                ${x.vu === "non" ? `<i>${esc(t("fiche.absent_valeur", { perte: x.perte }))}</i>` : x.vu === "?" ? `<i>${esc(t("fiche.non_visible", { perte: x.perte }))}</i>` : `<i>${t("fiche.present")}</i>`}</span></label>`).join("")}</div>
            <div class="fi-ck-n" id="fiche-ck-n">${attResume(f.attendu)}</div>
            ${f.impactComplet ? `<div class="fi-imp">${esc(f.impactComplet)}</div>` : ""}` : "",
     true
@@ -1576,25 +2540,25 @@ function ficheCorps(f) {
 
     ${bloc(
     "vf",
-    "Vérifier le prix pour de vrai",
+    t("fiche.corps.verifier_prix"),
     `<div id="vf-slot">${verifBloc(f)}</div>${compBloc(f.comparables)}`,
     !ficheCalc(f).base
   )}
 
     ${bloc(
     "dg",
-    "Ce qui peut te coûter cher" + (f.pieges.length ? ` <i>${f.pieges.length}</i>` : ""),
+    t("fiche.corps.couter_cher") + (f.pieges.length ? ` <i>${f.pieges.length}</i>` : ""),
     listes(f.pieges) + listes(f.verifs),
     f.pieges.length > 0
   )}
 
-    ${bloc("et", "L'état, si la photo t'a menti", ficheReglages(f, ficheCalc(f)), false)}
+    ${bloc("et", t("fiche.corps.etat_photo_menti"), ficheReglages(f, ficheCalc(f)), false)}
 
     ${bloc(
     "id",
-    "L'identification",
+    t("fiche.corps.identification"),
     (f.code ? `<div class="fi-code">${esc(f.code)}</div>
-                 <button class="fi-cp" onclick="ficheCopieCode()">Copier la référence</button>` : `<div class="fi-vide">${f.codeOu ? esc(f.codeOu) : "Aucune référence visible."}</div>`) + (f.identification ? `<div class="ident">${esc(f.identification)}</div>` : "") + (ci ? `<div class="fi-circ ${ci[1]}">${ci[0]}</div>` : "") + (f.note ? `<div class="aimeta">${esc(f.note)}</div>` : ""),
+                 <button class="fi-cp" onclick="ficheCopieCode()">${t("fiche.corps.copier_reference")}</button>` : `<div class="fi-vide">${f.codeOu ? esc(f.codeOu) : t("fiche.corps.aucune_reference")}</div>`) + (f.identification ? `<div class="ident">${esc(f.identification)}</div>` : "") + (ci ? `<div class="fi-circ ${ci[1]}">${t(ci[0])}</div>` : "") + (f.note ? `<div class="aimeta">${esc(f.note)}</div>` : ""),
     false
   )}`;
 }
@@ -1604,9 +2568,9 @@ function ficheDire(f) {
   if (/\d+\s*(€|euros?)/i.test(arg)) {
     arg = arg.split(/([,;.!?])/).filter((x, i) => i % 2 === 0).filter((x) => !/\d+\s*(€|euros?)/i.test(x)).map((x) => x.trim()).filter(Boolean).join(", ");
   }
-  if (!arg) arg = "C'est un titre très courant";
+  if (!arg) arg = t("fiche.titre_tres_courant");
   if (!/[.!?]$/.test(arg)) arg += ".";
-  return c.plafond ? arg + " Je t'en donne " + c.ouverture + " €." : arg;
+  return c.plafond ? arg + t("fiche.je_ten_donne", { ouv: c.ouverture }) : arg;
 }
 function ficheCoche(i, coche) {
   if (!FICHE || !FICHE.attendu[i]) return;
@@ -1615,7 +2579,7 @@ function ficheCoche(i, coche) {
   if (lb) {
     lb.className = "v-" + (coche ? "o" : "n");
     const it = lb.querySelector("i");
-    if (it) it.textContent = coche ? "présent" : "absent — " + FICHE.attendu[i].perte + "% de valeur en moins";
+    if (it) it.textContent = coche ? t("fiche.present") : t("fiche.absent_valeur", { perte: FICHE.attendu[i].perte });
   }
   const el = $("fiche-ck-n");
   if (el) el.textContent = attResume(FICHE.attendu);
@@ -1624,13 +2588,13 @@ function ficheCoche(i, coche) {
 }
 function ficheCopieCode() {
   if (!FICHE || !FICHE.code) return;
-  const t = FICHE.code;
+  const code = FICHE.code;
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(t).then(() => {
+    navigator.clipboard.writeText(code).then(() => {
       vib();
-      alert("Référence copiée : " + t);
+      alert(t("fiche.reference_copiee", { code }));
     });
-  } else prompt("Copie la référence :", t);
+  } else prompt(t("fiche.copie_reference_prompt"), code);
 }
 function coteReelle(query) {
   const qt = collTokens(query);
@@ -1656,14 +2620,14 @@ function renderResult(j, images, avis) {
   const cote = coteReelle((f.objet || "") + " " + (f.identification || ""));
   if (cote) {
     f.marcheReel = cote.prix;
-    f.marcheSrc = "ta vente réelle" + (cote.d ? " · " + new Date(cote.d).toLocaleDateString("fr-BE") : "");
+    f.marcheSrc = t("fiche.ta_vente_reelle") + (cote.d ? " · " + new Date(cote.d).toLocaleDateString("fr-BE") : "");
   }
   const c = ficheCalc(f);
   const dem = parseFloat($("price").value || "0") || 0;
   const vd = ficheVerdict(f, c, dem);
   const conf = (f.confiance || "").toLowerCase();
   let cKey = f.marcheReel ? "h" : conf.startsWith("haut") ? "m" : conf.startsWith("moy") ? "m" : "f";
-  const cTxt = { h: "Cote vérifiée", m: "Estimation confiante", f: "Estimation" }[cKey];
+  const cTxt = t({ h: "fiche.cote.verifiee", m: "fiche.cote.confiante", f: "fiche.cote.estimation" }[cKey]);
   const imgHtml = images && images.length ? `<div class="aithumb-container">` + images.map((im) => `<img src="${im.url}" class="aithumb">`).join("") + `</div>` : "";
   const rq = (f.objet || "") + " " + (f.identification || "");
   const dupHtml = collBanner(rq);
@@ -1671,14 +2635,14 @@ function renderResult(j, images, avis) {
     <div class="aicard">
       ${imgHtml}
       <div class="aihead ${vd.v}" id="fiche-head">
-        <div class="p"><div class="num">${c.plafond ? c.plafond + "€" : "—"}</div><div class="cap">TON MAX</div></div>
+        <div class="p"><div class="num">${c.plafond ? c.plafond + "€" : "—"}</div><div class="cap">${t("fiche.ton_max")}</div></div>
         <div class="t">
-          <div class="v">${vd.t}</div>
+          <div class="v">${t(vd.t)}</div>
           <div class="o">${esc(f.objet)}</div>
-          <div class="r">${c.net ? "Revente nette ≈ " + c.net + "€" : "Marché inconnu"}</div>
+          <div class="r">${c.net ? esc(t("fiche.revente_nette", { n: c.net })) : t("fiche.marche_inconnu")}</div>
         </div>
       </div>
-      ${f.pieges.length ? `<div class="piege-top">⚠ <b>${esc(f.pieges[0])}</b>${f.pieges.length > 1 ? `<span>+ ${f.pieges.length - 1} autre${f.pieges.length > 2 ? "s" : ""} piège${f.pieges.length > 2 ? "s" : ""} détaillé${f.pieges.length > 2 ? "s" : ""} plus bas</span>` : ""}</div>` : ""}
+      ${f.pieges.length ? `<div class="piege-top">⚠ <b>${esc(f.pieges[0])}</b>${f.pieges.length > 1 ? `<span>${f.pieges.length > 2 ? esc(t("fiche.pieges_plus_plusieurs", { n: f.pieges.length - 1 })) : t("fiche.pieges_plus_un")}</span>` : ""}</div>` : ""}
       <div id="fiche-acte">${ficheAction(f, c, dem)}</div>
       ${f.nego ? `<div class="say" id="fiche-say">« ${esc(ficheDire(f))} »</div>` : ""}
       <div id="disc-slot"></div>
@@ -1686,16 +2650,16 @@ function renderResult(j, images, avis) {
       <div id="brick-slot"></div>
       <div class="aibody">${ficheCorps(f)}</div>
       <div id="fiche-prix" class="prix">${fichePrix(f, c, dem)}</div>
-      <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
+      <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + t(PORT_LBL[f.gabarit]) : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
       <div class="act-grid deux">
-        <input id="log-dem" type="number" inputmode="decimal" placeholder="Demandé €"
-          title="Ce qu'il demandait avant négociation, à taper toi-même — jamais pré-rempli : un oubli doit rester une absence de donnée (exclue des stats), jamais un ancien chiffre resté affiché par erreur (inclus à tort).">
-        <input id="log-price" type="number" inputmode="decimal" placeholder="Payé €">
+        <input id="log-dem" type="number" inputmode="decimal" placeholder="${t("fiche.demande_placeholder")}"
+          title="${t("fiche.demande_title")}">
+        <input id="log-price" type="number" inputmode="decimal" placeholder="${t("fiche.paye_placeholder")}">
         <button class="act act-buy" onclick="logFind()">
-          <svg class="ico16"><use href="#i-cash"/></svg>Je l'achète</button>
+          <svg class="ico16"><use href="#i-cash"/></svg>${t("fiche.je_lachete")}</button>
       </div>
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer</button>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">${t("fiche.fermer")}</button>
     </div>`;
   LAST = { objet: f.objet, revente: c.net, prixMax: c.plafond, demande: dem };
   PRIX_UTILISE = $("price").value;
@@ -1712,12 +2676,12 @@ function renderResult(j, images, avis) {
   brickGreffe(f, "brick-slot");
 }
 function standItemsHtml(reperes) {
-  if (!reperes || !reperes.length) return "<li>Rien de très évident à première vue.</li>";
+  if (!reperes || !reperes.length) return `<li>${t("stand.rien_evident")}</li>`;
   return reperes.map((obj) => `
     <li style="margin-bottom:10px;">
-      <b style="color:var(--gold)">${esc(obj.nom || "Objet non nommé")}</b><br>
+      <b style="color:var(--gold)">${esc(obj.nom || t("stand.objet_non_nomme"))}</b><br>
       ${obj.interet ? `<span style="font-size:12px; color:var(--text-muted)">${esc(obj.interet)}</span>` : ""}
-      ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">Verif: ${esc(obj.verifsStand)}</i>` : ""}
+      ${obj.verifsStand ? `<br><i style="font-size:11px; color:#ff9800;">${esc(t("stand.verif", { texte: obj.verifsStand }))}</i>` : ""}
     </li>`).join("");
 }
 function renderStandResult(j, image, avis) {
@@ -1731,17 +2695,17 @@ function renderStandResult(j, image, avis) {
       <div class="aihead ${v}">
         <div class="p" style="flex: 0 0 80px;"><div class="num" style="font-size:38px;">🎯</div></div>
         <div class="t">
-          <div class="v">ANALYSE DE STAND</div>
-          <div class="o" style="font-size:16px;">${esc(vg || (v === "S" ? "Stand à fouiller" : "Rien de flagrant"))}</div>
+          <div class="v">${t("stand.titre")}</div>
+          <div class="o" style="font-size:16px;">${esc(vg) || (v === "S" ? t("stand.a_fouiller") : t("stand.rien_flagrant"))}</div>
         </div>
       </div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
       <div class="aibody">
-        <h4>Cibles Potentielles Repérées</h4>
+        <h4>${t("stand.cibles")}</h4>
         <ul style="list-style-type:none; padding-left:0;">${itemsHtml}</ul>
-        ${j.conseil ? `<h4>Conseil Stratégique</h4><p style="font-size:14px; margin-top:5px; font-style:italic;">${esc(j.conseil)}</p>` : ""}
+        ${j.conseil ? `<h4>${t("stand.conseil")}</h4><p style="font-size:14px; margin-top:5px; font-style:italic;">${esc(j.conseil)}</p>` : ""}
       </div>
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">${t("analyse.fermer")}</button>
     </div>`;
 }
 function renderBacResult(j, images, avis, garderSel) {
@@ -1767,18 +2731,18 @@ function renderBacResult(j, images, avis, garderSel) {
     const idx = rows.indexOf(r);
     const coche = BAC_SEL.has(idx);
     return `<div class="bacrow ${cls}${coche ? " sel" : ""}" onclick="bacToggle(${idx})">
-      <div class="bac-v">${r.dup ? "DÉJÀ" : cls}</div>
+      <div class="bac-v">${r.dup ? t("bac.deja_badge") : cls}</div>
       <div class="bac-tick">${coche ? "☑" : "☐"}</div>
       <div class="bac-c">
         <div class="bac-n">${esc(o.nom || "—")}</div>
         <div class="bac-a">${esc(o.artiste || "")}${o.annee ? " · " + esc(o.annee) : ""}</div>
-        ${r.flou ? `<div class="bac-warn">Ressemble à « ${esc(r.flou.e.t)} » que tu as déjà — vérifie l'édition.</div>` : ""}
+        ${r.flou ? `<div class="bac-warn">${esc(t("bac.ressemble", { titre: r.flou.e.t }))}</div>` : ""}
         ${o.note ? `<div class="bac-note">${esc(o.note)}</div>` : ""}
-        ${!r.dup && discToken() && discMusique((o.artiste || "") + " " + (o.nom || "")) ? `<button class="bac-disc" onclick="event.stopPropagation();bacDisc(${idx})">Cote Discogs</button>
+        ${!r.dup && discToken() && discMusique((o.artiste || "") + " " + (o.nom || "")) ? `<button class="bac-disc" onclick="event.stopPropagation();bacDisc(${idx})">${t("bac.cote_discogs")}</button>
              <div id="disc-bac-${idx}"></div>` : ""}
       </div>
       <div class="bac-p">
-        ${r.dup ? `<span class="bac-dup">en collection</span>` : `<b>${Number(o.prixMax) || "?"}€</b><span>→ ${Number(o.revente) || "?"}€</span>`}
+        ${r.dup ? `<span class="bac-dup">${t("bac.en_collection")}</span>` : `<b>${Number(o.prixMax) || "?"}€</b><span>→ ${Number(o.revente) || "?"}€</span>`}
       </div>
     </div>`;
   };
@@ -1794,43 +2758,43 @@ function renderBacResult(j, images, avis, garderSel) {
     <div class="aicard">
       <div class="bac-strip">${images.slice(0, 4).map((im) => `<img src="${im.url}">`).join("")}</div>
       <div class="aihead ${pris.length ? "R" : doub.length && !nego.length ? "L" : "N"}">
-        <div class="p"><div class="num">${lot.length}</div><div class="cap">LUS</div></div>
+        <div class="p"><div class="num">${lot.length}</div><div class="cap">${t("bac.lus")}</div></div>
         <div class="t">
-          <div class="v">MODE BAC${j.typeBac ? " · " + esc(j.typeBac).toUpperCase() : ""}</div>
-          <div class="o">${pris.length} à prendre${doub.length ? ` · ${doub.length} déjà chez toi` : ""}</div>
-          ${valeur ? `<div class="r">valeur des « à prendre » ≈ ${valeur}€</div>` : ""}
+          <div class="v">${t("bac.mode_bac")}${j.typeBac ? " · " + esc(j.typeBac).toUpperCase() : ""}</div>
+          <div class="o">${esc(t("bac.n_a_prendre", { n: pris.length }))}${doub.length ? esc(t("bac.deja_chez_toi", { n: doub.length })) : ""}</div>
+          ${valeur ? `<div class="r">${esc(t("bac.valeur_a_prendre", { n: valeur }))}</div>` : ""}
         </div>
       </div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ""}
       <div class="aibody">
         ${bacBar({ R: pris.length, N: nego.length, D: doub.length, L: laisse.length })}
         ${j.resume ? `<div class="saywrap">${esc(j.resume)}</div>` : ""}
-        ${bloc("À prendre", pris)}
-        ${bloc("À négocier", nego, "Seulement sous le prix indiqué.")}
-        ${bloc("Tu l'as déjà", doub, "Sauf si l'édition diffère de la tienne.")}
-        ${bloc("Laisse", laisse)}
+        ${bloc(t("bac.section.prendre"), pris)}
+        ${bloc(t("bac.section.negocier"), nego, t("bac.section.negocier_sub"))}
+        ${bloc(t("bac.section.deja"), doub, t("bac.section.deja_sub"))}
+        ${bloc(t("bac.section.laisse"), laisse)}
         ${!lot.length ? `<div class="empty-state"><svg class="ico-big"><use href="#i-crate"/></svg>
-          <b>Rien de lisible</b><p>Rapproche-toi, ou écarte les pochettes pour dégager les tranches.</p></div>` : ""}
+          <b>${t("bac.vide.titre")}</b><p>${t("bac.vide.sub")}</p></div>` : ""}
       </div>
       ${lot.length ? bacCart() : ""}
-      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">Fermer l'analyse</button>
+      <button class="dismiss" onclick="document.getElementById('ai-results').innerHTML=''">${t("analyse.fermer")}</button>
     </div>`;
 }
 function bacCart() {
   if (BAC_ACHETE) {
     return `<div class="bac-cart done"><div class="bc-t">
-      <b>Lot enregistré</b>
-      <span>Journal de chasse mis à jour</span></div></div>`;
+      <b>${t("bac.cart.enregistre")}</b>
+      <span>${t("bac.cart.journal_maj")}</span></div></div>`;
   }
   const sel = [...BAC_SEL].map((i) => BAC_ROWS[i]).filter(Boolean);
   const val = sel.reduce((s, r) => s + (Number(r.o.revente) || 0), 0);
   const max = sel.reduce((s, r) => s + (Number(r.o.prixMax) || 0), 0);
   return `<div class="bac-cart">
     <div class="bc-t">
-      <b>${sel.length} pièce${sel.length > 1 ? "s" : ""} · revente ≈ ${val}€</b>
-      <span>${sel.length ? "ne dépasse pas " + max + "€ pour le lot" : "coche ce que tu emportes"}</span>
+      <b>${esc(t(sel.length > 1 ? "bac.cart.resume_plusieurs" : "bac.cart.resume_un", { n: sel.length, val }))}</b>
+      <span>${sel.length ? esc(t("bac.cart.ne_depasse_pas", { max })) : t("bac.cart.coche")}</span>
     </div>
-    <button class="${sel.length ? "" : "off"}" onclick="bacBuy()">J'ai acheté</button>
+    <button class="${sel.length ? "" : "off"}" onclick="bacBuy()">${t("bac.cart.jai_achete")}</button>
   </div>`;
 }
 function bacDisc(i) {
@@ -1854,16 +2818,16 @@ function bacBuy() {
   const idx = [...BAC_SEL].sort((a, b) => a - b);
   const sel = idx.map((i) => BAC_ROWS[i]).filter(Boolean);
   if (!sel.length) {
-    alert("Coche d'abord les pièces que tu emportes.");
+    alert(t("bac.buy.coche_dabord"));
     return;
   }
   const tot = parseFloat(prompt(
-    "Combien as-tu payé pour ces " + sel.length + " pièce(s) au total ?",
+    t(sel.length > 1 ? "bac.buy.prompt_paye_plusieurs" : "bac.buy.prompt_paye_un", { n: sel.length }),
     ""
   ) || "");
   if (isNaN(tot) || tot < 0) return;
   const totDem = parseFloat(prompt(
-    "Il en demandait combien pour ces " + sel.length + " pièce(s), avant négociation ? (facultatif)",
+    t(sel.length > 1 ? "bac.buy.prompt_demande_plusieurs" : "bac.buy.prompt_demande_un", { n: sel.length }),
     ""
   ) || "");
   const vals = sel.map((r) => Number(r.o.revente) || 0);
@@ -1898,22 +2862,22 @@ function discCarte(c) {
       <b>${esc(c.artiste ? c.artiste + " — " : "")}${esc(c.titre)}</b>
       <i>${[c.annee, c.label, c.format].filter(Boolean).map(esc).join(" · ")}</i></div>
     <div class="disc-n">
-      <div><b>${c.bas ? c.bas + "€" : "—"}</b><span>moins cher en vente</span></div>
-      <div><b>${c.envente}</b><span>exemplaires dispo</span></div>
-      <div><b>${c.ont}/${c.veulent}</b><span>l'ont / le veulent</span></div>
+      <div><b>${c.bas ? c.bas + "€" : "—"}</b><span>${t("carte.disc.moins_cher")}</span></div>
+      <div><b>${c.envente}</b><span>${t("carte.disc.exemplaires_dispo")}</span></div>
+      <div><b>${c.ont}/${c.veulent}</b><span>${t("carte.disc.ont_veulent")}</span></div>
     </div>
-    ${l.revente ? `<div class="disc-v"><b>${l.prixMax}€ maximum</b>
-      <span>pour revendre autour de ${l.revente}€ — un cran sous le moins cher en ligne</span></div>` : ""}
+    ${l.revente ? `<div class="disc-v"><b>${esc(t("carte.disc.prix_max", { n: l.prixMax }))}</b>
+      <span>${esc(t("carte.disc.pour_revendre", { n: l.revente }))}</span></div>` : ""}
     <div class="disc-l ${l.rcls}">${esc(l.rarete)}</div>
     ${l.demande ? `<div class="disc-d">${esc(l.demande)}</div>` : ""}
-    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">Ouvrir la fiche Discogs</a>
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">${t("carte.disc.ouvrir")}</a>
   </div>`;
 }
 async function discGreffe(query, cibleId) {
   if (!discToken()) return;
   const el = $(cibleId);
   if (!el) return;
-  el.innerHTML = `<div class="disc-load">Vérification de la cote Discogs…</div>`;
+  el.innerHTML = `<div class="disc-load">${t("carte.disc.verification")}</div>`;
   try {
     const c = await discCote(query);
     const cur = $(cibleId);
@@ -1923,7 +2887,7 @@ async function discGreffe(query, cibleId) {
       const l = discLire(c);
       if (l.revente && !FICHE.marcheVu) {
         FICHE.marcheReel = l.revente;
-        FICHE.marcheSrc = "Discogs · " + c.envente + " en vente";
+        FICHE.marcheSrc = t("carte.disc.marche_src", { n: c.envente });
         FICHE.circulation = c.envente > 150 ? "massif" : c.envente > 40 ? "courant" : c.envente > 8 ? "peu courant" : "rare";
         fichePaint();
       }
@@ -1931,8 +2895,8 @@ async function discGreffe(query, cibleId) {
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "JETON" ? `<div class="disc-err">Jeton Discogs refusé — recolle-le dans Réglages.</div>` : /AbortError|aborted/i.test(String(err.name || err.message)) ? `<div class="disc-err">Discogs n'a pas répondu à temps (réseau lent). Réessaie.</div>` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<div class="disc-err">Discogs injoignable depuis le navigateur.<br>
-             <i>Si ça se répète, c'est la restriction CORS : dis-le-moi, on passera par un relais.</i></div>` : `<div class="disc-err">${esc(err.message)}</div>`;
+    cur.innerHTML = String(err.message) === "JETON" ? `<div class="disc-err">${t("carte.disc.jeton_refuse")}</div>` : /AbortError|aborted/i.test(String(err.name || err.message)) ? `<div class="disc-err">${t("carte.disc.timeout")}</div>` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<div class="disc-err">${t("carte.disc.injoignable")}<br>
+             <i>${t("carte.disc.cors_note")}</i></div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function verifQuery(f, pref) {
@@ -1988,24 +2952,24 @@ function verifBloc(f) {
       <em>${esc(q.length > 34 ? q.slice(0, 34) + "…" : q)}</em></a>`;
   }).join("");
   const base = ficheCalc(f).base;
-  return `<div class="vf-h">La requête est déjà écrite : un doigt, tu vois les vrais prix.</div>
+  return `<div class="vf-h">${t("verif.requete_ecrite")}</div>
     <div class="vf-g">${liens}</div>
     <div class="vf-in">
-      <label>Prix constaté <i>ce que tu viens de voir, pour un exemplaire en bon état</i></label>
+      <label>${t("verif.prix_constate")} <i>${t("verif.prix_constate_aide")}</i></label>
       <div class="vf-row">
         <input id="vf-prix" type="number" inputmode="decimal" placeholder="${base || "—"}"
           value="${f.marcheVu || ""}" onchange="verifSet(this.value)">
-        <button onclick="verifSet(document.getElementById('vf-prix').value)">Recalculer</button>
+        <button onclick="verifSet(document.getElementById('vf-prix').value)">${t("fiche.recalculer")}</button>
       </div>
-      ${f.marcheVu ? `<div class="vf-ok">Prix vérifié par toi : tout le calcul repose dessus.
-        <button class="vf-x" onclick="verifSet('')">Revenir à l'estimation</button></div>` : ""}
+      ${f.marcheVu ? `<div class="vf-ok">${t("verif.prix_verifie_toi")}
+        <button class="vf-x" onclick="verifSet('')">${t("verif.revenir_estimation")}</button></div>` : ""}
     </div>`;
 }
 function verifSet(v) {
   if (!FICHE) return;
   const n = parseFloat(String(v).replace(",", ".")) || 0;
   FICHE.marcheVu = n > 0 ? n : 0;
-  if (FICHE.marcheVu) FICHE.marcheSrc = "vérifié par toi";
+  if (FICHE.marcheVu) FICHE.marcheSrc = t("verif.marche_src");
   vib();
   fichePaint();
   const bl = $("vf-slot");
@@ -2015,28 +2979,27 @@ function compBloc(comp) {
   if (!comp.length) return "";
   return `<div class="cmp">${comp.map((c) => {
     const dedans = `${c.prix ? `<b>${c.prix}€</b>` : ""}<span>${esc(c.t)}</span>`;
-    return c.url ? `<a class="cmp-l" href="${c.url}" target="_blank" rel="noopener">${dedans}<i>voir</i></a>` : `<div class="cmp-l muet">${dedans}</div>`;
+    return c.url ? `<a class="cmp-l" href="${c.url}" target="_blank" rel="noopener">${dedans}<i>${t("comp.voir")}</i></a>` : `<div class="cmp-l muet">${dedans}</div>`;
   }).join("")}</div>
-  <div class="cmp-n">Rapporté par l'IA. Ce qui n'a pas de lien n'a pas été vérifié.</div>`;
+  <div class="cmp-n">${t("comp.rapporte_ia")}</div>`;
 }
 function legoCarte(c) {
   const v = legoValeur(c);
-  const figsTxt = v.figsConnu ? String(c.figs) : "inconnu";
-  const totalTxt = v.figsConnu ? `${v.total}€` : `au moins ${v.total}€`;
-  const ligneDetail = v.figsConnu ? `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€` : `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + figurines non comptées (réseau)`;
+  const figsTxt = v.figsConnu ? String(c.figs) : t("carte.lego.inconnu");
+  const totalTxt = v.figsConnu ? `${v.total}€` : t("carte.lego.au_moins", { n: v.total });
+  const ligneDetail = v.figsConnu ? `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${c.figs} × ${v.t.fig}€` : `${c.pieces} × ${v.t.piece.toFixed(2).replace(".", ",")}€ + ${t("carte.lego.figs_non_comptees")}`;
   return `<div class="disc lego">
     <div class="disc-h"><span class="disc-b">Rebrickable</span>
       <b>${esc(c.nom)}</b>
       <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
     <div class="disc-n">
-      <div><b>${c.pieces}</b><span>pièces</span></div>
-      <div><b>${figsTxt}</b><span>figurines</span></div>
-      <div><b>${totalTxt}</b><span>complet, sans boîte</span></div>
+      <div><b>${c.pieces}</b><span>${t("carte.pieces")}</span></div>
+      <div><b>${esc(figsTxt)}</b><span>${t("carte.figurines")}</span></div>
+      <div><b>${esc(totalTxt)}</b><span>${t("carte.lego.complet_sans_boite")}</span></div>
     </div>
-    <div class="disc-l">${ligneDetail}</div>
-    <div class="disc-d">Barème de revendeur, pas une cote : Rebrickable ne publie pas de prix.
-      Ajuste-le dans Réglages avec ce que tu encaisses réellement.</div>
-    <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">Voir le set</a>
+    <div class="disc-l">${esc(ligneDetail)}</div>
+    <div class="disc-d">${t("carte.lego.bareme")}</div>
+    <a class="disc-a" href="https://rebrickable.com/sets/${encodeURIComponent(c.num)}/" target="_blank" rel="noopener">${t("carte.voir_set")}</a>
   </div>`;
 }
 async function legoGreffe(f, cibleId) {
@@ -2045,7 +3008,7 @@ async function legoGreffe(f, cibleId) {
   if (!num) return;
   const el = $(cibleId);
   if (!el) return;
-  el.innerHTML = `<div class="disc-load">Recherche du set ${esc(num)} sur Rebrickable…</div>`;
+  el.innerHTML = `<div class="disc-load">${esc(t("carte.lego.recherche", { num }))}</div>`;
   try {
     const c = await legoSet(num);
     const cur = $(cibleId);
@@ -2059,14 +3022,14 @@ async function legoGreffe(f, cibleId) {
       const v = legoValeur(c);
       if (v.total > 0 && !FICHE.marcheVu) {
         FICHE.marcheReel = v.total;
-        FICHE.marcheSrc = "Rebrickable · " + c.pieces + " pièces, " + (v.figsConnu ? c.figs + " figurines" : "figurines non comptées");
+        FICHE.marcheSrc = v.figsConnu ? t("carte.lego.marche_src_figs", { pieces: c.pieces, figs: c.figs }) : t("carte.lego.marche_src_nofigs", { pieces: c.pieces });
         fichePaint();
       }
     }
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Rebrickable refusée — recolle-la dans Réglages.</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">Rebrickable injoignable (réseau).</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
+    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">${t("carte.lego.cle_refusee")}</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">${t("carte.lego.injoignable")}</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function brickCarte(c) {
@@ -2075,13 +3038,12 @@ function brickCarte(c) {
       <b>${esc(c.nom)}</b>
       <i>Set ${esc(c.num)}${c.annee ? " · " + c.annee : ""}</i></div>
     <div class="disc-n">
-      <div><b>${c.pieces}</b><span>pièces</span></div>
-      <div><b>${c.figs}</b><span>figurines</span></div>
-      <div><b>${c.prixNeuf ? c.prixNeuf + "€" : "—"}</b><span>${c.prixNeuf ? "neuf (" + c.prixDev + ")" : "prix neuf"}</span></div>
+      <div><b>${c.pieces}</b><span>${t("carte.pieces")}</span></div>
+      <div><b>${c.figs}</b><span>${t("carte.figurines")}</span></div>
+      <div><b>${c.prixNeuf ? c.prixNeuf + "€" : "—"}</b><span>${c.prixNeuf ? esc(t("carte.brick.neuf_dev", { dev: c.prixDev })) : t("carte.brick.prix_neuf")}</span></div>
     </div>
-    <div class="disc-d">Prix neuf officiel LEGO à la sortie du set, pas une cote d'occasion :
-      sert de plafond de référence, pas de prix de revente.</div>
-    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">Voir le set</a>
+    <div class="disc-d">${t("carte.brick.explain")}</div>
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">${t("carte.voir_set")}</a>
   </div>`;
 }
 async function brickGreffe(f, cibleId) {
@@ -2090,7 +3052,7 @@ async function brickGreffe(f, cibleId) {
   if (!num) return;
   const el = $(cibleId);
   if (!el) return;
-  el.innerHTML = `<div class="disc-load">Recherche du set ${esc(num)} sur Brickset…</div>`;
+  el.innerHTML = `<div class="disc-load">${esc(t("carte.brick.recherche", { num }))}</div>`;
   try {
     const c = await brickSet(num);
     const cur = $(cibleId);
@@ -2101,18 +3063,18 @@ async function brickGreffe(f, cibleId) {
     }
     cur.innerHTML = brickCarte(c);
     if (FICHE && (c.pieces || c.figs) && !FICHE.marcheVu && !FICHE.marcheReel) {
-      const t = legoTarifs();
-      const total = Math.round(c.pieces * t.piece + c.figs * t.fig);
+      const tarifs = legoTarifs();
+      const total = Math.round(c.pieces * tarifs.piece + c.figs * tarifs.fig);
       if (total > 0) {
         FICHE.marcheReel = total;
-        FICHE.marcheSrc = "Brickset · " + c.pieces + " pièces, " + c.figs + " figurines";
+        FICHE.marcheSrc = t("carte.brick.marche_src", { pieces: c.pieces, figs: c.figs });
         fichePaint();
       }
     }
   } catch (err) {
     const cur = $(cibleId);
     if (!cur) return;
-    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">Clé Brickset refusée — recolle-la dans Réglages.</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">Brickset injoignable (réseau).</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
+    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">${t("carte.brick.cle_refusee")}</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">${t("carte.brick.injoignable")}</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function bacBar(n) {
@@ -2120,12 +3082,12 @@ function bacBar(n) {
   if (!tot) return "";
   const seg = (v, cls, lbl) => v ? `<div class="bb-s ${cls}" style="flex:${v}" title="${lbl}">${v}</div>` : "";
   return `<div class="bacbar">
-    <div class="bb">${seg(n.R, "R", "À prendre")}${seg(n.N, "N", "À négocier")}${seg(n.D, "D", "Déjà")}${seg(n.L, "L", "Laisse")}</div>
+    <div class="bb">${seg(n.R, "R", t("bac.section.prendre"))}${seg(n.N, "N", t("bac.section.negocier"))}${seg(n.D, "D", t("bac.section.deja_court"))}${seg(n.L, "L", t("bac.section.laisse"))}</div>
     <div class="bb-k">
-      ${n.R ? `<span><i class="R"></i>${n.R} à prendre</span>` : ""}
-      ${n.N ? `<span><i class="N"></i>${n.N} à négocier</span>` : ""}
-      ${n.D ? `<span><i class="D"></i>${n.D} déjà</span>` : ""}
-      ${n.L ? `<span><i class="L"></i>${n.L} laisse</span>` : ""}
+      ${n.R ? `<span><i class="R"></i>${esc(t("bac.bar.a_prendre", { n: n.R }))}</span>` : ""}
+      ${n.N ? `<span><i class="N"></i>${esc(t("bac.bar.a_negocier", { n: n.N }))}</span>` : ""}
+      ${n.D ? `<span><i class="D"></i>${esc(t("bac.bar.deja", { n: n.D }))}</span>` : ""}
+      ${n.L ? `<span><i class="L"></i>${esc(t("bac.bar.laisse", { n: n.L }))}</span>` : ""}
     </div>
   </div>`;
 }
@@ -2156,16 +3118,16 @@ function triggerCamera(mode, src) {
   input.click();
 }
 const MODE_DIT = {
-  objet: "Prends-en plusieurs si tu veux : le dos, le dessous, le défaut.",
-  bac: "Une photo par pièce, ou une photo de plusieurs pièces. Chacune sera chiffrée.",
-  stand: "Une vue large de la table. L'app te dit s'il vaut la peine de fouiller."
+  objet: "mode.dit.objet",
+  bac: "mode.dit.bac",
+  stand: "mode.dit.stand"
 };
-const MODE_BTN = { objet: "Analyser", bac: "Trier ce lot", stand: "Lire ce stand" };
+const MODE_BTN = { objet: "shoot.analyser", bac: "mode.btn.bac", stand: "mode.btn.stand" };
 function modeSet(m) {
   currentCameraMode = m;
   document.querySelectorAll("#modes .md").forEach((b) => b.classList.toggle("on", b.dataset.m === m));
   const dd = $("mode-dit");
-  if (dd) dd.textContent = MODE_DIT[m] || "";
+  if (dd) dd.textContent = MODE_DIT[m] ? t(MODE_DIT[m]) : "";
   if (m === "stand" && photoQueue.length > 1) photoQueue = [photoQueue[photoQueue.length - 1]];
   vib();
   updatePhotoQueueUI();
@@ -2180,7 +3142,7 @@ function handleFileSelect(e) {
     ps.forEach((p) => photoQueue.push(p));
     if (photoQueue.length > 8) {
       photoQueue = photoQueue.slice(0, 8);
-      alert("8 photos au maximum par analyse.");
+      alert(t("alert.photos_max"));
     }
     updatePhotoQueueUI();
   });
@@ -2203,10 +3165,10 @@ function updatePhotoQueueUI() {
   const n = photoQueue.length;
   const btn = q.querySelector(".analyze-multi-btn");
   if (btn) {
-    btn.textContent = (MODE_BTN[currentCameraMode] || "Analyser") + (n > 1 ? ` · ${n} vues` : "");
+    btn.textContent = t(MODE_BTN[currentCameraMode] || "shoot.analyser") + (n > 1 ? t("shoot.vues_suffix", { n }) : "");
   }
   const cs = $("shoot-cam-s");
-  if (cs) cs.textContent = n ? "ajouter une vue" : "l'appareil s'ouvre";
+  if (cs) cs.textContent = n ? t("shoot.photo.ajouter") : t("shoot.photo.sub");
   if (n > 0) {
     q.classList.add("active");
     imgs.innerHTML = photoQueue.map((p, i) => `
@@ -2289,7 +3251,7 @@ Prix vendeur : ${p} EUR.`;
 }
 function askAIBac() {
   if (!photoQueue.length) {
-    alert("Prends d'abord une ou plusieurs photos du bac.");
+    alert(t("alert.bac_vide"));
     return;
   }
   const artistes = [...new Set(collRead().map((x) => x.a).filter(Boolean))].slice(0, 120);
@@ -2325,8 +3287,8 @@ function bcDispo() {
 async function bcOuvrir() {
   vib();
   if (!bcDispo()) {
-    const t = prompt("Ton navigateur ne sait pas lire les codes-barres.\n\nTape le code à la main (les chiffres sous les barres) :");
-    if (t && t.trim()) bcTrouve(t.trim());
+    const t2 = prompt("Ton navigateur ne sait pas lire les codes-barres.\n\nTape le code à la main (les chiffres sous les barres) :");
+    if (t2 && t2.trim()) bcTrouve(t2.trim());
     return;
   }
   const ov = $("bc-overlay");
@@ -2377,7 +3339,7 @@ function bcFermer() {
     BC_BOUCLE = null;
   }
   if (BC_FLUX) {
-    BC_FLUX.getTracks().forEach((t) => t.stop());
+    BC_FLUX.getTracks().forEach((t2) => t2.stop());
     BC_FLUX = null;
   }
   const v = $("bc-video");
@@ -2407,13 +3369,13 @@ const qImgFull = (img) => ({ ...img, url: img.url || "data:" + (img.media || "im
 function queuePush(promptText, images, mode, cacheKey, tentatives = 0) {
   const a = queueRead();
   if (a.length >= 4) {
-    alert("File pleine (4 objets). Relance-la dès que tu captes.");
+    alert(t("alert.file_pleine"));
     return false;
   }
   const slim = (images || []).slice(0, 2).map(qImgSlim);
   a.push({ d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives });
   if (!queueWrite(a)) {
-    alert("Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.");
+    alert(t("alert.memoire_saturee"));
     return false;
   }
   hudPaint();
@@ -2429,11 +3391,11 @@ async function queueRun(manuel) {
   if (qBusy) return;
   const a = queueRead();
   if (!a.length) {
-    if (manuel) alert("La file est vide.");
+    if (manuel) alert(t("alert.file_vide"));
     return;
   }
   if (!navigator.onLine) {
-    if (manuel) alert("Toujours pas de réseau.");
+    if (manuel) alert(t("alert.pas_de_reseau"));
     return;
   }
   qBusy = true;
@@ -2484,16 +3446,16 @@ function saveSettings() {
 function backupState() {
   const el = $("backup-state");
   if (!el) return;
-  let t = 0;
+  let t2 = 0;
   try {
-    t = parseInt(localStorage.getItem("insertcoin.lastbackup") || "0", 10);
+    t2 = parseInt(localStorage.getItem("insertcoin.lastbackup") || "0", 10);
   } catch (e) {
   }
   const n = sortieRead().length, j = logRead().length;
-  const jours = t ? Math.floor((Date.now() - t) / 864e5) : null;
+  const jours = t2 ? Math.floor((Date.now() - t2) / 864e5) : null;
   const alerte = jours === null || jours > 14;
   el.style.borderLeft = "3px solid " + (alerte ? "var(--stop)" : "var(--go)");
-  el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours<br>` + (t ? `Dernière sauvegarde : il y a ${jours} jour(s)` : "<b>Jamais sauvegardé</b>");
+  el.innerHTML = `${n} sortie(s) archivée(s) · ${j} achat(s) en cours<br>` + (t2 ? `Dernière sauvegarde : il y a ${jours} jour(s)` : "<b>Jamais sauvegardé</b>");
   memPaint();
 }
 const MEM_MAX = 5 * 1024 * 1024;
@@ -2573,11 +3535,11 @@ function discSave() {
 function discPaint() {
   const el = $("disc-state");
   if (!el) return;
-  const t = discToken();
+  const t2 = discToken();
   const inp = $("disc-token");
-  if (inp && !inp.value) inp.value = t;
-  el.style.borderLeft = "3px solid " + (t ? "var(--go)" : "var(--border)");
-  el.innerHTML = t ? "Jeton enregistré. Les cotes Discogs s'affichent sous chaque analyse de disque." : "Aucun jeton. Les vinyles restent estimés par l'IA, sans vérification du marché réel.";
+  if (inp && !inp.value) inp.value = t2;
+  el.style.borderLeft = "3px solid " + (t2 ? "var(--go)" : "var(--border)");
+  el.innerHTML = t2 ? "Jeton enregistré. Les cotes Discogs s'affichent sous chaque analyse de disque." : "Aucun jeton. Les vinyles restent estimés par l'IA, sans vérification du marché réel.";
 }
 async function discTest() {
   const el = $("disc-state");
@@ -2613,12 +3575,12 @@ function legoSave() {
 function legoPaint() {
   const el = $("lego-state");
   if (!el) return;
-  const k = legoKey(), t = legoTarifs();
+  const k = legoKey(), t2 = legoTarifs();
   if ($("lego-key") && !$("lego-key").value) $("lego-key").value = k;
-  if ($("lego-piece") && !$("lego-piece").value) $("lego-piece").value = t.piece;
-  if ($("lego-fig") && !$("lego-fig").value) $("lego-fig").value = t.fig;
+  if ($("lego-piece") && !$("lego-piece").value) $("lego-piece").value = t2.piece;
+  if ($("lego-fig") && !$("lego-fig").value) $("lego-fig").value = t2.fig;
   el.style.borderLeft = "3px solid " + (k ? "var(--go)" : "var(--border)");
-  el.innerHTML = k ? `Clé enregistrée. Barème actuel : ${t.piece.toFixed(2).replace(".", ",")}€ la pièce, ${t.fig}€ la figurine.` : "Aucune clé. Les sets LEGO restent estimés par l'IA, sans comptage de pièces.";
+  el.innerHTML = k ? `Clé enregistrée. Barème actuel : ${t2.piece.toFixed(2).replace(".", ",")}€ la pièce, ${t2.fig}€ la figurine.` : "Aucune clé. Les sets LEGO restent estimés par l'IA, sans comptage de pièces.";
 }
 async function legoTest() {
   const el = $("lego-state");
@@ -2705,6 +3667,14 @@ if (window.matchMedia) {
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     if (themeGet() === "auto") themeApply("auto");
   });
+}
+function langueApply(l) {
+  i18nAppliquer();
+  document.querySelectorAll("#langue-seg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.l === l));
+}
+function langueSet(l) {
+  localeSet(l);
+  langueApply(locale());
 }
 const CLES = [
   "insertcoin.log",
@@ -2988,13 +3958,13 @@ function buildBody(parts, mode, ground, model) {
   return b;
 }
 function jsonRepare(raw) {
-  let t = String(raw || "").replace(/```json|```/g, "");
-  t = t.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "");
-  const dep = t.indexOf("{");
+  let t2 = String(raw || "").replace(/```json|```/g, "");
+  t2 = t2.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "");
+  const dep = t2.indexOf("{");
   if (dep < 0) return null;
   let out = "", pile = [], ins = false, ech = false, fini = false;
-  for (let i = dep; i < t.length && !fini; i++) {
-    const c = t[i];
+  for (let i = dep; i < t2.length && !fini; i++) {
+    const c = t2[i];
     if (ech) {
       out += c;
       ech = false;
@@ -3035,10 +4005,10 @@ function jsonRepare(raw) {
     return JSON.parse(out);
   } catch (e) {
   }
-  const b = t.lastIndexOf("}");
+  const b = t2.lastIndexOf("}");
   if (b > dep) {
     try {
-      return JSON.parse(t.slice(dep, b + 1));
+      return JSON.parse(t2.slice(dep, b + 1));
     } catch (e) {
     }
   }
@@ -3064,6 +4034,15 @@ function devraitReenfiler(erreurMessage, tentatives) {
 function lotVide(mode, j) {
   return mode === "bac" && (!j || !Array.isArray(j.lot) || !j.lot.length);
 }
+const LANGUE_NOM = { nl: "néerlandais", en: "anglais" };
+function directiveLangue() {
+  const l = locale();
+  if (l === DEFAULT_LOCALE) return "";
+  const nom = LANGUE_NOM[l];
+  return nom ? `IMPORTANT : réponds dans tous les champs texte en ${nom}, sans exception — y compris "resume", "note", "nego" et le contenu des tableaux ("lot", "attendu", "objetsReperes"...). Les noms des clés JSON, eux, restent tels quels.
+
+` : "";
+}
 async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0) {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
@@ -3073,11 +4052,11 @@ async function callGemini(promptText, images = [], mode = "single", fromQueue, c
     setTimeout(() => alert("Configure ta clé API Gemini pour utiliser l'IA."), 300);
     return;
   }
-  const ckey = !images.length && mode === "single" && cacheKey ? cacheKey : null;
+  const ckey = !images.length && mode === "single" && cacheKey ? cacheKey + ":" + locale() : null;
   if (ckey) {
     const hit = cacheGet(ckey);
     if (hit) {
-      renderResult(hit, [], "Résultat déjà obtenu ce jour — aucun quota consommé.");
+      renderResult(hit, [], t("avis.deja_obtenu"));
       return;
     }
   }
@@ -3119,7 +4098,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   }
   const parts = [];
   images.forEach((img) => parts.push({ inlineData: { mimeType: img.media, data: img.data } }));
-  parts.push({ text: promptText + ctx });
+  parts.push({ text: directiveLangue() + promptText + ctx });
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
   const attempts = [];
@@ -3534,8 +4513,8 @@ function calendarInit() {
   }));
 }
 async function driveConnect() {
-  const t = await driveAuth(true);
-  if (!t) {
+  const t2 = await driveAuth(true);
+  if (!t2) {
     alert("Connexion refusée ou annulée.");
     return;
   }
@@ -3689,8 +4668,8 @@ function collPaint() {
   if (ci && !ci.value) ci.value = driveCid();
   let quand = "";
   try {
-    const t = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
-    if (t) quand = "Dernière synchro : " + new Date(t).toLocaleString("fr-BE", { dateStyle: "short", timeStyle: "short" });
+    const t2 = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
+    if (t2) quand = "Dernière synchro : " + new Date(t2).toLocaleString("fr-BE", { dateStyle: "short", timeStyle: "short" });
   } catch (e) {
   }
   if (!c.length) {
@@ -3764,6 +4743,7 @@ function init() {
   const gb = $("groundBox");
   if (gb) gb.checked = getGround();
   themeApply(themeGet());
+  langueApply(locale());
   modeSet("objet");
   legoPaint();
   brickPaint();
@@ -3784,7 +4764,7 @@ function init() {
   paintKeyState();
   captureInit();
   calendarInit();
-  $("sac-ticks").innerHTML = TICKS.map((t) => `<label class="tick"><input type="checkbox"><span>${t}</span></label>`).join("");
+  $("sac-ticks").innerHTML = TICKS.map((t2) => `<label class="tick"><input type="checkbox"><span>${t2}</span></label>`).join("");
 }
 window.addEventListener("error", (e) => {
   const el = document.getElementById("ai-results");
@@ -3857,6 +4837,7 @@ Object.assign(window, {
   brickTest,
   brickRelayCopier,
   themeSet,
+  langueSet,
   backupDownload,
   backupDrive,
   backupRestore,
@@ -4673,7 +5654,7 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <img src="./pixel-papa-logo.png" alt="Pixel Papa" class="avatar" onerror="this.src='/icon-mask-192.png'">
   <div class="brand">
     <h1>Insert Coin</h1>
-    <span>Argus de terrain</span>
+    <span data-i18n="app.tagline">Argus de terrain</span>
   </div>
 </header>
 
@@ -4682,19 +5663,19 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 <div class="bc-overlay" id="bc-overlay">
   <video id="bc-video" playsinline muted></video>
   <div class="bc-cadre"></div>
-  <div class="bc-msg" id="bc-msg">Cadre le code-barres</div>
-  <button class="bc-close" onclick="bcFermer()">Annuler</button>
+  <div class="bc-msg" id="bc-msg" data-i18n="bc.cadre">Cadre le code-barres</div>
+  <button class="bc-close" onclick="bcFermer()" data-i18n="bc.annuler">Annuler</button>
 </div>
 
 <div class="scoreov" id="score-screen"></div>
 <div class="imminent" id="imminent"></div>
 <div class="hud" id="hud">
   <div class="hud-cell" onclick="switchView('log')">
-    <span class="hl">Score</span><b id="hud-score">—</b></div>
+    <span class="hl" data-i18n="hud.score">Score</span><b id="hud-score">—</b></div>
   <div class="hud-cell">
-    <span class="hl">Crédits</span><b id="hud-cred">0</b></div>
+    <span class="hl" data-i18n="hud.credits">Crédits</span><b id="hud-cred">0</b></div>
   <div class="hud-cell" id="hud-q-cell" onclick="queueRun(true)">
-    <span class="hl">En file</span><b id="hud-queue">0</b></div>
+    <span class="hl" data-i18n="hud.file">En file</span><b id="hud-queue">0</b></div>
 </div>
 
 <div id="view-live" class="view active">
@@ -4702,9 +5683,9 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <!-- Le mode d'abord : il décide de ce qu'on demande à l'IA, pas de la façon
        de prendre la photo. Trois situations réelles sur un stand. -->
   <div class="modes" id="modes">
-    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b>Un objet</b></button>
-    <button class="md" data-m="bac" onclick="modeSet('bac')"><b>Un lot</b></button>
-    <button class="md" data-m="stand" onclick="modeSet('stand')"><b>Un stand</b></button>
+    <button class="md on" data-m="objet" onclick="modeSet('objet')"><b data-i18n="mode.objet">Un objet</b></button>
+    <button class="md" data-m="bac" onclick="modeSet('bac')"><b data-i18n="mode.bac">Un lot</b></button>
+    <button class="md" data-m="stand" onclick="modeSet('stand')"><b data-i18n="mode.stand">Un stand</b></button>
   </div>
   <div class="mode-dit" id="mode-dit"></div>
 
@@ -4713,29 +5694,29 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   <div class="shoot">
     <button class="shoot-b cam" onclick="triggerCamera(cameraMode(), 'cam')">
       <svg class="ico-cam"><use href="#i-scan"/></svg>
-      <b>Photographier</b>
-      <span id="shoot-cam-s">l'appareil s'ouvre</span>
+      <b data-i18n="shoot.photo.titre">Photographier</b>
+      <span id="shoot-cam-s" data-i18n="shoot.photo.sub">l'appareil s'ouvre</span>
     </button>
     <button class="shoot-b gal" onclick="triggerCamera(cameraMode(), 'ask')">
       <svg class="ico-cam"><use href="#i-crate"/></svg>
-      <b>Galerie</b>
-      <span>plusieurs à la fois</span>
+      <b data-i18n="shoot.galerie.titre">Galerie</b>
+      <span data-i18n="shoot.galerie.sub">plusieurs à la fois</span>
     </button>
   </div>
 
   <div id="photo-queue" class="photo-queue">
     <div class="photo-queue-imgs-container" id="photo-queue-imgs"></div>
-    <button class="analyze-multi-btn" onclick="askAIGo()">Analyser</button>
+    <button class="analyze-multi-btn" onclick="askAIGo()" data-i18n="shoot.analyser">Analyser</button>
   </div>
 
   <button class="bc-btn" onclick="bcOuvrir()">
     <svg class="ico16"><use href="#i-scan"/></svg>
-    <b>Scanner le code-barres</b>
-    <span>identification exacte, instantanée</span>
+    <b data-i18n="scan.bc.titre">Scanner le code-barres</b>
+    <span data-i18n="scan.bc.sub">identification exacte, instantanée</span>
   </button>
 
   <div class="askprix">
-    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé">
+    <input id="price" type="number" inputmode="decimal" placeholder="Il en demande combien ? (facultatif)" aria-label="Prix demandé" data-i18n-placeholder="prix.placeholder" data-i18n-label="prix.label">
   </div>
 
   <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
@@ -4745,116 +5726,116 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 
   <!-- Replié : sur un stand, on ne descend jamais jusqu'ici. -->
   <details class="autres">
-    <summary>Autres façons de chercher</summary>
+    <summary data-i18n="autres.summary">Autres façons de chercher</summary>
     <div class="autres-in">
       <div class="search-input-wrap">
-        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required>
+        <input type="text" id="q" placeholder="Chercher par nom, ou poser une question" autocomplete="off" autocapitalize="off" required data-i18n-placeholder="recherche.placeholder">
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
-      <button id="ask" class="btn-save" disabled>Demander à l'IA</button>
+      <button id="ask" class="btn-save" disabled data-i18n="recherche.demander">Demander à l'IA</button>
     </div>
   </details>
 </div>
 
 <div id="view-cal" class="view">
-  <h2 class="view-title">Calendrier</h2>
-  <p class="view-sub">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
+  <h2 class="view-title" data-i18n="cal.titre">Calendrier</h2>
+  <p class="view-sub" data-i18n="cal.sous_titre">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
 
   <div class="cal-actions">
     <button class="btn-save" onclick="calFetch()">
-      <svg class="ico16"><use href="#i-cal"/></svg> Chercher les prochaines dates</button>
-    <button class="btn-save alt" onclick="calAddManual()">＋ Ajouter à la main</button>
+      <svg class="ico16"><use href="#i-cal"/></svg> <span data-i18n="cal.chercher">Chercher les prochaines dates</span></button>
+    <button class="btn-save alt" onclick="calAddManual()" data-i18n="cal.ajouter_manuel">＋ Ajouter à la main</button>
   </div>
   <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-bottom:16px"
-    onclick="calICS(-1)">Exporter toutes mes dates marquées (.ics)</button>
+    onclick="calICS(-1)" data-i18n="cal.exporter">Exporter toutes mes dates marquées (.ics)</button>
 
   <div class="seg" id="cal-filter" style="margin-bottom:16px">
-    <button data-f="all" aria-pressed="true">Toutes</button>
-    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg>J'y vais</button>
-    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg>Les grosses</button>
+    <button data-f="all" aria-pressed="true" data-i18n="cal.filtre.toutes">Toutes</button>
+    <button data-f="go" aria-pressed="false"><svg class="ico16"><use href="#i-star"/></svg><span data-i18n="cal.filtre.jyvais">J'y vais</span></button>
+    <button data-f="big" aria-pressed="false"><svg class="ico16"><use href="#i-flame"/></svg><span data-i18n="cal.filtre.grosses">Les grosses</span></button>
   </div>
 
   <div id="cal-list"></div>
 </div>
 
 <div id="view-log" class="view">
-  <h2 class="view-title">Journal de chasse</h2>
+  <h2 class="view-title" data-i18n="log.titre">Journal de chasse</h2>
   <div id="log-sum" class="logsum"></div>
   <div id="log-charts"></div>
   <div id="log-stats"></div>
-  <h3 class="sect">Tes achats</h3>
+  <h3 class="sect" data-i18n="log.tes_achats">Tes achats</h3>
   <div id="log-list"></div>
   <button class="btn-save" style="margin-top:18px" onclick="sortieFin()">
-    <svg class="ico16"><use href="#i-star"/></svg> Terminer la sortie</button>
-  <button class="btn-save alt2" onclick="logExport()">Envoyer le journal dans mon Drive</button>
+    <svg class="ico16"><use href="#i-star"/></svg> <span data-i18n="log.terminer_sortie">Terminer la sortie</span></button>
+  <button class="btn-save alt2" onclick="logExport()" data-i18n="log.envoyer_drive">Envoyer le journal dans mon Drive</button>
 
-  <h3 class="sect">Sorties archivées</h3>
+  <h3 class="sect" data-i18n="log.sorties_archivees">Sorties archivées</h3>
   <div id="hist-list"></div>
-  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()">Vider le journal</button>
+  <button class="btn-save" style="background:var(--surface-light);margin-top:18px" onclick="logClear()" data-i18n="log.vider_journal">Vider le journal</button>
 
-  <h3 class="sect">Historique des recherches</h3>
-  <p style="font-size:13px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+  <h3 class="sect" data-i18n="log.historique_recherches">Historique des recherches</h3>
+  <p style="font-size:13px;color:var(--text-muted);margin:0 0 10px;line-height:1.5" data-i18n="log.historique_sub">
     Chaque photo, scan ou question analysée, achetée ou non — pour retrouver une fiche vue plus tôt.</p>
   <div id="rech-list"></div>
-  <button class="btn-save alt2" style="margin-top:12px" onclick="rechClear()">Vider l'historique des recherches</button>
+  <button class="btn-save alt2" style="margin-top:12px" onclick="rechClear()" data-i18n="log.vider_recherches">Vider l'historique des recherches</button>
 </div>
 
 <div id="view-guide" class="view">
-  <h2 class="view-title">Menu Guide 🧔🏼‍♂️</h2>
-  
+  <h2 class="view-title" data-i18n="guide.titre">Menu Guide 🧔🏼‍♂️</h2>
+
   <div class="guide-section">
-    <h3>⚙️ Configuration IA</h3>
-    <p>Clé API Gemini (stockée localement) :</p>
-    <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici">
-    <p style="margin-top: 10px;">Modèle IA (Puissance vs Vitesse) :</p>
+    <h3 data-i18n="guide.ia.titre">⚙️ Configuration IA</h3>
+    <p data-i18n="guide.ia.cle_label">Clé API Gemini (stockée localement) :</p>
+    <input type="password" id="api-key" class="api-input" placeholder="Collez votre clé API Google ici" data-i18n-placeholder="guide.ia.cle_placeholder">
+    <p style="margin-top: 10px;" data-i18n="guide.ia.modele_label">Modèle IA (Puissance vs Vitesse) :</p>
     <select id="api-model" class="model-select"></select>
-    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)">Vérifier les modèles disponibles</button>
+    <button class="btn-save alt2" style="margin-top:-6px" onclick="modelsRefresh(true)" data-i18n="guide.ia.verifier_modeles">Vérifier les modèles disponibles</button>
     <label style="display:flex;align-items:center;gap:12px;padding:14px 0;font-size:15px;cursor:pointer">
       <input type="checkbox" id="groundBox" style="width:22px;height:22px;accent-color:var(--gold)">
-      <span>Chercher les prix sur le web<br>
-      <i style="font-size:12px;color:var(--text-muted);font-style:normal">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
+      <span><span data-i18n="guide.ia.ground_label">Chercher les prix sur le web</span><br>
+      <i style="font-size:12px;color:var(--text-muted);font-style:normal" data-i18n="guide.ia.ground_note">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
-    <button class="btn-save" onclick="saveSettings()">Enregistrer les réglages</button>
+    <button class="btn-save" onclick="saveSettings()" data-i18n="guide.ia.enregistrer">Enregistrer les réglages</button>
 
-    <h3 class="sect">Cotes Discogs (musique)</h3>
+    <h3 class="sect" data-i18n="guide.discogs.titre">Cotes Discogs (musique)</h3>
     <div id="disc-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.discogs.explain">
       Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token.
       Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA
       par le prix réellement pratiqué et le nombre d'exemplaires en vente.
     </p>
-    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false">
-    <button class="btn-save" onclick="discSave()">Enregistrer le jeton</button>
-    <button class="btn-save alt2" onclick="discTest()">Tester la connexion Discogs</button>
+    <input id="disc-token" type="password" class="api-input" placeholder="Colle ton jeton Discogs ici" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.discogs.placeholder">
+    <button class="btn-save" onclick="discSave()" data-i18n="guide.discogs.enregistrer">Enregistrer le jeton</button>
+    <button class="btn-save alt2" onclick="discTest()" data-i18n="guide.discogs.tester">Tester la connexion Discogs</button>
 
-    <h3 class="sect">Sets LEGO (Rebrickable)</h3>
+    <h3 class="sect" data-i18n="guide.rebrickable.titre">Sets LEGO (Rebrickable)</h3>
     <div id="lego-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.rebrickable.explain">
       Clé gratuite et immédiate : rebrickable.com &rarr; ton profil &rarr; Settings &rarr; API &rarr; Generate.
       Rebrickable ne publie pas de prix — il donne le nombre de pièces et de figurines,
       les deux chiffres qui font vraiment la valeur d'un set d'occasion.
     </p>
-    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false">
+    <input id="lego-key" type="password" class="api-input" placeholder="Colle ta clé Rebrickable" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.rebrickable.placeholder">
     <div class="lego-tarif">
-      <label>€ la pièce<input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
-      <label>€ la figurine<input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
+      <label><span data-i18n="guide.rebrickable.piece">€ la pièce</span><input id="lego-piece" type="number" step="0.01" inputmode="decimal" placeholder="0.07"></label>
+      <label><span data-i18n="guide.rebrickable.figurine">€ la figurine</span><input id="lego-fig" type="number" step="0.5" inputmode="decimal" placeholder="3"></label>
     </div>
-    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5">
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5" data-i18n="guide.rebrickable.bareme">
       Barème de revendeur, à corriger avec tes propres ventes.
     </p>
-    <button class="btn-save" onclick="legoSave()">Enregistrer</button>
-    <button class="btn-save alt2" onclick="legoTest()">Tester la connexion Rebrickable</button>
+    <button class="btn-save" onclick="legoSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="legoTest()" data-i18n="guide.rebrickable.tester">Tester la connexion Rebrickable</button>
 
-    <h3 class="sect">Sets LEGO (Brickset)</h3>
+    <h3 class="sect" data-i18n="guide.brickset.titre">Sets LEGO (Brickset)</h3>
     <div id="brick-state" class="diagbox"></div>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.brickset.explain">
       Clé gratuite sur demande : brickset.com &rarr; ton compte &rarr; API &rarr; Request a key.
       Brickset donne les mêmes pièces et figurines que Rebrickable, plus le prix de vente neuf
       officiel LEGO. Sert de second avis quand tu n'as pas de clé Rebrickable — les deux ne
       s'affichent jamais en double sur une même fiche.
     </p>
-    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false">
-    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6">
+    <input id="brick-key" type="password" class="api-input" placeholder="Colle ta clé Brickset" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.brickset.placeholder">
+    <p style="font-size:12.5px;color:var(--text-muted);margin:12px 0 8px;line-height:1.6" data-i18n-html="guide.brickset.relais_html">
       <b style="color:var(--mid)">Brickset bloque les appels directs depuis un navigateur</b> — contrairement à
       Discogs et Rebrickable. La clé seule ne suffit donc pas : il faut un relais gratuit qui
       transmet la requête à ta place. Deux minutes, une fois :<br>
@@ -4862,49 +5843,56 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       2. Colle le code ci-dessous à la place de l'exemple, dans l'éditeur du navigateur, puis Deploy.<br>
       3. Colle l'adresse en <b>*.workers.dev</b> qu'il te donne dans le champ juste en dessous, et reteste.
     </p>
-    <button class="btn-save alt2" onclick="brickRelayCopier()">Copier le code du relais</button>
-    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px">
-    <button class="btn-save" style="margin-top:9px" onclick="brickSave()">Enregistrer</button>
-    <button class="btn-save alt2" onclick="brickTest()">Tester la connexion Brickset</button>
+    <button class="btn-save alt2" onclick="brickRelayCopier()" data-i18n="guide.brickset.copier_relais">Copier le code du relais</button>
+    <input id="brick-relay" type="text" class="api-input" placeholder="https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)" autocomplete="off" spellcheck="false" style="margin-top:9px" data-i18n-placeholder="guide.brickset.relais_placeholder">
+    <button class="btn-save" style="margin-top:9px" onclick="brickSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="brickTest()" data-i18n="guide.brickset.tester">Tester la connexion Brickset</button>
 
-    <h3 class="sect">Sauvegarde</h3>
+    <h3 class="sect" data-i18n="guide.sauvegarde.titre">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
     <div id="mem-state" class="diagbox" style="margin-top:9px"></div>
-    <button class="btn-save alt2" onclick="memFree()">Libérer de la place</button>
-    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55">
+    <button class="btn-save alt2" onclick="memFree()" data-i18n="guide.sauvegarde.liberer">Libérer de la place</button>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n="guide.sauvegarde.explain">
       Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur.
       Un nettoyage de cache Android l'effacerait sans prévenir.
     </p>
     <button class="btn-save" onclick="backupDrive()">
-      <svg class="ico16"><use href="#i-disk"/></svg> Sauvegarder dans mon Drive</button>
-    <button class="btn-save alt2" onclick="backupDownload()">Télécharger la sauvegarde</button>
+      <svg class="ico16"><use href="#i-disk"/></svg> <span data-i18n="guide.sauvegarde.drive">Sauvegarder dans mon Drive</span></button>
+    <button class="btn-save alt2" onclick="backupDownload()" data-i18n="guide.sauvegarde.telecharger">Télécharger la sauvegarde</button>
     <input type="file" id="restore-file" accept=".json" style="display:none" onchange="backupRestore(event)">
-    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()">Restaurer une sauvegarde</button>
+    <button class="btn-save alt2" onclick="document.getElementById('restore-file').click()" data-i18n="guide.sauvegarde.restaurer">Restaurer une sauvegarde</button>
 
-    <h3 class="sect">Apparence</h3>
+    <h3 class="sect" data-i18n="guide.apparence.titre">Apparence</h3>
     <div class="seg" id="theme-seg">
-      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg>Clair</button>
-      <button data-t="auto" onclick="themeSet('auto')">Auto</button>
-      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg>Sombre</button>
+      <button data-t="light" onclick="themeSet('light')"><svg class="ico16"><use href="#i-sun"/></svg><span data-i18n="guide.apparence.clair">Clair</span></button>
+      <button data-t="auto" onclick="themeSet('auto')" data-i18n="guide.apparence.auto">Auto</button>
+      <button data-t="dark" onclick="themeSet('dark')"><svg class="ico16"><use href="#i-moon"/></svg><span data-i18n="guide.apparence.sombre">Sombre</span></button>
     </div>
 
-    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px">Mes bases Google Drive</h3>
+    <h3 class="sect" data-i18n="guide.langue.titre">Langue</h3>
+    <div class="seg" id="langue-seg">
+      <button data-l="fr" onclick="langueSet('fr')">Français</button>
+      <button data-l="nl" onclick="langueSet('nl')">Nederlands</button>
+      <button data-l="en" onclick="langueSet('en')">English</button>
+    </div>
+
+    <h3 style="font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:28px" data-i18n="guide.drive.titre">Mes bases Google Drive</h3>
     <div id="coll-state" class="diagbox"></div>
 
-    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px">
+    <p style="font-size:13.5px;color:var(--text-muted);margin:14px 0 6px" data-i18n="guide.drive.cid_explain">
       Identifiant client OAuth (Google Cloud Console). À coller une seule fois.
     </p>
     <input id="drive-cid" type="text" placeholder="xxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false"
       style="width:100%;height:46px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:0 12px;font-family:var(--mono);font-size:12px">
 
-    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()">Connecter mon Drive</button>
-    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()">Choisir mes fichiers</button>
+    <button class="btn-save" style="margin-top:10px" onclick="driveConnect()" data-i18n="guide.drive.connecter">Connecter mon Drive</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="drivePick()" data-i18n="guide.drive.choisir_fichiers">Choisir mes fichiers</button>
     <div id="drive-files"></div>
-    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)">Synchroniser maintenant</button>
+    <button class="btn-save" style="background:var(--surface-light);color:var(--text);margin-top:9px" onclick="driveSync(true)" data-i18n="guide.drive.synchroniser">Synchroniser maintenant</button>
     <button class="btn-save" style="background:transparent;color:var(--stop);border:1px solid var(--stop);margin-top:9px"
-      onclick="collClear()">Oublier mes bases</button>
+      onclick="collClear()" data-i18n="guide.drive.oublier">Oublier mes bases</button>
 
-    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6">
+    <p style="font-size:12.5px;color:var(--text-muted);margin-top:14px;line-height:1.6" data-i18n="guide.drive.sync_explain">
       La synchronisation se relance toute seule à l'ouverture de l'app quand tu as du réseau.
       Sur le terrain, la comparaison se fait en local : elle marche sans connexion.
     </p>
@@ -4912,24 +5900,24 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
   </div>
 
   <div class="guide-section">
-    <h3>💬 Négociation (La mécanique)</h3>
-    <div class="rule"><i>1</i><span>Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.</span></div>
-    <div class="rule"><i>2</i><span>Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.</span></div>
-    <div class="rule"><i>3</i><span>Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.</span></div>
-    <div class="rule"><i>4</i><span>Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.</span></div>
-    <div class="rule"><i>5</i><span>Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.</span></div>
+    <h3 data-i18n="guide.nego.titre">💬 Négociation (La mécanique)</h3>
+    <div class="rule"><i>1</i><span data-i18n="guide.nego.regle1">Offre 50 à 60 % du prix affiché. Tope à 70 %. Au-delà, tu paies le prix de revente.</span></div>
+    <div class="rule"><i>2</i><span data-i18n="guide.nego.regle2">Groupe toujours : « je prends ces quatre-là, 20 € et c'est fait » marche mieux que quatre marchandages.</span></div>
+    <div class="rule"><i>3</i><span data-i18n="guide.nego.regle3">Espèces, petites coupures, montant exact déjà en main. Un billet tendu conclut une hésitation.</span></div>
+    <div class="rule"><i>4</i><span data-i18n="guide.nego.regle4">Visage neutre, même sur une pépite. Dès que tu t'illumines, le prix se fige.</span></div>
+    <div class="rule"><i>5</i><span data-i18n="guide.nego.regle5">Un seul chiffre, puis tu te tais. Le silence fait le travail à ta place.</span></div>
   </div>
 
   <div class="guide-section">
-    <h3>⚠️ Pièges Fréquents</h3>
-    <div class="warn-rule"><b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.</div>
-    <div class="warn-rule"><b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.</div>
-    <div class="warn-rule"><b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.</div>
-    <div class="warn-rule"><b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.</div>
+    <h3 data-i18n="guide.pieges.titre">⚠️ Pièges Fréquents</h3>
+    <div class="warn-rule" data-i18n-html="guide.pieges.repro_html"><b>Cartouches repro :</b> Étiquette trop nette, vis cruciforme. Nintendo utilise du tri-wing 3,8 mm. Le plastique d'origine est mat.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.piles_html"><b>Corrosion de piles :</b> Ouvre toujours la trappe. Le vert ronge les contacts et coûte plus cher que l'objet.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.boite_html"><b>Boîte pleine, jeu absent :</b> Ouvre tout. Le boîtier PS2 avec un disque de karaoké dedans est un classique.</div>
+    <div class="warn-rule" data-i18n-html="guide.pieges.lot_html"><b>Le lot piège :</b> Trois bons objets sur le dessus, du remplissage en dessous. Retourne le carton avant d'annoncer un prix.</div>
   </div>
 
   <div class="guide-section">
-    <h3>🎒 Le Sac Idéal</h3>
+    <h3 data-i18n="guide.sac.titre">🎒 Le Sac Idéal</h3>
     <div id="sac-ticks"></div>
   </div>
   
@@ -4940,16 +5928,16 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 
 <nav>
   <div class="nav-item active" data-v="live" onclick="switchView('live')">
-    <svg class="ico"><use href="#i-scan"/></svg><span>Scan</span>
+    <svg class="ico"><use href="#i-scan"/></svg><span data-i18n="nav.scan">Scan</span>
   </div>
   <div class="nav-item" data-v="cal" onclick="switchView('cal')">
-    <svg class="ico"><use href="#i-cal"/></svg><span>Dates</span>
+    <svg class="ico"><use href="#i-cal"/></svg><span data-i18n="nav.dates">Dates</span>
   </div>
   <div class="nav-item" data-v="log" onclick="switchView('log')">
-    <svg class="ico"><use href="#i-cash"/></svg><span>Journal</span>
+    <svg class="ico"><use href="#i-cash"/></svg><span data-i18n="nav.journal">Journal</span>
   </div>
   <div class="nav-item" data-v="guide" onclick="switchView('guide')">
-    <svg class="ico"><use href="#i-pad"/></svg><span>Réglages</span>
+    <svg class="ico"><use href="#i-pad"/></svg><span data-i18n="nav.reglages">Réglages</span>
   </div>
 </nav>
 

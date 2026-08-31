@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidentialité — Insert Coin</title>
+<style>
+  :root{
+    --bg: #0a0a0c; --surface: #1a1a24;
+    --gold: #d4af37; --gold-dim: #997a00;
+    --text: #f4f5f2; --text-muted: #8c877f; --border: #333333;
+    --cond: "Avenir Next Condensed", "HelveticaNeue-CondensedBold", "Arial Narrow", Impact, sans-serif;
+    --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.55;
+    padding:24px 18px 60px;max-width:680px;margin:0 auto}
+  h1{font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:.5px;
+    font-size:26px;margin:8px 0 4px}
+  .maj{color:var(--text-muted);font-size:13px;margin-bottom:28px}
+  h2{font-family:var(--cond);color:var(--gold);text-transform:uppercase;letter-spacing:.4px;
+    font-size:17px;margin:32px 0 10px;border-top:1px solid var(--border);padding-top:20px}
+  p,li{font-size:15px;color:var(--text)}
+  ul{padding-left:20px}
+  li{margin-bottom:6px}
+  a{color:var(--gold)}
+  .encadre{background:var(--surface);border:1px solid var(--gold-dim);border-radius:11px;
+    padding:14px 16px;margin:16px 0;font-size:14px}
+  .retour{display:inline-block;margin-top:36px;color:var(--text-muted);text-decoration:none;font-size:14px}
+  .retour:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<h1>Politique de confidentialité — Insert Coin</h1>
+<p class="maj">Dernière mise à jour : 30 août 2026</p>
+
+<div class="encadre">
+En résumé : Insert Coin n'a pas de serveur. Il n'existe aucun compte, aucun
+suivi, aucune publicité. Tout ce que l'app enregistre reste sur ton
+téléphone, et les seuls échanges avec l'extérieur se font directement entre
+ton appareil et les services que <em>tu</em> configures toi-même (Google
+Gemini, Discogs, Rebrickable, Brickset, Google Drive) — jamais via un
+serveur intermédiaire que quelqu'un d'autre contrôlerait.
+</div>
+
+<h2>Qui est responsable de ce traitement</h2>
+<p>
+Janowski Joachim, développeur individuel,
+contact : <a href="mailto:jotrunk@gmail.com">jotrunk@gmail.com</a>.
+</p>
+
+<h2>Quelles données Insert Coin enregistre</h2>
+<p>Tout est stocké localement, sur ton appareil uniquement (mémoire du navigateur ou de l'app), jamais transmis à un serveur d'Insert Coin — il n'y en a pas :</p>
+<ul>
+  <li>Ton historique d'achats/ventes et tes statistiques de négociation ;</li>
+  <li>Ta collection personnelle (pour repérer les doublons) ;</li>
+  <li>Les résultats d'analyses déjà obtenues, mis en cache pour économiser du quota API ;</li>
+  <li>Tes réglages (thème, recherche web activée ou non, modèle IA choisi) ;</li>
+  <li>Les clés/jetons d'accès que <strong>tu</strong> colles toi-même dans les réglages (clé API Gemini, jeton Discogs, clé Rebrickable/Brickset, jeton de connexion Google Drive si tu l'actives).</li>
+</ul>
+<p>Rien de tout ça n'est envoyé, ni lu, ni consulté par le développeur de l'app. Désinstaller l'app ou vider les données du site dans ton navigateur efface tout, définitivement.</p>
+
+<h2>Ce qui part vers l'extérieur, et vers qui</h2>
+<p>Insert Coin fonctionne en <strong>« apporte ta propre clé »</strong> : chaque service externe n'est utilisé que si tu t'y es toi-même connecté, avec tes propres identifiants. Dans ce cas, les échanges suivants ont lieu <strong>directement entre ton appareil et ce service</strong>, sans jamais transiter par un serveur d'Insert Coin :</p>
+<ul>
+  <li><strong>Google Gemini</strong> — les photos que tu prends et le texte de ta recherche sont envoyés à l'API Gemini pour l'analyse IA, avec ta propre clé. Régi par la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">politique de confidentialité de Google</a> et les conditions de l'API Gemini.</li>
+  <li><strong>Discogs, Rebrickable, Brickset</strong> — tes recherches de cote (titre, référence) sont envoyées à ces services avec ton propre jeton/clé, uniquement si tu les as configurés.</li>
+  <li><strong>Google Drive</strong> — uniquement si tu actives la synchronisation : un jeton de connexion OAuth est stocké sur ton appareil et sert à lire les fichiers que tu as toi-même sélectionnés, en lecture seule.</li>
+</ul>
+<p>Aucune de ces données ne passe par une infrastructure appartenant au développeur d'Insert Coin — il n'y en a pas.</p>
+
+<h2>Suivi, publicité, analytique</h2>
+<p>Aucun. Pas de cookie de suivi, pas de publicité, pas d'outil d'analyse d'usage (Google Analytics ou équivalent), pas de revente de données — il n'y a rien à revendre, rien n'est collecté centralement.</p>
+
+<h2>Tes droits</h2>
+<p>Comme aucune donnée personnelle n'est conservée ailleurs que sur ton propre appareil, tu en gardes le contrôle direct et permanent : consultation, modification et suppression se font depuis l'app elle-même ou en vidant les données du site dans ton navigateur. Pour toute question sur ce traitement, écris à <a href="mailto:jotrunk@gmail.com">jotrunk@gmail.com</a>.</p>
+
+<h2>Mineurs</h2>
+<p>Insert Coin n'est pas conçu pour, ni destiné à, des utilisateurs mineurs.</p>
+
+<h2>Modifications de cette politique</h2>
+<p>Si l'app évolue (par exemple si un serveur ou un compte utilisateur est introduit à l'avenir), cette page sera mise à jour et la date ci-dessus changera en conséquence.</p>
+
+<a class="retour" href="./index.html">← Retour à l'app</a>
+
+</body>
+</html>
