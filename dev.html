@@ -102,7 +102,7 @@
 
 <div id="view-cal" class="view">
   <h2 class="view-title" data-i18n="cal.titre">Calendrier</h2>
-  <p class="view-sub" data-i18n="cal.sous_titre">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
+  <p class="view-sub" id="cal-sous-titre">Brocantes à moins de 50 km de Binche, Belgique et France. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.</p>
 
   <div class="cal-actions">
     <button class="btn-save" onclick="calFetch()">
@@ -159,8 +159,37 @@
       <i style="font-size:12px;color:var(--text-muted);font-style:normal" data-i18n="guide.ia.ground_note">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
     <p style="margin-top:10px" data-i18n="guide.ia.region_label">Région pour la recherche (optionnel)</p>
-    <input type="text" id="region-input" class="api-input" placeholder="Ex. Binche, Belgique" data-i18n-placeholder="guide.ia.region_placeholder">
-    <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0;line-height:1.5" data-i18n="guide.ia.region_note">Oriente la recherche web vers les ventes de ta zone. Une orientation, pas une garantie.</p>
+    <select id="region-select" class="api-input" onchange="regionSelectChange()">
+      <option value="" data-i18n="guide.ia.region_aucune">Aucune (par défaut : Binche)</option>
+      <optgroup label="Belgique" id="region-grp-be">
+        <option value="Binche, Belgique">Binche</option>
+        <option value="Bruxelles, Belgique">Bruxelles</option>
+        <option value="Anvers, Belgique">Anvers</option>
+        <option value="Gand, Belgique">Gand</option>
+        <option value="Charleroi, Belgique">Charleroi</option>
+        <option value="Liège, Belgique">Liège</option>
+        <option value="Bruges, Belgique">Bruges</option>
+        <option value="Namur, Belgique">Namur</option>
+        <option value="Mons, Belgique">Mons</option>
+        <option value="Louvain, Belgique">Louvain</option>
+        <option value="Tournai, Belgique">Tournai</option>
+        <option value="La Louvière, Belgique">La Louvière</option>
+      </optgroup>
+      <optgroup label="France" id="region-grp-fr">
+        <option value="Lille, France">Lille</option>
+        <option value="Valenciennes, France">Valenciennes</option>
+        <option value="Douai, France">Douai</option>
+        <option value="Arras, France">Arras</option>
+        <option value="Amiens, France">Amiens</option>
+        <option value="Maubeuge, France">Maubeuge</option>
+        <option value="Charleville-Mézières, France">Charleville-Mézières</option>
+        <option value="Reims, France">Reims</option>
+        <option value="Paris, France">Paris</option>
+      </optgroup>
+      <option value="__autre__" data-i18n="guide.ia.region_autre">Autre (saisir une ville)</option>
+    </select>
+    <input type="text" id="region-input" class="api-input" style="display:none;margin-top:8px" placeholder="Ex. Charleroi, Belgique" data-i18n-placeholder="guide.ia.region_placeholder">
+    <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0;line-height:1.5" data-i18n="guide.ia.region_note">Oriente la recherche web (dates de brocantes, cotes) vers ta zone. Une orientation, pas une garantie.</p>
     <button class="btn-save" onclick="saveSettings()" data-i18n="guide.ia.enregistrer">Enregistrer les réglages</button>
 
     <h3 class="sect" data-i18n="guide.discogs.titre">Cotes Discogs (musique)</h3>

@@ -5,7 +5,7 @@ import {
   CACHE_STORE, Q_STORE, DISC_CACHE, LEGO_CACHE, sortieRead, logRead,
   discToken, DISC_STORE, legoKey, LEGO_STORE, LEGO_PIECE_STORE, LEGO_FIG_STORE, legoTarifs,
   brickKey, BRICK_STORE, BRICK_RELAY_STORE, brickRelay, THEME_STORE, themeGet,
-  REGION_STORE
+  REGION_STORE, regionGet
 } from "../storage/local.js";
 import { MODELS, modelJoli, modelsRefresh } from "../api/gemini.js";
 import { discCote } from "../api/discogs.js";
@@ -14,6 +14,7 @@ import { brickSet, BRICK_RELAY_CODE } from "../api/brickset.js";
 import { hudPaint } from "./hud.js";
 import { driveAuth } from "../api/googledrive.js";
 import { i18nAppliquer, locale, localeSet } from "../i18n/index.js";
+import { calSousTitrePaint } from "./calendar.js";
 
 export function saveSettings() {
   vib();
@@ -28,8 +29,10 @@ export function saveSettings() {
   localStorage.setItem(MODEL_STORE, modelVal);
   try{ localStorage.setItem(GROUND_STORE, $('groundBox').checked ? "on" : "off"); }catch(e){}
 
-  const regionVal = ($('region-input').value || "").trim();
+  const selVal = $('region-select').value;
+  const regionVal = selVal === "__autre__" ? ($('region-input').value || "").trim() : selVal;
   try{ regionVal ? localStorage.setItem(REGION_STORE, regionVal) : localStorage.removeItem(REGION_STORE); }catch(e){}
+  calSousTitrePaint();
 
   paintKeyState();
   /* Une clé neuve n'ouvre pas forcément les mêmes modèles que l'ancienne. */
@@ -265,6 +268,27 @@ export async function brickTest(){
   }
 }
 
+/* Demande du 01/09/2026 : liste déroulante BE/FR plutôt qu'un champ de
+   saisie libre, avec repli "Autre" pour qui n'est couvert par aucune ville
+   de la liste (l'app est publique, pas réservée à la région de départ). */
+export function regionSelectChange(){
+  const sel = $('region-select'); const inp = $('region-input');
+  if(!sel || !inp) return;
+  inp.style.display = sel.value === "__autre__" ? "block" : "none";
+}
+
+export function regionPaint(){
+  const sel = $('region-select'); const inp = $('region-input');
+  if(!sel || !inp) return;
+  const stocke = regionGet();
+  const correspond = stocke && [...sel.options].some(o => o.value === stocke);
+  if(!stocke){ sel.value = ""; inp.value = ""; }
+  else if(correspond){ sel.value = stocke; inp.value = ""; }
+  else { sel.value = "__autre__"; inp.value = stocke; }
+  regionSelectChange();
+}
+
+
 export function themeApply(mode){
   const sombre = mode === "dark" || (mode === "auto" &&
     window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -293,6 +317,7 @@ if(window.matchMedia){
    separe non fait dans cette passe (30/08/2026). */
 export function langueApply(l){
   i18nAppliquer();
+  calSousTitrePaint(); // ne fait plus partie du balayage data-i18n générique (variables {lieu}/{pays})
   document.querySelectorAll('#langue-seg button').forEach(b =>
     b.setAttribute("aria-pressed", b.dataset.l === l));
 }

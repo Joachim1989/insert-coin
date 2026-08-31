@@ -4,6 +4,7 @@ import { fetchAvecDelai } from "../util/fetchTimeout.js";
 import { KEY_STORE, MODEL_STORE, calRead, calWrite, regionGet } from "../storage/local.js";
 import { MODELS, extractJSON } from "../api/gemini.js";
 import { credBump } from "./hud.js";
+import { t } from "../i18n/index.js";
 
 export let calFilter = "all";
 
@@ -18,6 +19,23 @@ export function calKey(x){ return norm((x.date||"") + "|" + (x.ville||"")); }
    (voir BRIEF_BASE, src/api/gemini.js), inchangée tant que rien n'est
    configuré. */
 export function calLieu(){ return regionGet() || "Binche"; }
+
+
+/* Variables du sous-titre affiché en haut de l'onglet Dates (cal.sous_titre,
+   i18n/dict.js — template avec {lieu} et {pays}). Même logique que
+   calBrief() : sans région configurée, l'hypothèse "Belgique et France"
+   reste affichée (comportement d'origine inchangé) ; avec une région
+   choisie dans la liste déroulante, elle disparaît — elle n'a de sens que
+   pour Binche. Extraite pure pour être testable sans DOM. */
+export function calSousTitreVars(){
+  return { lieu: calLieu(), aucuneRegion: !regionGet() };
+}
+
+export function calSousTitrePaint(){
+  const el = $('cal-sous-titre'); if(!el) return;
+  const { lieu, aucuneRegion } = calSousTitreVars();
+  el.textContent = t("cal.sous_titre", { lieu, pays: aucuneRegion ? t("cal.sous_titre_pays") : "" });
+}
 
 
 /* Correctif du 01/09/2026 (demande utilisateur) : la recherche restait codée

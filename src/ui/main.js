@@ -1,13 +1,13 @@
 import { $, vib } from "../util/dom.js";
 import { TICKS } from "../data/localBase.js";
-import { KEY_STORE, SYNC_STORE, getGround, queueRead, driveFiles, themeGet, regionGet } from "../storage/local.js";
+import { KEY_STORE, SYNC_STORE, getGround, queueRead, driveFiles, themeGet } from "../storage/local.js";
 import { modelsRefresh } from "../api/gemini.js";
-import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, backupState, themeApply, langueApply } from "./settings.js";
+import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, backupState, themeApply, langueApply, regionPaint } from "./settings.js";
 import { locale } from "../i18n/index.js";
 import { modeSet, srcPaint, queueRun, captureInit } from "./capture.js";
 import { hudPaint } from "./hud.js";
 import { renderLog, renderHist, renderRecherches } from "./log.js";
-import { renderCal, paintImminent, calendarInit } from "./calendar.js";
+import { renderCal, paintImminent, calendarInit, calSousTitrePaint } from "./calendar.js";
 import { collPaint, driveSync } from "./drive.js";
 import { pwaInit } from "./pwa.js";
 
@@ -46,9 +46,10 @@ export function init() {
     }
   }
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
-  const ri = $('region-input'); if(ri) ri.value = regionGet();
+  regionPaint();
   themeApply(themeGet());
   langueApply(locale());
+  calSousTitrePaint();
   modeSet('objet');
   legoPaint(); brickPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); renderRecherches(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);

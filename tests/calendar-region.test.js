@@ -8,12 +8,12 @@
 // brocantes communales que les gros agendas ne référencent pas.
 import { describe, it, expect, beforeAll, beforeEach } from "vitest";
 
-let calBrief;
+let calBrief, calLieu, calSousTitreVars;
 
 beforeAll(async () => {
   const { poserDomMinimal } = await import("./helpers/domStub.js");
   poserDomMinimal();
-  ({ calBrief } = await import("../src/ui/calendar.js"));
+  ({ calBrief, calLieu, calSousTitreVars } = await import("../src/ui/calendar.js"));
 });
 
 beforeEach(() => {
@@ -56,5 +56,20 @@ describe("calBrief() — décision pure, aucun réseau", () => {
   it("la date du jour reçue en paramètre se retrouve telle quelle dans le prompt", () => {
     const b = calBrief("2026-09-01");
     expect(b).toContain("Nous sommes le 2026-09-01");
+  });
+});
+
+describe("calSousTitreVars() — variables du sous-titre affiché (demande du 01/09/2026 : liste déroulante BE/FR)", () => {
+  // aucuneRegion, pas un fragment de texte en dur : la traduction elle-même
+  // (cal.sous_titre_pays) se résout via t() dans calSousTitrePaint(), pas ici
+  // — cette fonction reste indépendante de la langue active.
+  it("aucune région configurée : lieu = Binche, l'hypothèse Belgique/France reste affichée", () => {
+    expect(calSousTitreVars()).toEqual({ lieu: "Binche", aucuneRegion: true });
+  });
+
+  it("région configurée (ex. choisie dans la liste déroulante) : lieu = la région, plus d'hypothèse figée sur Belgique/France", () => {
+    localStorage.setItem("insertcoin.region", "Charleroi, Belgique");
+    expect(calLieu()).toBe("Charleroi, Belgique");
+    expect(calSousTitreVars()).toEqual({ lieu: "Charleroi, Belgique", aucuneRegion: false });
   });
 });
