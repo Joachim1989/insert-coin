@@ -1,2 +1,20 @@
 node_modules/
 dist/
+
+# Projet Android genere par Bubblewrap (bubblewrap init/build, 31/08/2026) —
+# ne doit JAMAIS entrer dans ce depot public, en particulier android.keystore
+# (la cle privee de signature de l'app). Recommande : deplacer tout ce projet
+# hors de ce dossier plutot que de compter uniquement sur ce garde-fou — voir
+# la discussion du 31/08/2026.
+android.keystore
+*.keystore
+app/
+build.gradle
+gradle.properties
+gradle/
+gradlew
+gradlew.bat
+settings.gradle
+manifest-checksum.txt
+store_icon.png
+twa-manifest.json
