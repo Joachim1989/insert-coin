@@ -32,7 +32,19 @@ fs.mkdirSync(PREVIEW_DIR, { recursive: true });
 fs.writeFileSync(path.join(PREVIEW_DIR, "index.html"), html, "utf8");
 console.log(`preview/index.html publié (${html.length.toLocaleString("fr-BE")} octets).`);
 
-for (const f of fs.readdirSync(PUBLIC_DIR)) {
-  fs.copyFileSync(path.join(PUBLIC_DIR, f), path.join(PREVIEW_DIR, f));
-  console.log(`preview/${f} synchronisé depuis public/${f}.`);
+// Copie récursive : public/ peut contenir des sous-dossiers (ex. .well-known/
+// pour assetlinks.json, requis par le TWA Android) en plus des fichiers à plat.
+function copierDossier(src, dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  for (const f of fs.readdirSync(src)) {
+    const srcPath = path.join(src, f);
+    const destPath = path.join(dest, f);
+    if (fs.statSync(srcPath).isDirectory()) {
+      copierDossier(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+      console.log(`${destPath} synchronisé depuis ${srcPath}.`);
+    }
+  }
 }
+copierDossier(PUBLIC_DIR, PREVIEW_DIR);

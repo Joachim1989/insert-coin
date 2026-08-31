@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "be.pixelpapa.insertcoin",
+        "sha256_cert_fingerprints": ["47:46:BA:1E:97:5E:F8:28:7B:16:08:4B:8E:A9:2F:D5:12:8F:B5:A2:CB:6C:C3:07:93:13:59:43:3B:EC:E8:DD"]
+      }
+    }]

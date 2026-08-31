@@ -2,8 +2,9 @@
 // sert réellement :
 //   - dist/dev.html (page unique, tout inliné par vite-plugin-singlefile)
 //     devient index.html ;
-//   - public/* (manifest, icônes, sw.js — jamais transformés par Vite) sont
-//     recopiés tels quels à côté.
+//   - public/* (manifest, icônes, sw.js — jamais transformés par Vite), y
+//     compris les sous-dossiers comme .well-known/, sont recopiés tels
+//     quels à côté.
 // On vérifie d'abord une taille plausible : si le build a raté en silence et
 // produit une page quasi vide, mieux vaut planter ici que publier un site cassé.
 import fs from "node:fs";
@@ -22,7 +23,19 @@ if(size < 50000){
 fs.copyFileSync(built, "index.html");
 console.log(`index.html republié depuis ${built} (${(size/1024).toFixed(0)} Ko).`);
 
-for(const f of fs.readdirSync("public")){
-  fs.copyFileSync(path.join("public", f), f);
-  console.log(`${f} synchronisé depuis public/${f}.`);
+// Copie récursive : public/ peut contenir des sous-dossiers (ex. .well-known/
+// pour assetlinks.json, requis par le TWA Android) en plus des fichiers à plat.
+function copierDossier(src, dest){
+  fs.mkdirSync(dest, { recursive: true });
+  for(const f of fs.readdirSync(src)){
+    const srcPath = path.join(src, f);
+    const destPath = path.join(dest, f);
+    if(fs.statSync(srcPath).isDirectory()){
+      copierDossier(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+      console.log(`${destPath} synchronisé depuis ${srcPath}.`);
+    }
+  }
 }
+copierDossier("public", ".");
