@@ -4239,6 +4239,20 @@ let calFilter = "all";
 function calKey(x) {
   return norm((x.date || "") + "|" + (x.ville || ""));
 }
+function calLieu() {
+  return regionGet() || "Binche";
+}
+function calBrief(auj) {
+  const r = regionGet();
+  const lieu = r || "Binche (7130, Belgique)";
+  const contexte = r ? "" : ", en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes)";
+  return `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de ${lieu}${contexte}.
+Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
+Cherche en priorité sur quefaire.be (le plus gros agenda de brocantes en Belgique), puis recoupe avec brocabrac.fr, vide-greniers.org, brocantes.be, Facebook (événements et groupes locaux de brocante), la presse régionale (Sudinfo, La Nouvelle Gazette, La Voix du Nord selon la zone), les sites communaux et les agendas locaux.
+Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis ${calLieu()} en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
+N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
+Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
+}
 async function calFetch() {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
@@ -4252,14 +4266,9 @@ async function calFetch() {
   }
   const el = $("cal-list");
   el.innerHTML = `<div class="loading"><div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p>Recherche des brocantes autour de Binche…</p></div>`;
+    <p>Recherche des brocantes autour de ${esc(calLieu())}…</p></div>`;
   const auj = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
-  const brief = `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de Binche (7130, Belgique), en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes).
-Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
-Cherche en priorité sur quefaire.be (le plus gros agenda de brocantes en Belgique), puis recoupe avec brocabrac.fr, vide-greniers.org, brocantes.be, les sites communaux et les agendas locaux.
-Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis Binche en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
-N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
-Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
+  const brief = calBrief(auj);
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
   let lastErr = "";
@@ -4336,7 +4345,7 @@ function calAddManual() {
     alert("Date attendue au format AAAA-MM-JJ.");
     return;
   }
-  const km = parseInt(prompt("Distance depuis Binche en km ?", "20") || "0", 10) || 0;
+  const km = parseInt(prompt("Distance depuis " + calLieu() + " en km ?", "20") || "0", 10) || 0;
   const a = calRead();
   a.push({ date, nom, ville, pays: "BE", km, exposants: 0, horaires: "", note: "", manuel: true, go: true });
   a.sort((x, y) => (x.date || "").localeCompare(y.date || ""));
@@ -4354,7 +4363,7 @@ function calTitre(x) {
 }
 function calDesc(x) {
   const l = [];
-  if (x.km) l.push("Distance depuis Binche : " + x.km + " km");
+  if (x.km) l.push("Distance depuis " + calLieu() + " : " + x.km + " km");
   if (x.exposants) l.push(x.exposants + " exposants");
   if (x.horaires) l.push("Horaires : " + x.horaires);
   if (x.note) l.push(x.note);

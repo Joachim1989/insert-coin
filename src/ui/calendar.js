@@ -1,7 +1,7 @@
 import { $, vib } from "../util/dom.js";
 import { norm, esc } from "../util/text.js";
 import { fetchAvecDelai } from "../util/fetchTimeout.js";
-import { KEY_STORE, MODEL_STORE, calRead, calWrite } from "../storage/local.js";
+import { KEY_STORE, MODEL_STORE, calRead, calWrite, regionGet } from "../storage/local.js";
 import { MODELS, extractJSON } from "../api/gemini.js";
 import { credBump } from "./hud.js";
 
@@ -11,6 +11,38 @@ export let calFilter = "all";
 export function calKey(x){ return norm((x.date||"") + "|" + (x.ville||"")); }
 
 
+/* Réglage réutilisé : la Région ajoutée en Phase 1 (voir directiveRegion(),
+   src/api/gemini.js) répond au même besoin ici — "où es-tu basé ?" — pas de
+   raison de dupliquer un second champ "ta ville" rien que pour le calendrier.
+   Binche reste la valeur par défaut : c'est l'identité de base de l'app
+   (voir BRIEF_BASE, src/api/gemini.js), inchangée tant que rien n'est
+   configuré. */
+export function calLieu(){ return regionGet() || "Binche"; }
+
+
+/* Correctif du 01/09/2026 (demande utilisateur) : la recherche restait codée
+   en dur sur "Binche, 50 km" quel que soit le réglage Région, ET ne
+   cherchait que 4 agendas généralistes — beaucoup de petites brocantes
+   communales ne sont annoncées que sur Facebook (événements, groupes
+   locaux) ou dans la presse régionale, jamais sur les gros agendas.
+   Extraite pure (aucun accès réseau) pour être testable sans mock lourd —
+   voir tests/calendar-region.test.js. L'hypothèse géographique BE/nord de
+   la France n'a de sens que pour Binche : avec une région configurée, on
+   laisse Gemini déduire le pays depuis le lieu donné plutôt que de traîner
+   une hypothèse fausse. */
+export function calBrief(auj){
+  const r = regionGet();
+  const lieu = r || "Binche (7130, Belgique)";
+  const contexte = r ? "" : ", en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes)";
+  return `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de ${lieu}${contexte}.
+Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
+Cherche en priorité sur quefaire.be (le plus gros agenda de brocantes en Belgique), puis recoupe avec brocabrac.fr, vide-greniers.org, brocantes.be, Facebook (événements et groupes locaux de brocante), la presse régionale (Sudinfo, La Nouvelle Gazette, La Voix du Nord selon la zone), les sites communaux et les agendas locaux.
+Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis ${calLieu()} en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
+N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
+Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
+}
+
+
 export async function calFetch(){
   const key = localStorage.getItem(KEY_STORE);
   if(!key){ alert("Configure d'abord ta clé Gemini dans Réglages."); return; }
@@ -18,15 +50,10 @@ export async function calFetch(){
 
   const el = $('cal-list');
   el.innerHTML = `<div class="loading"><div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p>Recherche des brocantes autour de Binche…</p></div>`;
+    <p>Recherche des brocantes autour de ${esc(calLieu())}…</p></div>`;
 
   const auj = new Date().toISOString().slice(0,10);
-  const brief = `Tu cherches les brocantes, vide-greniers et marchés aux puces à moins de 50 km de Binche (7130, Belgique), en Belgique ET dans le nord de la France (Nord, Aisne, Ardennes).
-Nous sommes le ${auj}. Ne retiens que les dates À VENIR dans les 3 prochains mois.
-Cherche en priorité sur quefaire.be (le plus gros agenda de brocantes en Belgique), puis recoupe avec brocabrac.fr, vide-greniers.org, brocantes.be, les sites communaux et les agendas locaux.
-Pour chaque brocante donne : date (AAAA-MM-JJ), nom, ville, pays ("BE" ou "FR"), distance approximative depuis Binche en km (nombre entier), nombre d'exposants si connu (0 sinon), horaires si connus, et une note courte (spécialité, réputation, entrée payante...).
-N'invente aucune date : si tu n'es pas sûr, ne la mets pas. Trie par date croissante. Maximum 25 entrées.
-Réponds UNIQUEMENT en JSON : {"brocantes":[{"date":"","nom":"","ville":"","pays":"","km":0,"exposants":0,"horaires":"","note":""}]}`;
+  const brief = calBrief(auj);
 
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter(m => m !== chosen)];
@@ -100,7 +127,7 @@ export function calAddManual(){
   const ville = prompt("Ville ?") || "";
   const date = prompt("Date (AAAA-MM-JJ) ?", new Date().toISOString().slice(0,10)) || "";
   if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){ alert("Date attendue au format AAAA-MM-JJ."); return; }
-  const km = parseInt(prompt("Distance depuis Binche en km ?", "20") || "0", 10) || 0;
+  const km = parseInt(prompt("Distance depuis " + calLieu() + " en km ?", "20") || "0", 10) || 0;
   const a = calRead();
   a.push({date, nom, ville, pays:"BE", km, exposants:0, horaires:"", note:"", manuel:true, go:true});
   a.sort((x,y) => (x.date||"").localeCompare(y.date||""));
@@ -126,7 +153,7 @@ export function calTitre(x){
 
 export function calDesc(x){
   const l = [];
-  if(x.km) l.push("Distance depuis Binche : " + x.km + " km");
+  if(x.km) l.push("Distance depuis " + calLieu() + " : " + x.km + " km");
   if(x.exposants) l.push(x.exposants + " exposants");
   if(x.horaires) l.push("Horaires : " + x.horaires);
   if(x.note) l.push(x.note);
