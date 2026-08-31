@@ -342,17 +342,29 @@ export function lotVide(mode, j){
    restait toujours en francais, meme interface basculee en neerlandais
    - aucune consigne de langue n'etait jamais envoyee au modele, seul le
    texte de l'app (boutons, libelles) avait ete traduit.
-   N'ajoute qu'UNE ligne, et seulement quand la langue active n'est PAS
-   le francais : le prompt francais (le cas par defaut, calibre tout au
-   long de cette session - mode Bac, timeouts, etc.) reste inchange au
-   caractere pres, zero risque sur le comportement deja valide. */
+   N'ajoute qu'UNE consigne, et seulement quand la langue active n'est
+   PAS le francais : le prompt francais (le cas par defaut, calibre tout
+   au long de cette session - mode Bac, timeouts, etc.) reste inchange
+   au caractere pres, zero risque sur le comportement deja valide.
+
+   Renforce le meme jour (deuxieme retour de terrain : Bac/Stand encore
+   en francais malgre la premiere version) : place maintenant en TETE du
+   prompt plutot qu'apres coup, et cite des noms de champ concrets
+   ("resume", "note"...) plutot qu'une formule vague - une instruction
+   noyee tout au bout d'un prompt deja tres directif ("Reponds
+   UNIQUEMENT en JSON : ...") semble avoir moins de poids pour le
+   modele, surtout avec la recherche web activee (les sources trouvees
+   sont presque toujours en francais). Toujours NON TESTABLE
+   automatiquement : c'est un comportement du modele, pas du code - a
+   reconfirmer sur le terrain, precisement ce qui a signale le probleme
+   une deuxieme fois. */
 const LANGUE_NOM = { nl: "néerlandais" };
 
 export function directiveLangue(){
   const l = locale();
   if(l === DEFAULT_LOCALE) return "";
   const nom = LANGUE_NOM[l];
-  return nom ? `\nRéponds dans tous les champs texte en ${nom}.` : "";
+  return nom ? `IMPORTANT : réponds dans tous les champs texte en ${nom}, sans exception — y compris "resume", "note", "nego" et le contenu des tableaux ("lot", "attendu", "objetsReperes"...). Les noms des clés JSON, eux, restent tels quels.\n\n` : "";
 }
 
 
@@ -417,7 +429,7 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
 
   const parts = [];
   images.forEach(img => parts.push({inlineData:{mimeType: img.media, data: img.data}}));
-  parts.push({text: promptText + ctx + directiveLangue()});
+  parts.push({text: directiveLangue() + promptText + ctx});
 
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter(m => m !== chosen)];

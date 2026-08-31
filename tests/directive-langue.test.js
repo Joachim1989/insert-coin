@@ -39,9 +39,12 @@ describe("directiveLangue() — décision pure", () => {
     expect(directiveLangue()).toBe("");
   });
 
-  it("néerlandais : une consigne de langue, une seule ligne", () => {
+  it("néerlandais : une consigne de langue, citant des noms de champ concrets", () => {
     localeSet("nl");
-    expect(directiveLangue()).toBe("\nRéponds dans tous les champs texte en néerlandais.");
+    const d = directiveLangue();
+    expect(d).toContain("néerlandais");
+    expect(d).toContain('"resume"');
+    expect(d).toContain('"note"');
   });
 });
 
@@ -65,7 +68,7 @@ describe("callGemini() — le prompt réellement envoyé à Gemini", () => {
     expect(texteEnvoye).toBe("Identifie cet objet précisément.");
   });
 
-  it("en néerlandais : la consigne de langue est ajoutée à la fin du prompt envoyé", async () => {
+  it("en néerlandais : la consigne de langue est placée EN TÊTE du prompt envoyé (deuxième retour de terrain : reléguée en fin de prompt, elle semblait avoir moins de poids)", async () => {
     localeSet("nl");
     let corpsEnvoye = null;
     vi.stubGlobal("fetch", vi.fn((url, options) => {
@@ -81,7 +84,9 @@ describe("callGemini() — le prompt réellement envoyé à Gemini", () => {
     await callGemini("Identifie cet objet précisément.", [], 'single');
 
     const texteEnvoye = corpsEnvoye.contents[0].parts[0].text;
-    expect(texteEnvoye).toBe("Identifie cet objet précisément.\nRéponds dans tous les champs texte en néerlandais.");
+    expect(texteEnvoye.startsWith("IMPORTANT")).toBe(true);
+    expect(texteEnvoye).toContain("néerlandais");
+    expect(texteEnvoye.endsWith("Identifie cet objet précisément.")).toBe(true);
     localeSet("fr");
   });
 
