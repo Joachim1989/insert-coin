@@ -1,8 +1,19 @@
+import { t } from "../i18n/index.js";
 
 /* ---------- Les barèmes ----------
    Ils sont dans l'app, pas dans le prompt : un modèle qui improvise ses propres
    décotes donne un chiffre différent à chaque appel pour le même objet. */
-export const ETAT_LBL = {5:"Neuf / scellé", 4:"Excellent", 3:"Bon", 2:"Moyen", 1:"Abîmé", 0:"Non évalué"};
+/* Correctif du 31/08/2026 : ces constantes contiennent des CLES i18n, pas
+   le texte lui-meme — un objet litteral evalue une seule fois a l'import
+   aurait fige la langue active au chargement du module (meme piege que
+   MODE_DIT/CIRC_MOT ailleurs dans le projet). t() est appele au moment de
+   l'usage, dans src/ui/fiche.js. Les valeurs de calcul (coefficients,
+   formules, plus bas dans ce fichier) ne sont PAS concernees par ce
+   chantier — seuls les libelles d'affichage ont ete touches, sur
+   autorisation explicite du 31/08/2026 (voir le compte rendu de cette
+   date : "les libelles du moteur de cotation restent en francais — hors
+   de portee sans ton autorisation explicite" / "oui bien sur !"). */
+export const ETAT_LBL = {5:"pricing.etat.5", 4:"pricing.etat.4", 3:"pricing.etat.3", 2:"pricing.etat.2", 1:"pricing.etat.1", 0:"pricing.etat.0"};
 
 /* ANCRAGE : la référence est le BON ÉTAT D'USAGE (note 3), pas l'exemplaire
    excellent. C'est dans cet état que la quasi-totalité des objets d'occasion se
@@ -20,7 +31,7 @@ export const PERTE_DEFAUT = {cle: 40, autre: 8};
 
 export const PERTE_PLANCHER = 0.15;
 
-export const PORT_LBL = {pochette:"Pochette", petit:"Petit colis", moyen:"Colis moyen", gros:"Gros colis", encombrant:"Encombrant"};
+export const PORT_LBL = {pochette:"pricing.port.pochette", petit:"pricing.port.petit", moyen:"pricing.port.moyen", gros:"pricing.port.gros", encombrant:"pricing.port.encombrant"};
 
 /* Sur Vinted, c'est l'acheteur qui paie le port. Ce qu'on retire ici n'est donc
    pas le tarif postal, c'est la PRESSION que le volume met sur ton prix : plus
@@ -198,25 +209,30 @@ export function ficheCalc(f){
 }
 
 
-/* Le verdict tient compte du prix demandé quand tu l'as saisi. */
+/* Le verdict tient compte du prix demandé quand tu l'as saisi.
+   Correctif du 31/08/2026 : .t est desormais une CLE i18n (t() est deja
+   pris comme nom de parametre ci-dessous par convention du fichier — la
+   fonction importee garde son nom, aucune collision : ce module n'a pas
+   de variable locale nommee t). Les appelants (src/ui/fiche.js) doivent
+   resoudre .t via t(vd.t) avant affichage. */
 export function ficheVerdict(f, c, demande){
-  if(!c.base) return {v:"N", t:"À VÉRIFIER"};
-  if(c.plafond < 1) return {v:"L", t:"LAISSE"};
+  if(!c.base) return {v:"N", t:"pricing.verdict.a_verifier"};
+  if(c.plafond < 1) return {v:"L", t:"pricing.verdict.laisse"};
   /* Le vert veut dire « prends », pas « l'objet existe ». Sans prix affiché,
      rien n'est encore une bonne affaire. */
-  if(!demande) return {v:"N", t:"À CE PRIX SEULEMENT"};
-  if(demande <= c.cible) return {v:"R", t:"RAFLE"};
-  if(demande <= c.plafond) return {v:"N", t:"NÉGOCIE"};
-  return {v:"L", t:"LAISSE"};
+  if(!demande) return {v:"N", t:"pricing.verdict.a_ce_prix"};
+  if(demande <= c.cible) return {v:"R", t:"pricing.verdict.rafle"};
+  if(demande <= c.plafond) return {v:"N", t:"pricing.verdict.negocie"};
+  return {v:"L", t:"pricing.verdict.laisse"};
 }
 
 
 export function attResume(att){
   const perte = attPerte(att);
   const q = att.filter(x => x.vu === "?").length;
-  let t = perte ? "Manque constaté : −" + perte + "% appliqués" : "Rien ne manque : aucune décote";
-  if(q) t += " · " + q + " élément" + (q>1?"s":"") + " à vérifier sur place";
-  return t;
+  let texte = perte ? t("pricing.resume.manque", {perte}) : t("pricing.resume.rien_manque");
+  if(q) texte += t(q > 1 ? "pricing.resume.element_verifier_plusieurs" : "pricing.resume.element_verifier_un", {q});
+  return texte;
 }
 
 

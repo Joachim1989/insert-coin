@@ -1,6 +1,7 @@
 import { norm, collTokens, collScore } from "../util/text.js";
 import { discToken, discCacheGet, discCacheSet } from "../storage/local.js";
 import { fetchAvecDelai } from "../util/fetchTimeout.js";
+import { t } from "../i18n/index.js";
 
 export const DISC_API   = "https://api.discogs.com";
 
@@ -17,11 +18,16 @@ export async function discThrottle(){
 
 
 export async function discGet(chemin, params){
-  const t = discToken();
-  if(!t) throw new Error("Aucun jeton Discogs");
+  // Nommee 'token' et pas 't' : ce fichier importe desormais aussi la
+  // fonction i18n t() (voir discLire() plus bas) - meme piege de
+  // masquage de nom deja rencontre et corrige dans ficheCorps()/
+  // ficheCopieCode()/brickGreffe() (src/ui/fiche.js) plus tot dans cette
+  // meme session.
+  const token = discToken();
+  if(!token) throw new Error("Aucun jeton Discogs");
   if(!navigator.onLine) throw new Error("Hors réseau");
   await discThrottle();
-  const q = new URLSearchParams({...(params||{}), token: t});
+  const q = new URLSearchParams({...(params||{}), token});
   /* Budget de temps : simple lecture, pas d'upload — 10s (correctif du
      23/08/2026, voir src/util/fetchTimeout.js). */
   const r = await fetchAvecDelai(DISC_API + chemin + "?" + q.toString(), {}, 10000);
@@ -95,20 +101,23 @@ export async function discCote(query){
 }
 
 
-/* Lecture des chiffres. C'est ici que la donnée devient une décision. */
+/* Lecture des chiffres. C'est ici que la donnée devient une décision.
+   Libelles traduits le 31/08/2026 (autorisation explicite de toucher a ce
+   fichier, hors coefficients/formules — voir le compte rendu de cette
+   date). */
 export function discLire(c){
   const ratio = c.ont ? c.veulent / c.ont : 0;
   let rarete, rcls;
-  if(c.envente === 0 && c.ont < 500){ rarete = "Aucun exemplaire en vente"; rcls = "r"; }
-  else if(c.envente > 150){ rarete = "Pressage massif — " + c.envente + " en vente"; rcls = "c"; }
-  else if(c.envente > 40){ rarete = c.envente + " exemplaires en vente"; rcls = "c"; }
-  else if(c.envente > 0){ rarete = "Seulement " + c.envente + " en vente"; rcls = "r"; }
-  else { rarete = "Marché introuvable"; rcls = ""; }
+  if(c.envente === 0 && c.ont < 500){ rarete = t("disc.rarete.aucun"); rcls = "r"; }
+  else if(c.envente > 150){ rarete = t("disc.rarete.massif", {n: c.envente}); rcls = "c"; }
+  else if(c.envente > 40){ rarete = t("disc.rarete.exemplaires", {n: c.envente}); rcls = "c"; }
+  else if(c.envente > 0){ rarete = t("disc.rarete.seulement", {n: c.envente}); rcls = "r"; }
+  else { rarete = t("disc.rarete.introuvable"); rcls = ""; }
 
   let demande = "";
-  if(ratio >= 1) demande = "Plus de gens le veulent que ne le possèdent (×" + ratio.toFixed(1) + ")";
-  else if(ratio >= 0.4) demande = "Demande correcte (" + Math.round(ratio*100) + " veulent pour 100 qui l'ont)";
-  else if(c.ont > 0) demande = "Peu demandé (" + Math.round(ratio*100) + " pour 100)";
+  if(ratio >= 1) demande = t("disc.demande.plus_veulent", {ratio: ratio.toFixed(1)});
+  else if(ratio >= 0.4) demande = t("disc.demande.correcte", {pct: Math.round(ratio*100)});
+  else if(c.ont > 0) demande = t("disc.demande.peu", {pct: Math.round(ratio*100)});
 
   /* Pour vendre, il faut passer sous le moins cher déjà en ligne : la revente
      réaliste n'est pas le prix affiché sur Discogs, c'est un cran en dessous.

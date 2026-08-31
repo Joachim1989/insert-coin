@@ -57,7 +57,7 @@ export function fichePaint(){
     hd.className = "aihead " + vd.v;
     const num = hd.querySelector('.num'), lab = hd.querySelector('.v'), r = hd.querySelector('.r');
     if(num) num.textContent = c.plafond ? c.plafond + "€" : "—";
-    if(lab) lab.textContent = vd.t;
+    if(lab) lab.textContent = t(vd.t);
     if(r) r.textContent = c.net ? t("fiche.revente_nette", {n: c.net}) : t("fiche.marche_inconnu");
   }
   /* Ce qui part au journal et aux objets repérés doit suivre tes réglages. */
@@ -120,8 +120,8 @@ export function ficheAction(f, c, dem){
 export function ficheParce(f, c, absent){
   const l = [];
   l.push(`<b>${c.base}€</b> — ${f.marcheVu ? t("fiche.prix_tu_as_constate") : t("fiche.ce_qui_se_vend_bon_etat")}${f.marcheSrc ? " (" + esc(f.marcheSrc) + ")" : ""}${f.lot && f.lotNb ? t("fiche.lot_entier_suffix") : ""}`);
-  if(c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — ${esc(t("fiche.meilleur_etat_courant", {etat: ETAT_LBL[f.etat].toLowerCase()}))}`);
-  else if(c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — ${esc(t("fiche.etat_x", {etat: ETAT_LBL[f.etat].toLowerCase()}))}`);
+  if(c.ce > 1) l.push(`<b>+${Math.round((c.ce - 1) * 100)}%</b> — ${esc(t("fiche.meilleur_etat_courant", {etat: t(ETAT_LBL[f.etat]).toLowerCase()}))}`);
+  else if(c.ce < 1) l.push(`<b>−${Math.round((1 - c.ce) * 100)}%</b> — ${esc(t("fiche.etat_x", {etat: t(ETAT_LBL[f.etat]).toLowerCase()}))}`);
   absent.forEach(x => l.push(`<b>−${x.perte}%</b> — ${esc(t("fiche.manque", {nom: x.n}))}`));
   if(c.port) l.push(`<b>−${c.port}€</b> — ${t("fiche.cout_envoi")}`);
   l.push(`= <b>${c.net}€</b> ${t("fiche.dans_poche_revente")}`);
@@ -133,7 +133,7 @@ export function ficheParce(f, c, absent){
 
 export function ficheReglages(f, c){
   const b = (n) => `<button class="et${f.etat === n ? " on" : ""}" onclick="ficheEtatSet(${n})">
-    <b>${n}</b><span>${ETAT_LBL[n]}</span></button>`;
+    <b>${n}</b><span>${t(ETAT_LBL[n])}</span></button>`;
   return `
     <div class="reg" id="fiche-reglages">
       <div class="reg-t">${t("fiche.etat_reel.titre")} <i>${f.echelle ? esc(f.echelle) : t("fiche.etat_reel.que_tu_constates")} ${t("fiche.etat_reel.note3")}</i></div>
@@ -337,7 +337,7 @@ export function renderResult(j, images, avis) {
       <div class="aihead ${vd.v}" id="fiche-head">
         <div class="p"><div class="num">${c.plafond ? c.plafond + "€" : "—"}</div><div class="cap">${t("fiche.ton_max")}</div></div>
         <div class="t">
-          <div class="v">${vd.t}</div>
+          <div class="v">${t(vd.t)}</div>
           <div class="o">${esc(f.objet)}</div>
           <div class="r">${c.net ? esc(t("fiche.revente_nette", {n: c.net})) : t("fiche.marche_inconnu")}</div>
         </div>
@@ -351,7 +351,7 @@ export function renderResult(j, images, avis) {
       <div id="brick-slot"></div>
       <div class="aibody">${ficheCorps(f)}</div>
       <div id="fiche-prix" class="prix">${fichePrix(f, c, dem)}</div>
-      <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + PORT_LBL[f.gabarit] : ""}</div>
+      <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + t(PORT_LBL[f.gabarit]) : ""}</div>
       ${avis ? `<div class="avis">⚠︎ ${esc(avis)}</div>` : ''}
       <div class="act-grid deux">
         <input id="log-dem" type="number" inputmode="decimal" placeholder="${t("fiche.demande_placeholder")}"

@@ -339,7 +339,41 @@ export const DICT = {
     "carte.brick.cle_refusee": "Clé Brickset refusée — recolle-la dans Réglages.",
     "carte.brick.injoignable": "Brickset injoignable (réseau).",
 
-    "avis.deja_obtenu": "Résultat déjà obtenu ce jour — aucun quota consommé."
+    "avis.deja_obtenu": "Résultat déjà obtenu ce jour — aucun quota consommé.",
+
+    "pricing.etat.5": "Neuf / scellé",
+    "pricing.etat.4": "Excellent",
+    "pricing.etat.3": "Bon",
+    "pricing.etat.2": "Moyen",
+    "pricing.etat.1": "Abîmé",
+    "pricing.etat.0": "Non évalué",
+
+    "pricing.port.pochette": "Pochette",
+    "pricing.port.petit": "Petit colis",
+    "pricing.port.moyen": "Colis moyen",
+    "pricing.port.gros": "Gros colis",
+    "pricing.port.encombrant": "Encombrant",
+
+    "pricing.verdict.a_verifier": "À VÉRIFIER",
+    "pricing.verdict.laisse": "LAISSE",
+    "pricing.verdict.a_ce_prix": "À CE PRIX SEULEMENT",
+    "pricing.verdict.rafle": "RAFLE",
+    "pricing.verdict.negocie": "NÉGOCIE",
+
+    "pricing.resume.manque": "Manque constaté : −{perte}% appliqués",
+    "pricing.resume.rien_manque": "Rien ne manque : aucune décote",
+    "pricing.resume.element_verifier_un": " · 1 élément à vérifier sur place",
+    "pricing.resume.element_verifier_plusieurs": " · {q} éléments à vérifier sur place",
+
+    "disc.rarete.aucun": "Aucun exemplaire en vente",
+    "disc.rarete.massif": "Pressage massif — {n} en vente",
+    "disc.rarete.exemplaires": "{n} exemplaires en vente",
+    "disc.rarete.seulement": "Seulement {n} en vente",
+    "disc.rarete.introuvable": "Marché introuvable",
+
+    "disc.demande.plus_veulent": "Plus de gens le veulent que ne le possèdent (×{ratio})",
+    "disc.demande.correcte": "Demande correcte ({pct} veulent pour 100 qui l'ont)",
+    "disc.demande.peu": "Peu demandé ({pct} pour 100)"
   },
 
   nl: {
@@ -669,7 +703,41 @@ export const DICT = {
     "carte.brick.cle_refusee": "Brickset-sleutel geweigerd — plak ze opnieuw in Instellingen.",
     "carte.brick.injoignable": "Brickset niet bereikbaar (netwerk).",
 
-    "avis.deja_obtenu": "Resultaat al verkregen vandaag — geen quota verbruikt."
+    "avis.deja_obtenu": "Resultaat al verkregen vandaag — geen quota verbruikt.",
+
+    "pricing.etat.5": "Nieuw / verzegeld",
+    "pricing.etat.4": "Uitstekend",
+    "pricing.etat.3": "Goed",
+    "pricing.etat.2": "Matig",
+    "pricing.etat.1": "Beschadigd",
+    "pricing.etat.0": "Niet beoordeeld",
+
+    "pricing.port.pochette": "Hoes",
+    "pricing.port.petit": "Klein pakket",
+    "pricing.port.moyen": "Middelgroot pakket",
+    "pricing.port.gros": "Groot pakket",
+    "pricing.port.encombrant": "Omvangrijk",
+
+    "pricing.verdict.a_verifier": "TE CONTROLEREN",
+    "pricing.verdict.laisse": "LAAT LIGGEN",
+    "pricing.verdict.a_ce_prix": "ALLEEN TEGEN DEZE PRIJS",
+    "pricing.verdict.rafle": "GRIJP HET",
+    "pricing.verdict.negocie": "ONDERHANDEL",
+
+    "pricing.resume.manque": "Gebrek vastgesteld: −{perte}% toegepast",
+    "pricing.resume.rien_manque": "Niets ontbreekt: geen korting",
+    "pricing.resume.element_verifier_un": " · 1 element ter plaatse te controleren",
+    "pricing.resume.element_verifier_plusieurs": " · {q} elementen ter plaatse te controleren",
+
+    "disc.rarete.aucun": "Geen exemplaar te koop",
+    "disc.rarete.massif": "Massale oplage — {n} te koop",
+    "disc.rarete.exemplaires": "{n} exemplaren te koop",
+    "disc.rarete.seulement": "Slechts {n} te koop",
+    "disc.rarete.introuvable": "Markt niet gevonden",
+
+    "disc.demande.plus_veulent": "Meer mensen willen het dan het bezitten (×{ratio})",
+    "disc.demande.correcte": "Redelijke vraag ({pct} willen het per 100 die het hebben)",
+    "disc.demande.peu": "Weinig gevraagd ({pct} per 100)"
   },
 
   en: {
@@ -999,6 +1067,40 @@ export const DICT = {
     "carte.brick.cle_refusee": "Brickset key rejected — paste it again in Settings.",
     "carte.brick.injoignable": "Brickset unreachable (network).",
 
-    "avis.deja_obtenu": "Result already obtained today — no quota used."
+    "avis.deja_obtenu": "Result already obtained today — no quota used.",
+
+    "pricing.etat.5": "New / sealed",
+    "pricing.etat.4": "Excellent",
+    "pricing.etat.3": "Good",
+    "pricing.etat.2": "Fair",
+    "pricing.etat.1": "Damaged",
+    "pricing.etat.0": "Not assessed",
+
+    "pricing.port.pochette": "Sleeve",
+    "pricing.port.petit": "Small parcel",
+    "pricing.port.moyen": "Medium parcel",
+    "pricing.port.gros": "Large parcel",
+    "pricing.port.encombrant": "Bulky",
+
+    "pricing.verdict.a_verifier": "TO CHECK",
+    "pricing.verdict.laisse": "SKIP",
+    "pricing.verdict.a_ce_prix": "ONLY AT THIS PRICE",
+    "pricing.verdict.rafle": "GRAB IT",
+    "pricing.verdict.negocie": "NEGOTIATE",
+
+    "pricing.resume.manque": "Missing found: −{perte}% applied",
+    "pricing.resume.rien_manque": "Nothing missing: no discount",
+    "pricing.resume.element_verifier_un": " · 1 item to check on site",
+    "pricing.resume.element_verifier_plusieurs": " · {q} items to check on site",
+
+    "disc.rarete.aucun": "No copies for sale",
+    "disc.rarete.massif": "Mass pressing — {n} for sale",
+    "disc.rarete.exemplaires": "{n} copies for sale",
+    "disc.rarete.seulement": "Only {n} for sale",
+    "disc.rarete.introuvable": "Market not found",
+
+    "disc.demande.plus_veulent": "More people want it than own it (×{ratio})",
+    "disc.demande.correcte": "Fair demand ({pct} want it per 100 who have it)",
+    "disc.demande.peu": "Low demand ({pct} per 100)"
   }
 };
