@@ -4,7 +4,8 @@ import {
   KEY_STORE, MODEL_STORE, GROUND_STORE, memBytes, queueRead,
   CACHE_STORE, Q_STORE, DISC_CACHE, LEGO_CACHE, sortieRead, logRead,
   discToken, DISC_STORE, legoKey, LEGO_STORE, LEGO_PIECE_STORE, LEGO_FIG_STORE, legoTarifs,
-  brickKey, BRICK_STORE, BRICK_RELAY_STORE, brickRelay, THEME_STORE, themeGet
+  brickKey, BRICK_STORE, BRICK_RELAY_STORE, brickRelay, THEME_STORE, themeGet,
+  REGION_STORE
 } from "../storage/local.js";
 import { MODELS, modelJoli, modelsRefresh } from "../api/gemini.js";
 import { discCote } from "../api/discogs.js";
@@ -26,7 +27,10 @@ export function saveSettings() {
   }
   localStorage.setItem(MODEL_STORE, modelVal);
   try{ localStorage.setItem(GROUND_STORE, $('groundBox').checked ? "on" : "off"); }catch(e){}
-  
+
+  const regionVal = ($('region-input').value || "").trim();
+  try{ regionVal ? localStorage.setItem(REGION_STORE, regionVal) : localStorage.removeItem(REGION_STORE); }catch(e){}
+
   paintKeyState();
   /* Une clé neuve n'ouvre pas forcément les mêmes modèles que l'ancienne. */
   if(keyVal && navigator.onLine) modelsRefresh(false);

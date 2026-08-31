@@ -70,6 +70,9 @@ export const DICT = {
     "guide.ia.verifier_modeles": "Vérifier les modèles disponibles",
     "guide.ia.ground_label": "Chercher les prix sur le web",
     "guide.ia.ground_note": "Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.",
+    "guide.ia.region_label": "Région pour la recherche (optionnel)",
+    "guide.ia.region_placeholder": "Ex. Binche, Belgique",
+    "guide.ia.region_note": "Oriente la recherche web vers les ventes de ta zone. Une orientation, pas une garantie.",
     "guide.ia.enregistrer": "Enregistrer les réglages",
 
     "guide.discogs.titre": "Cotes Discogs (musique)",
@@ -434,6 +437,9 @@ export const DICT = {
     "guide.ia.verifier_modeles": "Beschikbare modellen controleren",
     "guide.ia.ground_label": "Prijzen op het web zoeken",
     "guide.ia.ground_note": "Onmisbaar voor echte prijzen. Vink alleen uit bij herhaalde 429-fouten.",
+    "guide.ia.region_label": "Regio voor de zoekopdracht (optioneel)",
+    "guide.ia.region_placeholder": "Bijv. Binche, België",
+    "guide.ia.region_note": "Richt de webzoekopdracht op verkopen in jouw omgeving. Een richting, geen garantie.",
     "guide.ia.enregistrer": "Instellingen opslaan",
 
     "guide.discogs.titre": "Discogs-prijzen (muziek)",
@@ -798,6 +804,9 @@ export const DICT = {
     "guide.ia.verifier_modeles": "Check available models",
     "guide.ia.ground_label": "Search prices on the web",
     "guide.ia.ground_note": "Essential for real prices. Only untick it if you keep getting 429 errors.",
+    "guide.ia.region_label": "Region for the search (optional)",
+    "guide.ia.region_placeholder": "E.g. Binche, Belgium",
+    "guide.ia.region_note": "Steers the web search toward sales in your area. A steer, not a guarantee.",
     "guide.ia.enregistrer": "Save settings",
 
     "guide.discogs.titre": "Discogs prices (music)",

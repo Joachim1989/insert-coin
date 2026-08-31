@@ -45,6 +45,13 @@ export const GROUND_STORE = "insertcoin.gemini.ground";
 
 export const getGround = () => { try { return localStorage.getItem(GROUND_STORE) !== "off"; } catch(e){ return true; } };
 
+/* Un objet identique se vend différemment selon le marché local — voir
+   directiveRegion() dans api/gemini.js. Optionnel : chaîne vide par défaut,
+   aucun changement du comportement existant tant que rien n'est configuré. */
+export const REGION_STORE = "insertcoin.region";
+
+export function regionGet(){ try { return (localStorage.getItem(REGION_STORE) || "").trim(); } catch(e){ return ""; } }
+
 
 /* Cache : une même recherche dans la matinée ne reconsomme pas de quota
    et répond instantanément devant le vendeur. */

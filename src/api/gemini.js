@@ -1,7 +1,7 @@
 import { $ } from "../util/dom.js";
 import { esc } from "../util/text.js";
 import { fetchAvecDelai } from "../util/fetchTimeout.js";
-import { KEY_STORE, MODEL_STORE, cacheGet, cacheSet, getGround, discToken, rechAjouter } from "../storage/local.js";
+import { KEY_STORE, MODEL_STORE, cacheGet, cacheSet, getGround, discToken, rechAjouter, regionGet } from "../storage/local.js";
 import { switchView } from "../ui/main.js";
 import { credBump } from "../ui/hud.js";
 import { queuePush } from "../ui/capture.js";
@@ -368,6 +368,18 @@ export function directiveLangue(){
 }
 
 
+/* Phase 1 de la note stratégique du 31/08/2026 (freemium/région) : un objet
+   identique se vend différemment selon le marché local — même mécanique que
+   directiveLangue() juste au-dessus (chaîne vide par défaut, une consigne en
+   tête de prompt seulement si le réglage est renseigné). Présentée comme une
+   orientation, pas une garantie : la recherche web de Gemini ne respecte pas
+   toujours parfaitement une contrainte géographique. */
+export function directiveRegion(){
+  const r = regionGet();
+  return r ? `Priorise les résultats de vente d'occasion autour de "${r}" quand la recherche web est activée (orientation, pas une garantie stricte).\n\n` : "";
+}
+
+
 export async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey, tentatives = 0) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
@@ -429,7 +441,7 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
 
   const parts = [];
   images.forEach(img => parts.push({inlineData:{mimeType: img.media, data: img.data}}));
-  parts.push({text: directiveLangue() + promptText + ctx});
+  parts.push({text: directiveRegion() + directiveLangue() + promptText + ctx});
 
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter(m => m !== chosen)];

@@ -1,6 +1,6 @@
 import { $, vib } from "../util/dom.js";
 import { TICKS } from "../data/localBase.js";
-import { KEY_STORE, SYNC_STORE, getGround, queueRead, driveFiles, themeGet } from "../storage/local.js";
+import { KEY_STORE, SYNC_STORE, getGround, queueRead, driveFiles, themeGet, regionGet } from "../storage/local.js";
 import { modelsRefresh } from "../api/gemini.js";
 import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, backupState, themeApply, langueApply } from "./settings.js";
 import { locale } from "../i18n/index.js";
@@ -46,6 +46,7 @@ export function init() {
     }
   }
   const gb = $('groundBox'); if(gb) gb.checked = getGround();
+  const ri = $('region-input'); if(ri) ri.value = regionGet();
   themeApply(themeGet());
   langueApply(locale());
   modeSet('objet');

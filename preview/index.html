@@ -94,6 +94,14 @@ const getGround = () => {
     return true;
   }
 };
+const REGION_STORE = "insertcoin.region";
+function regionGet() {
+  try {
+    return (localStorage.getItem(REGION_STORE) || "").trim();
+  } catch (e) {
+    return "";
+  }
+}
 const CACHE_STORE = "insertcoin.cache2";
 try {
   localStorage.removeItem("insertcoin.cache");
@@ -504,6 +512,9 @@ const DICT = {
     "guide.ia.verifier_modeles": "Vérifier les modèles disponibles",
     "guide.ia.ground_label": "Chercher les prix sur le web",
     "guide.ia.ground_note": "Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.",
+    "guide.ia.region_label": "Région pour la recherche (optionnel)",
+    "guide.ia.region_placeholder": "Ex. Binche, Belgique",
+    "guide.ia.region_note": "Oriente la recherche web vers les ventes de ta zone. Une orientation, pas une garantie.",
     "guide.ia.enregistrer": "Enregistrer les réglages",
     "guide.discogs.titre": "Cotes Discogs (musique)",
     "guide.discogs.explain": "Jeton personnel, à générer sur discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Il reste sur ce téléphone. Pour tout ce qui est disque, Discogs remplace l'estimation de l'IA par le prix réellement pratiqué et le nombre d'exemplaires en vente.",
@@ -812,6 +823,9 @@ const DICT = {
     "guide.ia.verifier_modeles": "Beschikbare modellen controleren",
     "guide.ia.ground_label": "Prijzen op het web zoeken",
     "guide.ia.ground_note": "Onmisbaar voor echte prijzen. Vink alleen uit bij herhaalde 429-fouten.",
+    "guide.ia.region_label": "Regio voor de zoekopdracht (optioneel)",
+    "guide.ia.region_placeholder": "Bijv. Binche, België",
+    "guide.ia.region_note": "Richt de webzoekopdracht op verkopen in jouw omgeving. Een richting, geen garantie.",
     "guide.ia.enregistrer": "Instellingen opslaan",
     "guide.discogs.titre": "Discogs-prijzen (muziek)",
     "guide.discogs.explain": "Persoonlijk token, aan te maken op discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. Het blijft op deze telefoon. Voor alles wat platen betreft, vervangt Discogs de schatting van de AI door de werkelijk gehanteerde prijs en het aantal exemplaren te koop.",
@@ -1120,6 +1134,9 @@ const DICT = {
     "guide.ia.verifier_modeles": "Check available models",
     "guide.ia.ground_label": "Search prices on the web",
     "guide.ia.ground_note": "Essential for real prices. Only untick it if you keep getting 429 errors.",
+    "guide.ia.region_label": "Region for the search (optional)",
+    "guide.ia.region_placeholder": "E.g. Binche, Belgium",
+    "guide.ia.region_note": "Steers the web search toward sales in your area. A steer, not a guarantee.",
     "guide.ia.enregistrer": "Save settings",
     "guide.discogs.titre": "Discogs prices (music)",
     "guide.discogs.explain": "Personal token, generate it at discogs.com &rarr; Settings &rarr; Developers &rarr; Generate new token. It stays on this phone. For anything record-related, Discogs replaces the AI's estimate with the actual going price and the number of copies for sale.",
@@ -3440,6 +3457,11 @@ function saveSettings() {
     localStorage.setItem(GROUND_STORE, $("groundBox").checked ? "on" : "off");
   } catch (e) {
   }
+  const regionVal = ($("region-input").value || "").trim();
+  try {
+    regionVal ? localStorage.setItem(REGION_STORE, regionVal) : localStorage.removeItem(REGION_STORE);
+  } catch (e) {
+  }
   paintKeyState();
   if (keyVal && navigator.onLine) modelsRefresh(false);
 }
@@ -4043,6 +4065,12 @@ function directiveLangue() {
 
 ` : "";
 }
+function directiveRegion() {
+  const r = regionGet();
+  return r ? `Priorise les résultats de vente d'occasion autour de "${r}" quand la recherche web est activée (orientation, pas une garantie stricte).
+
+` : "";
+}
 async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0) {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
@@ -4098,7 +4126,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   }
   const parts = [];
   images.forEach((img) => parts.push({ inlineData: { mimeType: img.media, data: img.data } }));
-  parts.push({ text: directiveLangue() + promptText + ctx });
+  parts.push({ text: directiveRegion() + directiveLangue() + promptText + ctx });
   const chosen = localStorage.getItem(MODEL_STORE) || MODELS[0];
   const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
   const attempts = [];
@@ -4742,6 +4770,8 @@ function init() {
   }
   const gb = $("groundBox");
   if (gb) gb.checked = getGround();
+  const ri = $("region-input");
+  if (ri) ri.value = regionGet();
   themeApply(themeGet());
   langueApply(locale());
   modeSet("objet");
@@ -5795,6 +5825,9 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <span><span data-i18n="guide.ia.ground_label">Chercher les prix sur le web</span><br>
       <i style="font-size:12px;color:var(--text-muted);font-style:normal" data-i18n="guide.ia.ground_note">Indispensable pour des cotes réelles. Décoche seulement en cas d'erreurs 429 répétées.</i></span>
     </label>
+    <p style="margin-top:10px" data-i18n="guide.ia.region_label">Région pour la recherche (optionnel)</p>
+    <input type="text" id="region-input" class="api-input" placeholder="Ex. Binche, Belgique" data-i18n-placeholder="guide.ia.region_placeholder">
+    <p style="font-size:12px;color:var(--text-muted);margin:6px 0 0;line-height:1.5" data-i18n="guide.ia.region_note">Oriente la recherche web vers les ventes de ta zone. Une orientation, pas une garantie.</p>
     <button class="btn-save" onclick="saveSettings()" data-i18n="guide.ia.enregistrer">Enregistrer les réglages</button>
 
     <h3 class="sect" data-i18n="guide.discogs.titre">Cotes Discogs (musique)</h3>
