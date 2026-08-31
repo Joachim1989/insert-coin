@@ -337,7 +337,9 @@ export const DICT = {
     "carte.brick.recherche": "Recherche du set {num} sur Brickset…",
     "carte.brick.marche_src": "Brickset · {pieces} pièces, {figs} figurines",
     "carte.brick.cle_refusee": "Clé Brickset refusée — recolle-la dans Réglages.",
-    "carte.brick.injoignable": "Brickset injoignable (réseau)."
+    "carte.brick.injoignable": "Brickset injoignable (réseau).",
+
+    "avis.deja_obtenu": "Résultat déjà obtenu ce jour — aucun quota consommé."
   },
 
   nl: {
@@ -665,6 +667,8 @@ export const DICT = {
     "carte.brick.recherche": "Set {num} opzoeken op Brickset…",
     "carte.brick.marche_src": "Brickset · {pieces} onderdelen, {figs} poppetjes",
     "carte.brick.cle_refusee": "Brickset-sleutel geweigerd — plak ze opnieuw in Instellingen.",
-    "carte.brick.injoignable": "Brickset niet bereikbaar (netwerk)."
+    "carte.brick.injoignable": "Brickset niet bereikbaar (netwerk).",
+
+    "avis.deja_obtenu": "Resultaat al verkregen vandaag — geen quota verbruikt."
   }
 };

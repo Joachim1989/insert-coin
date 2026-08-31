@@ -9,7 +9,7 @@ import { collMatch } from "../ui/dedup.js";
 import { renderResult, renderBacResult, renderStandResult, discGreffe } from "../ui/fiche.js";
 import { discMusique } from "./discogs.js";
 import { modelsPaint } from "../ui/settings.js";
-import { locale, DEFAULT_LOCALE } from "../i18n/index.js";
+import { t, locale, DEFAULT_LOCALE } from "../i18n/index.js";
 
 // --- AI API CALLS ---
 /* ══════════════════ LE MOTEUR EXPERT ══════════════════
@@ -370,11 +370,17 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
   /* La clé DOIT venir de la recherche elle-même. Elle était calculée sur les
      180 premiers caractères du prompt — c'est-à-dire le début du brief,
      identique pour toutes les requêtes : chaque recherche retombait donc sur
-     le résultat de la précédente. */
-  const ckey = (!images.length && mode === 'single' && cacheKey) ? cacheKey : null;
+     le résultat de la précédente.
+     Correctif du 31/08/2026 (retour de terrain) : la langue de la reponse
+     depend maintenant de la langue active (voir directiveLangue()
+     plus bas) — sans la langue DANS la cle, une recherche deja en cache
+     en francais s'affichait telle quelle apres avoir bascule en
+     neerlandais, sans jamais rappeler Gemini ni voir la consigne de
+     langue. Meme requete + langue differente = entree de cache differente. */
+  const ckey = (!images.length && mode === 'single' && cacheKey) ? cacheKey + ":" + locale() : null;
   if(ckey){
     const hit = cacheGet(ckey);
-    if(hit){ renderResult(hit, [], "Résultat déjà obtenu ce jour — aucun quota consommé."); return; }
+    if(hit){ renderResult(hit, [], t("avis.deja_obtenu")); return; }
   }
 
   if(!navigator.onLine && !fromQueue){ queuePush(promptText, images, mode, cacheKey); return; }
