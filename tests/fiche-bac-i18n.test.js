@@ -67,6 +67,17 @@ describe("renderBacResult() — langue active", () => {
     expect(aiResults.innerHTML).toContain("Niets leesbaars");
     expect(aiResults.innerHTML).not.toContain("Rien de lisible");
   });
+
+  it("en anglais (31/08/2026, troisième langue) : mêmes libellés en anglais", () => {
+    localeSet("en");
+    renderBacResult(LOT_EXEMPLE, [], null);
+    expect(aiResults.innerHTML).toContain("LOT MODE");
+    expect(aiResults.innerHTML).toContain("<h4>To take ");
+    expect(aiResults.innerHTML).toContain("<h4>Skip ");
+    expect(aiResults.innerHTML).toContain("Close analysis");
+    expect(aiResults.innerHTML).toContain("The Wall");
+    localeSet("fr");
+  });
 });
 
 describe("bacBuy() — prompts traduits, singulier/pluriel corrects", () => {

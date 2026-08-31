@@ -4,7 +4,7 @@
 import { DICT } from "./dict.js";
 
 export const LOCALE_STORE = "insertcoin.locale";
-export const LOCALES = ["fr", "nl"];
+export const LOCALES = ["fr", "nl", "en"];
 export const DEFAULT_LOCALE = "fr";
 
 export function locale(){

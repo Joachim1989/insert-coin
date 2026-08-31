@@ -80,19 +80,24 @@ describe("t()", () => {
   });
 });
 
-describe("dictionnaire — complétude fr/nl", () => {
+describe("dictionnaire — complétude entre toutes les langues supportées", () => {
   it("chaque langue supportée a une entrée dans DICT", () => {
     LOCALES.forEach(l => expect(DICT[l]).toBeTruthy());
   });
 
-  it("toute clé présente en français est aussi présente en néerlandais (pas de repli silencieux dans dev.html)", () => {
-    const manquantes = Object.keys(DICT.fr).filter(k => !(k in DICT.nl));
-    expect(manquantes).toEqual([]);
-  });
+  // Générique sur LOCALES plutôt que fr/nl codés en dur : ce test couvre
+  // automatiquement toute langue ajoutée plus tard (anglais le 31/08/2026),
+  // sans qu'il faille penser à l'étendre à la main.
+  LOCALES.filter(l => l !== DEFAULT_LOCALE).forEach(l => {
+    it(`toute clé présente en ${DEFAULT_LOCALE} est aussi présente en ${l} (pas de repli silencieux dans dev.html)`, () => {
+      const manquantes = Object.keys(DICT[DEFAULT_LOCALE]).filter(k => !(k in DICT[l]));
+      expect(manquantes).toEqual([]);
+    });
 
-  it("toute clé présente en néerlandais existe aussi en français (pas de clé orpheline)", () => {
-    const orphelines = Object.keys(DICT.nl).filter(k => !(k in DICT.fr));
-    expect(orphelines).toEqual([]);
+    it(`toute clé présente en ${l} existe aussi en ${DEFAULT_LOCALE} (pas de clé orpheline)`, () => {
+      const orphelines = Object.keys(DICT[l]).filter(k => !(k in DICT[DEFAULT_LOCALE]));
+      expect(orphelines).toEqual([]);
+    });
   });
 });
 

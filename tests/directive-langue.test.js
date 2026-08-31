@@ -46,6 +46,14 @@ describe("directiveLangue() — décision pure", () => {
     expect(d).toContain('"resume"');
     expect(d).toContain('"note"');
   });
+
+  it("anglais (31/08/2026, troisième langue) : même mécanique, aucun code dupliqué à vérifier", () => {
+    localeSet("en");
+    const d = directiveLangue();
+    expect(d).toContain("anglais");
+    expect(d).toContain('"resume"');
+    localeSet("fr");
+  });
 });
 
 describe("callGemini() — le prompt réellement envoyé à Gemini", () => {

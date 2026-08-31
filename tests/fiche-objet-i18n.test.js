@@ -95,4 +95,15 @@ describe("renderResult() — langue active (mode Objet/Multi)", () => {
     renderResult(OBJET_EXEMPLE, [], null);
     expect(aiResults.innerHTML).toContain("Laat het liggen");
   });
+
+  it("en anglais (31/08/2026, troisième langue) : mêmes éléments en anglais", () => {
+    localeSet("en");
+    renderResult(OBJET_EXEMPLE, [], null);
+    expect(aiResults.innerHTML).toContain("YOUR MAX");
+    expect(aiResults.innerHTML).toContain("You state");
+    expect(aiResults.innerHTML).toContain("Buy it");
+    expect(aiResults.innerHTML).toContain("Asked €");
+    expect(aiResults.innerHTML).toContain("Disque test");
+    localeSet("fr");
+  });
 });

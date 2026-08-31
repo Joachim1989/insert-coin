@@ -358,7 +358,7 @@ export function lotVide(mode, j){
    automatiquement : c'est un comportement du modele, pas du code - a
    reconfirmer sur le terrain, precisement ce qui a signale le probleme
    une deuxieme fois. */
-const LANGUE_NOM = { nl: "néerlandais" };
+const LANGUE_NOM = { nl: "néerlandais", en: "anglais" };
 
 export function directiveLangue(){
   const l = locale();

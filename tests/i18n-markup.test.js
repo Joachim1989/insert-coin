@@ -9,6 +9,7 @@ import { describe, it, expect } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { DICT } from "../src/i18n/dict.js";
+import { LOCALES } from "../src/i18n/index.js";
 
 const html = fs.readFileSync(path.resolve(__dirname, "../dev.html"), "utf8");
 
@@ -32,14 +33,13 @@ describe("dev.html — couverture i18n", () => {
     expect(toutesLesCles.length).toBeGreaterThan(50);
   });
 
-  it("chaque clé référencée dans dev.html existe en français", () => {
-    const manquantes = toutesLesCles.filter(k => !(k in DICT.fr));
-    expect(manquantes).toEqual([]);
-  });
-
-  it("chaque clé référencée dans dev.html existe en néerlandais", () => {
-    const manquantes = toutesLesCles.filter(k => !(k in DICT.nl));
-    expect(manquantes).toEqual([]);
+  // Générique sur LOCALES : couvre automatiquement toute langue ajoutée
+  // plus tard (anglais le 31/08/2026) sans qu'il faille y penser.
+  LOCALES.forEach(l => {
+    it(`chaque clé référencée dans dev.html existe en ${l}`, () => {
+      const manquantes = toutesLesCles.filter(k => !(k in DICT[l]));
+      expect(manquantes).toEqual([]);
+    });
   });
 
   it("data-i18n-html n'est utilisé que là où la traduction en a vraiment besoin — une balise, ou une entité HTML (&rarr; etc.) qu'un simple textContent afficherait telle quelle au lieu de l'interpréter", () => {
