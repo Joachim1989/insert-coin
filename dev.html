@@ -243,6 +243,19 @@
     <button class="btn-save" style="margin-top:9px" onclick="brickSave()" data-i18n="action.enregistrer">Enregistrer</button>
     <button class="btn-save alt2" onclick="brickTest()" data-i18n="guide.brickset.tester">Tester la connexion Brickset</button>
 
+    <h3 class="sect" data-i18n="guide.pricecharting.titre">Cotes jeux vidéo (PriceCharting)</h3>
+    <div id="pc-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.pricecharting.explain">
+      ⚠️ Contrairement aux trois sources ci-dessus, l'API PriceCharting est <b>payante</b> (abonnement
+      chez eux, pas chez nous) — aucun palier gratuit. Sans clé, rien ne change : l'IA continue
+      d'estimer les jeux vidéo comme aujourd'hui. Avec une clé, tu obtiens le vrai prix par palier
+      d'état (nu / en boîte / neuf scellé) sur le marché américain. Prix affichés en dollars,
+      jamais convertis — une référence, pas une cote directe en euros.
+    </p>
+    <input id="pc-key" type="password" class="api-input" placeholder="Colle ta clé PriceCharting" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.pricecharting.placeholder">
+    <button class="btn-save" onclick="pcSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="pcTest()" data-i18n="guide.pricecharting.tester">Tester la connexion PriceCharting</button>
+
     <h3 class="sect" data-i18n="guide.sauvegarde.titre">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
     <div id="mem-state" class="diagbox" style="margin-top:9px"></div>

@@ -291,6 +291,38 @@ export function brickCacheSet(k, v){
 }
 
 
+/* ══════════════════ COTES JEUX VIDÉO (PriceCharting) ══════════════════
+   Demande du 02/09/2026. Seule API payante des quatre intégrées (Discogs,
+   Rebrickable, Brickset sont gratuites) — voir la note deja presente dans
+   fiche.js avant ce chantier : "PriceCharting fait payer la sienne". Même
+   mécanique BYOK malgré tout : qui a une clé (payante, donc) en profite,
+   les autres gardent le comportement actuel (estimation Gemini seule). */
+export const PC_STORE = "insertcoin.pricecharting.key";
+
+export const PC_CACHE = "insertcoin.pricecharting.cache";
+
+export function pcToken(){ try { return localStorage.getItem(PC_STORE) || ""; } catch(e){ return ""; } }
+
+export function pcCacheGet(k){
+  try{
+    const c = JSON.parse(localStorage.getItem(PC_CACHE) || "{}");
+    const h = c[k];
+    if(h && Date.now() - h.t < 604800000) return h.v; /* 7 jours, comme Discogs : un prix ne bouge pas d'un jour a l'autre */
+  }catch(e){}
+  return null;
+}
+
+export function pcCacheSet(k, v){
+  try{
+    const c = JSON.parse(localStorage.getItem(PC_CACHE) || "{}");
+    c[k] = {t: Date.now(), v};
+    const ks = Object.keys(c);
+    if(ks.length > 80) ks.sort((a,b)=>c[a].t-c[b].t).slice(0, ks.length-80).forEach(x=>delete c[x]);
+    localStorage.setItem(PC_CACHE, JSON.stringify(c));
+  }catch(e){}
+}
+
+
 export const THEME_STORE = "insertcoin.theme";
 
 export function themeGet(){ try { return localStorage.getItem(THEME_STORE) || "auto"; } catch(e){ return "auto"; } }

@@ -5,12 +5,13 @@ import {
   CACHE_STORE, Q_STORE, DISC_CACHE, LEGO_CACHE, sortieRead, logRead,
   discToken, DISC_STORE, legoKey, LEGO_STORE, LEGO_PIECE_STORE, LEGO_FIG_STORE, legoTarifs,
   brickKey, BRICK_STORE, BRICK_RELAY_STORE, brickRelay, THEME_STORE, themeGet,
-  REGION_STORE, regionGet
+  REGION_STORE, regionGet, pcToken, PC_STORE, PC_CACHE
 } from "../storage/local.js";
 import { MODELS, modelJoli, modelsRefresh } from "../api/gemini.js";
 import { discCote } from "../api/discogs.js";
 import { legoSet } from "../api/rebrickable.js";
 import { brickSet, BRICK_RELAY_CODE } from "../api/brickset.js";
+import { pcCote } from "../api/pricecharting.js";
 import { hudPaint } from "./hud.js";
 import { driveAuth } from "../api/googledrive.js";
 import { i18nAppliquer, locale, localeSet } from "../i18n/index.js";
@@ -84,6 +85,7 @@ export function memFree(){
     localStorage.removeItem(Q_STORE);
     localStorage.removeItem(DISC_CACHE);
     localStorage.removeItem(LEGO_CACHE);
+    localStorage.removeItem(PC_CACHE);
   }catch(e){}
   vib(); hudPaint(); backupState();
   alert("Place libérée.");
@@ -267,6 +269,53 @@ export async function brickTest(){
         : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
   }
 }
+
+/* ══════ COTES JEUX VIDÉO (PriceCharting) ══════
+   Même mécanique que discSave()/discPaint()/discTest() — seule différence :
+   la clé est payante côté PriceCharting (voir la note dans
+   src/api/pricecharting.js), donc "Aucune clé" reste le cas normal pour la
+   grande majorité des utilisateurs, pas une anomalie à corriger. */
+export function pcSave(){
+  const v = ($('pc-key').value || "").trim();
+  if(v) { try{ localStorage.setItem(PC_STORE, v); }catch(e){} }
+  else  { try{ localStorage.removeItem(PC_STORE); }catch(e){} }
+  vib(); pcPaint();
+}
+
+
+export function pcPaint(){
+  const el = $('pc-state'); if(!el) return;
+  const t = pcToken();
+  const inp = $('pc-key');
+  if(inp && !inp.value) inp.value = t;
+  el.style.borderLeft = "3px solid " + (t ? "var(--go)" : "var(--border)");
+  el.innerHTML = t
+    ? "Clé enregistrée. Les cotes PriceCharting s'affichent sous les jeux vidéo identifiés."
+    : "Aucune clé — API payante, optionnelle. Les jeux vidéo restent estimés par l'IA, sans vérification du marché réel.";
+}
+
+
+export async function pcTest(){
+  const el = $('pc-state');
+  if(!pcToken()){ alert("Colle d'abord ta clé, puis appuie sur Enregistrer."); return; }
+  el.innerHTML = "Test en cours…";
+  try{
+    const c = await pcCote("The Legend of Zelda Ocarina of Time");
+    el.style.borderLeft = "3px solid var(--go)";
+    el.innerHTML = c
+      ? `<b style="color:var(--go)">Connexion réussie.</b><br>Test sur « ${c.nom} » (${c.console}) : `
+        + `${c.loose ? "$" + c.loose + " nu, " : ""}${c.cib ? "$" + c.cib + " en boîte" : ""}.`
+      : `<b style="color:var(--mid)">Connexion établie, mais jeu test introuvable.</b>`;
+  }catch(err){
+    el.style.borderLeft = "3px solid var(--stop)";
+    el.innerHTML = String(err.message) === "CLE"
+      ? `<b style="color:var(--stop)">Clé refusée.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne, et que ton abonnement est actif.`
+      : /Failed to fetch|NetworkError/i.test(String(err.message))
+        ? `<b style="color:var(--stop)">PriceCharting bloque l'appel depuis le navigateur.</b><br>Dis-le-moi, on passera par un relais (même mécanisme que Brickset).`
+        : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
+  }
+}
+
 
 /* Demande du 01/09/2026 : liste déroulante BE/FR plutôt qu'un champ de
    saisie libre, avec repli "Autre" pour qui n'est couvert par aucune ville

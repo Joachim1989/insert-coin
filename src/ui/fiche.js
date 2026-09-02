@@ -1,13 +1,14 @@
 import { $, vib } from "../util/dom.js";
 import { esc, collTokens, collScore } from "../util/text.js";
 import { repartirProrata } from "../util/repartition.js";
-import { logRead, logWrite, sortieRead, discToken, legoKey, brickKey, legoTarifs } from "../storage/local.js";
+import { logRead, logWrite, sortieRead, discToken, legoKey, brickKey, legoTarifs, pcToken } from "../storage/local.js";
 import {
   ETAT_LBL, PORT_LBL, ficheNorm, ficheCalc, ficheVerdict, attManquants, attResume
 } from "../pricing/engine.js";
 import { discCote, discLire, discMusique } from "../api/discogs.js";
 import { legoSet, legoValeur, legoNumTrouve } from "../api/rebrickable.js";
 import { brickSet } from "../api/brickset.js";
+import { pcCote, pcJeuVideo } from "../api/pricecharting.js";
 import { collMatch, collBanner } from "./dedup.js";
 import { hudPaint } from "./hud.js";
 import { renderLog } from "./log.js";
@@ -349,6 +350,7 @@ export function renderResult(j, images, avis) {
       <div id="disc-slot"></div>
       <div id="lego-slot"></div>
       <div id="brick-slot"></div>
+      <div id="pc-slot"></div>
       <div class="aibody">${ficheCorps(f)}</div>
       <div id="fiche-prix" class="prix">${fichePrix(f, c, dem)}</div>
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + t(PORT_LBL[f.gabarit]) : ""}</div>
@@ -374,6 +376,7 @@ export function renderResult(j, images, avis) {
   if(discMusique(req)) discGreffe(req.trim(), 'disc-slot');
   legoGreffe(f, 'lego-slot');
   brickGreffe(f, 'brick-slot');
+  if(pcJeuVideo(req)) pcGreffe(req.trim(), 'pc-slot');
 }
 
 
@@ -663,6 +666,50 @@ export async function discGreffe(query, cibleId){
           ? `<div class="disc-err">${t("carte.disc.injoignable")}<br>
              <i>${t("carte.disc.cors_note")}</i></div>`
           : `<div class="disc-err">${esc(err.message)}</div>`;
+  }
+}
+
+
+/* Prix TOUJOURS en $ explicite, jamais en € — voir la note en tête de
+   src/api/pricecharting.js. Purement informatif : contrairement à
+   discGreffe()/legoGreffe(), pcGreffe() (plus bas) n'écrase jamais
+   FICHE.marcheReel. */
+export function pcCarte(c){
+  return `<div class="disc">
+    <div class="disc-h"><span class="disc-b">PriceCharting</span>
+      <b>${esc(c.nom)}</b>
+      <i>${esc(c.console)}</i></div>
+    <div class="disc-n">
+      <div><b>${c.loose ? "$" + c.loose : "—"}</b><span>${t("carte.pc.nu")}</span></div>
+      <div><b>${c.cib ? "$" + c.cib : "—"}</b><span>${t("carte.pc.boite")}</span></div>
+      <div><b>${c.neuf ? "$" + c.neuf : "—"}</b><span>${t("carte.pc.scelle")}</span></div>
+    </div>
+    <div class="disc-d">${t("carte.pc.explain")}</div>
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">${t("carte.pc.ouvrir")}</a>
+  </div>`;
+}
+
+
+/* Greffée comme discGreffe()/legoGreffe(), mêmes garanties d'erreur (voir
+   tests/greffe-erreurs.test.js et tests/pricecharting.test.js) — mais
+   n'écrase JAMAIS FICHE.marcheReel : les prix PriceCharting sont en dollars
+   US, jamais convertis, on ne les mélange pas avec le moteur de cotation
+   en euros. Carte purement informative. */
+export async function pcGreffe(query, cibleId){
+  if(!pcToken()) return;
+  const el = $(cibleId); if(!el) return;
+  el.innerHTML = `<div class="disc-load">${t("carte.pc.verification")}</div>`;
+  try{
+    const c = await pcCote(query);
+    const cur = $(cibleId); if(!cur) return;
+    cur.innerHTML = c ? pcCarte(c) : "";
+  }catch(err){
+    const cur = $(cibleId); if(!cur) return;
+    cur.innerHTML = String(err.message) === "CLE"
+      ? `<div class="disc-err">${t("carte.pc.cle_refusee")}</div>`
+      : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message))
+        ? `<div class="disc-err">${t("carte.pc.injoignable")}</div>`
+        : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 

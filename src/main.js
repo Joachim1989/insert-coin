@@ -25,7 +25,8 @@ import {
 import {
   saveSettings, memFree, discSave, discTest, legoSave, legoTest,
   brickSave, brickTest, brickRelayCopier, themeSet, langueSet,
-  backupDownload, backupDrive, backupRestore, regionSelectChange
+  backupDownload, backupDrive, backupRestore, regionSelectChange,
+  pcSave, pcTest
 } from "./ui/settings.js";
 import { modelsRefresh } from "./api/gemini.js";
 
@@ -40,5 +41,6 @@ Object.assign(window, {
   rechOuvrir, rechDel, rechClear,
   saveSettings, memFree, discSave, discTest, legoSave, legoTest,
   brickSave, brickTest, brickRelayCopier, themeSet, langueSet,
-  backupDownload, backupDrive, backupRestore, modelsRefresh, regionSelectChange
+  backupDownload, backupDrive, backupRestore, modelsRefresh, regionSelectChange,
+  pcSave, pcTest
 });

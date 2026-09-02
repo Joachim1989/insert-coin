@@ -2,7 +2,7 @@ import { $, vib } from "../util/dom.js";
 import { TICKS } from "../data/localBase.js";
 import { KEY_STORE, SYNC_STORE, getGround, queueRead, driveFiles, themeGet } from "../storage/local.js";
 import { modelsRefresh } from "../api/gemini.js";
-import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, backupState, themeApply, langueApply, regionPaint } from "./settings.js";
+import { modelsPaint, discPaint, paintKeyState, legoPaint, brickPaint, pcPaint, backupState, themeApply, langueApply, regionPaint } from "./settings.js";
 import { locale } from "../i18n/index.js";
 import { modeSet, srcPaint, queueRun, captureInit } from "./capture.js";
 import { hudPaint } from "./hud.js";
@@ -51,7 +51,7 @@ export function init() {
   langueApply(locale());
   calSousTitrePaint();
   modeSet('objet');
-  legoPaint(); brickPaint(); discPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); renderRecherches(); backupState();
+  legoPaint(); brickPaint(); discPaint(); pcPaint(); collPaint(); hudPaint(); renderLog(); renderCal(); paintImminent(); renderHist(); renderRecherches(); backupState();
   if(queueRead().length && navigator.onLine) setTimeout(() => queueRun(false), 3000);
   if(navigator.onLine && driveFiles().length){
     const last = parseInt(localStorage.getItem(SYNC_STORE) || "0", 10);
