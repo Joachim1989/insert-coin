@@ -296,6 +296,34 @@ function brickCacheSet(k, v) {
   } catch (e) {
   }
 }
+const PC_STORE = "insertcoin.pricecharting.key";
+const PC_CACHE = "insertcoin.pricecharting.cache";
+function pcToken() {
+  try {
+    return localStorage.getItem(PC_STORE) || "";
+  } catch (e) {
+    return "";
+  }
+}
+function pcCacheGet(k) {
+  try {
+    const c = JSON.parse(localStorage.getItem(PC_CACHE) || "{}");
+    const h = c[k];
+    if (h && Date.now() - h.t < 6048e5) return h.v;
+  } catch (e) {
+  }
+  return null;
+}
+function pcCacheSet(k, v) {
+  try {
+    const c = JSON.parse(localStorage.getItem(PC_CACHE) || "{}");
+    c[k] = { t: Date.now(), v };
+    const ks = Object.keys(c);
+    if (ks.length > 80) ks.sort((a, b) => c[a].t - c[b].t).slice(0, ks.length - 80).forEach((x) => delete c[x]);
+    localStorage.setItem(PC_CACHE, JSON.stringify(c));
+  } catch (e) {
+  }
+}
 const THEME_STORE = "insertcoin.theme";
 function themeGet() {
   try {
@@ -487,6 +515,9 @@ const DICT = {
     "autres.summary": "Autres façons de chercher",
     "recherche.placeholder": "Chercher par nom, ou poser une question",
     "recherche.demander": "Demander à l'IA",
+    "lien.placeholder": "Coller un lien d'annonce (Vinted, eBay, Leboncoin…)",
+    "lien.label": "Lien de l'annonce",
+    "lien.analyser": "Analyser cette annonce",
     "cal.titre": "Calendrier",
     "cal.sous_titre": "Brocantes à moins de 50 km de {lieu}{pays}. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
     "cal.sous_titre_pays": ", Belgique et France",
@@ -538,6 +569,10 @@ const DICT = {
     "guide.brickset.copier_relais": "Copier le code du relais",
     "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relais, optionnel mais nécessaire pour que Brickset marche)",
     "guide.brickset.tester": "Tester la connexion Brickset",
+    "guide.pricecharting.titre": "Cotes jeux vidéo (PriceCharting)",
+    "guide.pricecharting.explain": "⚠️ Contrairement aux trois sources ci-dessus, l'API PriceCharting est <b>payante</b> (abonnement chez eux, pas chez nous) — aucun palier gratuit. Sans clé, rien ne change : l'IA continue d'estimer les jeux vidéo comme aujourd'hui. Avec une clé, tu obtiens le vrai prix par palier d'état (nu / en boîte / neuf scellé) sur le marché américain. Prix affichés en dollars, jamais convertis — une référence, pas une cote directe en euros.",
+    "guide.pricecharting.placeholder": "Colle ta clé PriceCharting",
+    "guide.pricecharting.tester": "Tester la connexion PriceCharting",
     "guide.sauvegarde.titre": "Sauvegarde",
     "guide.sauvegarde.liberer": "Libérer de la place",
     "guide.sauvegarde.explain": "Journal, sorties archivées, calendrier et bases : tout est stocké dans ce navigateur. Un nettoyage de cache Android l'effacerait sans prévenir.",
@@ -586,6 +621,7 @@ const DICT = {
     "alert.memoire_saturee": "Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.",
     "alert.file_vide": "La file est vide.",
     "alert.pas_de_reseau": "Toujours pas de réseau.",
+    "alert.lien_invalide": "Ça ne ressemble pas à un lien (commence par http:// ou https://).",
     "analyse.fermer": "Fermer l'analyse",
     "bac.deja_badge": "DÉJÀ",
     "bac.ressemble": "Ressemble à « {titre} » que tu as déjà — vérifie l'édition.",
@@ -745,6 +781,14 @@ const DICT = {
     "carte.brick.neuf_dev": "neuf ({dev})",
     "carte.brick.prix_neuf": "prix neuf",
     "carte.brick.explain": "Prix neuf officiel LEGO à la sortie du set, pas une cote d'occasion : sert de plafond de référence, pas de prix de revente.",
+    "carte.pc.nu": "nu (cartouche seule)",
+    "carte.pc.boite": "en boîte complet",
+    "carte.pc.scelle": "neuf scellé",
+    "carte.pc.explain": "Prix du marché américain, en dollars — une référence sur l'écart entre les paliers d'état, pas une cote directe en euros.",
+    "carte.pc.ouvrir": "Voir sur PriceCharting",
+    "carte.pc.verification": "Vérification PriceCharting…",
+    "carte.pc.cle_refusee": "Clé PriceCharting refusée. Vérifie qu'il n'y a ni espace ni retour à la ligne, et que ton abonnement est actif.",
+    "carte.pc.injoignable": "PriceCharting injoignable pour l'instant.",
     "carte.brick.recherche": "Recherche du set {num} sur Brickset…",
     "carte.brick.marche_src": "Brickset · {pieces} pièces, {figs} figurines",
     "carte.brick.cle_refusee": "Clé Brickset refusée — recolle-la dans Réglages.",
@@ -801,6 +845,9 @@ const DICT = {
     "autres.summary": "Andere manieren om te zoeken",
     "recherche.placeholder": "Zoek op naam, of stel een vraag",
     "recherche.demander": "Vraag het aan de AI",
+    "lien.placeholder": "Plak een link naar een advertentie (Vinted, eBay, 2dehands…)",
+    "lien.label": "Link naar de advertentie",
+    "lien.analyser": "Analyseer deze advertentie",
     "cal.titre": "Kalender",
     "cal.sous_titre": "Rommelmarkten binnen 50 km van {lieu}{pays}. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
     "cal.sous_titre_pays": ", België en Frankrijk",
@@ -852,6 +899,10 @@ const DICT = {
     "guide.brickset.copier_relais": "Relaiscode kopiëren",
     "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relais, optioneel maar nodig om Brickset te laten werken)",
     "guide.brickset.tester": "Brickset-verbinding testen",
+    "guide.pricecharting.titre": "Videogameprijzen (PriceCharting)",
+    "guide.pricecharting.explain": "⚠️ In tegenstelling tot de drie bronnen hierboven is de PriceCharting-API <b>betalend</b> (abonnement bij hen, niet bij ons) — geen gratis niveau. Zonder sleutel verandert er niets: de AI blijft videogames schatten zoals vandaag. Met een sleutel krijg je de echte prijs per staat (los / compleet in doos / nieuw verzegeld) op de Amerikaanse markt. Prijzen worden in dollar getoond, nooit omgerekend — een referentie, geen directe koers in euro.",
+    "guide.pricecharting.placeholder": "Plak je PriceCharting-sleutel",
+    "guide.pricecharting.tester": "PriceCharting-verbinding testen",
     "guide.sauvegarde.titre": "Back-up",
     "guide.sauvegarde.liberer": "Ruimte vrijmaken",
     "guide.sauvegarde.explain": "Journaal, gearchiveerde uitstappen, kalender en databases: alles wordt opgeslagen in deze browser. Een Android-cache-opruiming zou dit zonder waarschuwing wissen.",
@@ -900,6 +951,7 @@ const DICT = {
     "alert.memoire_saturee": "Telefoongeheugen vol: kan niet in de wachtrij zetten.\n\nGa naar Instellingen → Back-up om ruimte vrij te maken.",
     "alert.file_vide": "De wachtrij is leeg.",
     "alert.pas_de_reseau": "Nog steeds geen netwerk.",
+    "alert.lien_invalide": "Dat lijkt niet op een link (moet beginnen met http:// of https://).",
     "analyse.fermer": "Analyse sluiten",
     "bac.deja_badge": "AL",
     "bac.ressemble": "Lijkt op « {titre} », die je al hebt — controleer de editie.",
@@ -1059,6 +1111,14 @@ const DICT = {
     "carte.brick.neuf_dev": "nieuw ({dev})",
     "carte.brick.prix_neuf": "nieuwprijs",
     "carte.brick.explain": "Officiële LEGO-nieuwprijs bij het uitbrengen van de set, geen tweedehandsprijs: dient als bovengrens, niet als doorverkoopprijs.",
+    "carte.pc.nu": "los (enkel de cartridge)",
+    "carte.pc.boite": "compleet in doos",
+    "carte.pc.scelle": "nieuw verzegeld",
+    "carte.pc.explain": "Prijs van de Amerikaanse markt, in dollar — een referentie voor het verschil tussen de staten, geen directe koers in euro.",
+    "carte.pc.ouvrir": "Bekijk op PriceCharting",
+    "carte.pc.verification": "PriceCharting wordt gecontroleerd…",
+    "carte.pc.cle_refusee": "PriceCharting-sleutel geweigerd. Controleer dat er geen spatie of regeleinde in staat, en dat je abonnement actief is.",
+    "carte.pc.injoignable": "PriceCharting momenteel niet bereikbaar.",
     "carte.brick.recherche": "Set {num} opzoeken op Brickset…",
     "carte.brick.marche_src": "Brickset · {pieces} onderdelen, {figs} poppetjes",
     "carte.brick.cle_refusee": "Brickset-sleutel geweigerd — plak ze opnieuw in Instellingen.",
@@ -1115,6 +1175,9 @@ const DICT = {
     "autres.summary": "Other ways to search",
     "recherche.placeholder": "Search by name, or ask a question",
     "recherche.demander": "Ask the AI",
+    "lien.placeholder": "Paste a listing link (Vinted, eBay, Leboncoin…)",
+    "lien.label": "Listing link",
+    "lien.analyser": "Analyze this listing",
     "cal.titre": "Calendar",
     "cal.sous_titre": "Flea markets within 50 km of {lieu}{pays}. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",
     "cal.sous_titre_pays": ", Belgium and France",
@@ -1166,6 +1229,10 @@ const DICT = {
     "guide.brickset.copier_relais": "Copy relay code",
     "guide.brickset.relais_placeholder": "https://xxxxx.workers.dev (relay, optional but required for Brickset to work)",
     "guide.brickset.tester": "Test Brickset connection",
+    "guide.pricecharting.titre": "Video game prices (PriceCharting)",
+    "guide.pricecharting.explain": "⚠️ Unlike the three sources above, the PriceCharting API is <b>paid</b> (subscription with them, not with us) — no free tier. Without a key, nothing changes: the AI keeps estimating video games as it does today. With a key, you get the real price per condition tier (loose / complete in box / new sealed) on the US market. Prices shown in dollars, never converted — a reference point, not a direct euro quote.",
+    "guide.pricecharting.placeholder": "Paste your PriceCharting key",
+    "guide.pricecharting.tester": "Test PriceCharting connection",
     "guide.sauvegarde.titre": "Backup",
     "guide.sauvegarde.liberer": "Free up space",
     "guide.sauvegarde.explain": "Log, archived outings, calendar, and databases: everything is stored in this browser. An Android cache clear would wipe it without warning.",
@@ -1214,6 +1281,7 @@ const DICT = {
     "alert.memoire_saturee": "Phone storage full: can't queue it.\n\nGo to Settings → Backup to free up space.",
     "alert.file_vide": "The queue is empty.",
     "alert.pas_de_reseau": "Still no network.",
+    "alert.lien_invalide": "That doesn't look like a link (must start with http:// or https://).",
     "analyse.fermer": "Close analysis",
     "bac.deja_badge": "OWNED",
     "bac.ressemble": 'Looks like "{titre}", which you already have — check the edition.',
@@ -1373,6 +1441,14 @@ const DICT = {
     "carte.brick.neuf_dev": "new ({dev})",
     "carte.brick.prix_neuf": "retail price",
     "carte.brick.explain": "Official LEGO retail price when the set launched, not a used market price: use it as a reference ceiling, not a resale price.",
+    "carte.pc.nu": "loose (cartridge only)",
+    "carte.pc.boite": "complete in box",
+    "carte.pc.scelle": "new sealed",
+    "carte.pc.explain": "US market price, in dollars — a reference for the spread between condition tiers, not a direct euro quote.",
+    "carte.pc.ouvrir": "View on PriceCharting",
+    "carte.pc.verification": "Checking PriceCharting…",
+    "carte.pc.cle_refusee": "PriceCharting key refused. Check there's no space or line break, and that your subscription is active.",
+    "carte.pc.injoignable": "PriceCharting unreachable right now.",
     "carte.brick.recherche": "Looking up set {num} on Brickset…",
     "carte.brick.marche_src": "Brickset · {pieces} pieces, {figs} minifigures",
     "carte.brick.cle_refusee": "Brickset key rejected — paste it again in Settings.",
@@ -1823,6 +1899,55 @@ async function brickSet(num) {
   };
   brickCacheSet(cle, cote);
   return cote;
+}
+const PC_API = "https://www.pricecharting.com/api";
+const PC_OUI = /(wii ?u?|switch|playstation|ps[1-5]\b|psp\b|\bps vita\b|xbox|nintendo|gamecube|dreamcast|saturn|megadrive|game ?boy|nes\b|snes\b|\bn64\b|\b3ds\b|\bds\b|atari|sega|amiga|commodore|master system|neo ?geo|jeu vid[ée]o|video ?game|cartouche|manette de jeu)/i;
+function pcJeuVideo(txt) {
+  const s = String(txt || "");
+  if (s.trim().length < 3) return false;
+  return PC_OUI.test(s);
+}
+let PC_LAST = 0;
+async function pcGet(params) {
+  const key = pcToken();
+  if (!key) throw new Error("Aucune clé PriceCharting");
+  if (!navigator.onLine) throw new Error("Hors réseau");
+  const attente = 900 - (Date.now() - PC_LAST);
+  if (attente > 0) await new Promise((r2) => setTimeout(r2, attente));
+  PC_LAST = Date.now();
+  const q = new URLSearchParams({ ...params || {}, t: key });
+  const r = await fetchAvecDelai(PC_API + "/products?" + q.toString(), {}, 1e4);
+  if (r.status === 401 || r.status === 403) throw new Error("CLE");
+  if (r.status === 429) throw new Error("Trop de requêtes — attends une minute");
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+async function pcCote(query) {
+  const cle = "p:" + String(query || "").trim().toLowerCase().slice(0, 80);
+  const cache = pcCacheGet(cle);
+  if (cache !== null) return cache;
+  const s = await pcGet({ q: query });
+  const hits = Array.isArray(s.products) ? s.products.filter((x) => x && x.id) : [];
+  if (!hits.length) {
+    pcCacheSet(cle, false);
+    return false;
+  }
+  const h = hits[0];
+  const cote = {
+    id: h.id,
+    nom: h["product-name"] || query,
+    console: h["console-name"] || "",
+    loose: centsToUnite(h["loose-price"]),
+    cib: centsToUnite(h["cib-price"]),
+    neuf: centsToUnite(h["new-price"]),
+    url: "https://www.pricecharting.com/game/" + encodeURIComponent(h.id)
+  };
+  pcCacheSet(cle, cote);
+  return cote;
+}
+function centsToUnite(v) {
+  const n = Number(v);
+  return isFinite(n) && n > 0 ? Math.round(n) / 100 : 0;
 }
 function collMatch(query) {
   const coll = collRead();
@@ -2674,6 +2799,7 @@ function renderResult(j, images, avis) {
       <div id="disc-slot"></div>
       <div id="lego-slot"></div>
       <div id="brick-slot"></div>
+      <div id="pc-slot"></div>
       <div class="aibody">${ficheCorps(f)}</div>
       <div id="fiche-prix" class="prix">${fichePrix(f, c, dem)}</div>
       <div class="conf ${cKey}"><span class="cdot"></span>${cTxt}${f.categorie ? " · " + esc(f.categorie) : ""}${f.gabarit ? " · " + t(PORT_LBL[f.gabarit]) : ""}</div>
@@ -2700,6 +2826,7 @@ function renderResult(j, images, avis) {
   if (discMusique(req)) discGreffe(req.trim(), "disc-slot");
   legoGreffe(f, "lego-slot");
   brickGreffe(f, "brick-slot");
+  if (pcJeuVideo(req)) pcGreffe(req.trim(), "pc-slot");
 }
 function standItemsHtml(reperes) {
   if (!reperes || !reperes.length) return `<li>${t("stand.rien_evident")}</li>`;
@@ -2923,6 +3050,36 @@ async function discGreffe(query, cibleId) {
     if (!cur) return;
     cur.innerHTML = String(err.message) === "JETON" ? `<div class="disc-err">${t("carte.disc.jeton_refuse")}</div>` : /AbortError|aborted/i.test(String(err.name || err.message)) ? `<div class="disc-err">${t("carte.disc.timeout")}</div>` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<div class="disc-err">${t("carte.disc.injoignable")}<br>
              <i>${t("carte.disc.cors_note")}</i></div>` : `<div class="disc-err">${esc(err.message)}</div>`;
+  }
+}
+function pcCarte(c) {
+  return `<div class="disc">
+    <div class="disc-h"><span class="disc-b">PriceCharting</span>
+      <b>${esc(c.nom)}</b>
+      <i>${esc(c.console)}</i></div>
+    <div class="disc-n">
+      <div><b>${c.loose ? "$" + c.loose : "—"}</b><span>${t("carte.pc.nu")}</span></div>
+      <div><b>${c.cib ? "$" + c.cib : "—"}</b><span>${t("carte.pc.boite")}</span></div>
+      <div><b>${c.neuf ? "$" + c.neuf : "—"}</b><span>${t("carte.pc.scelle")}</span></div>
+    </div>
+    <div class="disc-d">${t("carte.pc.explain")}</div>
+    <a class="disc-a" href="${c.url}" target="_blank" rel="noopener">${t("carte.pc.ouvrir")}</a>
+  </div>`;
+}
+async function pcGreffe(query, cibleId) {
+  if (!pcToken()) return;
+  const el = $(cibleId);
+  if (!el) return;
+  el.innerHTML = `<div class="disc-load">${t("carte.pc.verification")}</div>`;
+  try {
+    const c = await pcCote(query);
+    const cur = $(cibleId);
+    if (!cur) return;
+    cur.innerHTML = c ? pcCarte(c) : "";
+  } catch (err) {
+    const cur = $(cibleId);
+    if (!cur) return;
+    cur.innerHTML = String(err.message) === "CLE" ? `<div class="disc-err">${t("carte.pc.cle_refusee")}</div>` : /Failed to fetch|NetworkError|AbortError|aborted/i.test(String(err.message)) ? `<div class="disc-err">${t("carte.pc.injoignable")}</div>` : `<div class="disc-err">${esc(err.message)}</div>`;
   }
 }
 function verifQuery(f, pref) {
@@ -3243,6 +3400,30 @@ Objet recherché : ${q}. `;
   if (p) prompt2 += `Le vendeur en demande ${p} EUR. Dis dans "note" si c'est ok à ce prix.`;
   callGemini(prompt2, [], "single", false, "t:" + norm(q) + "|" + (p || ""));
 }
+function askAIUrl() {
+  prixNouveau();
+  const u = ($("annonce-url").value || "").trim();
+  if (!u) return;
+  if (!/^https?:\/\//i.test(u)) {
+    alert(t("alert.lien_invalide"));
+    return;
+  }
+  let prompt2 = BRIEF_BASE + BRIEF_JSON + `
+ANNONCE EN LIGNE. Ouvre et lis cette page avant de répondre, elle est la seule source fiable : ${u}
+Base-toi sur son contenu réel — titre, description complète, photos si tu peux les consulter, et le prix affiché — pour identifier l'objet et répondre aux cinq questions habituelles.
+Si un prix est affiché sur cette annonce, recopie-le tel quel (le nombre seul, sans texte autour) dans une clé supplémentaire "prixAnnonce" ; si tu n'en vois aucun, mets "prixAnnonce":null. Compare ce prix à "marche" dans "note".
+Si la page est inaccessible ou que son contenu ne suffit pas à identifier l'objet, dis-le franchement plutôt que d'inventer.`;
+  const customText = $("q").value.trim();
+  if (customText) prompt2 += `
+
+QUESTION OU PRÉCISION DU CHINEUR : ${customText}
+Réponds obligatoirement à cette instruction spécifique.`;
+  const p = $("price").value.trim();
+  if (p) prompt2 += `
+Prix déjà noté par le chineur, fais-lui confiance plutôt qu'à ce que tu lirais sur la page : ${p} EUR.`;
+  callGemini(prompt2, [], "single", false, null, 0, true);
+  $("annonce-url").value = "";
+}
 function askAISingle() {
   let prompt2 = BRIEF_BASE + BRIEF_JSON + `
 Identifie l'objet sur cette photo. Lis en priorité toute référence, code, matricule ou marquage moulé visible, même partiellement.`;
@@ -3392,14 +3573,14 @@ Prix vendeur : ${$("price").value.trim()} EUR.` : "");
 }
 const qImgSlim = (img) => ({ data: img.data, media: img.media });
 const qImgFull = (img) => ({ ...img, url: img.url || "data:" + (img.media || "image/jpeg") + ";base64," + img.data });
-function queuePush(promptText, images, mode, cacheKey, tentatives = 0) {
+function queuePush(promptText, images, mode, cacheKey, tentatives = 0, urlCtx = false) {
   const a = queueRead();
   if (a.length >= 4) {
     alert(t("alert.file_pleine"));
     return false;
   }
   const slim = (images || []).slice(0, 2).map(qImgSlim);
-  a.push({ d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives });
+  a.push({ d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives, urlCtx });
   if (!queueWrite(a)) {
     alert(t("alert.memoire_saturee"));
     return false;
@@ -3429,7 +3610,7 @@ async function queueRun(manuel) {
   queueWrite(a);
   hudPaint();
   try {
-    await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || "single", true, job.cacheKey, job.tentatives || 0);
+    await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || "single", true, job.cacheKey, job.tentatives || 0, job.urlCtx || false);
   } finally {
     qBusy = false;
   }
@@ -3450,6 +3631,12 @@ function captureInit() {
   $("ask").addEventListener("click", () => {
     vib();
     askAIText();
+  });
+  $("annonce-url").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      askAIUrl();
+    }
   });
 }
 let calFilter = "all";
@@ -3834,6 +4021,7 @@ function memFree() {
     localStorage.removeItem(Q_STORE);
     localStorage.removeItem(DISC_CACHE);
     localStorage.removeItem(LEGO_CACHE);
+    localStorage.removeItem(PC_CACHE);
   } catch (e) {
   }
   vib();
@@ -4003,6 +4191,47 @@ async function brickTest() {
   } catch (err) {
     el.style.borderLeft = "3px solid var(--stop)";
     el.innerHTML = String(err.message) === "CLE" ? `<b style="color:var(--stop)">Clé refusée.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne.` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? brickRelay() ? `<b style="color:var(--stop)">Le relais ne répond pas.</b><br>Vérifie l'adresse *.workers.dev collée ci-dessus (pas d'espace, pas de slash final) et que le Worker est bien déployé sur Cloudflare.` : `<b style="color:var(--stop)">Brickset bloque l'appel direct depuis un navigateur.</b><br>Suis les 3 étapes juste au-dessus (2 minutes, gratuit), colle l'adresse *.workers.dev, puis reteste.` : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
+  }
+}
+function pcSave() {
+  const v = ($("pc-key").value || "").trim();
+  if (v) {
+    try {
+      localStorage.setItem(PC_STORE, v);
+    } catch (e) {
+    }
+  } else {
+    try {
+      localStorage.removeItem(PC_STORE);
+    } catch (e) {
+    }
+  }
+  vib();
+  pcPaint();
+}
+function pcPaint() {
+  const el = $("pc-state");
+  if (!el) return;
+  const t2 = pcToken();
+  const inp = $("pc-key");
+  if (inp && !inp.value) inp.value = t2;
+  el.style.borderLeft = "3px solid " + (t2 ? "var(--go)" : "var(--border)");
+  el.innerHTML = t2 ? "Clé enregistrée. Les cotes PriceCharting s'affichent sous les jeux vidéo identifiés." : "Aucune clé — API payante, optionnelle. Les jeux vidéo restent estimés par l'IA, sans vérification du marché réel.";
+}
+async function pcTest() {
+  const el = $("pc-state");
+  if (!pcToken()) {
+    alert("Colle d'abord ta clé, puis appuie sur Enregistrer.");
+    return;
+  }
+  el.innerHTML = "Test en cours…";
+  try {
+    const c = await pcCote("The Legend of Zelda Ocarina of Time");
+    el.style.borderLeft = "3px solid var(--go)";
+    el.innerHTML = c ? `<b style="color:var(--go)">Connexion réussie.</b><br>Test sur « ${c.nom} » (${c.console}) : ${c.loose ? "$" + c.loose + " nu, " : ""}${c.cib ? "$" + c.cib + " en boîte" : ""}.` : `<b style="color:var(--mid)">Connexion établie, mais jeu test introuvable.</b>`;
+  } catch (err) {
+    el.style.borderLeft = "3px solid var(--stop)";
+    el.innerHTML = String(err.message) === "CLE" ? `<b style="color:var(--stop)">Clé refusée.</b><br>Vérifie qu'il n'y a ni espace ni retour à la ligne, et que ton abonnement est actif.` : /Failed to fetch|NetworkError/i.test(String(err.message)) ? `<b style="color:var(--stop)">PriceCharting bloque l'appel depuis le navigateur.</b><br>Dis-le-moi, on passera par un relais (même mécanisme que Brickset).` : `<b style="color:var(--stop)">Échec.</b><br>${esc(err.message)}`;
   }
 }
 function regionSelectChange() {
@@ -4319,7 +4548,7 @@ const SCHEMA_STAND = {
     conseil: { type: "STRING" }
   }
 };
-function buildBody(parts, mode, ground, model) {
+function buildBody(parts, mode, ground, model, urlCtx) {
   const g3 = /^gemini-3/.test(model || "");
   const utile = mode === "bac" ? 3e3 : mode === "stand" ? 2e3 : 1400;
   const gc = { maxOutputTokens: g3 ? utile + 6e3 : utile };
@@ -4330,8 +4559,11 @@ function buildBody(parts, mode, ground, model) {
     gc.thinkingConfig = { thinkingBudget: 0 };
   }
   const b = { contents: [{ role: "user", parts }], generationConfig: gc };
-  if (ground) {
-    b.tools = [{ google_search: {} }];
+  if (ground || urlCtx) {
+    const tools = [];
+    if (urlCtx) tools.push({ url_context: {} });
+    if (ground) tools.push({ google_search: {} });
+    b.tools = tools;
   } else {
     b.generationConfig.responseMimeType = "application/json";
     b.generationConfig.responseSchema = mode === "stand" ? SCHEMA_STAND : mode === "bac" ? SCHEMA_BAC : SCHEMA_SINGLE;
@@ -4430,7 +4662,7 @@ function directiveRegion() {
 
 ` : "";
 }
-async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0) {
+async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0, urlCtx = false) {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $("ai-results");
@@ -4448,12 +4680,12 @@ async function callGemini(promptText, images = [], mode = "single", fromQueue, c
     }
   }
   if (!navigator.onLine && !fromQueue) {
-    queuePush(promptText, images, mode, cacheKey);
+    queuePush(promptText, images, mode, cacheKey, 0, urlCtx);
     return;
   }
   aiEl.innerHTML = `<div class="loading">
     <div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p id="load-step">${images.length ? "Lecture de la photo" : "Identification"}…</p>
+    <p id="load-step">${urlCtx ? "Lecture de l'annonce" : images.length ? "Lecture de la photo" : "Identification"}…</p>
     <div class="chrono" id="chrono">0.0 s</div>
   </div>`;
   const t0 = Date.now();
@@ -4490,11 +4722,12 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
   const attempts = [];
   for (const m of chain) {
-    if (getGround()) {
-      attempts.push({ model: m, ground: true });
-      attempts.push({ model: m, ground: true, bis: true });
+    if (getGround() || urlCtx) {
+      const g = getGround();
+      attempts.push({ model: m, ground: g, urlCtx });
+      attempts.push({ model: m, ground: g, urlCtx, bis: true });
     }
-    attempts.push({ model: m, ground: false });
+    attempts.push({ model: m, ground: false, urlCtx: false });
   }
   let lastErr = "";
   let ok = null, lotVideSecours = null;
@@ -4509,7 +4742,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-          body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))
+          body: JSON.stringify(buildBody(parts, mode, at.ground, at.model, at.urlCtx))
         },
         25e3
       );
@@ -4527,8 +4760,8 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
       stopChrono();
       const j = extractJSON(await res.json());
       let avis = null;
-      if (!at.ground) {
-        avis = "Sans recherche web : prix estimés de mémoire, à confirmer." + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "") + (lastErr ? " (cause : " + lastErr + ")" : "");
+      if (!at.ground && !at.urlCtx) {
+        avis = urlCtx ? "Impossible de lire cette annonce (page bloquée, protégée ou hors ligne) : estimation à l'aveugle, à vérifier absolument sur la page elle-même." + (lastErr ? " (cause : " + lastErr + ")" : "") : "Sans recherche web : prix estimés de mémoire, à confirmer." + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "") + (lastErr ? " (cause : " + lastErr + ")" : "");
         if (mode !== "stand" && mode !== "bac") j.confiance = "faible";
       }
       if (lotVide(mode, j)) {
@@ -4555,6 +4788,11 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   }
   if (ok) {
     stopChrono();
+    if (urlCtx) {
+      const pa = Number(ok.j && ok.j.prixAnnonce);
+      const priceEl = $("price");
+      if (priceEl && !priceEl.value.trim() && pa > 0) priceEl.value = pa;
+    }
     rechAjouter(mode, ok.j, ok.avis);
     try {
       if (mode === "bac") renderBacResult(ok.j, images, ok.avis);
@@ -4573,7 +4811,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     return;
   }
   if (devraitReenfiler(lastErr, tentatives)) {
-    if (queuePush(promptText, images, mode, cacheKey, tentatives + 1)) return;
+    if (queuePush(promptText, images, mode, cacheKey, tentatives + 1, urlCtx)) return;
   }
   stopChrono();
   let titre = "Échec de l'analyse.", aide = "Vérifie ta connexion et réessaie.";
@@ -4832,6 +5070,7 @@ function init() {
   legoPaint();
   brickPaint();
   discPaint();
+  pcPaint();
   collPaint();
   hudPaint();
   renderLog();
@@ -4876,6 +5115,7 @@ Object.assign(window, {
   clearSearch,
   queueRun,
   cameraMode,
+  askAIUrl,
   bcOuvrir,
   bcFermer,
   ficheEtatSet,
@@ -4926,7 +5166,9 @@ Object.assign(window, {
   backupDrive,
   backupRestore,
   modelsRefresh,
-  regionSelectChange
+  regionSelectChange,
+  pcSave,
+  pcTest
 });</script>
   <style rel="stylesheet" crossorigin>:root{
   --bg: #0a0a0c; --surface: #1a1a24; --surface-light: #2a2a36; 
@@ -5088,6 +5330,10 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .askprix input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
   padding:15px;color:var(--text);font-family:var(--cond);font-size:17px;outline:none;text-align:center}
 .askprix{margin-bottom:16px}
+.lien-annonce{margin-top:14px}
+.lien-annonce input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px 15px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;margin-bottom:9px}
+.lien-annonce input::placeholder{color:var(--text-muted)}
 .autres{margin-top:22px;border-top:1px solid var(--border);padding-top:14px}
 .autres summary{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.8px;
   color:var(--text-muted);cursor:pointer;list-style:none;text-align:center}
@@ -5818,6 +6064,11 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
       <button id="ask" class="btn-save" disabled data-i18n="recherche.demander">Demander à l'IA</button>
+
+      <div class="lien-annonce">
+        <input type="url" id="annonce-url" inputmode="url" placeholder="Coller un lien d'annonce (Vinted, eBay, Leboncoin…)" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="lien.placeholder" aria-label="Lien de l'annonce" data-i18n-label="lien.label">
+        <button class="btn-save alt2" onclick="askAIUrl()" data-i18n="lien.analyser">Analyser cette annonce</button>
+      </div>
     </div>
   </details>
 </div>
@@ -5965,6 +6216,19 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     <button class="btn-save" style="margin-top:9px" onclick="brickSave()" data-i18n="action.enregistrer">Enregistrer</button>
     <button class="btn-save alt2" onclick="brickTest()" data-i18n="guide.brickset.tester">Tester la connexion Brickset</button>
 
+    <h3 class="sect" data-i18n="guide.pricecharting.titre">Cotes jeux vidéo (PriceCharting)</h3>
+    <div id="pc-state" class="diagbox"></div>
+    <p style="font-size:13px;color:var(--text-muted);margin:12px 0 8px;line-height:1.55" data-i18n-html="guide.pricecharting.explain">
+      ⚠️ Contrairement aux trois sources ci-dessus, l'API PriceCharting est <b>payante</b> (abonnement
+      chez eux, pas chez nous) — aucun palier gratuit. Sans clé, rien ne change : l'IA continue
+      d'estimer les jeux vidéo comme aujourd'hui. Avec une clé, tu obtiens le vrai prix par palier
+      d'état (nu / en boîte / neuf scellé) sur le marché américain. Prix affichés en dollars,
+      jamais convertis — une référence, pas une cote directe en euros.
+    </p>
+    <input id="pc-key" type="password" class="api-input" placeholder="Colle ta clé PriceCharting" autocomplete="off" spellcheck="false" data-i18n-placeholder="guide.pricecharting.placeholder">
+    <button class="btn-save" onclick="pcSave()" data-i18n="action.enregistrer">Enregistrer</button>
+    <button class="btn-save alt2" onclick="pcTest()" data-i18n="guide.pricecharting.tester">Tester la connexion PriceCharting</button>
+
     <h3 class="sect" data-i18n="guide.sauvegarde.titre">Sauvegarde</h3>
     <div id="backup-state" class="diagbox"></div>
     <div id="mem-state" class="diagbox" style="margin-top:9px"></div>
@@ -6057,6 +6321,6 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
     <svg class="ico"><use href="#i-pad"/></svg><span data-i18n="nav.reglages">Réglages</span>
   </div>
 </nav>
-
+
 </body>
 </html>
