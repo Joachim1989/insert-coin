@@ -200,6 +200,36 @@ export function askAIText() {
 }
 
 
+/* ══════ ANALYSER UNE ANNONCE EN LIGNE ══════
+   Le chineur tombe sur une annonce (Vinted, eBay, Leboncoin, 2ememain...)
+   sans avoir l'objet sous la main : pas de photo à prendre, juste un lien.
+   L'IA va lire la page elle-même (outil url_context, voir buildBody() dans
+   api/gemini.js) — description, prix affiché, photos si elle peut les
+   consulter — plutôt que de deviner à partir d'un titre recopié à la main.
+   Pas de cache : chaque annonce est unique, et son prix peut bouger. */
+export function askAIUrl() {
+  prixNouveau();
+  const u = ($('annonce-url').value || "").trim();
+  if(!u) return;
+  if(!/^https?:\/\//i.test(u)){ alert(t("alert.lien_invalide")); return; }
+
+  let prompt = BRIEF_BASE + BRIEF_JSON + `
+ANNONCE EN LIGNE. Ouvre et lis cette page avant de répondre, elle est la seule source fiable : ${u}
+Base-toi sur son contenu réel — titre, description complète, photos si tu peux les consulter, et le prix affiché — pour identifier l'objet et répondre aux cinq questions habituelles.
+Si un prix est affiché sur cette annonce, recopie-le tel quel (le nombre seul, sans texte autour) dans une clé supplémentaire "prixAnnonce" ; si tu n'en vois aucun, mets "prixAnnonce":null. Compare ce prix à "marche" dans "note".
+Si la page est inaccessible ou que son contenu ne suffit pas à identifier l'objet, dis-le franchement plutôt que d'inventer.`;
+
+  const customText = $('q').value.trim();
+  if(customText) prompt += `\n\nQUESTION OU PRÉCISION DU CHINEUR : ${customText}\nRéponds obligatoirement à cette instruction spécifique.`;
+
+  const p = $('price').value.trim();
+  if(p) prompt += `\nPrix déjà noté par le chineur, fais-lui confiance plutôt qu'à ce que tu lirais sur la page : ${p} EUR.`;
+
+  callGemini(prompt, [], 'single', false, null, 0, true);
+  $('annonce-url').value = "";
+}
+
+
 // Fonctions Photos modifiées pour inclure le texte de la barre de recherche
 export function askAISingle() {
   let prompt = BRIEF_BASE + BRIEF_JSON + `\nIdentifie l'objet sur cette photo. Lis en priorité toute référence, code, matricule ou marquage moulé visible, même partiellement.`;
@@ -385,7 +415,7 @@ export const qImgSlim = img => ({data: img.data, media: img.media});
 export const qImgFull = img => ({...img, url: img.url || ("data:" + (img.media||"image/jpeg") + ";base64," + img.data)});
 
 
-export function queuePush(promptText, images, mode, cacheKey, tentatives = 0){
+export function queuePush(promptText, images, mode, cacheKey, tentatives = 0, urlCtx = false){
   const a = queueRead();
   if(a.length >= 4){ alert(t("alert.file_pleine")); return false; }
   /* Au-delà de deux vues, le gain d'identification ne compense pas le risque
@@ -394,8 +424,10 @@ export function queuePush(promptText, images, mode, cacheKey, tentatives = 0){
   /* tentatives : combien de fois ce job est déjà repassé par la file — voir
      devraitReenfiler()/TENTATIVES_MAX dans src/api/gemini.js, correctif du
      23/08/2026. Sans ce compteur, un job requeue-able à l'infini bouclerait
-     pour toujours sur un réseau mort. */
-  a.push({d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives});
+     pour toujours sur un réseau mort.
+     urlCtx : l'analyse d'un lien d'annonce a besoin de l'outil url_context
+     au retour en ligne — sans le garder ici, la relance perdrait le lien. */
+  a.push({d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives, urlCtx});
   if(!queueWrite(a)){ alert(t("alert.memoire_saturee")); return false; }
   hudPaint();
   $('ai-results').innerHTML = `<div class="queued">
@@ -417,7 +449,7 @@ export async function queueRun(manuel){
   qBusy = true;
   const job = a.shift();
   queueWrite(a); hudPaint();
-  try{ await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || 'single', true, job.cacheKey, job.tentatives || 0); }
+  try{ await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || 'single', true, job.cacheKey, job.tentatives || 0, job.urlCtx || false); }
   finally{ qBusy = false; }
   if(queueRead().length) setTimeout(() => queueRun(false), 1200);
 }
@@ -436,4 +468,8 @@ export function captureInit(){
   });
 
   $('ask').addEventListener('click', () => { vib(); askAIText(); });
+
+  $('annonce-url').addEventListener('keydown', (e) => {
+    if(e.key === "Enter") { e.preventDefault(); askAIUrl(); }
+  });
 }

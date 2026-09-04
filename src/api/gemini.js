@@ -200,8 +200,14 @@ export const SCHEMA_STAND = {
 /* Gemini refuse responseSchema ET tools dans la même requête.
    La cote réelle prime sur le confort de parsing : on passe donc en priorité
    par la recherche web SANS schéma (JSON demandé dans le texte, parsé large),
-   et on ne retombe sur le schéma strict que si le grounding est indisponible. */
-export function buildBody(parts, mode, ground, model){
+   et on ne retombe sur le schéma strict que si le grounding est indisponible.
+
+   urlCtx (analyse d'un lien d'annonce, voir askAIUrl() dans capture.js) suit
+   la même règle : c'est aussi un tool, donc lui aussi interdit le schéma
+   strict tant qu'il est actif. Les deux tools se combinent sans problème
+   dans le même appel — url_context lit la page donnée, google_search
+   cherche des comparables autour. */
+export function buildBody(parts, mode, ground, model, urlCtx){
   /* Gemini 3 a changé les règles : temperature/topP/topK sont dépréciés, et
      thinkingBudget est refusé (400) au profit de thinkingLevel. Envoyer les deux
      ferait échouer la requête, on choisit donc selon la famille du modèle. */
@@ -225,8 +231,11 @@ export function buildBody(parts, mode, ground, model){
     gc.thinkingConfig = {thinkingBudget:0};
   }
   const b = { contents:[{role:"user", parts}], generationConfig: gc };
-  if(ground){
-    b.tools = [{google_search:{}}];
+  if(ground || urlCtx){
+    const tools = [];
+    if(urlCtx) tools.push({url_context:{}});
+    if(ground) tools.push({google_search:{}});
+    b.tools = tools;
   }else{
     b.generationConfig.responseMimeType = "application/json";
     b.generationConfig.responseSchema = mode === 'stand' ? SCHEMA_STAND
@@ -380,7 +389,7 @@ export function directiveRegion(){
 }
 
 
-export async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey, tentatives = 0) {
+export async function callGemini(promptText, images = [], mode = 'single', fromQueue, cacheKey, tentatives = 0, urlCtx = false) {
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $('ai-results');
 
@@ -407,11 +416,11 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
     if(hit){ renderResult(hit, [], t("avis.deja_obtenu")); return; }
   }
 
-  if(!navigator.onLine && !fromQueue){ queuePush(promptText, images, mode, cacheKey); return; }
+  if(!navigator.onLine && !fromQueue){ queuePush(promptText, images, mode, cacheKey, 0, urlCtx); return; }
 
   aiEl.innerHTML = `<div class="loading">
     <div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p id="load-step">${images.length ? "Lecture de la photo" : "Identification"}…</p>
+    <p id="load-step">${urlCtx ? "Lecture de l'annonce" : images.length ? "Lecture de la photo" : "Identification"}…</p>
     <div class="chrono" id="chrono">0.0 s</div>
   </div>`;
   const t0 = Date.now();
@@ -450,9 +459,18 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
     /* Deux passages avec recherche web avant de renoncer : un JSON illisible
        est le plus souvent un accident de génération, pas une incapacité du
        modèle. Renoncer au premier essai, c'est troquer une vraie cote contre
-       une estimation de mémoire — exactement ce qu'on cherche à éviter. */
-    if(getGround()){ attempts.push({model:m, ground:true}); attempts.push({model:m, ground:true, bis:true}); }
-    attempts.push({model:m, ground:false});
+       une estimation de mémoire — exactement ce qu'on cherche à éviter.
+       Analyser un lien (urlCtx) a besoin de l'outil url_context pour lire
+       la page : ça ne dépend pas du réglage « recherche web », donc ces
+       deux premières tentatives passent même si getGround() est décoché.
+       google_search, lui, reste conditionné au réglage — il sert à trouver
+       des comparables, pas à lire la page elle-même. */
+    if(getGround() || urlCtx){
+      const g = getGround();
+      attempts.push({model:m, ground:g, urlCtx});
+      attempts.push({model:m, ground:g, urlCtx, bis:true});
+    }
+    attempts.push({model:m, ground:false, urlCtx:false});
   }
 
   let lastErr = "";
@@ -477,7 +495,7 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
         `https://generativelanguage.googleapis.com/v1beta/models/${at.model}:generateContent`,
         {method:"POST",
          headers:{"Content-Type":"application/json","x-goog-api-key":key},
-         body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))}, 25000);
+         body: JSON.stringify(buildBody(parts, mode, at.ground, at.model, at.urlCtx))}, 25000);
 
       if(!res.ok){
         let d = ""; try { d = (await res.json()).error?.message || ""; } catch(e){}
@@ -489,10 +507,17 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
       credBump(); stopChrono();
       const j = extractJSON(await res.json());
       let avis = null;
-      if(!at.ground){
-        avis = "Sans recherche web : prix estimés de mémoire, à confirmer."
-             + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "")
-             + (lastErr ? " (cause : " + lastErr + ")" : "");
+      if(!at.ground && !at.urlCtx){
+        /* Ce cas couvre deux situations différentes : le réglage « recherche
+           web » est décoché (avis habituel), ou — pour un lien — même les
+           tentatives avec url_context ont échoué et on retombe sur la
+           dernière tentative, sans outil du tout, donc sans accès à la page. */
+        avis = urlCtx
+          ? "Impossible de lire cette annonce (page bloquée, protégée ou hors ligne) : estimation à l'aveugle, à vérifier absolument sur la page elle-même."
+            + (lastErr ? " (cause : " + lastErr + ")" : "")
+          : "Sans recherche web : prix estimés de mémoire, à confirmer."
+            + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "")
+            + (lastErr ? " (cause : " + lastErr + ")" : "");
         if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
       }
 
@@ -526,6 +551,16 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
 
   if(ok){
     stopChrono();
+    /* Le prix affiché sur l'annonce n'est pas "marche" (le prix du marché
+       que l'IA estime) : c'est ce que CE vendeur-ci demande, exactement le
+       rôle que joue déjà le champ #price pour un objet vu en vrai. On ne
+       l'y recopie que si le chineur ne l'a pas déjà rempli lui-même — son
+       chiffre prime toujours sur celui lu par l'IA. */
+    if(urlCtx){
+      const pa = Number(ok.j && ok.j.prixAnnonce);
+      const priceEl = $('price');
+      if(priceEl && !priceEl.value.trim() && pa > 0) priceEl.value = pa;
+    }
     /* Enregistré même si l'affichage plante juste après (catch ci-dessous) :
        l'analyse a réussi, c'est ça qui compte pour l'historique — voir
        storage/local.js et la demande du 23/08/2026. */
@@ -547,7 +582,7 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
   }
 
   if(devraitReenfiler(lastErr, tentatives)){
-    if(queuePush(promptText, images, mode, cacheKey, tentatives + 1)) return;
+    if(queuePush(promptText, images, mode, cacheKey, tentatives + 1, urlCtx)) return;
   }
 
   stopChrono();

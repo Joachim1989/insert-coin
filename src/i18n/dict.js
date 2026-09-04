@@ -42,6 +42,10 @@ export const DICT = {
     "recherche.placeholder": "Chercher par nom, ou poser une question",
     "recherche.demander": "Demander à l'IA",
 
+    "lien.placeholder": "Coller un lien d'annonce (Vinted, eBay, Leboncoin…)",
+    "lien.label": "Lien de l'annonce",
+    "lien.analyser": "Analyser cette annonce",
+
     "cal.titre": "Calendrier",
     "cal.sous_titre": "Brocantes à moins de 50 km de {lieu}{pays}. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
     "cal.sous_titre_pays": ", Belgique et France",
@@ -163,6 +167,7 @@ export const DICT = {
     "alert.memoire_saturee": "Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.",
     "alert.file_vide": "La file est vide.",
     "alert.pas_de_reseau": "Toujours pas de réseau.",
+    "alert.lien_invalide": "Ça ne ressemble pas à un lien (commence par http:// ou https://).",
 
     "analyse.fermer": "Fermer l'analyse",
 
@@ -425,6 +430,10 @@ export const DICT = {
     "recherche.placeholder": "Zoek op naam, of stel een vraag",
     "recherche.demander": "Vraag het aan de AI",
 
+    "lien.placeholder": "Plak een link naar een advertentie (Vinted, eBay, 2dehands…)",
+    "lien.label": "Link naar de advertentie",
+    "lien.analyser": "Analyseer deze advertentie",
+
     "cal.titre": "Kalender",
     "cal.sous_titre": "Rommelmarkten binnen 50 km van {lieu}{pays}. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
     "cal.sous_titre_pays": ", België en Frankrijk",
@@ -546,6 +555,7 @@ export const DICT = {
     "alert.memoire_saturee": "Telefoongeheugen vol: kan niet in de wachtrij zetten.\n\nGa naar Instellingen → Back-up om ruimte vrij te maken.",
     "alert.file_vide": "De wachtrij is leeg.",
     "alert.pas_de_reseau": "Nog steeds geen netwerk.",
+    "alert.lien_invalide": "Dat lijkt niet op een link (moet beginnen met http:// of https://).",
 
     "analyse.fermer": "Analyse sluiten",
 
@@ -808,6 +818,10 @@ export const DICT = {
     "recherche.placeholder": "Search by name, or ask a question",
     "recherche.demander": "Ask the AI",
 
+    "lien.placeholder": "Paste a listing link (Vinted, eBay, Leboncoin…)",
+    "lien.label": "Listing link",
+    "lien.analyser": "Analyze this listing",
+
     "cal.titre": "Calendar",
     "cal.sous_titre": "Flea markets within 50 km of {lieu}{pays}. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",
     "cal.sous_titre_pays": ", Belgium and France",
@@ -929,6 +943,7 @@ export const DICT = {
     "alert.memoire_saturee": "Phone storage full: can't queue it.\n\nGo to Settings → Backup to free up space.",
     "alert.file_vide": "The queue is empty.",
     "alert.pas_de_reseau": "Still no network.",
+    "alert.lien_invalide": "That doesn't look like a link (must start with http:// or https://).",
 
     "analyse.fermer": "Close analysis",
 

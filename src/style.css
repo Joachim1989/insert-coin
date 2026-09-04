@@ -158,6 +158,10 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .askprix input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
   padding:15px;color:var(--text);font-family:var(--cond);font-size:17px;outline:none;text-align:center}
 .askprix{margin-bottom:16px}
+.lien-annonce{margin-top:14px}
+.lien-annonce input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px 15px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;margin-bottom:9px}
+.lien-annonce input::placeholder{color:var(--text-muted)}
 .autres{margin-top:22px;border-top:1px solid var(--border);padding-top:14px}
 .autres summary{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.8px;
   color:var(--text-muted);cursor:pointer;list-style:none;text-align:center}

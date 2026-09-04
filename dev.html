@@ -96,6 +96,11 @@
         <div class="clear" onclick="clearSearch()">✕</div>
       </div>
       <button id="ask" class="btn-save" disabled data-i18n="recherche.demander">Demander à l'IA</button>
+
+      <div class="lien-annonce">
+        <input type="url" id="annonce-url" inputmode="url" placeholder="Coller un lien d'annonce (Vinted, eBay, Leboncoin…)" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="lien.placeholder" aria-label="Lien de l'annonce" data-i18n-label="lien.label">
+        <button class="btn-save alt2" onclick="askAIUrl()" data-i18n="lien.analyser">Analyser cette annonce</button>
+      </div>
     </div>
   </details>
 </div>
