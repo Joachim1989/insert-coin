@@ -518,6 +518,7 @@ const DICT = {
     "lien.placeholder": "Coller un lien d'annonce (Vinted, eBay, Leboncoin…)",
     "lien.label": "Lien de l'annonce",
     "lien.analyser": "Analyser cette annonce",
+    "lien.aide": "Marche bien avec eBay, Leboncoin, 2ememain… Vinted et les réseaux sociaux bloquent souvent la lecture automatique — si ça échoue, prends plutôt une photo de l'annonce à l'écran.",
     "cal.titre": "Calendrier",
     "cal.sous_titre": "Brocantes à moins de 50 km de {lieu}{pays}. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
     "cal.sous_titre_pays": ", Belgique et France",
@@ -848,6 +849,7 @@ const DICT = {
     "lien.placeholder": "Plak een link naar een advertentie (Vinted, eBay, 2dehands…)",
     "lien.label": "Link naar de advertentie",
     "lien.analyser": "Analyseer deze advertentie",
+    "lien.aide": "Werkt goed met eBay, 2dehands, Leboncoin… Vinted en sociale netwerken blokkeren vaak het automatisch lezen — lukt het niet, maak dan liever een foto van de advertentie op het scherm.",
     "cal.titre": "Kalender",
     "cal.sous_titre": "Rommelmarkten binnen 50 km van {lieu}{pays}. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
     "cal.sous_titre_pays": ", België en Frankrijk",
@@ -1178,6 +1180,7 @@ const DICT = {
     "lien.placeholder": "Paste a listing link (Vinted, eBay, Leboncoin…)",
     "lien.label": "Listing link",
     "lien.analyser": "Analyze this listing",
+    "lien.aide": "Works well with eBay, Leboncoin, 2ememain… Vinted and social networks often block automatic reading — if it fails, take a photo of the listing on screen instead.",
     "cal.titre": "Calendar",
     "cal.sous_titre": "Flea markets within 50 km of {lieu}{pays}. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",
     "cal.sous_titre_pays": ", Belgium and France",
@@ -3408,6 +3411,7 @@ function askAIUrl() {
     alert(t("alert.lien_invalide"));
     return;
   }
+  $("annonce-url").blur();
   let prompt2 = BRIEF_BASE + BRIEF_JSON + `
 ANNONCE EN LIGNE. Ouvre et lis cette page avant de répondre, elle est la seule source fiable : ${u}
 Base-toi sur son contenu réel — titre, description complète, photos si tu peux les consulter, et le prix affiché — pour identifier l'objet et répondre aux cinq questions habituelles.
@@ -4758,9 +4762,15 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
       }
       credBump();
       stopChrono();
-      const j = extractJSON(await res.json());
+      const data = await res.json();
+      const j = extractJSON(data);
       let avis = null;
-      if (!at.ground && !at.urlCtx) {
+      const urlMeta = at.urlCtx && data.candidates && data.candidates[0] && data.candidates[0].urlContextMetadata && data.candidates[0].urlContextMetadata.urlMetadata;
+      const lienNonLu = Array.isArray(urlMeta) && urlMeta.length && !urlMeta.some((u) => u.urlRetrievalStatus === "URL_RETRIEVAL_STATUS_SUCCESS");
+      if (lienNonLu) {
+        avis = "Cette page n'a pas pu être lue automatiquement (certains sites, Vinted en tête, bloquent la lecture automatique ou n'affichent leur contenu qu'en JavaScript). Ce qui suit est une estimation à l'aveugle, à vérifier toi-même sur l'annonce — ou prends plutôt une photo de l'écran avec « Photographier »/« Galerie ».";
+        if (mode !== "stand" && mode !== "bac") j.confiance = "faible";
+      } else if (!at.ground && !at.urlCtx) {
         avis = urlCtx ? "Impossible de lire cette annonce (page bloquée, protégée ou hors ligne) : estimation à l'aveugle, à vérifier absolument sur la page elle-même." + (lastErr ? " (cause : " + lastErr + ")" : "") : "Sans recherche web : prix estimés de mémoire, à confirmer." + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "") + (lastErr ? " (cause : " + lastErr + ")" : "");
         if (mode !== "stand" && mode !== "bac") j.confiance = "faible";
       }
@@ -5024,7 +5034,7 @@ function swBanniereAfficher() {
   b.id = "sw-banniere";
   b.className = "sw-banniere";
   b.innerHTML = 'Nouvelle version disponible <button id="sw-recharger">Recharger</button>';
-  document.body.appendChild(b);
+  document.body.insertBefore(b, document.body.firstChild);
   document.getElementById("sw-recharger").onclick = () => location.reload();
 }
 function switchView(viewId, navEl) {
@@ -5189,8 +5199,15 @@ html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
 body { background: var(--bg); color: var(--text); font-family: var(--body); font-size: 16px; line-height: 1.35; padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
-/* SERVICE WORKER — bandeau de mise à jour disponible (voir src/ui/pwa.js) */
-.sw-banniere{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--gold);color:#14110f;
+/* SERVICE WORKER — bandeau de mise à jour disponible (voir src/ui/pwa.js).
+   Correctif du 05/09/2026 : plus de position:fixed. Un bandeau qui se pose
+   PAR-DESSUS le contenu, sans lui laisser de place, recouvre forcément
+   n'importe quel bouton qui se trouvait là où le chineur avait scrollé —
+   c'est exactement ce qui rendait "Analyser cette annonce" impossible à
+   toucher sur certains téléphones. En flux normal (voir pwa.js,
+   insertBefore en tout premier enfant de body), il pousse le reste de la
+   page vers le bas au lieu de le recouvrir. */
+.sw-banniere{background:var(--gold);color:#14110f;
   padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));
   display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
   font-family:var(--cond);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;
@@ -5334,6 +5351,7 @@ html[data-theme="light"] .dupbox.dup-artist{background:#E2EDEE}
 .lien-annonce input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;
   padding:14px 15px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;margin-bottom:9px}
 .lien-annonce input::placeholder{color:var(--text-muted)}
+.lien-aide{font-size:12px;color:var(--text-muted);line-height:1.5;margin:9px 0 0}
 .autres{margin-top:22px;border-top:1px solid var(--border);padding-top:14px}
 .autres summary{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.8px;
   color:var(--text-muted);cursor:pointer;list-style:none;text-align:center}
@@ -6066,8 +6084,9 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
       <button id="ask" class="btn-save" disabled data-i18n="recherche.demander">Demander à l'IA</button>
 
       <div class="lien-annonce">
-        <input type="url" id="annonce-url" inputmode="url" placeholder="Coller un lien d'annonce (Vinted, eBay, Leboncoin…)" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="lien.placeholder" aria-label="Lien de l'annonce" data-i18n-label="lien.label">
+        <input type="url" id="annonce-url" inputmode="url" enterkeyhint="go" placeholder="Coller un lien d'annonce (Vinted, eBay, Leboncoin…)" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="lien.placeholder" aria-label="Lien de l'annonce" data-i18n-label="lien.label">
         <button class="btn-save alt2" onclick="askAIUrl()" data-i18n="lien.analyser">Analyser cette annonce</button>
+        <p class="lien-aide" data-i18n="lien.aide">Marche bien avec eBay, Leboncoin, 2ememain… Vinted et les réseaux sociaux bloquent souvent la lecture automatique — si ça échoue, prends plutôt une photo de l'annonce à l'écran.</p>
       </div>
     </div>
   </details>
