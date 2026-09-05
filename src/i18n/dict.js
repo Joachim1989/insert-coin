@@ -45,6 +45,7 @@ export const DICT = {
     "lien.placeholder": "Coller un lien d'annonce (Vinted, eBay, Leboncoin…)",
     "lien.label": "Lien de l'annonce",
     "lien.analyser": "Analyser cette annonce",
+    "lien.aide": "Marche bien avec eBay, Leboncoin, 2ememain… Vinted et les réseaux sociaux bloquent souvent la lecture automatique — si ça échoue, prends plutôt une photo de l'annonce à l'écran.",
 
     "cal.titre": "Calendrier",
     "cal.sous_titre": "Brocantes à moins de 50 km de {lieu}{pays}. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
@@ -433,6 +434,7 @@ export const DICT = {
     "lien.placeholder": "Plak een link naar een advertentie (Vinted, eBay, 2dehands…)",
     "lien.label": "Link naar de advertentie",
     "lien.analyser": "Analyseer deze advertentie",
+    "lien.aide": "Werkt goed met eBay, 2dehands, Leboncoin… Vinted en sociale netwerken blokkeren vaak het automatisch lezen — lukt het niet, maak dan liever een foto van de advertentie op het scherm.",
 
     "cal.titre": "Kalender",
     "cal.sous_titre": "Rommelmarkten binnen 50 km van {lieu}{pays}. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
@@ -821,6 +823,7 @@ export const DICT = {
     "lien.placeholder": "Paste a listing link (Vinted, eBay, Leboncoin…)",
     "lien.label": "Listing link",
     "lien.analyser": "Analyze this listing",
+    "lien.aide": "Works well with eBay, Leboncoin, 2ememain… Vinted and social networks often block automatic reading — if it fails, take a photo of the listing on screen instead.",
 
     "cal.titre": "Calendar",
     "cal.sous_titre": "Flea markets within 50 km of {lieu}{pays}. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",

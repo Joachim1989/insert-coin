@@ -98,8 +98,9 @@
       <button id="ask" class="btn-save" disabled data-i18n="recherche.demander">Demander à l'IA</button>
 
       <div class="lien-annonce">
-        <input type="url" id="annonce-url" inputmode="url" placeholder="Coller un lien d'annonce (Vinted, eBay, Leboncoin…)" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="lien.placeholder" aria-label="Lien de l'annonce" data-i18n-label="lien.label">
+        <input type="url" id="annonce-url" inputmode="url" enterkeyhint="go" placeholder="Coller un lien d'annonce (Vinted, eBay, Leboncoin…)" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="lien.placeholder" aria-label="Lien de l'annonce" data-i18n-label="lien.label">
         <button class="btn-save alt2" onclick="askAIUrl()" data-i18n="lien.analyser">Analyser cette annonce</button>
+        <p class="lien-aide" data-i18n="lien.aide">Marche bien avec eBay, Leboncoin, 2ememain… Vinted et les réseaux sociaux bloquent souvent la lecture automatique — si ça échoue, prends plutôt une photo de l'annonce à l'écran.</p>
       </div>
     </div>
   </details>

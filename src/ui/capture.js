@@ -212,6 +212,15 @@ export function askAIUrl() {
   const u = ($('annonce-url').value || "").trim();
   if(!u) return;
   if(!/^https?:\/\//i.test(u)){ alert(t("alert.lien_invalide")); return; }
+  /* Correctif du 05/09/2026 (retour de terrain : bouton impossible à
+     toucher) : sur mobile, le clavier (et sa barre de suggestions/collage)
+     reste ouvert après avoir collé le lien et peut recouvrir le bouton
+     juste en dessous. On ferme le clavier dès la validation, que ce soit
+     ce bouton qu'on ait touché ou la touche « Aller » du clavier lui-même
+     (voir enterkeyhint="go" dans dev.html et le listener plus bas) — cette
+     dernière reste, elle, toujours accessible puisqu'elle fait partie du
+     clavier. */
+  $('annonce-url').blur();
 
   let prompt = BRIEF_BASE + BRIEF_JSON + `
 ANNONCE EN LIGNE. Ouvre et lis cette page avant de répondre, elle est la seule source fiable : ${u}

@@ -45,6 +45,15 @@ function swBanniereAfficher(){
   b.id = 'sw-banniere';
   b.className = 'sw-banniere';
   b.innerHTML = 'Nouvelle version disponible <button id="sw-recharger">Recharger</button>';
-  document.body.appendChild(b);
+  /* Correctif du 05/09/2026 (retour de terrain : le bandeau empêchait
+     d'appuyer sur un bouton en dessous) : il vivait en position:fixed en
+     haut de l'écran, PAR-DESSUS le contenu, sans jamais lui laisser de
+     place — quel que soit l'endroit où le chineur avait scrollé au moment
+     où la mise à jour arrivait, le bandeau se posait dessus et rendait
+     ce qu'il y avait dessous impossible à toucher. En le mettant en tout
+     premier enfant de body (flux normal, pas de position:fixed — voir
+     style.css), il pousse tout le reste vers le bas au lieu de le
+     recouvrir : il ne peut plus jamais se superposer à un bouton. */
+  document.body.insertBefore(b, document.body.firstChild);
   document.getElementById('sw-recharger').onclick = () => location.reload();
 }

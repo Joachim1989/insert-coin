@@ -505,9 +505,38 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
       }
 
       credBump(); stopChrono();
-      const j = extractJSON(await res.json());
+      const data = await res.json();
+      const j = extractJSON(data);
       let avis = null;
-      if(!at.ground && !at.urlCtx){
+
+      /* Retour de terrain du 05/09/2026 : un lien Vinted collé ne donnait
+         jamais rien de correct. Cause probable — pas un bug de ce code :
+         url_context est un fetch simple côté Google, sans navigateur ni
+         JavaScript ; beaucoup de sites d'annonces (Vinted en tête, souvent
+         les réseaux sociaux) protègent leurs pages contre ce genre de
+         lecture automatique (Cloudflare, contenu qui ne se charge qu'en
+         JS après coup) et renvoient un blocage plutôt que la page. Gemini
+         répond quand même, mais SANS avoir rien lu — un JSON plausible
+         construit sur le seul intitulé de l'URL, indiscernable d'une vraie
+         lecture si on ne vérifie rien. Google expose justement ce cas dans
+         les métadonnées de la réponse (candidat.urlContextMetadata.urlMetadata[]
+         — comme finishReason ou promptFeedback plus bas dans ce fichier,
+         l'API REST renvoie du camelCase, pas le snake_case du nom du tool ;
+         urlRetrievalStatus vaut URL_RETRIEVAL_STATUS_SUCCESS quand la
+         lecture a marché) : on s'en sert pour le dire franchement plutôt
+         que de présenter une fiche à l'aveugle comme si elle venait de la
+         page. */
+      const urlMeta = at.urlCtx
+        && data.candidates && data.candidates[0]
+        && data.candidates[0].urlContextMetadata
+        && data.candidates[0].urlContextMetadata.urlMetadata;
+      const lienNonLu = Array.isArray(urlMeta) && urlMeta.length
+        && !urlMeta.some(u => u.urlRetrievalStatus === "URL_RETRIEVAL_STATUS_SUCCESS");
+
+      if(lienNonLu){
+        avis = "Cette page n'a pas pu être lue automatiquement (certains sites, Vinted en tête, bloquent la lecture automatique ou n'affichent leur contenu qu'en JavaScript). Ce qui suit est une estimation à l'aveugle, à vérifier toi-même sur l'annonce — ou prends plutôt une photo de l'écran avec « Photographier »/« Galerie ».";
+        if(mode !== 'stand' && mode !== 'bac') j.confiance = "faible";
+      }else if(!at.ground && !at.urlCtx){
         /* Ce cas couvre deux situations différentes : le réglage « recherche
            web » est décoché (avis habituel), ou — pour un lien — même les
            tentatives avec url_context ont échoué et on retombe sur la
