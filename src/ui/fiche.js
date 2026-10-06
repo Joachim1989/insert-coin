@@ -60,6 +60,10 @@ export function fichePaint(){
     if(num) num.textContent = c.plafond ? c.plafond + "€" : "—";
     if(lab) lab.textContent = t(vd.t);
     if(r) r.textContent = c.net ? t("fiche.revente_nette", {n: c.net}) : t("fiche.marche_inconnu");
+    const mImg = hd.querySelector('.fiche-mascot-img');
+    if(mImg){
+      mImg.src = vd.v === 'R' ? '/mascot/jackpot.png' : (vd.v === 'N' ? '/mascot/bargaining.png' : '/mascot/skeptical.png');
+    }
   }
   /* Ce qui part au journal et aux objets repérés doit suivre tes réglages. */
   LAST = {objet: FICHE.objet, revente: c.net, prixMax: c.plafond, demande: dem};
@@ -331,11 +335,16 @@ export function renderResult(j, images, avis) {
 
   const rq = (f.objet || "") + " " + (f.identification || "");
   const dupHtml = collBanner(rq);
+  const mascotImg = vd.v === 'R' ? '/mascot/jackpot.png' : (vd.v === 'N' ? '/mascot/bargaining.png' : '/mascot/skeptical.png');
+  const mascotAlt = vd.v === 'R' ? 'Pépite !' : (vd.v === 'N' ? 'Négocie !' : 'Méfiance !');
 
   $('ai-results').innerHTML = dupHtml + `
     <div class="aicard">
       ${imgHtml}
       <div class="aihead ${vd.v}" id="fiche-head">
+        <div class="aihead-mascot">
+          <img src="${mascotImg}" alt="${mascotAlt}" class="fiche-mascot-img">
+        </div>
         <div class="p"><div class="num">${c.plafond ? c.plafond + "€" : "—"}</div><div class="cap">${t("fiche.ton_max")}</div></div>
         <div class="t">
           <div class="v">${t(vd.t)}</div>
@@ -411,7 +420,10 @@ export function renderStandResult(j, image, avis) {
     <div class="aicard">
       ${image && image.url ? `<img src="${image.url}" style="width:100%; max-height:220px; object-fit:cover;">` : ""}
       <div class="aihead ${v}">
-        <div class="p" style="flex: 0 0 80px;"><div class="num" style="font-size:38px;">🎯</div></div>
+        <div class="aihead-mascot">
+          <img src="/mascot/foraging.png" alt="Le Fouineur fouille" class="fiche-mascot-img">
+        </div>
+        <div class="p" style="flex: 0 0 80px;"><div class="num" style="font-size:32px;">🎯</div></div>
         <div class="t">
           <div class="v">${t("stand.titre")}</div>
           <div class="o" style="font-size:16px;">${esc(vg) || (v === 'S' ? t("stand.a_fouiller") : t("stand.rien_flagrant"))}</div>

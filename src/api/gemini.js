@@ -419,8 +419,11 @@ export async function callGemini(promptText, images = [], mode = 'single', fromQ
   if(!navigator.onLine && !fromQueue){ queuePush(promptText, images, mode, cacheKey, 0, urlCtx); return; }
 
   aiEl.innerHTML = `<div class="loading">
+    <div class="mascot-loading">
+      <img src="/mascot/inspecting.png" alt="Le Fouineur inspecte" class="fouineur-inspect-img">
+    </div>
     <div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p id="load-step">${urlCtx ? "Lecture de l'annonce" : images.length ? "Lecture de la photo" : "Identification"}…</p>
+    <p id="load-step">${urlCtx ? "Lecture de l'annonce" : images.length ? "Le Fouineur inspecte la trouvaille" : "Identification"}…</p>
     <div class="chrono" id="chrono">0.0 s</div>
   </div>`;
   const t0 = Date.now();

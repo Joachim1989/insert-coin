@@ -122,10 +122,24 @@ export function renderLog(){
   const val = a.reduce((s,x)=>s+(x.r||0),0);
   const marge = val - dep;
 
-  $('log-sum').innerHTML = `
-    <div class="sumbox"><div class="sn">${dep.toFixed(0)}€</div><div class="sc">Dépensé</div></div>
-    <div class="sumbox"><div class="sn">${val.toFixed(0)}€</div><div class="sc">Revente est.</div></div>
-    <div class="sumbox ${marge>=0?'pos':'neg'}"><div class="sn">${marge>=0?'+':''}${marge.toFixed(0)}€</div><div class="sc">Marge</div></div>`;
+  const heroHtml = `
+    <div class="log-hero-banner">
+      <div class="log-hero-mascot">
+        <img src="/mascot/end_of_day.png" alt="Fin de brocante" class="log-mascot-img">
+      </div>
+      <div class="log-hero-text">
+        <span class="log-tag">Bilan de chasse</span>
+        <b>${a.length ? a.length + " trouvaille" + (a.length > 1 ? "s" : "") + " enregistrée" + (a.length > 1 ? "s" : "") : "Prêt pour la chine"}</b>
+        <p>${a.length ? (marge >= 0 ? "Belle rentabilité sur tes prises du jour !" : "Attention aux coûts d'achat.") : "Enregistre tes achats pour calculer ta marge en direct."}</p>
+      </div>
+    </div>`;
+
+  $('log-sum').innerHTML = heroHtml + `
+    <div class="sumboxes-row">
+      <div class="sumbox"><div class="sn">${dep.toFixed(0)}€</div><div class="sc">Dépensé</div></div>
+      <div class="sumbox"><div class="sn">${val.toFixed(0)}€</div><div class="sc">Revente est.</div></div>
+      <div class="sumbox ${marge>=0?'pos':'neg'}"><div class="sn">${marge>=0?'+':''}${marge.toFixed(0)}€</div><div class="sc">Marge</div></div>
+    </div>`;
 
   const ch = $('log-charts');
   if(ch) ch.innerHTML = margeChart() + topChart();
@@ -233,9 +247,13 @@ export function sortieFin(){
 
 export function showScore(so){
   const r = so.rang;
+  const scoreMascot = (r === 'S' || r === 'A') ? '/mascot/victory.png' : '/mascot/end_of_day.png';
   $('score-screen').className = "scoreov on";
   $('score-screen').innerHTML = `
     <div class="score">
+      <div class="sc-mascot">
+        <img src="${scoreMascot}" alt="${RANG_MOT[r]}" class="score-mascot-img">
+      </div>
       <div class="sc-top">Sortie terminée</div>
       <div class="sc-rang r${r}">${r}</div>
       <div class="sc-mot">${RANG_MOT[r]}</div>

@@ -14,6 +14,9 @@
 export const DICT = {
   fr: {
     "app.tagline": "Argus de terrain",
+    "hero.salut": "Salut chineur ! 👋",
+    "hero.phrase": "Prêt à dénicher de vraies pépites ?",
+    "hero.sub": "Cadre un objet, un bac ou un stand pour l'estimer en direct.",
 
     "bc.cadre": "Cadre le code-barres",
     "bc.annuler": "Annuler",
@@ -403,6 +406,9 @@ export const DICT = {
 
   nl: {
     "app.tagline": "Prijsgids voor op de rommelmarkt",
+    "hero.salut": "Hoi schatzoeker! 👋",
+    "hero.phrase": "Klaar om echte parels te vinden?",
+    "hero.sub": "Kader een voorwerp, bak of kraam in om direct te schatten.",
 
     "bc.cadre": "Richt de barcode in het kader",
     "bc.annuler": "Annuleren",
@@ -792,6 +798,9 @@ export const DICT = {
 
   en: {
     "app.tagline": "Field price guide",
+    "hero.salut": "Hey picker! 👋",
+    "hero.phrase": "Ready to unearth real gems?",
+    "hero.sub": "Frame an item, crate or stall to estimate it live.",
 
     "bc.cadre": "Frame the barcode",
     "bc.annuler": "Cancel",
