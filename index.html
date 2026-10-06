@@ -515,6 +515,10 @@ const DICT = {
     "autres.summary": "Autres façons de chercher",
     "recherche.placeholder": "Chercher par nom, ou poser une question",
     "recherche.demander": "Demander à l'IA",
+    "lien.placeholder": "Coller un lien d'annonce (Vinted, eBay, Leboncoin…)",
+    "lien.label": "Lien de l'annonce",
+    "lien.analyser": "Analyser cette annonce",
+    "lien.aide": "Marche bien avec eBay, Leboncoin, 2ememain… Vinted et les réseaux sociaux bloquent souvent la lecture automatique — si ça échoue, prends plutôt une photo de l'annonce à l'écran.",
     "cal.titre": "Calendrier",
     "cal.sous_titre": "Brocantes à moins de 50 km de {lieu}{pays}. Recherché sur quefaire.be en priorité, croisé avec d'autres agendas — vérifie avant de partir, une date d'IA reste une date d'IA.",
     "cal.sous_titre_pays": ", Belgique et France",
@@ -618,6 +622,7 @@ const DICT = {
     "alert.memoire_saturee": "Mémoire du téléphone saturée : impossible de mettre en file.\n\nVa dans Réglages → Sauvegarde pour libérer de la place.",
     "alert.file_vide": "La file est vide.",
     "alert.pas_de_reseau": "Toujours pas de réseau.",
+    "alert.lien_invalide": "Ça ne ressemble pas à un lien (commence par http:// ou https://).",
     "analyse.fermer": "Fermer l'analyse",
     "bac.deja_badge": "DÉJÀ",
     "bac.ressemble": "Ressemble à « {titre} » que tu as déjà — vérifie l'édition.",
@@ -841,6 +846,10 @@ const DICT = {
     "autres.summary": "Andere manieren om te zoeken",
     "recherche.placeholder": "Zoek op naam, of stel een vraag",
     "recherche.demander": "Vraag het aan de AI",
+    "lien.placeholder": "Plak een link naar een advertentie (Vinted, eBay, 2dehands…)",
+    "lien.label": "Link naar de advertentie",
+    "lien.analyser": "Analyseer deze advertentie",
+    "lien.aide": "Werkt goed met eBay, 2dehands, Leboncoin… Vinted en sociale netwerken blokkeren vaak het automatisch lezen — lukt het niet, maak dan liever een foto van de advertentie op het scherm.",
     "cal.titre": "Kalender",
     "cal.sous_titre": "Rommelmarkten binnen 50 km van {lieu}{pays}. In de eerste plaats gezocht op quefaire.be, gekruist met andere agenda's — controleer voor je vertrekt, een datum van AI blijft een datum van AI.",
     "cal.sous_titre_pays": ", België en Frankrijk",
@@ -944,6 +953,7 @@ const DICT = {
     "alert.memoire_saturee": "Telefoongeheugen vol: kan niet in de wachtrij zetten.\n\nGa naar Instellingen → Back-up om ruimte vrij te maken.",
     "alert.file_vide": "De wachtrij is leeg.",
     "alert.pas_de_reseau": "Nog steeds geen netwerk.",
+    "alert.lien_invalide": "Dat lijkt niet op een link (moet beginnen met http:// of https://).",
     "analyse.fermer": "Analyse sluiten",
     "bac.deja_badge": "AL",
     "bac.ressemble": "Lijkt op « {titre} », die je al hebt — controleer de editie.",
@@ -1167,6 +1177,10 @@ const DICT = {
     "autres.summary": "Other ways to search",
     "recherche.placeholder": "Search by name, or ask a question",
     "recherche.demander": "Ask the AI",
+    "lien.placeholder": "Paste a listing link (Vinted, eBay, Leboncoin…)",
+    "lien.label": "Listing link",
+    "lien.analyser": "Analyze this listing",
+    "lien.aide": "Works well with eBay, Leboncoin, 2ememain… Vinted and social networks often block automatic reading — if it fails, take a photo of the listing on screen instead.",
     "cal.titre": "Calendar",
     "cal.sous_titre": "Flea markets within 50 km of {lieu}{pays}. Searched primarily on quefaire.be, cross-checked with other listings — double-check before you head out, an AI-found date is still an AI-found date.",
     "cal.sous_titre_pays": ", Belgium and France",
@@ -1270,6 +1284,7 @@ const DICT = {
     "alert.memoire_saturee": "Phone storage full: can't queue it.\n\nGo to Settings → Backup to free up space.",
     "alert.file_vide": "The queue is empty.",
     "alert.pas_de_reseau": "Still no network.",
+    "alert.lien_invalide": "That doesn't look like a link (must start with http:// or https://).",
     "analyse.fermer": "Close analysis",
     "bac.deja_badge": "OWNED",
     "bac.ressemble": 'Looks like "{titre}", which you already have — check the edition.',
@@ -3388,6 +3403,31 @@ Objet recherché : ${q}. `;
   if (p) prompt2 += `Le vendeur en demande ${p} EUR. Dis dans "note" si c'est ok à ce prix.`;
   callGemini(prompt2, [], "single", false, "t:" + norm(q) + "|" + (p || ""));
 }
+function askAIUrl() {
+  prixNouveau();
+  const u = ($("annonce-url").value || "").trim();
+  if (!u) return;
+  if (!/^https?:\/\//i.test(u)) {
+    alert(t("alert.lien_invalide"));
+    return;
+  }
+  $("annonce-url").blur();
+  let prompt2 = BRIEF_BASE + BRIEF_JSON + `
+ANNONCE EN LIGNE. Ouvre et lis cette page avant de répondre, elle est la seule source fiable : ${u}
+Base-toi sur son contenu réel — titre, description complète, photos si tu peux les consulter, et le prix affiché — pour identifier l'objet et répondre aux cinq questions habituelles.
+Si un prix est affiché sur cette annonce, recopie-le tel quel (le nombre seul, sans texte autour) dans une clé supplémentaire "prixAnnonce" ; si tu n'en vois aucun, mets "prixAnnonce":null. Compare ce prix à "marche" dans "note".
+Si la page est inaccessible ou que son contenu ne suffit pas à identifier l'objet, dis-le franchement plutôt que d'inventer.`;
+  const customText = $("q").value.trim();
+  if (customText) prompt2 += `
+
+QUESTION OU PRÉCISION DU CHINEUR : ${customText}
+Réponds obligatoirement à cette instruction spécifique.`;
+  const p = $("price").value.trim();
+  if (p) prompt2 += `
+Prix déjà noté par le chineur, fais-lui confiance plutôt qu'à ce que tu lirais sur la page : ${p} EUR.`;
+  callGemini(prompt2, [], "single", false, null, 0, true);
+  $("annonce-url").value = "";
+}
 function askAISingle() {
   let prompt2 = BRIEF_BASE + BRIEF_JSON + `
 Identifie l'objet sur cette photo. Lis en priorité toute référence, code, matricule ou marquage moulé visible, même partiellement.`;
@@ -3537,14 +3577,14 @@ Prix vendeur : ${$("price").value.trim()} EUR.` : "");
 }
 const qImgSlim = (img) => ({ data: img.data, media: img.media });
 const qImgFull = (img) => ({ ...img, url: img.url || "data:" + (img.media || "image/jpeg") + ";base64," + img.data });
-function queuePush(promptText, images, mode, cacheKey, tentatives = 0) {
+function queuePush(promptText, images, mode, cacheKey, tentatives = 0, urlCtx = false) {
   const a = queueRead();
   if (a.length >= 4) {
     alert(t("alert.file_pleine"));
     return false;
   }
   const slim = (images || []).slice(0, 2).map(qImgSlim);
-  a.push({ d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives });
+  a.push({ d: Date.now(), promptText, images: slim, mode, cacheKey, tentatives, urlCtx });
   if (!queueWrite(a)) {
     alert(t("alert.memoire_saturee"));
     return false;
@@ -3574,7 +3614,7 @@ async function queueRun(manuel) {
   queueWrite(a);
   hudPaint();
   try {
-    await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || "single", true, job.cacheKey, job.tentatives || 0);
+    await callGemini(job.promptText, (job.images || []).map(qImgFull), job.mode || "single", true, job.cacheKey, job.tentatives || 0, job.urlCtx || false);
   } finally {
     qBusy = false;
   }
@@ -3595,6 +3635,12 @@ function captureInit() {
   $("ask").addEventListener("click", () => {
     vib();
     askAIText();
+  });
+  $("annonce-url").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      askAIUrl();
+    }
   });
 }
 let calFilter = "all";
@@ -4506,7 +4552,7 @@ const SCHEMA_STAND = {
     conseil: { type: "STRING" }
   }
 };
-function buildBody(parts, mode, ground, model) {
+function buildBody(parts, mode, ground, model, urlCtx) {
   const g3 = /^gemini-3/.test(model || "");
   const utile = mode === "bac" ? 3e3 : mode === "stand" ? 2e3 : 1400;
   const gc = { maxOutputTokens: g3 ? utile + 6e3 : utile };
@@ -4517,8 +4563,11 @@ function buildBody(parts, mode, ground, model) {
     gc.thinkingConfig = { thinkingBudget: 0 };
   }
   const b = { contents: [{ role: "user", parts }], generationConfig: gc };
-  if (ground) {
-    b.tools = [{ google_search: {} }];
+  if (ground || urlCtx) {
+    const tools = [];
+    if (urlCtx) tools.push({ url_context: {} });
+    if (ground) tools.push({ google_search: {} });
+    b.tools = tools;
   } else {
     b.generationConfig.responseMimeType = "application/json";
     b.generationConfig.responseSchema = mode === "stand" ? SCHEMA_STAND : mode === "bac" ? SCHEMA_BAC : SCHEMA_SINGLE;
@@ -4617,7 +4666,7 @@ function directiveRegion() {
 
 ` : "";
 }
-async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0) {
+async function callGemini(promptText, images = [], mode = "single", fromQueue, cacheKey, tentatives = 0, urlCtx = false) {
   var _a;
   const key = localStorage.getItem(KEY_STORE);
   const aiEl = $("ai-results");
@@ -4635,12 +4684,12 @@ async function callGemini(promptText, images = [], mode = "single", fromQueue, c
     }
   }
   if (!navigator.onLine && !fromQueue) {
-    queuePush(promptText, images, mode, cacheKey);
+    queuePush(promptText, images, mode, cacheKey, 0, urlCtx);
     return;
   }
   aiEl.innerHTML = `<div class="loading">
     <div class="dots"><span>●</span><span>●</span><span>●</span></div>
-    <p id="load-step">${images.length ? "Lecture de la photo" : "Identification"}…</p>
+    <p id="load-step">${urlCtx ? "Lecture de l'annonce" : images.length ? "Lecture de la photo" : "Identification"}…</p>
     <div class="chrono" id="chrono">0.0 s</div>
   </div>`;
   const t0 = Date.now();
@@ -4677,11 +4726,12 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   const chain = [chosen, ...MODELS.filter((m) => m !== chosen)];
   const attempts = [];
   for (const m of chain) {
-    if (getGround()) {
-      attempts.push({ model: m, ground: true });
-      attempts.push({ model: m, ground: true, bis: true });
+    if (getGround() || urlCtx) {
+      const g = getGround();
+      attempts.push({ model: m, ground: g, urlCtx });
+      attempts.push({ model: m, ground: g, urlCtx, bis: true });
     }
-    attempts.push({ model: m, ground: false });
+    attempts.push({ model: m, ground: false, urlCtx: false });
   }
   let lastErr = "";
   let ok = null, lotVideSecours = null;
@@ -4696,7 +4746,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
         {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-          body: JSON.stringify(buildBody(parts, mode, at.ground, at.model))
+          body: JSON.stringify(buildBody(parts, mode, at.ground, at.model, at.urlCtx))
         },
         25e3
       );
@@ -4712,10 +4762,16 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
       }
       credBump();
       stopChrono();
-      const j = extractJSON(await res.json());
+      const data = await res.json();
+      const j = extractJSON(data);
       let avis = null;
-      if (!at.ground) {
-        avis = "Sans recherche web : prix estimés de mémoire, à confirmer." + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "") + (lastErr ? " (cause : " + lastErr + ")" : "");
+      const urlMeta = at.urlCtx && data.candidates && data.candidates[0] && data.candidates[0].urlContextMetadata && data.candidates[0].urlContextMetadata.urlMetadata;
+      const lienNonLu = Array.isArray(urlMeta) && urlMeta.length && !urlMeta.some((u) => u.urlRetrievalStatus === "URL_RETRIEVAL_STATUS_SUCCESS");
+      if (lienNonLu) {
+        avis = "Cette page n'a pas pu être lue automatiquement (certains sites, Vinted en tête, bloquent la lecture automatique ou n'affichent leur contenu qu'en JavaScript). Ce qui suit est une estimation à l'aveugle, à vérifier toi-même sur l'annonce — ou prends plutôt une photo de l'écran avec « Photographier »/« Galerie ».";
+        if (mode !== "stand" && mode !== "bac") j.confiance = "faible";
+      } else if (!at.ground && !at.urlCtx) {
+        avis = urlCtx ? "Impossible de lire cette annonce (page bloquée, protégée ou hors ligne) : estimation à l'aveugle, à vérifier absolument sur la page elle-même." + (lastErr ? " (cause : " + lastErr + ")" : "") : "Sans recherche web : prix estimés de mémoire, à confirmer." + (discToken() ? " La cote Discogs ci-dessous, elle, vient du marché réel." : "") + (lastErr ? " (cause : " + lastErr + ")" : "");
         if (mode !== "stand" && mode !== "bac") j.confiance = "faible";
       }
       if (lotVide(mode, j)) {
@@ -4742,6 +4798,11 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
   }
   if (ok) {
     stopChrono();
+    if (urlCtx) {
+      const pa = Number(ok.j && ok.j.prixAnnonce);
+      const priceEl = $("price");
+      if (priceEl && !priceEl.value.trim() && pa > 0) priceEl.value = pa;
+    }
     rechAjouter(mode, ok.j, ok.avis);
     try {
       if (mode === "bac") renderBacResult(ok.j, images, ok.avis);
@@ -4760,7 +4821,7 @@ CONTEXTE : le chineur possède déjà « ${m.e.a} — ${m.e.t} » dans sa collec
     return;
   }
   if (devraitReenfiler(lastErr, tentatives)) {
-    if (queuePush(promptText, images, mode, cacheKey, tentatives + 1)) return;
+    if (queuePush(promptText, images, mode, cacheKey, tentatives + 1, urlCtx)) return;
   }
   stopChrono();
   let titre = "Échec de l'analyse.", aide = "Vérifie ta connexion et réessaie.";
@@ -4973,7 +5034,7 @@ function swBanniereAfficher() {
   b.id = "sw-banniere";
   b.className = "sw-banniere";
   b.innerHTML = 'Nouvelle version disponible <button id="sw-recharger">Recharger</button>';
-  document.body.appendChild(b);
+  document.body.insertBefore(b, document.body.firstChild);
   document.getElementById("sw-recharger").onclick = () => location.reload();
 }
 function switchView(viewId, navEl) {
@@ -5064,6 +5125,7 @@ Object.assign(window, {
   clearSearch,
   queueRun,
   cameraMode,
+  askAIUrl,
   bcOuvrir,
   bcFermer,
   ficheEtatSet,
