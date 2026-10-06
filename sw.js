@@ -3,7 +3,7 @@
    absent du dépôt) faisait échouer TOUTE l'installation du service worker,
    donc aucun cache et aucun mode hors ligne. On met chaque fichier en cache
    individuellement : un manquant ne casse plus les autres. */
-const CACHE = 'insertcoin-v5.1';
+const CACHE = 'insertcoin-v6.0';
 const FILES = [
   './',
   './index.html',
@@ -12,7 +12,15 @@ const FILES = [
   './icon-192.png',
   './icon-512.png',
   './icon-mask-192.png',
-  './icon-mask-512.png'
+  './icon-mask-512.png',
+  './mascot/welcome.png',
+  './mascot/foraging.png',
+  './mascot/jackpot.png',
+  './mascot/inspecting.png',
+  './mascot/skeptical.png',
+  './mascot/bargaining.png',
+  './mascot/victory.png',
+  './mascot/end_of_day.png'
 ];
 
 self.addEventListener('install', e => {
