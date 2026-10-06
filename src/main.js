@@ -10,7 +10,11 @@ import {
   triggerCamera, modeSet, handleFileSelect, removePhoto, askAIGo, askAIMulti,
   clearSearch, queueRun, cameraMode, askAIUrl
 } from "./ui/capture.js";
-import { bcOuvrir, bcFermer } from "./ui/capture.js";
+import {
+  turboOuvrir, turboFermer, turboToggleSound, turboSetUnitPrice,
+  turboToggleItem, turboRemoveItem, turboClearBasket,
+  turboSetLotPricePrompt, turboSaveLot, bcOuvrir, bcFermer
+} from "./ui/turbo.js";
 import {
   ficheEtatSet, ficheCoche, ficheCopieCode, verifSet,
   bacToggle, bacBuy, bacDisc
@@ -33,6 +37,9 @@ import { modelsRefresh } from "./api/gemini.js";
 Object.assign(window, {
   switchView, triggerCamera, modeSet, handleFileSelect, removePhoto, askAIGo, askAIMulti,
   clearSearch, queueRun, cameraMode, askAIUrl, bcOuvrir, bcFermer,
+  turboOuvrir, turboFermer, turboToggleSound, turboSetUnitPrice,
+  turboToggleItem, turboRemoveItem, turboClearBasket,
+  turboSetLotPricePrompt, turboSaveLot,
   ficheEtatSet, ficheCoche, ficheCopieCode, verifSet, bacToggle, bacBuy, bacDisc,
   collClear, driveConnect, drivePick, driveSaveSel, driveSync,
   calFetch, calAddManual, calICS, calGo, calDel, calGoogle, calVerifMark,

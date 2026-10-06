@@ -20,6 +20,9 @@ export const DICT = {
 
     "bc.cadre": "Cadre le code-barres",
     "bc.annuler": "Annuler",
+    "scan.turbo.titre": "Mode Turbo",
+    "scan.turbo.prix_unit": "Prix unitaire :",
+    "scan.turbo.panier_titre": "Panier de stand en direct",
 
     "hud.score": "Score",
     "hud.credits": "Crédits",
@@ -412,6 +415,9 @@ export const DICT = {
 
     "bc.cadre": "Richt de barcode in het kader",
     "bc.annuler": "Annuleren",
+    "scan.turbo.titre": "Turbo-modus",
+    "scan.turbo.prix_unit": "Eenheidsprijs:",
+    "scan.turbo.panier_titre": "Live standmandje",
 
     "hud.score": "Score",
     "hud.credits": "Credits",
@@ -804,6 +810,9 @@ export const DICT = {
 
     "bc.cadre": "Frame the barcode",
     "bc.annuler": "Cancel",
+    "scan.turbo.titre": "Turbo Mode",
+    "scan.turbo.prix_unit": "Unit price:",
+    "scan.turbo.panier_titre": "Live stand basket",
 
     "hud.score": "Score",
     "hud.credits": "Credits",

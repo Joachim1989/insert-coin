@@ -90,11 +90,42 @@
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
   </symbol>
 </svg>
-<div class="bc-overlay" id="bc-overlay">
-  <video id="bc-video" playsinline muted></video>
-  <div class="bc-cadre"></div>
-  <div class="bc-msg" id="bc-msg" data-i18n="bc.cadre">Cadre le code-barres</div>
-  <button class="bc-close" onclick="bcFermer()" data-i18n="bc.annuler">Annuler</button>
+<div class="bc-overlay turbo-overlay" id="bc-overlay">
+  <div class="turbo-header">
+    <div class="turbo-badge-header">
+      <svg class="ico16"><use href="#i-flame"/></svg>
+      <span data-i18n="scan.turbo.titre">Mode Turbo</span>
+    </div>
+    <div class="turbo-header-actions">
+      <button class="turbo-head-btn" id="turbo-sound-btn" onclick="turboToggleSound()">🔊 Son ON</button>
+      <div class="turbo-price-selector">
+        <span class="turbo-price-lbl" data-i18n="scan.turbo.prix_unit">Prix unitaire :</span>
+        <button class="tpb" onclick="turboSetUnitPrice(1)">1€</button>
+        <button class="tpb" onclick="turboSetUnitPrice(2)">2€</button>
+        <button class="tpb" onclick="turboSetUnitPrice(3)">3€</button>
+        <button class="tpb" onclick="turboSetUnitPrice(5)">5€</button>
+        <b id="turbo-unit-price-display" class="tpb-disp">3€</b>
+      </div>
+      <button class="turbo-close-btn" onclick="turboFermer()" aria-label="Fermer">✕</button>
+    </div>
+  </div>
+
+  <div class="turbo-camera-box">
+    <video id="bc-video" playsinline muted></video>
+    <div class="bc-cadre" id="bc-cadre">
+      <div class="bc-laser"></div>
+    </div>
+    <div class="bc-status-msg" id="bc-status-msg" data-i18n="bc.cadre">Cadre le code-barres</div>
+  </div>
+
+  <div class="turbo-body">
+    <div class="turbo-ribbon-title">
+      <svg class="ico16"><use href="#i-crate"/></svg>
+      <span data-i18n="scan.turbo.panier_titre">Panier de stand en direct</span>
+    </div>
+    <div class="turbo-ribbon" id="turbo-ribbon"></div>
+    <div class="turbo-summary" id="turbo-summary"></div>
+  </div>
 </div>
 
 <div class="scoreov" id="score-screen"></div>

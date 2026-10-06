@@ -504,6 +504,9 @@ const DICT = {
     "hero.sub": "Cadre un objet, un bac ou un stand pour l'estimer en direct.",
     "bc.cadre": "Cadre le code-barres",
     "bc.annuler": "Annuler",
+    "scan.turbo.titre": "Mode Turbo",
+    "scan.turbo.prix_unit": "Prix unitaire :",
+    "scan.turbo.panier_titre": "Panier de stand en direct",
     "hud.score": "Score",
     "hud.credits": "Crédits",
     "hud.file": "En file",
@@ -838,6 +841,9 @@ const DICT = {
     "hero.sub": "Kader een voorwerp, bak of kraam in om direct te schatten.",
     "bc.cadre": "Richt de barcode in het kader",
     "bc.annuler": "Annuleren",
+    "scan.turbo.titre": "Turbo-modus",
+    "scan.turbo.prix_unit": "Eenheidsprijs:",
+    "scan.turbo.panier_titre": "Live standmandje",
     "hud.score": "Score",
     "hud.credits": "Credits",
     "hud.file": "In wachtrij",
@@ -1172,6 +1178,9 @@ const DICT = {
     "hero.sub": "Frame an item, crate or stall to estimate it live.",
     "bc.cadre": "Frame the barcode",
     "bc.annuler": "Cancel",
+    "scan.turbo.titre": "Turbo Mode",
+    "scan.turbo.prix_unit": "Unit price:",
+    "scan.turbo.panier_titre": "Live stand basket",
     "hud.score": "Score",
     "hud.credits": "Credits",
     "hud.file": "Queued",
@@ -3533,90 +3542,6 @@ Dis-moi si tu vois cela.`;
   callGemini(prompt2, photoQueue, "stand");
   photoVider();
 }
-let BC_FLUX = null, BC_BOUCLE = null;
-function bcDispo() {
-  return typeof window.BarcodeDetector !== "undefined";
-}
-async function bcOuvrir() {
-  vib();
-  if (!bcDispo()) {
-    const t2 = prompt("Ton navigateur ne sait pas lire les codes-barres.\n\nTape le code à la main (les chiffres sous les barres) :");
-    if (t2 && t2.trim()) bcTrouve(t2.trim());
-    return;
-  }
-  const ov = $("bc-overlay");
-  ov.classList.add("on");
-  $("bc-msg").textContent = "Cadre le code-barres";
-  try {
-    BC_FLUX = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: "environment" } }
-    });
-    const v = $("bc-video");
-    v.srcObject = BC_FLUX;
-    await v.play();
-    bcBoucle();
-  } catch (err) {
-    $("bc-msg").textContent = "Accès à la caméra refusé.";
-    setTimeout(bcFermer, 1600);
-  }
-}
-async function bcBoucle() {
-  let det;
-  try {
-    det = new window.BarcodeDetector({
-      formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128", "code_39"]
-    });
-  } catch (e) {
-    $("bc-msg").textContent = "Lecture impossible sur cet appareil.";
-    return;
-  }
-  const v = $("bc-video");
-  BC_BOUCLE = setInterval(async () => {
-    if (!v || v.readyState < 2) return;
-    try {
-      const codes = await det.detect(v);
-      if (codes && codes.length) {
-        const brut = String(codes[0].rawValue || "").trim();
-        if (brut) {
-          bcFermer();
-          bcTrouve(brut);
-        }
-      }
-    } catch (e) {
-    }
-  }, 400);
-}
-function bcFermer() {
-  if (BC_BOUCLE) {
-    clearInterval(BC_BOUCLE);
-    BC_BOUCLE = null;
-  }
-  if (BC_FLUX) {
-    BC_FLUX.getTracks().forEach((t2) => t2.stop());
-    BC_FLUX = null;
-  }
-  const v = $("bc-video");
-  if (v) v.srcObject = null;
-  const ov = $("bc-overlay");
-  if (ov) ov.classList.remove("on");
-}
-function bcTrouve(code) {
-  vib();
-  const q = $("q");
-  if (q) q.value = "Code-barres " + code;
-  const chp = $("ask");
-  if (chp) chp.disabled = false;
-  askAICode(code);
-}
-function askAICode(code) {
-  const prompt2 = BRIEF_BASE + BRIEF_JSON + `
-IDENTIFICATION PAR CODE-BARRES. Le code lu sur l'emballage est : ${code}
-Ce code désigne une référence précise et une seule. Cherche à quoi il correspond exactement (produit, édition, région, année) avant toute estimation.
-Si tu ne trouves pas ce code exact, dis-le franchement dans "note", mets "confiance":"faible", et n'invente pas un produit approchant.
-Recopie le code dans "code".` + (($("price").value || "").trim() ? `
-Prix vendeur : ${$("price").value.trim()} EUR.` : "");
-  callGemini(prompt2, [], "single");
-}
 const qImgSlim = (img) => ({ data: img.data, media: img.media });
 const qImgFull = (img) => ({ ...img, url: img.url || "data:" + (img.media || "image/jpeg") + ";base64," + img.data });
 function queuePush(promptText, images, mode, cacheKey, tentatives = 0, urlCtx = false) {
@@ -4318,7 +4243,7 @@ function themeSet(mode) {
   }
   themeApply(mode);
 }
-if (window.matchMedia) {
+if (typeof window !== "undefined" && window.matchMedia) {
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     if (themeGet() === "auto") themeApply("auto");
   });
@@ -5159,6 +5084,533 @@ window.onload = function() {
     alert("Une erreur est survenue au démarrage.\n\nTes données ne sont pas perdues : va dans Réglages pour les sauvegarder.\n\n" + (err.message || err));
   }
 };
+const SOUND_STORE = "insertcoin.sound_enabled";
+function isSoundEnabled() {
+  try {
+    const val = localStorage.getItem(SOUND_STORE);
+    return val === null ? true : val === "true";
+  } catch (e) {
+    return true;
+  }
+}
+function setSoundEnabled(enabled) {
+  try {
+    localStorage.setItem(SOUND_STORE, enabled ? "true" : "false");
+  } catch (e) {
+  }
+}
+let audioCtx = null;
+function getAudioContext() {
+  if (!isSoundEnabled()) return null;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    if (!audioCtx) {
+      audioCtx = new AudioContextClass();
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  } catch (e) {
+    return null;
+  }
+}
+function playCoinSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(987.77, now);
+    osc.frequency.setValueAtTime(1318.51, now + 0.08);
+    gain.gain.setValueAtTime(0.18, now);
+    gain.gain.exponentialRampToValueAtTime(1e-3, now + 0.35);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.36);
+  } catch (e) {
+  }
+}
+function playWarningSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.setValueAtTime(390, now + 0.1);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(1e-3, now + 0.28);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.29);
+  } catch (e) {
+  }
+}
+function playBuzzerSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(160, now);
+    osc.frequency.linearRampToValueAtTime(110, now + 0.18);
+    gain.gain.setValueAtTime(0.14, now);
+    gain.gain.exponentialRampToValueAtTime(1e-3, now + 0.2);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.21);
+  } catch (e) {
+  }
+}
+function playClickSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  try {
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(800, now);
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(1e-3, now + 0.04);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  } catch (e) {
+  }
+}
+function vibCoin() {
+  if (navigator.vibrate) navigator.vibrate([40, 40, 80]);
+}
+function vibWarn() {
+  if (navigator.vibrate) navigator.vibrate([90, 40, 90]);
+}
+function vibLow() {
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+let turboPanier = [];
+let turboPrixDefaut = 3;
+let turboPrixLotGlobal = null;
+let turboFlux = null;
+let turboBoucle = null;
+const turboCooldowns = /* @__PURE__ */ new Map();
+function turboDispo() {
+  return typeof window.BarcodeDetector !== "undefined";
+}
+async function turboOuvrir() {
+  if (!turboDispo()) {
+    alert("Le scan en direct nécessite Chrome sur Android ou un navigateur compatible avec BarcodeDetector.");
+    return;
+  }
+  const ov = $("bc-overlay");
+  if (!ov) return;
+  ov.classList.add("on");
+  playClickSound();
+  turboRender();
+  try {
+    turboFlux = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" } }
+    });
+    const v = $("bc-video");
+    if (v) {
+      v.srcObject = turboFlux;
+      await v.play();
+    }
+    turboDemarrerBoucle();
+  } catch (err) {
+    const msg = $("bc-status-msg");
+    if (msg) msg.textContent = "Accès à la caméra refusé.";
+    setTimeout(turboFermer, 2e3);
+  }
+}
+function turboFermer() {
+  if (turboBoucle) {
+    clearInterval(turboBoucle);
+    turboBoucle = null;
+  }
+  if (turboFlux) {
+    turboFlux.getTracks().forEach((t2) => t2.stop());
+    turboFlux = null;
+  }
+  const v = $("bc-video");
+  if (v) v.srcObject = null;
+  const ov = $("bc-overlay");
+  if (ov) ov.classList.remove("on");
+}
+const bcOuvrir = turboOuvrir;
+const bcFermer = turboFermer;
+function turboDemarrerBoucle() {
+  let det;
+  try {
+    det = new window.BarcodeDetector({
+      formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128", "code_39"]
+    });
+  } catch (e) {
+    const msg = $("bc-status-msg");
+    if (msg) msg.textContent = "Détecteur non supporté.";
+    return;
+  }
+  const v = $("bc-video");
+  turboBoucle = setInterval(async () => {
+    if (!v || v.readyState < 2) return;
+    try {
+      const codes = await det.detect(v);
+      if (codes && codes.length) {
+        for (const item of codes) {
+          const brut = String(item.rawValue || "").trim();
+          if (brut) {
+            turboTraiterScan(brut);
+            break;
+          }
+        }
+      }
+    } catch (e) {
+    }
+  }, 350);
+}
+async function turboTraiterScan(code) {
+  const now = Date.now();
+  const dernier = turboCooldowns.get(code) || 0;
+  if (now - dernier < 3e3) return;
+  turboCooldowns.set(code, now);
+  const cadre = $("bc-cadre");
+  if (cadre) {
+    cadre.classList.add("flash-green");
+    setTimeout(() => cadre.classList.remove("flash-green"), 400);
+  }
+  let isDoublon = false;
+  let doublonInfo = "";
+  try {
+    const m = collMatch(code);
+    if (m && m.e) {
+      isDoublon = true;
+      doublonInfo = (m.e.a ? m.e.a + " — " : "") + (m.e.t || "");
+    } else {
+      const items = collRead();
+      const direct = items.find((x) => String(x.code || "").trim() === code || String(x.t || "").toLowerCase().includes(code.toLowerCase()));
+      if (direct) {
+        isDoublon = true;
+        doublonInfo = (direct.a ? direct.a + " — " : "") + (direct.t || "");
+      }
+    }
+  } catch (e) {
+  }
+  const itemId = "t_" + now + "_" + Math.floor(Math.random() * 1e3);
+  const nouvelArticle = {
+    id: itemId,
+    code,
+    nom: "Réf. " + code,
+    console: "",
+    cote: 0,
+    coteSrc: "Recherche...",
+    prixDemande: turboPrixDefaut,
+    isDoublon,
+    doublonInfo,
+    verdict: "N",
+    selected: true,
+    loading: true,
+    date: now
+  };
+  turboPanier.unshift(nouvelArticle);
+  turboRender();
+  if (isDoublon) {
+    playWarningSound();
+    vibWarn();
+  } else {
+    playClickSound();
+    vibLow();
+  }
+  await turboResoudreCote(nouvelArticle);
+  turboRender();
+}
+async function turboResoudreCote(art) {
+  if (pcToken()) {
+    try {
+      const pc = await pcCote(art.code);
+      if (pc && pc.nom) {
+        art.nom = pc.nom;
+        art.console = pc.console || "";
+        art.cote = pc.cib || pc.loose || pc.neuf || 0;
+        art.coteSrc = `PriceCharting ($${art.cote})`;
+        art.loading = false;
+        turboCalculerVerdict(art);
+        return;
+      }
+    } catch (e) {
+    }
+  }
+  if (discToken()) {
+    try {
+      const dc = await discCote(art.code);
+      if (dc && (dc.titre || dc.artiste)) {
+        art.nom = (dc.artiste ? dc.artiste + " — " : "") + (dc.titre || "");
+        art.console = dc.format || "Musique";
+        art.cote = dc.bas || 0;
+        art.coteSrc = `Discogs (${art.cote}€)`;
+        art.loading = false;
+        turboCalculerVerdict(art);
+        return;
+      }
+    } catch (e) {
+    }
+  }
+  const apiKey = localStorage.getItem(KEY_STORE);
+  if (apiKey && navigator.onLine) {
+    try {
+      const model = localStorage.getItem(MODEL_STORE) || "gemini-2.5-flash";
+      const prompt2 = `Code-barres : ${art.code}. Identifie précisément ce produit (jeu vidéo, livre, CD, jouet, etc.).
+Donne son titre, sa plateforme ou catégorie, et son prix d'occasion moyen en euros (chiffre entier dans 'marche').
+Réponds uniquement en JSON : {"nom":"...","console":"...","marche":15}`;
+      const res = await fetchAvecDelai(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+          body: JSON.stringify({
+            contents: [{ role: "user", parts: [{ text: prompt2 }] }],
+            generationConfig: { responseMimeType: "application/json", maxOutputTokens: 250 }
+          })
+        },
+        7e3
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const j = extractJSON(data);
+        if (j && (j.nom || j.objet)) {
+          art.nom = j.nom || j.objet;
+          art.console = j.console || j.categorie || "";
+          art.cote = Number(j.marche) || Number(j.revente) || 0;
+          art.coteSrc = `Estimation IA (~${art.cote}€)`;
+          art.loading = false;
+          turboCalculerVerdict(art);
+          return;
+        }
+      }
+    } catch (e) {
+    }
+  }
+  art.coteSrc = "Cote manuelle";
+  art.loading = false;
+  turboCalculerVerdict(art);
+}
+function turboCalculerVerdict(art) {
+  const dem = art.prixDemande || turboPrixDefaut;
+  if (art.cote >= dem * 2.2 && art.cote >= 10) {
+    art.verdict = "R";
+    if (!art.isDoublon) {
+      playCoinSound();
+      vibCoin();
+    }
+  } else if (art.cote >= dem * 1.3) {
+    art.verdict = "N";
+  } else {
+    art.verdict = "L";
+    if (!art.isDoublon && art.cote > 0) {
+      playBuzzerSound();
+    }
+  }
+}
+function turboSetUnitPrice(prix) {
+  turboPrixDefaut = Math.max(0, Number(prix) || 0);
+  turboPanier.forEach((it) => {
+    it.prixDemande = turboPrixDefaut;
+    turboCalculerVerdict(it);
+  });
+  turboRender();
+}
+function turboToggleSound() {
+  const cur = isSoundEnabled();
+  setSoundEnabled(!cur);
+  playClickSound();
+  turboRender();
+}
+function turboToggleItem(id) {
+  const it = turboPanier.find((x) => x.id === id);
+  if (it) {
+    it.selected = !it.selected;
+    playClickSound();
+    turboRender();
+  }
+}
+function turboRemoveItem(id) {
+  const idx = turboPanier.findIndex((x) => x.id === id);
+  if (idx >= 0) turboPanier.splice(idx, 1);
+  playClickSound();
+  turboRender();
+}
+function turboClearBasket() {
+  if (!turboPanier.length) return;
+  if (confirm("Vider tout le panier du stand ?")) {
+    turboPanier.length = 0;
+    turboPrixLotGlobal = null;
+    turboCooldowns.clear();
+    turboRender();
+  }
+}
+function turboSetLotPricePrompt() {
+  const act = turboPanier.filter((x) => x.selected);
+  const defaut = turboPrixLotGlobal || act.length * turboPrixDefaut;
+  const saisie = prompt(`Prix global demandé par le vendeur pour ces ${act.length} article(s) (€) :`, String(defaut));
+  if (saisie === null) return;
+  const val = parseFloat(saisie);
+  if (!isNaN(val) && val >= 0) {
+    turboPrixLotGlobal = val;
+    turboRender();
+  }
+}
+function turboConseilNego(selectionnes, totalCote, totalDemande) {
+  if (!selectionnes.length) {
+    return "Cadre les codes-barres des boîtes ou des pochettes. Le panier se remplit en temps réel !";
+  }
+  const n = selectionnes.length;
+  if (totalCote <= 0) {
+    return `Tu as ${n} article(s) dans le lot. Demande le prix global au vendeur pour calculer ta marge.`;
+  }
+  const marge = totalCote - totalDemande;
+  const offreAttaque = Math.max(1, Math.round(totalCote * 0.45));
+  const offreMax = Math.max(1, Math.round(totalCote * 0.65));
+  if (totalDemande <= offreAttaque) {
+    return `🔥 Affaire en or ! Le vendeur demande ${totalDemande} € pour une cote de ~${totalCote} € (marge +${marge.toFixed(0)} €). Prends sans hésiter !`;
+  }
+  if (totalDemande <= offreMax) {
+    return `👍 Bon lot négociable. Cote totale ~${totalCote} €. Tente d'emporter le tout pour ${offreAttaque} € cash (soit ~${(offreAttaque / n).toFixed(1)} € / pièce).`;
+  }
+  return `⚠️ Vendeur gourmand (${totalDemande} € demandés pour ~${totalCote} € de cote). Propose maximum ${offreMax} € pour le lot, ou laisse les titres moins cotés.`;
+}
+function turboSaveLot() {
+  const selectionnes = turboPanier.filter((x) => x.selected);
+  if (!selectionnes.length) {
+    alert("Aucun article sélectionné à enregistrer.");
+    return;
+  }
+  selectionnes.reduce((acc, it) => acc + (it.cote || 0), 0);
+  const totalPaye = turboPrixLotGlobal !== null ? turboPrixLotGlobal : selectionnes.reduce((acc, it) => acc + (it.prixDemande || turboPrixDefaut), 0);
+  const cotes = selectionnes.map((x) => x.cote || 1);
+  const partsPaye = repartirProrata(cotes, totalPaye);
+  const lg = logRead();
+  selectionnes.forEach((it, i) => {
+    lg.unshift({
+      d: Date.now() + i,
+      o: it.nom + (it.console ? ` (${it.console})` : ""),
+      p: partsPaye[i] || 0,
+      r: it.cote || 0,
+      dem: it.prixDemande || turboPrixDefaut,
+      mx: Math.round((it.cote || 0) * 0.7)
+    });
+  });
+  logWrite(lg);
+  playCoinSound();
+  vibCoin();
+  hudPaint();
+  renderLog();
+  const aGarder = turboPanier.filter((x) => !x.selected);
+  turboPanier.length = 0;
+  turboPanier.push(...aGarder);
+  turboPrixLotGlobal = null;
+  turboRender();
+  alert(`✓ ${selectionnes.length} article(s) enregistré(s) dans ton Journal de chasse !`);
+}
+function turboRender() {
+  const ribbonEl = $("turbo-ribbon");
+  const sumEl = $("turbo-summary");
+  const soundBtn = $("turbo-sound-btn");
+  const priceDisplay = $("turbo-unit-price-display");
+  if (soundBtn) {
+    const on = isSoundEnabled();
+    soundBtn.innerHTML = on ? "🔊 Son ON" : "🔇 Muet";
+    soundBtn.classList.toggle("muted", !on);
+  }
+  if (priceDisplay) {
+    priceDisplay.textContent = turboPrixDefaut + "€";
+  }
+  const selectionnes = turboPanier.filter((x) => x.selected);
+  const totalCote = selectionnes.reduce((acc, it) => acc + (it.cote || 0), 0);
+  const totalDemande = turboPrixLotGlobal !== null ? turboPrixLotGlobal : selectionnes.reduce((acc, it) => acc + (it.prixDemande || turboPrixDefaut), 0);
+  const marge = totalCote - totalDemande;
+  if (ribbonEl) {
+    if (!turboPanier.length) {
+      ribbonEl.innerHTML = `
+        <div class="turbo-empty">
+          <svg class="ico16"><use href="#i-scan"/></svg>
+          <span>Le panier est vide. Scanne des codes pour les empiler en direct.</span>
+        </div>`;
+    } else {
+      ribbonEl.innerHTML = turboPanier.map((it) => {
+        const vCls = it.verdict === "R" ? "pos" : it.verdict === "L" ? "neg" : "mid";
+        const vBadge = it.verdict === "R" ? "PÉPITE" : it.verdict === "L" ? "LAISSE" : "À NÉGO";
+        return `
+          <div class="turbo-card ${it.selected ? "checked" : "dimmed"}" onclick="turboToggleItem('${it.id}')">
+            <input type="checkbox" class="turbo-check" ${it.selected ? "checked" : ""} onclick="event.stopPropagation(); turboToggleItem('${it.id}')">
+            <div class="turbo-card-info">
+              <div class="turbo-title">
+                <b>${esc(it.nom)}</b>
+                ${it.console ? `<span class="turbo-tag">${esc(it.console)}</span>` : ""}
+              </div>
+              <div class="turbo-details">
+                <span class="turbo-cote ${vCls}">
+                  ${it.loading ? "⏳ Recherche..." : it.cote ? it.cote + "€" : "Cote ?"}
+                </span>
+                <span class="turbo-src">${esc(it.coteSrc)}</span>
+                <span class="turbo-sep">·</span>
+                <span class="turbo-buy-p">Achat : ${it.prixDemande}€</span>
+              </div>
+              ${it.isDoublon ? `<div class="turbo-doublon">⚠️ DÉJÀ EN COLL. : ${esc(it.doublonInfo)}</div>` : ""}
+            </div>
+            <div class="turbo-card-right">
+              <span class="turbo-badge ${vCls}">${vBadge}</span>
+              <button class="turbo-del-btn" onclick="event.stopPropagation(); turboRemoveItem('${it.id}')">✕</button>
+            </div>
+          </div>`;
+      }).join("");
+    }
+  }
+  if (sumEl) {
+    const conseil = turboConseilNego(selectionnes, totalCote, totalDemande);
+    sumEl.innerHTML = `
+      <div class="turbo-advice">
+        <div class="turbo-advice-mascot">
+          <img src="/mascot/${marge >= 25 ? "jackpot.png" : marge >= 10 ? "bargaining.png" : "inspecting.png"}" alt="Conseil Barnabé">
+        </div>
+        <div class="turbo-advice-text">${esc(conseil)}</div>
+      </div>
+      <div class="turbo-metrics-row">
+        <div class="tmetric">
+          <span class="lbl">Articles</span>
+          <b>${selectionnes.length} / ${turboPanier.length}</b>
+        </div>
+        <div class="tmetric">
+          <span class="lbl">Cote totale</span>
+          <b>${totalCote.toFixed(0)}€</b>
+        </div>
+        <div class="tmetric" onclick="turboSetLotPricePrompt()" style="cursor:pointer" title="Cliquer pour modifier le prix du lot">
+          <span class="lbl">Offre stand ✏️</span>
+          <b>${totalDemande.toFixed(0)}€</b>
+        </div>
+        <div class="tmetric ${marge >= 0 ? "pos" : "neg"}">
+          <span class="lbl">Marge est.</span>
+          <b>${marge >= 0 ? "+" : ""}${marge.toFixed(0)}€</b>
+        </div>
+      </div>
+      <div class="turbo-actions-row">
+        <button class="turbo-clear-btn" onclick="turboClearBasket()">Vider</button>
+        <button class="turbo-save-btn" onclick="turboSaveLot()" ${!selectionnes.length ? "disabled" : ""}>
+          🤝 Enregistrer ${selectionnes.length} achat${selectionnes.length > 1 ? "s" : ""}
+        </button>
+      </div>`;
+  }
+}
 Object.assign(window, {
   switchView,
   triggerCamera,
@@ -5173,6 +5625,15 @@ Object.assign(window, {
   askAIUrl,
   bcOuvrir,
   bcFermer,
+  turboOuvrir,
+  turboFermer,
+  turboToggleSound,
+  turboSetUnitPrice,
+  turboToggleItem,
+  turboRemoveItem,
+  turboClearBasket,
+  turboSetLotPricePrompt,
+  turboSaveLot,
   ficheEtatSet,
   ficheCoche,
   ficheCopieCode,
@@ -6774,27 +7235,383 @@ nav {
 .empty-state p { font-size: 13.5px; color: var(--text-muted); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SCANNER CODE-BARRES OVERLAY
+   SCANNER CODE-BARRES & MODE TERRAIN TURBO
    ═══════════════════════════════════════════════════════════════════════════ */
-.bc-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: #000; }
-.bc-overlay.on { display: block; }
-.bc-overlay video { width: 100%; height: 100%; object-fit: cover; }
+.bc-overlay { display: none; position: fixed; inset: 0; z-index: 250; background: #07090e; }
+.bc-overlay.on { display: flex; flex-direction: column; }
+
+.turbo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(13, 16, 23, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+  gap: 10px;
+}
+.turbo-badge-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gold);
+  font-family: var(--pixel);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.turbo-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.turbo-head-btn {
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--r-full);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.turbo-head-btn.muted {
+  opacity: 0.6;
+  border-style: dashed;
+}
+.turbo-price-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  padding: 2px 8px;
+}
+.turbo-price-lbl {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-right: 2px;
+}
+.tpb {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.tpb:hover, .tpb:active {
+  background: var(--surface-hover);
+  color: var(--gold);
+}
+.tpb-disp {
+  font-family: var(--mono);
+  color: var(--gold);
+  font-size: 12px;
+  margin-left: 2px;
+}
+.turbo-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.turbo-camera-box {
+  position: relative;
+  height: 36vh;
+  min-height: 190px;
+  background: #000;
+  overflow: hidden;
+}
+.turbo-camera-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .bc-cadre {
-  position: absolute; top: 50%; left: 8%; width: 84%; height: 160px;
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 115px;
   transform: translateY(-50%);
-  border: 2px solid var(--gold); border-radius: 18px;
-  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.6);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.55);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  overflow: hidden;
 }
-.bc-msg {
-  position: absolute; top: calc(50% + 105px); left: 0; right: 0;
-  text-align: center; color: #fff; font-size: 15px; font-weight: 700;
-  letter-spacing: 0.02em; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+.bc-cadre.flash-green {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.9), 0 0 0 100vmax rgba(0, 0, 0, 0.55) !important;
 }
-.bc-close {
-  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
-  background: var(--surface); color: var(--text); border: 1px solid var(--border);
-  border-radius: var(--r-full); padding: 12px 32px; font-size: 15px;
-  font-weight: 700; cursor: pointer;
+.bc-laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), #fff, var(--gold), transparent);
+  box-shadow: 0 0 8px var(--gold);
+  animation: laser-sweep 2s infinite ease-in-out;
+}
+@keyframes laser-sweep {
+  0% { top: 10%; opacity: 0.3; }
+  50% { top: 90%; opacity: 1; }
+  100% { top: 10%; opacity: 0.3; }
+}
+.bc-status-msg {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.turbo-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+.turbo-ribbon-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.turbo-ribbon {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.turbo-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 28px 16px;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 13px;
+}
+.turbo-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.turbo-card.dimmed {
+  opacity: 0.55;
+  background: rgba(23, 29, 40, 0.4);
+}
+.turbo-card.checked {
+  border-color: rgba(245, 166, 35, 0.3);
+}
+.turbo-check {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+.turbo-card-info {
+  flex: 1;
+  min-width: 0;
+}
+.turbo-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.turbo-title b {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+.turbo-tag {
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--surface-light);
+  color: var(--gold);
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+.turbo-details {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  margin-top: 3px;
+  color: var(--text-muted);
+}
+.turbo-cote {
+  font-weight: 800;
+  font-family: var(--mono);
+}
+.turbo-cote.pos { color: var(--go); }
+.turbo-cote.mid { color: var(--mid); }
+.turbo-cote.neg { color: var(--text-muted); }
+.turbo-src { font-size: 11px; }
+.turbo-buy-p { font-family: var(--mono); color: var(--text); }
+.turbo-doublon {
+  font-size: 11px;
+  color: #c084fc;
+  font-weight: 700;
+  margin-top: 3px;
+}
+.turbo-card-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.turbo-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: var(--r-full);
+  text-transform: uppercase;
+}
+.turbo-badge.pos { background: rgba(34, 197, 94, 0.15); color: var(--go); border: 1px solid rgba(34, 197, 94, 0.3); }
+.turbo-badge.mid { background: rgba(245, 158, 11, 0.15); color: var(--mid); border: 1px solid rgba(245, 158, 11, 0.3); }
+.turbo-badge.neg { background: rgba(239, 68, 68, 0.12); color: var(--stop); border: 1px solid rgba(239, 68, 68, 0.25); }
+.turbo-del-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.turbo-del-btn:hover { color: var(--stop); }
+
+.turbo-summary {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.3);
+}
+.turbo-advice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+.turbo-advice-mascot {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+.turbo-advice-mascot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.turbo-advice-text {
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.35;
+  font-style: italic;
+}
+.turbo-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.tmetric {
+  background: var(--surface-light);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 8px;
+  text-align: center;
+}
+.tmetric .lbl {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.tmetric b {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: var(--text);
+}
+.tmetric.pos b { color: var(--go); }
+.tmetric.neg b { color: var(--stop); }
+
+.turbo-actions-row {
+  display: flex;
+  gap: 10px;
+}
+.turbo-clear-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: var(--r-full);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.turbo-save-btn {
+  flex: 1;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  color: #121008;
+  border: none;
+  border-radius: var(--r-full);
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245, 166, 35, 0.25);
+  transition: all 0.2s ease;
+}
+.turbo-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -7097,11 +7914,42 @@ label.tick input { width: 20px; height: 20px; accent-color: var(--gold); flex-sh
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
   </symbol>
 </svg>
-<div class="bc-overlay" id="bc-overlay">
-  <video id="bc-video" playsinline muted></video>
-  <div class="bc-cadre"></div>
-  <div class="bc-msg" id="bc-msg" data-i18n="bc.cadre">Cadre le code-barres</div>
-  <button class="bc-close" onclick="bcFermer()" data-i18n="bc.annuler">Annuler</button>
+<div class="bc-overlay turbo-overlay" id="bc-overlay">
+  <div class="turbo-header">
+    <div class="turbo-badge-header">
+      <svg class="ico16"><use href="#i-flame"/></svg>
+      <span data-i18n="scan.turbo.titre">Mode Turbo</span>
+    </div>
+    <div class="turbo-header-actions">
+      <button class="turbo-head-btn" id="turbo-sound-btn" onclick="turboToggleSound()">🔊 Son ON</button>
+      <div class="turbo-price-selector">
+        <span class="turbo-price-lbl" data-i18n="scan.turbo.prix_unit">Prix unitaire :</span>
+        <button class="tpb" onclick="turboSetUnitPrice(1)">1€</button>
+        <button class="tpb" onclick="turboSetUnitPrice(2)">2€</button>
+        <button class="tpb" onclick="turboSetUnitPrice(3)">3€</button>
+        <button class="tpb" onclick="turboSetUnitPrice(5)">5€</button>
+        <b id="turbo-unit-price-display" class="tpb-disp">3€</b>
+      </div>
+      <button class="turbo-close-btn" onclick="turboFermer()" aria-label="Fermer">✕</button>
+    </div>
+  </div>
+
+  <div class="turbo-camera-box">
+    <video id="bc-video" playsinline muted></video>
+    <div class="bc-cadre" id="bc-cadre">
+      <div class="bc-laser"></div>
+    </div>
+    <div class="bc-status-msg" id="bc-status-msg" data-i18n="bc.cadre">Cadre le code-barres</div>
+  </div>
+
+  <div class="turbo-body">
+    <div class="turbo-ribbon-title">
+      <svg class="ico16"><use href="#i-crate"/></svg>
+      <span data-i18n="scan.turbo.panier_titre">Panier de stand en direct</span>
+    </div>
+    <div class="turbo-ribbon" id="turbo-ribbon"></div>
+    <div class="turbo-summary" id="turbo-summary"></div>
+  </div>
 </div>
 
 <div class="scoreov" id="score-screen"></div>

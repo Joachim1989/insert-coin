@@ -352,7 +352,7 @@ export function themeSet(mode){
   try{ localStorage.setItem(THEME_STORE, mode); }catch(e){}
   themeApply(mode);
 }
-if(window.matchMedia){
+if(typeof window !== "undefined" && window.matchMedia){
   window.matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", () => { if(themeGet() === "auto") themeApply("auto"); });
 }
